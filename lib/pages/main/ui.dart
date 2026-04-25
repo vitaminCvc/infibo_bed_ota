@@ -14,6 +14,8 @@ class MainPage extends StatefulWidget {
 
 // 主页面状态管理
 class _MainPageState extends State<MainPage> {
+  // 主页面底部氛围灯默认按钮
+  bool _isLightOn = false;
   // 主页面逻辑控制器
   final MainLogic _logic = MainLogic();
 
@@ -178,8 +180,8 @@ class _MainPageState extends State<MainPage> {
                     // 主页面画布宽度
                     width: 800 * scale,
                     height: 1230 * scale,
-                      child: FittedBox(
-                        // 主页面画布高度
+                    child: FittedBox(
+                      // 主页面画布高度
                       fit: BoxFit.contain,
                       // 主页面画布居中对齐
                       alignment: Alignment.topCenter,
@@ -202,8 +204,8 @@ class _MainPageState extends State<MainPage> {
   ///////////////////////////////////////////////主页面组件构建////////////////////////////////////////////////
   /// 构建主页画布
   Widget _buildMainCanvas() {
-    return Stack(     
-//超出内容也显示      
+    return Stack(
+      //超出内容也显示
       clipBehavior: Clip.none,
       children: [
         // 占满整个布局
@@ -215,12 +217,21 @@ class _MainPageState extends State<MainPage> {
         _buildHeader(),
         _buildTitle(),
         _buildBodyStage(),
-        ..._leftModeCards.map(_buildModeCard),
-        ..._rightModeCards.map(_buildModeCard),
+        ..._leftModeCards.map((card) => _buildModeCard(card)),
+        ..._rightModeCards.map((card) => _buildModeCard(card)),
         _buildBottomActions(),
       ],
     );
   }
+
+  // 构建模式卡片
+       Widget _buildModeCard(_ModeCardData item) {
+       return Positioned(
+         left: item.left,
+         top: item.top,
+         child: _ModeCard(item: item, onTap: _logic.openModeDetail),
+       );
+     }
 
   /// 构建公共顶部表头
   Widget _buildHeader() {
@@ -302,14 +313,7 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  /// 构建模式卡片位置
-  Widget _buildModeCard(_ModeCardData item) {
-    return Positioned(
-      left: item.left,
-      top: item.top,
-      child: _ModeCard(item: item, onTap: _logic.openModeDetail),
-    );
-  }
+
 
   /// 构建底部按钮区域
   Widget _buildBottomActions() {
@@ -340,12 +344,14 @@ class _MainPageState extends State<MainPage> {
         Positioned(
           left: 260,
           top: 1100,
-          child: Image.asset(Assets.atmosphereLightLogo, width: 56, height: 56),
-        ),
-        Positioned(
-          left: 568,
-          top: 965,
-          child: Image.asset(Assets.liftControlLogo, width: 187, height: 187),
+          child: 
+          //检测用户手势操作
+          GestureDetector(
+            onTap: (){
+              setState(() => _isLightOn = !_isLightOn);
+            },
+            child: Image.asset(_isLightOn ? Assets.lightOpenLogo : Assets.LightLogo, width: 56, height: 56),
+          )
         ),
       ],
     );
@@ -380,7 +386,7 @@ class _ModeCardState extends State<_ModeCard> {
       onTapDown: (_) => setState(() => _pressed = true),
       onTapCancel: () => setState(() => _pressed = false),
       onTapUp: (_) => setState(() => _pressed = false),
-      onTap: () => widget.onTap(item.title),
+      onTap: () => widget.onTap('/choseusers'),
       child: AnimatedScale(
         scale: _pressed ? 0.96 : 1,
         duration: const Duration(milliseconds: 110),

@@ -1,11 +1,10 @@
 import 'dart:async';
-
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:ntp/ntp.dart';
 
-// 主页面逻辑控制类
-class MainLogic extends GetxController {
+  // 主页面逻辑控制类
+  class MainLogic extends GetxController {
   // 模式详情页路由
   static const String modeDetailRoute = '/modeDetail';
 
@@ -43,7 +42,7 @@ class MainLogic extends GetxController {
 
   // 跳转到模式详情页
   void openModeDetail(String title) {
-    Get.toNamed(modeDetailRoute, arguments: title);
+    Get.toNamed('/choseusers');
   }
 
   // 同步网络时间，失败时使用本机时间

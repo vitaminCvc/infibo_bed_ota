@@ -1,6 +1,7 @@
 // 根级路由
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:infibo_app/pages/choseusers/ui.dart';
 import 'package:infibo_app/pages/login/ui.dart';
 import 'package:infibo_app/pages/main/logic.dart';
 import 'package:infibo_app/pages/main/ui.dart';
@@ -21,10 +22,7 @@ List<GetPage> getRoutes() {
     GetPage(name: "/login", page: () => const LoginPage()),
     // 主页面
     GetPage(name: "/main", page: () => const MainPage()),
-    // 模式详情页
-    GetPage(
-      name: MainLogic.modeDetailRoute,
-      page: () => ModeDetailPage(title: Get.arguments as String? ?? '理疗模式'),
-    ),
+    // 选择用户页面
+    GetPage(name: "/choseusers", page: () => const ChoseUsersPage()),
   ];
 }
