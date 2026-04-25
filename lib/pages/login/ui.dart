@@ -1,0 +1,448 @@
+import 'package:flutter/material.dart';
+import 'package:infibo_app/constants/assets.dart';
+import 'package:infibo_app/pages/login/logic.dart';
+import 'package:infibo_app/constants/color.dart';
+//可选登录角色（管理员、操作员、用户）
+// enum LoginRole { admin, operator, user }
+//登录页UI
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+//登录页UI状态管理
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+//登录页UI状态管理
+class _LoginPageState extends State<LoginPage> {
+  // //登录角色 默认值为管理员
+  // LoginRole _role = LoginRole.admin;
+  //是否同意协议 默认值为false（未同意）
+  bool _agreed = false;
+  //是否显示密码  默认值为true（隐藏密码框）
+  bool _obscurePassword = true;
+  //手机号输入框控制器
+  final TextEditingController _phoneController = TextEditingController();
+  //密码输入框控制器  
+  final TextEditingController _passwordController = TextEditingController();
+  final LoginLogic _logic = LoginLogic();
+
+  @override
+  //在组件被销毁时,清理资源
+  void dispose() {
+    _phoneController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+///////////////////////////////////////////////////登录页界面布局///////////////////////////////////////////////////
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppTheme.primaryColor,
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 32),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 520),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ///构建品牌页头
+                   _buildBrandHeader(),
+                  const SizedBox(height: 120),
+                  _buildInputPhone(),
+                  const SizedBox(height: 30),
+                   _buildInputPassword(),
+                  const SizedBox(height: 30),
+                  _buildForgotPassword(),
+                  const SizedBox(height: 54),
+                  _buildLoginButton(),
+                  const SizedBox(height: 24),
+                  _buildRegisterButton(),
+                  const SizedBox(height: 88),
+                  _buildAgreementRow(),
+                  const SizedBox(height: 34),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+///////////////////////////////////////////////////登录页组件构建///////////////////////////////////////////////////
+///构建品牌页头
+  Widget _buildBrandHeader() {
+    return Image.asset(Assets.logo,fit: BoxFit.cover);
+  }
+///构建手机号输入框容器
+Widget _buildInputPhone() {
+  return Stack(
+    children: [
+      //毛玻璃
+      Image.asset(Assets.glassLogo),
+      //手机号输入框
+      Positioned(
+        left: 22,
+        right: 22,
+        top: 0,
+        bottom: 0,
+        child: _InputPhone(),
+      ),
+    ],
+  );
+}
+
+
+///构建手机号输入框
+Widget _InputPhone() {
+  return Row(
+    crossAxisAlignment: CrossAxisAlignment.center,
+    children: [
+      //电话图标
+      Image.asset(
+        Assets.phoneLogo,
+      ),
+      const SizedBox(width: 12),
+      // 宽度撑开（不加会报错）
+      Expanded(
+        child: TextField(
+          controller: _phoneController,
+          keyboardType: TextInputType.phone,
+          onChanged: (value) {
+            setState(() {});
+          },
+          //输入框内容样式
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+          ),
+          textAlignVertical: TextAlignVertical.center,
+          //输入框装饰
+          decoration: const InputDecoration(
+            isCollapsed: true,
+            hintText: '输入手机号',
+            hintStyle: TextStyle(
+              color: Color.fromARGB(255, 129, 133, 145),
+              fontSize: 18,
+            ),
+            border: InputBorder.none, // 
+            contentPadding: EdgeInsets.zero,
+          ),
+        ),
+      ),
+    ],
+  );
+}
+
+
+
+
+///构建密码输入框容器
+Widget _buildInputPassword() {
+  return Stack(
+    children: [
+      //毛玻璃
+      Image.asset(Assets.glassLogo),
+      //手机号输入框
+      Positioned(
+        left: 22,
+        right: 22,
+        top: 0,
+        bottom: 0,
+        child: _InputPassword(),
+      ),
+    ],
+  );
+}
+
+Widget _InputPassword() {
+  return Row(
+    crossAxisAlignment: CrossAxisAlignment.center,
+    children: [
+      //密码图标
+      Image.asset(
+        Assets.passwordLogo,
+      ),
+      const SizedBox(width: 12),
+      // 宽度撑开（不加会报错）
+      Expanded(
+        child: TextField(
+          controller: _passwordController,
+          keyboardType: TextInputType.text,
+          onChanged: (value) {
+            setState(() {});
+          },
+          //输入框内容样式
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+          ),
+          textAlignVertical: TextAlignVertical.center,
+          //输入框装饰
+          decoration: const InputDecoration(
+            isCollapsed: true,
+            hintText: '输入密码',
+            hintStyle: TextStyle(
+              color: Color.fromARGB(255, 129, 133, 145),
+              fontSize: 18,
+            ),
+            border: InputBorder.none, // 
+            contentPadding: EdgeInsets.zero,
+          ),
+        ),
+      ),
+    ],
+  );
+}
+///构建忘记密码按钮
+  Widget _buildForgotPassword() {
+    return Padding(
+      padding: const EdgeInsets.only(right: 28),
+      child: Align(
+        alignment: Alignment.centerRight,
+        child: TextButton(
+          //点击事件
+          //点击忘记密码按钮，跳转到忘记密码页面
+          onPressed: () {},
+          style: TextButton.styleFrom(
+            padding: EdgeInsets.zero,
+            minimumSize: Size.zero,
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          ),
+          child: const Text(
+            '忘记密码?',
+            style: TextStyle(
+              color: Color(0xFFC9CBD2),
+              fontSize: 17,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+///构建登录按钮
+  Widget _buildLoginButton() {
+    return Stack(
+      children: [
+        //毛玻璃
+        Opacity(
+          //毛玻璃透明度
+          opacity: 0,
+          //毛玻璃图片
+          child: Image.asset(Assets.glassLogo),
+        ),
+        Positioned.fill(
+          //登录按钮
+          child: ElevatedButton(
+            //点击事件
+            //点击登录按钮，跳转到登录页面
+            //如果手机号或密码为空，提示用户输入手机号或密码
+            onPressed: _canLogin() ? _logic.login : null,
+            style: ElevatedButton.styleFrom(
+              //登录按钮背景颜色
+              backgroundColor: const Color(0xFF1464DF),
+              //登录按钮禁用背景颜色
+              disabledBackgroundColor: const Color.fromARGB(255, 2, 43, 106),
+              //登录按钮文本颜色
+              foregroundColor: Colors.white,
+              //登录按钮禁用文本颜色
+              disabledForegroundColor: Colors.grey,
+              //登录按钮形状
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(31),
+              ),
+              //登录按钮阴影
+              elevation: 0,
+              //登录按钮内边距
+              padding: EdgeInsets.zero,
+              minimumSize: Size.zero,
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
+            child: const Text(
+              '登录',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+///构建注册按钮
+  Widget _buildRegisterButton() {
+    return TextButton(
+      onPressed: () {},
+      child: const Text(
+        '注册',
+        style: TextStyle(
+          color: Color(0xFFD9DAE0),
+          fontSize: 20,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+    );
+  }
+///构建用户协议行
+  Widget _buildAgreementRow() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(
+          width: 22,
+          height: 22,
+          child: Checkbox(
+            value: _agreed,
+            onChanged: (value) {
+              setState(() {
+                _agreed = value ?? false;
+              });
+            },
+            shape: const CircleBorder(),
+            side: const BorderSide(color: Color(0xFF7F8491)),
+            activeColor: const Color(0xFF1464DF),
+            checkColor: Colors.white,
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          ),
+        ),
+        const SizedBox(width: 8),
+        const Flexible(
+          child: Text.rich(
+            TextSpan(
+              text: '我已阅读并同意 ',
+              children: [
+                TextSpan(
+                  text: '《用户协议》',
+                  style: TextStyle(color: Color(0xFF1464DF)),
+                ),
+                TextSpan(text: ' 和 '),
+                TextSpan(
+                  text: '《隐私政策》',
+                  style: TextStyle(color: Color(0xFF1464DF)),
+                ),
+              ],
+            ),
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Color(0xFFB3B6C0),
+              fontSize: 17,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+///判断是否可以登录
+  bool _canLogin() {
+    //判断是否同意用户协议
+    return _agreed &&
+        _phoneController.text.trim().isNotEmpty &&
+        _passwordController.text.trim().isNotEmpty;
+  }
+}
+
+
+
+
+
+//   ///构建角色选择器
+//   Widget _buildRoleSelector()
+//   {
+//     return Stack(
+//       children: [
+//         //毛玻璃
+//         Image.asset(Assets.glassLogo),
+//         Positioned(
+//                   top: 8,
+//                   bottom: 8,   // 距离底部10
+//                   left: 10,//距离左侧15
+//                   right: 10,//距离右侧15
+//       child: Row(
+//           children: [
+//             _buildRoleItem(
+//               iconAsset: Assets.adminLogo,
+//               label: '管理员',
+//               role: LoginRole.admin,
+//             ),
+//             _buildRoleItem(
+//               iconAsset: Assets.operatorLogo,
+//               label: '操作员',
+//               role: LoginRole.operator,
+//             ),
+//             _buildRoleItem(
+//               iconAsset: Assets.userLogo,
+//               label: '个人',
+//               role: LoginRole.user,
+//             ),
+//           ],
+//         ),
+//         )
+//       ],
+//     );
+//   }
+// //构建管理员，操作员，个人选择器项
+//   Widget _buildRoleItem({
+//     required String iconAsset,
+//     required String label,
+//     required LoginRole role,
+//   }) {
+//     final bool selected = _role == role;
+//     //根据是否选中，设置颜色
+//     final Color color = Colors.white; 
+
+//     return Expanded(
+//       child: InkWell(
+//         borderRadius: BorderRadius.circular(23),
+//         onTap: () {
+//           setState(() {
+//             _role = role;
+//           });
+//         },
+//         //根据是否选中，设置背景颜色
+//         child: AnimatedContainer(
+//           //duration 动画持续时间
+//           duration: const Duration(milliseconds: 200),
+//           height: 45,
+//           decoration: BoxDecoration(
+//             //根据是否选中，设置背景颜色
+//             color: selected ? const Color.fromARGB(255, 62, 62, 64) : Colors.transparent,
+//             borderRadius: BorderRadius.circular(23),
+//           ),
+//           child: Row(
+//             //居中对齐
+//             mainAxisAlignment: MainAxisAlignment.center,
+//             children: [
+//               //图标
+//               Image.asset(
+//                 iconAsset,
+//                 width: 22,
+//                 height: 22,
+//                 color: color,
+//               ),
+//               //文本间距
+//               const SizedBox(width: 9),
+//               Flexible(
+//                 //文本
+//                 child: Text(
+//                   label,
+//                   //文本溢出处理
+//                   overflow: TextOverflow.ellipsis,
+//                   //文本样式
+//                   style: TextStyle(
+//                     color: color,
+//                     fontSize: 16,
+//                     //根据是否选中，设置字体粗细
+//                     //选中时，字体粗细为w800
+//                     //未选中时，字体粗细为w400 
+//                     fontWeight: selected ? FontWeight.w800 : FontWeight.w400,
+//                   ),
+//                 ),
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
