@@ -1,0 +1,80 @@
+Launching lib/main.dart on Pixel Tablet in debug mode...
+Running Gradle task 'assembleDebug'...                          
+
+D:\FlutterProject\infibo_app\android>if "Windows_NT" == "Windows_NT" setlocal
+
+D:\FlutterProject\infibo_app\android>set DEFAULT_JVM_OPTS= 
+
+D:\FlutterProject\infibo_app\android>set DIRNAME=D:\FlutterProject\infibo_app\android\ 
+
+D:\FlutterProject\infibo_app\android>if "D:\FlutterProject\infibo_app\android\" == "" set DIRNAME=. 
+
+D:\FlutterProject\infibo_app\android>set APP_BASE_NAME=gradlew 
+
+D:\FlutterProject\infibo_app\android>set APP_HOME=D:\FlutterProject\infibo_app\android\ 
+
+D:\FlutterProject\infibo_app\android>if defined JAVA_HOME goto findJavaFromJavaHome 
+
+D:\FlutterProject\infibo_app\android>set JAVA_HOME=D:\Android\jbr 
+
+D:\FlutterProject\infibo_app\android>set JAVA_EXE=D:\Android\jbr/bin/java.exe 
+
+D:\FlutterProject\infibo_app\android>if exist "D:\Android\jbr/bin/java.exe" goto init 
+
+D:\FlutterProject\infibo_app\android>if not "Windows_NT" == "Windows_NT" goto win9xME_args 
+
+D:\FlutterProject\infibo_app\android>if "@eval[2+2]" == "4" goto 4NT_args 
+
+D:\FlutterProject\infibo_app\android>set CMD_LINE_ARGS= 
+
+D:\FlutterProject\infibo_app\android>set _SKIP=2 
+
+D:\FlutterProject\infibo_app\android>if "x-q" == "x" goto execute 
+
+D:\FlutterProject\infibo_app\android>set CMD_LINE_ARGS=-q -Ptarget-platform=android-x64 -Ptarget=D:\FlutterProject\infibo_app\lib/main.dart -Pbase-application-name=android.app.Application -Pdart-defines=RkxVVFRFUl9WRVJTSU9OPTMuNDEuNw==,RkxVVFRFUl9DSEFOTkVMPXN0YWJsZQ==,RkxVVFRFUl9HSVRfVVJMPWh0dHBzOi8vZ2l0aHViLmNvbS9mbHV0dGVyL2ZsdXR0ZXIuZ2l0,RkxVVFRFUl9GUkFNRVdPUktfUkVWSVNJT049Y2MwNzM0YWM3MQ==,RkxVVFRFUl9FTkdJTkVfUkVWSVNJT049NTlhYTU4NGZkZg==,RkxVVFRFUl9EQVJUX1ZFUlNJT049My4xMS41 -Pdart-obfuscation=false -Ptrack-widget-creation=true -Ptree-shake-icons=false -Pfilesystem-scheme=org-dartlang-root assembleDebug 
+
+D:\FlutterProject\infibo_app\android>goto execute 
+
+D:\FlutterProject\infibo_app\android>set CLASSPATH=D:\FlutterProject\infibo_app\android\\gradle\wrapper\gradle-wrapper.jar 
+
+D:\FlutterProject\infibo_app\android>"D:\Android\jbr/bin/java.exe"    "-Dorg.gradle.appname=gradlew" -classpath "D:\FlutterProject\infibo_app\android\\gradle\wrapper\gradle-wrapper.jar" org.gradle.wrapper.GradleWrapperMain -q -Ptarget-platform=android-x64 -Ptarget=D:\FlutterProject\infibo_app\lib/main.dart -Pbase-application-name=android.app.Application -Pdart-defines=RkxVVFRFUl9WRVJTSU9OPTMuNDEuNw==,RkxVVFRFUl9DSEFOTkVMPXN0YWJsZQ==,RkxVVFRFUl9HSVRfVVJMPWh0dHBzOi8vZ2l0aHViLmNvbS9mbHV0dGVyL2ZsdXR0ZXIuZ2l0,RkxVVFRFUl9GUkFNRVdPUktfUkVWSVNJT049Y2MwNzM0YWM3MQ==,RkxVVFRFUl9FTkdJTkVfUkVWSVNJT049NTlhYTU4NGZkZg==,RkxVVFRFUl9EQVJUX1ZFUlNJT049My4xMS41 -Pdart-obfuscation=false -Ptrack-widget-creation=true -Ptree-shake-icons=false -Pfilesystem-scheme=org-dartlang-root assembleDebug 
+
+D:\FlutterProject\infibo_app\android>if "0" == "0" goto mainEnd 
+
+D:\FlutterProject\infibo_app\android>if "Windows_NT" == "Windows_NT" endlocal
+Running Gradle task 'assembleDebug'...                              4.5s
+√ Built build\app\outputs\flutter-apk\app-debug.apk
+Installing build\app\outputs\flutter-apk\app-debug.apk...          950ms
+D/FlutterJNI( 8133): Beginning load of flutter...
+D/FlutterJNI( 8133): flutter (null) was loaded normally!
+I/flutter ( 8133): [IMPORTANT:flutter/shell/platform/android/android_context_gl_impeller.cc(104)] Using the Impeller rendering backend (OpenGLES).
+D/FlutterRenderer( 8133): Width is zero. 0,0
+Syncing files to device Pixel Tablet...                             47ms
+
+Flutter run key commands.
+r Hot reload. 
+R Hot restart.
+h List all available interactive commands.
+d Detach (terminate "flutter run" but leave application running).
+c Clear the screen
+q Quit (terminate the application on the device).
+
+A Dart VM Service on Pixel Tablet is available at: http://127.0.0.1:56674/7HTg-NLy3Y4=/
+The Flutter DevTools debugger and profiler on Pixel Tablet is available at: http://127.0.0.1:56674/7HTg-NLy3Y4=/devtools/?uri=ws://127.0.0.1:56674/7HTg-NLy3Y4=/ws
+I/Choreographer( 8133): Skipped 113 frames!  The application may be doing too much work on its main thread.
+I/mple.infibo_app( 8133): Compiler allocated 5174KB to compile void android.view.ViewRootImpl.performTraversals()
+I/WindowExtensionsImpl( 8133): Initializing Window Extensions, vendor API level=6, activity embedding enabled=true
+D/FlutterRenderer( 8133): Width is zero. 0,0
+D/FlutterJNI( 8133): Sending viewport metrics to the engine.
+W/HWUI    ( 8133): Failed to choose config with EGL_SWAP_BEHAVIOR_PRESERVED, retrying without...
+W/HWUI    ( 8133): Failed to initialize 101010-2 format, error = EGL_SUCCESS
+I/Gralloc4( 8133): mapper 4.x is not supported
+W/WindowOnBackDispatcher( 8133): OnBackInvokedCallback is not enabled for the application.
+W/WindowOnBackDispatcher( 8133): Set 'android:enableOnBackInvokedCallback="true"' in the application manifest.
+I/Choreographer( 8133): Skipped 88 frames!  The application may be doing too much work on its main thread.
+D/FlutterJNI( 8133): Sending viewport metrics to the engine.
+I/HWUI    ( 8133): Davey! duration=1545ms; Flags=1, FrameTimelineVsyncId=446742, IntendedVsync=25058867987330, Vsync=25060334653938, InputEventId=0, HandleInputStart=25060349604600, AnimationStart=25060349620800, PerformTraversalsStart=25060349643400, DrawStart=25060366921100, FrameDeadline=25058884653996, FrameInterval=25060348852900, FrameStartTime=16666666, SyncQueued=25060367815100, SyncStart=25060368610400, IssueDrawCommandsStart=25060372536800, SwapBuffers=25060390313300, FrameCompleted=25060414528100, DequeueBufferDuration=19937000, QueueBufferDuration=851800, GpuCompleted=25060402287200, SwapBuffersCompleted=25060414528100, DisplayPresentTime=72904454231359566, CommandSubmissionCompleted=25060390313300, 
+D/FlutterJNI( 8133): Sending viewport metrics to the engine.
+D/ProfileInstaller( 8133): Installing profile for com.example.infibo_app
+W/mple.infibo_app( 8133): ApkAssets: Deleting an ApkAssets object '<empty> and /product/app/talkback/talkback.apk' with 1 weak references
+W/mple.infibo_app( 8133): ApkAssets: Deleting an ApkAssets object '/vendor/overlay/EmulatorTalkBackOverlay/EmulatorTalkBackOverlay.apk' with 1 weak references

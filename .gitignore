@@ -1,0 +1,26 @@
+# Flutter build
+build/
+
+# Dart
+.dart_tool/
+
+# IDE
+.idea/
+.vscode/
+
+# Mac / Windows
+.DS_Store
+Thumbs.db
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
+# Flutter / Android sensitive configs
+android/gradle.properties
