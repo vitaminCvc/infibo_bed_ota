@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:infibo_app/pages/choseusers/ui.dart';
 import 'package:infibo_app/pages/login/ui.dart';
-import 'package:infibo_app/pages/main/logic.dart';
 import 'package:infibo_app/pages/main/ui.dart';
+import 'package:infibo_app/pages/start/ui.dart';
 
 // 获取根级路由
 Widget getRootWidget() {
@@ -24,5 +24,7 @@ List<GetPage> getRoutes() {
     GetPage(name: "/main", page: () => const MainPage()),
     // 选择用户页面
     GetPage(name: "/choseusers", page: () => const ChoseUsersPage()),
+    // 启动理疗页面
+    GetPage(name: "/start", page: () => const StartPage()),
   ];
 }

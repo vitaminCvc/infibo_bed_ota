@@ -138,26 +138,6 @@ class _MainPageState extends State<MainPage> {
     ),
   ];
 
-  @override
-  // 初始化主页面状态
-  void initState() {
-    super.initState();
-    _logic.startClock(_refreshClock);
-  }
-
-  @override
-  // 页面销毁时释放资源
-  void dispose() {
-    _logic.disposeClock();
-    super.dispose();
-  }
-
-  // 刷新时间显示
-  void _refreshClock() {
-    if (!mounted) return;
-    setState(() {});
-  }
-
   ///////////////////////////////////////////////主页面布局////////////////////////////////////////////////
   @override
   Widget build(BuildContext context) {
@@ -225,13 +205,13 @@ class _MainPageState extends State<MainPage> {
   }
 
   // 构建模式卡片
-       Widget _buildModeCard(_ModeCardData item) {
-       return Positioned(
-         left: item.left,
-         top: item.top,
-         child: _ModeCard(item: item, onTap: _logic.openModeDetail),
-       );
-     }
+  Widget _buildModeCard(_ModeCardData item) {
+    return Positioned(
+      left: item.left,
+      top: item.top,
+      child: _ModeCard(item: item, onTap: _logic.openModeDetail),
+    );
+  }
 
   /// 构建公共顶部表头
   Widget _buildHeader() {
@@ -239,7 +219,7 @@ class _MainPageState extends State<MainPage> {
       left: 48,
       top: 34,
       right: 44,
-      child: AppTopHeader(timeText: _logic.timeText, dateText: _logic.dateText),
+      child: const AppTopHeader(),
     );
   }
 
@@ -313,8 +293,6 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-
-
   /// 构建底部按钮区域
   Widget _buildBottomActions() {
     return Stack(
@@ -344,14 +322,18 @@ class _MainPageState extends State<MainPage> {
         Positioned(
           left: 260,
           top: 1100,
-          child: 
-          //检测用户手势操作
-          GestureDetector(
-            onTap: (){
-              setState(() => _isLightOn = !_isLightOn);
-            },
-            child: Image.asset(_isLightOn ? Assets.lightOpenLogo : Assets.LightLogo, width: 56, height: 56),
-          )
+          child:
+              //检测用户手势操作
+              GestureDetector(
+                onTap: () {
+                  setState(() => _isLightOn = !_isLightOn);
+                },
+                child: Image.asset(
+                  _isLightOn ? Assets.lightOpenLogo : Assets.lightCloseLogo,
+                  width: 56,
+                  height: 56,
+                ),
+              ),
         ),
       ],
     );

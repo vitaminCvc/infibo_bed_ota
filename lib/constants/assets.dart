@@ -34,7 +34,7 @@ class Assets {
   static const String adminMainLogo = "assets/Mainimages/admin.png";
 
   // 主页面底部氛围灯默认按钮
-  static const String LightLogo ="assets/Mainimages/lightclose.png";
+  static const String lightCloseLogo = "assets/Mainimages/lightclose.png";
   // 主页面底部氛围灯开启按钮
   static const String lightOpenLogo = "assets/Mainimages/lighton.png";
 
@@ -42,7 +42,7 @@ class Assets {
   static const String settingLogo = "assets/Mainimages/setting.png";
 
   // 主页面右下角升降杆控制盘
-  static const String liftControlLogo = "assets/Mainimages/lift_control.png";
+  static const String liftControlLogo = "assets/Mainimages/control.png";
 
   // 深度放松模式卡片底图
   static const String deepRelaxLogo = "assets/Mode/DeepRelaxation.png";
@@ -74,4 +74,19 @@ class Assets {
 
   // 情绪疗愈模式卡片底图
   static const String mentalHealingLogo = "assets/Mode/EmotonnalHealing.png";
+
+  // 选择用户页搜索框底图
+  static const String choseUserSearchBg = "assets/Choseusers/搜索框.png";
+
+  // 选择用户页搜索图标
+  static const String choseUserSearchIcon = "assets/Choseusers/搜索.png";
+
+  // 选择用户页用户信息卡片底图
+  static const String choseUserItemBg = "assets/Choseusers/用户框.png";
+
+  // 选择用户页头像边框
+  static const String choseUserAvatarFrame = "assets/Choseusers/头像框.png";
+
+  // 选择用户页性别年龄标签底图
+  static const String choseUserInfoBg = "assets/Choseusers/信息框.png";
 }
