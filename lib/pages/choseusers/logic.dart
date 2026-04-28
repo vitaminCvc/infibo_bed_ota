@@ -7,11 +7,20 @@ class ChoseUsersLogic {
   static const String _databaseName = 'infibo_app.db';
   static const String _tableName = 'therapy_users';
   static const String startRoute = '/start';
+  static const String defaultModeTitle = '深度放松';
 
   final List<UserItemData> users = [];
 
   Database? _database;
   int? highlightedIndex;
+
+  String get selectedModeTitle {
+    final Object? args = Get.arguments;
+    if (args is Map && args['modeTitle'] is String) {
+      return args['modeTitle'] as String;
+    }
+    return defaultModeTitle;
+  }
 
   // 初始化数据库并加载用户。
   Future<void> init() async {
@@ -89,7 +98,10 @@ class ChoseUsersLogic {
 
   // 选择用户后进入启动页面。
   void selectUser(UserItemData user) {
-    Get.toNamed(startRoute, arguments: user);
+    Get.toNamed(
+      startRoute,
+      arguments: {'modeTitle': selectedModeTitle, 'user': user},
+    );
   }
 
   // 释放数据库。

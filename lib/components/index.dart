@@ -69,9 +69,10 @@ class AppHeaderPage extends StatelessWidget {
   const AppHeaderPage({
     super.key,
     this.children = const [],
-    this.onAddTap,//用户弹窗
-    this.onSettingTap,//设置按钮
-    this.onUserTap,//用户区域
+    this.onAddTap, //用户弹窗
+    this.onSettingTap, //设置按钮
+    this.onUserTap, //用户区域
+    this.enableLogoBack = true,
   });
 
   // 页面主体内容，通常传入 Positioned 组件。
@@ -86,6 +87,9 @@ class AppHeaderPage extends StatelessWidget {
   // 点击顶部用户区域。
   final VoidCallback? onUserTap;
 
+  // 是否允许点击logo返回主页，主页本身不需要返回自己。
+  final bool enableLogoBack;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,10 +102,12 @@ class AppHeaderPage extends StatelessWidget {
             children: [
               Positioned(
                 left: 48,
-                top: 34,
+                top: 25,
                 right: 44,
                 child: AppTopHeader(
-                  onLogoTap: AppComponentLogic.backToMainPage,
+                  onLogoTap: enableLogoBack
+                      ? AppComponentLogic.backToMainPage
+                      : null,
                   onAddTap: onAddTap,
                   onSettingTap: onSettingTap,
                   onUserTap: onUserTap,

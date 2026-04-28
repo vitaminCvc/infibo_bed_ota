@@ -28,7 +28,7 @@ class _MainPageState extends State<MainPage> {
       color: Color(0xFF26D1EF),
       asset: Assets.deepRelaxLogo,
       left: 153,
-      top: 262,
+      top: 244,
       width: 212,
       titleLeft: 41,
       titleTop: 19,
@@ -39,7 +39,7 @@ class _MainPageState extends State<MainPage> {
       color: Color(0xFFFB933E),
       asset: Assets.energyBoostLogo,
       left: 103,
-      top: 411,
+      top: 393,
       width: 191,
       titleLeft: 41,
       titleTop: 19,
@@ -50,7 +50,7 @@ class _MainPageState extends State<MainPage> {
       color: Color(0xFFF9645C),
       asset: Assets.painReliefLogo,
       left: 53,
-      top: 562,
+      top: 544,
       width: 217,
       titleLeft: 41,
       titleTop: 19,
@@ -61,7 +61,7 @@ class _MainPageState extends State<MainPage> {
       color: Color(0xFFA68DF5),
       asset: Assets.sleepEnhancementLogo,
       left: 103,
-      top: 712,
+      top: 694,
       width: 190,
       titleLeft: 41,
       titleTop: 19,
@@ -72,7 +72,7 @@ class _MainPageState extends State<MainPage> {
       color: Color(0xFF56D785),
       asset: Assets.sportsRehabilitationLogo,
       left: 153,
-      top: 861,
+      top: 843,
       width: 212,
       titleLeft: 41,
       titleTop: 16,
@@ -87,7 +87,7 @@ class _MainPageState extends State<MainPage> {
       color: Color(0xFF45CD9F),
       asset: Assets.stressReliefLogo,
       left: 437,
-      top: 262,
+      top: 244,
       width: 212,
       titleLeft: 88,
       titleTop: 18,
@@ -98,7 +98,7 @@ class _MainPageState extends State<MainPage> {
       color: Color(0xFF3DBAFA),
       asset: Assets.immuneBoostLogo,
       left: 500,
-      top: 411,
+      top: 393,
       width: 191,
       titleLeft: 61,
       titleTop: 19,
@@ -109,7 +109,7 @@ class _MainPageState extends State<MainPage> {
       color: Color(0xFFF9645C),
       asset: Assets.antiAgingLogo,
       left: 525,
-      top: 562,
+      top: 544,
       width: 217,
       titleLeft: 49,
       titleTop: 18,
@@ -120,7 +120,7 @@ class _MainPageState extends State<MainPage> {
       color: Color(0xFFE87CF3),
       asset: Assets.fullCareLogo,
       left: 500,
-      top: 712,
+      top: 694,
       width: 190,
       titleLeft: 61,
       titleTop: 18,
@@ -131,7 +131,7 @@ class _MainPageState extends State<MainPage> {
       color: Color(0xFFFDBC2A),
       asset: Assets.mentalHealingLogo,
       left: 437,
-      top: 861,
+      top: 843,
       width: 212,
       titleLeft: 88,
       titleTop: 17,
@@ -141,43 +141,37 @@ class _MainPageState extends State<MainPage> {
   ///////////////////////////////////////////////主页面布局////////////////////////////////////////////////
   @override
   Widget build(BuildContext context) {
-    final double scale = ((MediaQuery.sizeOf(context).width - 64) / 800)
+    final double scale = ((MediaQuery.sizeOf(context).width - 32) / 800)
         .clamp(0.72, 1.0)
         .toDouble();
 
-    return Scaffold(
-      backgroundColor: AppTheme.primaryColor,
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 32),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: 800 * scale),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SizedBox(
-                    // 主页面画布宽度
-                    width: 800 * scale,
-                    height: 1230 * scale,
-                    child: FittedBox(
-                      // 主页面画布高度
-                      fit: BoxFit.contain,
-                      // 主页面画布居中对齐
-                      alignment: Alignment.topCenter,
-                      child: SizedBox(
-                        width: 800,
-                        height: 1230,
-                        child: _buildMainCanvas(),
-                      ),
-                    ),
+    return AppHeaderPage(
+      enableLogoBack: false,
+      children: [
+        Positioned.fill(
+          child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.only(bottom: 24),
+              child: SizedBox(
+                // 主页面画布宽度
+                width: 800 * scale,
+                height: 1230 * scale,
+                child: FittedBox(
+                  // 主页面画布高度
+                  fit: BoxFit.contain,
+                  // 主页面画布居中对齐
+                  alignment: Alignment.topCenter,
+                  child: SizedBox(
+                    width: 800,
+                    height: 1230,
+                    child: _buildMainCanvas(),
                   ),
-                ],
+                ),
               ),
             ),
           ),
         ),
-      ),
+      ],
     );
   }
 
@@ -188,13 +182,6 @@ class _MainPageState extends State<MainPage> {
       //超出内容也显示
       clipBehavior: Clip.none,
       children: [
-        // 占满整个布局
-        Positioned.fill(
-          child: DecoratedBox(
-            decoration: BoxDecoration(color: AppTheme.primaryColor),
-          ),
-        ),
-        _buildHeader(),
         _buildTitle(),
         _buildBodyStage(),
         ..._leftModeCards.map((card) => _buildModeCard(card)),
@@ -213,20 +200,10 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  /// 构建公共顶部表头
-  Widget _buildHeader() {
-    return Positioned(
-      left: 48,
-      top: 34,
-      right: 44,
-      child: const AppTopHeader(),
-    );
-  }
-
   /// 构建标题区域
   Widget _buildTitle() {
     return Positioned(
-      top: 145,
+      top: 120,
       left: 0,
       right: 0,
       child: Column(
@@ -238,8 +215,8 @@ class _MainPageState extends State<MainPage> {
                 '预设理疗模式',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 26,
-                  fontWeight: FontWeight.w600,
+                  fontSize: 23,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
               const SizedBox(width: 14),
@@ -283,11 +260,11 @@ class _MainPageState extends State<MainPage> {
   Widget _buildBodyStage() {
     return Positioned(
       left: 160,
-      top: 242,
+      top: 180,
       child: Image.asset(
         Assets.mainBodyLogo,
         width: 479,
-        height: 778,
+        height: 800,
         fit: BoxFit.contain,
       ),
     );
@@ -300,21 +277,35 @@ class _MainPageState extends State<MainPage> {
         Positioned(
           left: 45,
           top: 1100,
-          child: ElevatedButton.icon(
-            onPressed: () {},
-            icon: const Icon(Icons.description_outlined, size: 22),
-            label: const Text('自定义方案'),
-            style: ElevatedButton.styleFrom(
-              fixedSize: const Size(192, 56),
-              backgroundColor: const Color(0xFF1876F2),
-              foregroundColor: Colors.white,
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(28),
-              ),
-              textStyle: const TextStyle(
-                fontSize: 19,
-                fontWeight: FontWeight.w600,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(28),
+            child: Material(
+              color: const Color(0xFF1876F2),
+              child: InkWell(
+                onTap: () {},
+                child: const SizedBox(
+                  width: 192,
+                  height: 56,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.description_outlined,
+                        color: Colors.white,
+                        size: 22,
+                      ),
+                      SizedBox(width: 8),
+                      Text(
+                        '自定义方案',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 19,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
@@ -368,7 +359,7 @@ class _ModeCardState extends State<_ModeCard> {
       onTapDown: (_) => setState(() => _pressed = true),
       onTapCancel: () => setState(() => _pressed = false),
       onTapUp: (_) => setState(() => _pressed = false),
-      onTap: () => widget.onTap('/choseusers'),
+      onTap: () => widget.onTap(item.title),
       child: AnimatedScale(
         scale: _pressed ? 0.96 : 1,
         duration: const Duration(milliseconds: 110),

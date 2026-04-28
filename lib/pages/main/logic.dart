@@ -7,6 +7,6 @@ class MainLogic extends GetxController {
 
   // 跳转到模式对应页面。
   void openModeDetail(String title) {
-    Get.toNamed('/choseusers');
+    Get.toNamed('/choseusers', arguments: {'modeTitle': title});
   }
 }

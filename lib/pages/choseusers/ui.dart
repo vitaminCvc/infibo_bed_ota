@@ -68,8 +68,8 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
         // 固定内容区域
         Positioned(left: 44, top: 145, right: 44, child: _buildFixedContent()),
         Positioned(
+          top: 292,//用户列表顶部距离
           left: 44,
-          top: 292,
           right: 44,
           bottom: 24,
           child: _buildUserList(),
@@ -190,22 +190,26 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
     return SizedBox(
       height: 48,
       child: Stack(
-        alignment: Alignment.centerLeft,
+        alignment: Alignment.centerLeft,//居中对齐
         children: [
+          // 搜索框背景沾满整个区域
           Positioned.fill(
+            // 搜索框背景
             child: Image.asset(Assets.choseUserSearchBg, fit: BoxFit.fill),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 22, right: 22),
             child: Row(
               children: [
+                // 搜索图标
                 Image.asset(Assets.choseUserSearchIcon, width: 16, height: 16),
                 const SizedBox(width: 10),
                 Expanded(
+                  // 搜索输入框
                   child: TextField(
                     controller: _searchController,
                     cursorColor: Colors.white,
-                    textInputAction: TextInputAction.search,
+                    textInputAction: TextInputAction.search,//搜索按钮
                     onSubmitted: _searchUser,
                     style: const TextStyle(
                       color: Colors.white,
@@ -213,6 +217,8 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
                       fontFamily: 'Microsoft YaHei',
                     ),
                     decoration: const InputDecoration(
+                      // 搜索输入框样式
+                      //
                       isDense: true,
                       border: InputBorder.none,
                       hintText: '输入用户姓名或手机号',
