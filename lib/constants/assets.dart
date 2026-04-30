@@ -3,15 +3,6 @@ class Assets {
   // 登录页品牌logo
   static const String logo = "assets/Loginimages/logo.png";
 
-  // 管理员角色图标
-  static const String adminLogo = "assets/Loginimages/manger.png";
-
-  // 操作员角色图标
-  static const String operatorLogo = "assets/Loginimages/operator.png";
-
-  // 用户头像图标
-  static const String userLogo = "assets/Loginimages/profile.png";
-
   // 登录页输入框毛玻璃背景
   static const String glassLogo = "assets/Loginimages/glass.png";
 
@@ -42,7 +33,8 @@ class Assets {
   static const String settingLogo = "assets/Mainimages/setting.png";
 
   // 主页面右下角升降杆控制盘
-  static const String liftControlLogo = "assets/Mainimages/control.png";
+  static const String liftControlLogo =
+      "assets/Mainimages/atmosphere_default.png";
 
   // 深度放松模式卡片底图
   static const String deepRelaxLogo = "assets/Mode/DeepRelaxation.png";
@@ -76,17 +68,80 @@ class Assets {
   static const String mentalHealingLogo = "assets/Mode/EmotonnalHealing.png";
 
   // 选择用户页搜索框底图
-  static const String choseUserSearchBg = "assets/Choseusers/搜索框.png";
+  static const String choseUserSearchBg = "assets/Choseusers/searchBox.png";
 
   // 选择用户页搜索图标
-  static const String choseUserSearchIcon = "assets/Choseusers/搜索.png";
+  static const String choseUserSearchIcon = "assets/Choseusers/search.png";
 
   // 选择用户页用户信息卡片底图
-  static const String choseUserItemBg = "assets/Choseusers/用户框.png";
+  static const String choseUserItemBg = "assets/Choseusers/usersBox.png";
 
   // 选择用户页头像边框
-  static const String choseUserAvatarFrame = "assets/Choseusers/头像框.png";
+  static const String choseUserAvatarFrame =
+      "assets/Choseusers/AvatarFrame.png";
 
   // 选择用户页性别年龄标签底图
-  static const String choseUserInfoBg = "assets/Choseusers/信息框.png";
+  static const String choseUserInfoBg = "assets/Choseusers/informationBox.png";
+
+  // 启动页人体图片
+  static const String startBodyLogo = "assets/Start/startBody.png";
+
+  // 启动页功能框
+  static const String startRedLightPanel =
+      "assets/Start/Function/redLightpage.png";
+  static const String startPemfPanel = "assets/Start/Function/PEMFpage.png";
+  static const String startVatPanel = "assets/Start/Function/VATpage.png";
+  static const String startHydrogenPanel =
+      "assets/Start/Function/hydrogenpage.png";
+  static const String startExpandPanel = "assets/Start/Function/expandpage.png";
+
+  // 启动页倒计时与控制
+  static const String startTimerRing = "assets/Start/Countdown/countdown.png";
+  static const String startTimerProgress =
+      "assets/Start/Countdown/ProgressBar.png";
+  static const String startTimerDot =
+      "assets/Start/Countdown/countdownPoint.png";
+  static const String startPlayButton = "assets/Start/Switch/Start.png";
+  static const String startPlayActiveButton =
+      "assets/Start/Switch/startClick.png";
+  static const String startPauseButton = "assets/Start/Switch/stop.png";
+  static const String startPauseActiveButton =
+      "assets/Start/Switch/stopClick.png";
+
+  // 启动页功能框内部效果图
+  static const String startRedLightWave = "assets/Start/Expand/redlight.png";
+  static const String startPemfWave = "assets/Start/Expand/PEMF.png";
+  static const String startVatWave = "assets/Start/Expand/VAT.png";
+  static const String startHydrogenMolecule =
+      "assets/Start/Expand/hydrogen.png";
+  static const String startExpandContinuous =
+      "assets/Start/Expand/continuous.png";
+  static const String startExpandSine = "assets/Start/Expand/sine.png";
+
+  // 启动页状态图标
+
+  static const String startRedLightIconOff = "assets/Start/icon/redlight.png";
+  static const String startRedLightIconOn =
+      "assets/Start/icon/redlightStart.png";
+  static const String startPemfIconOff = "assets/Start/icon/PEMF.png";
+  static const String startPemfIconOn = "assets/Start/icon/PEMFStart.png";
+  static const String startVatIconOff = "assets/Start/icon/VAT.png";
+  static const String startVatIconOn = "assets/Start/icon/VATStart.png";
+  static const String startHydrogenIconOff = "assets/Start/icon/hydrogen.png";
+  static const String startHydrogenIconOn =
+      "assets/Start/icon/hydrogenStart.png";
+  static const String startExpandIconOff = "assets/Start/icon/Chakras.png";
+  static const String startExpandIconOn = "assets/Start/icon/ChakrasStart.png";
+  static const String startTerahertzIconOff = "assets/Start/icon/Terahertz.png";
+  static const String startTerahertzIconOn =
+      "assets/Start/icon/TerahertzStart.png";
+  static const String startHifemIconOff = "assets/Start/icon/hifem.png";
+  static const String startHifemIconOn = "assets/Start/icon/hifemStart.png";
+  static const String startFragranceIconOff = "assets/Start/icon/Fragrance.png";
+  static const String startFragranceIconOn =
+      "assets/Start/icon/FragranceStart.png";
+  //删除图标
+  static const String customizedDeleteIcon = "assets/customized/delete.png";
+  static const String expandIcon = "assets/customized/expand.png";
+  static const String customizedSchemeIcon = "assets/customized/Scheme.png";
 }

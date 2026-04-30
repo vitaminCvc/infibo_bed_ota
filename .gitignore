@@ -1,5 +1,6 @@
 # Flutter build
 build/
+android/.gradle/
 
 # Dart
 .dart_tool/

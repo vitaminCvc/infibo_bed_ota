@@ -190,7 +190,11 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
         _selectedFeatureIds.remove(id);
       } else {
         _selectedFeatureIds.add(id);
+<<<<<<< HEAD
       }//text
+=======
+      }
+>>>>>>> 登录主页选择用户自定义列表
     });
   }
 

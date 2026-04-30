@@ -68,6 +68,13 @@ flutter:
     - assets/Mainimages/
     - assets/Mode/
     - assets/Choseusers/
+    - assets/Start/
+    - assets/Start/Countdown/
+    - assets/Start/Expand/
+    - assets/Start/Function/
+    - assets/Start/icon/
+    - assets/Start/Switch/
+    - assets/customized/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
