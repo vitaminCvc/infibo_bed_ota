@@ -282,7 +282,7 @@ class _MainPageState extends State<MainPage> {
             child: Material(
               color: const Color(0xFF1876F2),
               child: InkWell(
-                onTap: () {},
+                onTap: _logic.openCustomizedPage,
                 child: const SizedBox(
                   width: 192,
                   height: 56,

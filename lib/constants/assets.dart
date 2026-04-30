@@ -119,7 +119,7 @@ class Assets {
   static const String startExpandSine = "assets/Start/Expand/sine.png";
 
   // 启动页状态图标
-  
+
   static const String startRedLightIconOff = "assets/Start/icon/redlight.png";
   static const String startRedLightIconOn =
       "assets/Start/icon/redlightStart.png";
@@ -140,4 +140,8 @@ class Assets {
   static const String startFragranceIconOff = "assets/Start/icon/Fragrance.png";
   static const String startFragranceIconOn =
       "assets/Start/icon/FragranceStart.png";
+  //删除图标
+  static const String customizedDeleteIcon = "assets/customized/delete.png";
+  static const String expandIcon = "assets/customized/expand.png";
+  static const String customizedSchemeIcon = "assets/customized/Scheme.png";
 }

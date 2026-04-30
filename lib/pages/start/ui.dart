@@ -25,7 +25,7 @@ class _StartPageState extends State<StartPage> {
   static const double _timerSize = 250; //倒计时圆的尺寸大小
   static const double _timerRingSize = 255; //中间的圆环大小
   static const double _timerDotSize = 29; //控制小圆点大小.改大小后，位置也会自动按中心点对齐。
-  static const double _timerDotRadius = 120; //控制小圆点离圆心多远数字越大，点越往外；数字越小，点越往里。
+  static const double _timerDotRadius = 121; //控制小圆点离圆心多远数字越大，点越往外；数字越小，点越往里。
 
   // 页面逻辑控制器：倒计时、运行/暂停状态、当前工作设备都放在 logic.dart。
   final StartLogic _logic = StartLogic();
@@ -96,7 +96,7 @@ class _StartPageState extends State<StartPage> {
     return Stack(
       children: [
         // 当前理疗模式标题。
-        Positioned(left: 60, top: 36, child: _buildTitle(args)),
+        Positioned(left: 36, top: 30, child: _buildTitle(args)),
 
         // 中间人体图。它需要盖住左右功能框的手部边缘，所以放在功能框之前。
         Positioned(
@@ -191,7 +191,7 @@ class _StartPageState extends State<StartPage> {
           args.modeTitle,
           style: const TextStyle(
             color: Colors.white,
-            fontSize: 20,
+            fontSize: 24,
             fontFamily: 'Microsoft YaHei',
           ),
         ),
@@ -303,6 +303,7 @@ class _StartPageState extends State<StartPage> {
     }
   }
 
+  // 构建扩展功能状态图标
   Widget _buildExpandStatusIcons(bool isActive) {
     final List<String> iconAssets = [
       isActive ? Assets.startExpandIconOn : Assets.startExpandIconOff,
@@ -321,12 +322,13 @@ class _StartPageState extends State<StartPage> {
     );
   }
 
+  // 构建倒计时
   Widget _buildTimer() {
     final List<String> timeParts = _formatRemainingTime().split(':');
     final String minuteText = timeParts.isNotEmpty ? timeParts.first : '00';
     final String secondText = timeParts.length > 1 ? timeParts[1] : '00';
-    final double remainingProgress = _logic.remainingProgress;
-    final Offset dotOffset = _countdownDotOffset(remainingProgress);
+    final double elapsedProgress = _logic.progress;
+    final Offset dotOffset = _countdownDotOffset(elapsedProgress);
 
     return SizedBox(
       width: _timerSize,
@@ -341,7 +343,9 @@ class _StartPageState extends State<StartPage> {
             height: _timerRingSize,
           ),
           ClipPath(
-            clipper: _CountdownProgressClipper(progress: remainingProgress),
+            clipper: _CountdownProgressClipper(
+              elapsedProgress: elapsedProgress,
+            ),
             child: Image.asset(
               Assets.startTimerProgress,
               width: _timerSize,
@@ -399,6 +403,7 @@ class _StartPageState extends State<StartPage> {
     );
   }
 
+  // 计算倒计时进度条上的点的偏移量
   Offset _countdownDotOffset(double progress) {
     const double size = _timerSize;
     const double dotSize = _timerDotSize;
@@ -474,25 +479,26 @@ class _StartPageState extends State<StartPage> {
 }
 
 class _CountdownProgressClipper extends CustomClipper<Path> {
-  const _CountdownProgressClipper({required this.progress});
+  const _CountdownProgressClipper({required this.elapsedProgress});
 
-  final double progress;
+  final double elapsedProgress;
 
   @override
   Path getClip(Size size) {
-    final double clippedProgress = progress.clamp(0, 1).toDouble();
-    if (clippedProgress <= 0) return Path();
+    final double elapsed = elapsedProgress.clamp(0, 1).toDouble();
+    if (elapsed >= 1) return Path();
 
     final Offset center = Offset(size.width / 2, size.height / 2);
     final double radius = math.sqrt(
       size.width * size.width + size.height * size.height,
     );
-    final double sweep = math.pi * 2 * clippedProgress;
-    final int steps = math.max(2, (90 * clippedProgress).ceil());
+    final double startAngle = -math.pi / 2 + math.pi * 2 * elapsed;
+    final double sweep = math.pi * 2 * (1 - elapsed);
+    final int steps = math.max(2, (90 * (1 - elapsed)).ceil());
     final Path path = Path()..moveTo(center.dx, center.dy);
 
     for (int i = 0; i <= steps; i++) {
-      final double angle = -math.pi / 2 + sweep * i / steps;
+      final double angle = startAngle + sweep * i / steps;
       path.lineTo(
         center.dx + math.cos(angle) * radius,
         center.dy + math.sin(angle) * radius,
@@ -504,7 +510,7 @@ class _CountdownProgressClipper extends CustomClipper<Path> {
 
   @override
   bool shouldReclip(covariant _CountdownProgressClipper oldClipper) {
-    return oldClipper.progress != progress;
+    return oldClipper.elapsedProgress != elapsedProgress;
   }
 }
 

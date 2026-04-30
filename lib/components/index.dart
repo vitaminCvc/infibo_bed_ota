@@ -73,6 +73,7 @@ class AppHeaderPage extends StatelessWidget {
     this.onSettingTap, //设置按钮
     this.onUserTap, //用户区域
     this.enableLogoBack = true,
+    this.resizeToAvoidBottomInset = true,
   });
 
   // 页面主体内容，通常传入 Positioned 组件。
@@ -90,9 +91,13 @@ class AppHeaderPage extends StatelessWidget {
   // 是否允许点击logo返回主页，主页本身不需要返回自己。
   final bool enableLogoBack;
 
+  // 键盘弹出时是否压缩页面高度。
+  final bool resizeToAvoidBottomInset;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: resizeToAvoidBottomInset,
       backgroundColor: AppTheme.primaryColor,
       body: SafeArea(
         child: SizedBox(

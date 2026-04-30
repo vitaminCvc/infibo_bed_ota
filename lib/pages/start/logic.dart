@@ -5,7 +5,7 @@ class StartLogic {
   static const int phaseCount = totalSeconds ~/ phaseSeconds;
 
   int elapsedSeconds = 0;
-  bool isRunning = true;
+  bool isRunning = false;
 
   // 当前倒计时进度。
   double get progress => (elapsedSeconds / totalSeconds).clamp(0, 1).toDouble();

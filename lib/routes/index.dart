@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:infibo_app/pages/choseusers/ui.dart';
+import 'package:infibo_app/pages/customized/customizedPage/ui.dart';
+import 'package:infibo_app/pages/customized/ui.dart';
 import 'package:infibo_app/pages/login/ui.dart';
 import 'package:infibo_app/pages/main/ui.dart';
 import 'package:infibo_app/pages/start/ui.dart';
@@ -26,5 +28,9 @@ List<GetPage> getRoutes() {
     GetPage(name: "/choseusers", page: () => const ChoseUsersPage()),
     // 启动理疗页面
     GetPage(name: "/start", page: () => const StartPage()),
+    // 自定义页面
+    GetPage(name: "/customized", page: () => const CustomizedPage()),
+    // 自定义方案编辑页面
+    GetPage(name: "/customized/edit", page: () => const CustomizedEditPage()),
   ];
 }

@@ -18,7 +18,7 @@ class _LoginPageState extends State<LoginPage> {
   //是否同意协议 默认值为false（未同意）
   bool _agreed = false;
   //是否显示密码  默认值为true（隐藏密码框）
-  bool _obscurePassword = true;
+  //bool _obscurePassword = true;
   //手机号输入框控制器
   final TextEditingController _phoneController = TextEditingController();
   //密码输入框控制器  
