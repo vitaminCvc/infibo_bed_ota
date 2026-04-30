@@ -36,6 +36,7 @@ class _StartPageState extends State<StartPage> {
   @override
   void initState() {
     super.initState();
+    _logic.configure(Get.arguments);
     _startTimer();
   }
 
@@ -444,7 +445,7 @@ class _StartPageState extends State<StartPage> {
 
   Widget _buildPlayButton() {
     final bool isActive =
-        !_logic.isRunning && _logic.elapsedSeconds < StartLogic.totalSeconds;
+        !_logic.isRunning && _logic.elapsedSeconds < _logic.totalSeconds;
 
     return SizedBox(
       width: 167,

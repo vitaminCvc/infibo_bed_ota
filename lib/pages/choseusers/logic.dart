@@ -22,6 +22,12 @@ class ChoseUsersLogic {
     return defaultModeTitle;
   }
 
+  Object? get selectedCustomizedPlan {
+    final Object? args = Get.arguments;
+    if (args is Map) return args['customizedPlan'];
+    return null;
+  }
+
   // 初始化数据库并加载用户。
   Future<void> init() async {
     final String databasePath = await getDatabasesPath();
@@ -100,7 +106,11 @@ class ChoseUsersLogic {
   void selectUser(UserItemData user) {
     Get.toNamed(
       startRoute,
-      arguments: {'modeTitle': selectedModeTitle, 'user': user},
+      arguments: {
+        'modeTitle': selectedModeTitle,
+        'user': user,
+        'customizedPlan': selectedCustomizedPlan,
+      },
     );
   }
 

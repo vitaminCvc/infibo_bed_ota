@@ -86,7 +86,7 @@ Widget _buildInputPhone() {
         right: 22,
         top: 0,
         bottom: 0,
-        child: _InputPhone(),
+        child: _inputPhone(),
       ),
     ],
   );
@@ -94,7 +94,7 @@ Widget _buildInputPhone() {
 
 
 ///构建手机号输入框
-Widget _InputPhone() {
+Widget _inputPhone() {
   return Row(
     crossAxisAlignment: CrossAxisAlignment.center,
     children: [
@@ -149,13 +149,13 @@ Widget _buildInputPassword() {
         right: 22,
         top: 0,
         bottom: 0,
-        child: _InputPassword(),
+        child: _inputPassword(),
       ),
     ],
   );
 }
 
-Widget _InputPassword() {
+Widget _inputPassword() {
   return Row(
     crossAxisAlignment: CrossAxisAlignment.center,
     children: [
