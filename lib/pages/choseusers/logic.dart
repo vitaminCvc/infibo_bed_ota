@@ -1,3 +1,6 @@
+// 选择用户页的数据和导航逻辑。
+//
+// 负责本地用户数据库的增删改查、搜索高亮，以及进入启动理疗页时传递模式/方案参数。
 import 'package:get/get.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';

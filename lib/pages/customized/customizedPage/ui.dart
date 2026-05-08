@@ -1,10 +1,21 @@
+// 自定义方案编辑页。
+//
+// 这一页负责让用户按 5 分钟节点配置治疗模块：
+// 红光、PEMF、VAT、分子氢以及拓展功能（脉轮、太赫兹、HIFEM、香氛）。
+// 用户在这里选择每个节点启用哪些功能，点击“保存参数”固化当前节点，
+// 最后点击“保存方案”把节点配置保存到本地方案数据里。
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:infibo_app/components/index.dart';
-import 'package:infibo_app/pages/customized/customizedPage/1/ui.dart';
-import 'package:infibo_app/pages/customized/customizedPage/2/ui.dart';
-import 'package:infibo_app/pages/customized/customizedPage/3/ui.dart';
-import 'package:infibo_app/pages/customized/customizedPage/4/ui.dart';
+import 'package:infibo_app/constants/assets.dart';
+import 'package:infibo_app/pages/customized/customizedPage/hifem/ui.dart'
+    as hifem_page;
+import 'package:infibo_app/pages/customized/customizedPage/mailun/ui.dart'
+    as chakra_page;
+import 'package:infibo_app/pages/customized/customizedPage/taihezi/ui.dart'
+    as terahertz_page;
+import 'package:infibo_app/pages/customized/customizedPage/xiangfen/ui.dart'
+    as fragrance_page;
 import 'package:infibo_app/pages/customized/customizedPage/logic.dart';
 import 'package:infibo_app/pages/customized/logic.dart';
 import 'package:infibo_app/pages/customized/plan_features.dart';
@@ -17,14 +28,29 @@ class CustomizedEditPage extends StatefulWidget {
 }
 
 class _CustomizedEditPageState extends State<CustomizedEditPage> {
+  // 设计稿尺寸。
   static const double _designWidth = 800;
   static const double _designHeight = 1160;
+  // 最小缩放比例。
   static const double _minPageScale = 0.72;
+  // 时间线高度。
+  static const double _timelineHeight = 918;
+  // 时间线节点顶部距离。
+  static const double _timelineNodeTop = 48;
+  // 时间线节点间距。
+  static const double _timelineNodeGap = 75.2;
+  // 时间线节点灯宽度。
+  static const double _timelineNodeLightWidth = 30;
+  // 时间线节点灯高度。
+  static const double _timelineNodeLightHeight = 45;
+  static const Color _timelineLightTopColor = Color(0x33B8DCFF);
+  static const Color _timelineLightBottomColor = Color(0x6673A6FF);
+  static const Color _timelineLightBorderColor = Color(0x3379BAFF);
+  static const Color _timelineLightShadowColor = Color(0x8079BAFF);
 
-  static const String _assetRoot = 'assets/customized';
-  static const String _bodyAsset = '$_assetRoot/自定义页（人）.png';
-  static const String _timelineAsset = '$_assetRoot/时间轴.png';
-  static const String _saveBgAsset = '$_assetRoot/保存方案框.png';
+  static const String _bodyAsset = Assets.customizedBody;
+  static const String _timelineAsset = Assets.customizedTimeline;
+  static const String _saveBgAsset = Assets.customizedSavePlanBox;
 
   final CustomizedEditLogic _logic = CustomizedEditLogic();
   final TextEditingController _nameController = TextEditingController();
@@ -32,6 +58,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
   late final CustomizedPlanData? _editingPlan;
   late final List<Set<String>> _nodeFeatureIds;
   late final List<Set<String>> _nodeExpandIds;
+  late final List<Map<String, String>> _nodeChakraStrengths;
   late final Set<int> _savedNodeIndexes;
   int? _activeNodeIndex;
 
@@ -40,35 +67,50 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     _ModuleItem(
       id: 'redlight',
       title: '红光',
-      icon: '$_assetRoot/红光添加.png',
+      iconOff: Assets.startRedLightIconOff,
+      iconOn: Assets.startRedLightIconOn,
+      addIcon: Assets.redLightAddIcon,
+      rowBgAsset: Assets.addTreatmentRedLight,
       color: Color(0xFFF08A23),
       bgColors: [Color(0x553F3327), Color(0x3342312D)],
     ),
     _ModuleItem(
       id: 'pemf',
       title: 'PEMF',
-      icon: '$_assetRoot/PEMF添加.png',
+      iconOff: Assets.startPemfIconOff,
+      iconOn: Assets.startPemfIconOn,
+      addIcon: Assets.pemfAddIcon,
+      rowBgAsset: Assets.addTreatmentPemf,
       color: Color(0xFF2FAFC1),
       bgColors: [Color(0x55304F57), Color(0x3333444A)],
     ),
     _ModuleItem(
       id: 'vat',
       title: 'VAT',
-      icon: '$_assetRoot/VAT添加.png',
+      iconOff: Assets.startVatIconOff,
+      iconOn: Assets.startVatIconOn,
+      addIcon: Assets.vatAddIcon,
+      rowBgAsset: Assets.addTreatmentVat,
       color: Color(0xFF8C45D5),
       bgColors: [Color(0x554A315E), Color(0x333A2E48)],
     ),
     _ModuleItem(
       id: 'hydrogen',
       title: '分子氢',
-      icon: '$_assetRoot/分子氢添加.png',
+      iconOff: Assets.startHydrogenIconOff,
+      iconOn: Assets.startHydrogenIconOn,
+      addIcon: Assets.hydrogenAddIcon,
+      rowBgAsset: Assets.addTreatmentHydrogen,
       color: Color(0xFF1F74E8),
       bgColors: [Color(0x55394D72), Color(0x33303D59)],
     ),
     _ModuleItem(
       id: 'expand',
       title: '拓展功能',
-      icon: '$_assetRoot/拓展.png',
+      iconOff: Assets.expandIconOff,
+      iconOn: Assets.expandIcon,
+      addIcon: Assets.expandAddIcon,
+      rowBgAsset: Assets.addTreatmentExpand,
       color: Color(0xFF11A36D),
       bgColors: [Color(0x55315B45), Color(0x332A4638)],
     ),
@@ -81,6 +123,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     _nameController.text = _editingPlan?.name ?? '';
     _nodeFeatureIds = List.generate(12, (_) => <String>{});
     _nodeExpandIds = List.generate(12, (_) => <String>{});
+    _nodeChakraStrengths = List.generate(12, (_) => <String, String>{});
     _savedNodeIndexes = <int>{};
     _restoreEditingPlan();
   }
@@ -126,13 +169,15 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
   Widget _buildCanvas() {
     final bool showModulePanel = _activeNodeIndex != null;
     final Set<String> activeFeatures = _activeFeatures;
+    final bool showSaveParamsButton =
+        showModulePanel && activeFeatures.isNotEmpty;
 
     return Stack(
       clipBehavior: Clip.none,
       children: [
         const Positioned(left: 52, top: 42, child: _PageTitle()),
         Positioned(left: 186, top: 66, child: _buildBody()),
-        Positioned(left: 366, top: 70, child: _buildTimeline()),
+        Positioned(left: 366, top: 86, child: _buildTimeline()),
         ..._buildSavedNodeFeatureDots(),
         if (showModulePanel)
           Positioned(left: 45, top: 102, child: _buildAddModulePanel()),
@@ -146,7 +191,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
           Positioned(left: 485, top: 590, child: _buildVatPanel()),
         if (activeFeatures.contains('hydrogen'))
           Positioned(left: 485, top: 755, child: _buildHydrogenPanel()),
-        if (showModulePanel)
+        if (showSaveParamsButton)
           Positioned(left: 660, top: 936, child: _buildSaveParamsButton()),
         Positioned(left: 175, bottom: 22, child: _buildSavePlanButton()),
       ],
@@ -163,18 +208,26 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
   }
 
   Widget _buildTimeline() {
+    final List<int> lightedIndexes = _lightedTimelineIndexes;
+
     return SizedBox(
       width: 68,
-      height: 917,
+      height: _timelineHeight,
       child: Stack(
         clipBehavior: Clip.none,
         alignment: Alignment.topCenter,
         children: [
-          Image.asset(_timelineAsset, width: 28, height: 917, fit: BoxFit.fill),
+          Image.asset(
+            _timelineAsset,
+            width: 28,
+            height: _timelineHeight,
+            fit: BoxFit.fill,
+          ),
+          for (final int index in lightedIndexes) _buildLightedTimeline(index),
           for (int index = 0; index < 12; index++)
             Positioned(
               right: -2,
-              top: 48 + index * 75,
+              top: _timelineNodeTop + index * _timelineNodeGap,
               child: _TimelineAddButton(
                 isSaved: _savedNodeIndexes.contains(index),
                 isActive: _activeNodeIndex == index,
@@ -182,6 +235,43 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
               ),
             ),
         ],
+      ),
+    );
+  }
+
+  // 按当前节点裁剪蓝色时间轴，保留用户已经选择到哪一个 5 分钟节点的提示。
+  Widget _buildLightedTimeline(int index) {
+    final double top =
+        (index == 0
+                ? 37
+                : _timelineNodeTop +
+                      index * _timelineNodeGap -
+                      _timelineNodeLightHeight / 2 +
+                      12)
+            .clamp(0, _timelineHeight - _timelineNodeLightHeight)
+            .toDouble();
+
+    return Positioned(
+      top: top,
+      child: Container(
+        width: _timelineNodeLightWidth,
+        height: _timelineNodeLightHeight,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: _timelineLightBorderColor, width: 1),
+          gradient: const LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [_timelineLightTopColor, _timelineLightBottomColor],
+          ),
+          boxShadow: const [
+            BoxShadow(
+              color: _timelineLightShadowColor,
+              blurRadius: 20,
+              spreadRadius: 5,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -201,7 +291,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
                 Padding(
                   padding: const EdgeInsets.only(right: 5),
                   child: Image.asset(
-                    _moduleById(id).icon,
+                    _moduleById(id).iconOn,
                     width: 24,
                     height: 24,
                   ),
@@ -213,43 +303,43 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
   }
 
   Widget _buildAddModulePanel() {
-    return _NotchedPanel(
+    return SizedBox(
       width: 270,
       height: 525,
-      notchSide: _NotchSide.right,
-      gradient: const LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [Color(0xFF20212B), Color(0xFF171820)],
-      ),
-      borderColor: const Color(0xFF383A47),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              '添加治疗模块',
-              style: TextStyle(color: Colors.white, fontSize: 22),
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.asset(Assets.addTreatmentIcon, fit: BoxFit.fill),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  '添加治疗模块',
+                  style: TextStyle(color: Colors.white, fontSize: 22),
+                ),
+                const SizedBox(height: 18),
+                for (final _ModuleItem item in _modules) ...[
+                  _ModuleRow(
+                    item: item,
+                    isSelected: _activeFeatures.contains(item.id),
+                    onTap: () => _toggleFeature(item.id),
+                  ),
+                  if (item != _modules.last) const SizedBox(height: 18),
+                ],
+              ],
             ),
-            const SizedBox(height: 18),
-            for (final _ModuleItem item in _modules) ...[
-              _ModuleRow(
-                item: item,
-                isSelected: _activeFeatures.contains(item.id),
-                onTap: () => _toggleFeature(item.id),
-              ),
-              if (item != _modules.last) const SizedBox(height: 18),
-            ],
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildExpandPanel() {
     return _NotchedPanel(
-      width: 270,
+      width: 250,
       height: 255,
       notchSide: _NotchSide.right,
       gradient: const LinearGradient(
@@ -271,7 +361,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
                     style: TextStyle(color: Colors.white, fontSize: 22),
                   ),
                 ),
-                Image.asset('$_assetRoot/拓展.png', width: 43, height: 43),
+                Image.asset(Assets.expandIcon, width: 43, height: 43),
               ],
             ),
             const SizedBox(height: 15),
@@ -370,7 +460,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _PanelTitle(title: '红光', icon: '$_assetRoot/红光添加.png'),
+            _PanelTitle(title: '红光', icon: _moduleById('redlight').iconOn),
             const SizedBox(height: 18),
             _buildTwoColumnLabels('波长', '强度'),
             const SizedBox(height: 6),
@@ -415,7 +505,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _PanelTitle(title: 'PEMF', icon: '$_assetRoot/PEMF添加.png'),
+            _PanelTitle(title: 'PEMF', icon: _moduleById('pemf').iconOn),
             const SizedBox(height: 20),
             _buildTwoColumnLabels('频率', '强度'),
             const SizedBox(height: 7),
@@ -452,7 +542,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _PanelTitle(title: 'VAT', icon: '$_assetRoot/VAT添加.png'),
+            _PanelTitle(title: 'VAT', icon: _moduleById('vat').iconOn),
             const SizedBox(height: 17),
             _buildTwoColumnLabels('频率', '强度'),
             const SizedBox(height: 7),
@@ -485,7 +575,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _PanelTitle(title: '分子氢', icon: '$_assetRoot/分子氢添加.png'),
+            _PanelTitle(title: '分子氢', icon: _moduleById('hydrogen').iconOn),
             const SizedBox(height: 17),
             _buildTwoColumnLabels('氢气浓度', '流量'),
             const SizedBox(height: 7),
@@ -540,16 +630,13 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
   }
 
   Widget _buildSaveParamsButton() {
-    final bool canSave = _activeFeatures.isNotEmpty;
-
     return SizedBox(
       width: 95,
       height: 40,
       child: ElevatedButton(
-        onPressed: canSave ? _saveCurrentNodeParams : null,
+        onPressed: _saveCurrentNodeParams,
         style: ElevatedButton.styleFrom(
           elevation: 0,
-          disabledBackgroundColor: const Color(0xFF34363E),
           backgroundColor: const Color(0xFF1F74E8),
           foregroundColor: Colors.white,
           padding: EdgeInsets.zero,
@@ -626,6 +713,11 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
 
   // 选择一个 5 分钟节点。
   void _selectNode(int index) {
+    if (_activeNodeIndex == index) {
+      setState(() => _activeNodeIndex = null);
+      return;
+    }
+
     if (index > 0 && !_savedNodeIndexes.contains(index - 1)) {
       _showMessage('请先完成上一个 5 分钟节点');
       return;
@@ -641,22 +733,38 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     final int? index = _activeNodeIndex;
     if (index == null) return;
 
-    final bool? result = await Get.to<bool>(() {
-      switch (id) {
-        case 'chakra':
-          return const ChakraExpandPage();
-        case 'terahertz':
-          return const TerahertzExpandPage();
-        case 'hifem':
-          return const HifemExpandPage();
-        case 'fragrance':
-          return const FragranceExpandPage();
-        default:
-          return const ChakraExpandPage();
-      }
-    });
+    // 打开具体拓展设置页前先预加载图片，减少页面切换时的闪烁。
+    await _precacheExpandPageAssets(id);
+    if (!mounted) return;
 
-    if (result != true || !mounted) return;
+    final Object? result = await Get.to<Object?>(
+      () => _buildExpandPage(id, index),
+      preventDuplicates: false,
+      transition: Transition.noTransition,
+      duration: Duration.zero,
+      curve: Curves.linear,
+    );
+
+    if (!mounted) return;
+
+    if (id == 'chakra') {
+      if (result is! chakra_page.ChakraExpandResult ||
+          result.strengths.isEmpty) {
+        return;
+      }
+
+      setState(() {
+        _nodeFeatureIds[index].add('expand');
+        _nodeExpandIds[index].add(id);
+        _nodeChakraStrengths[index]
+          ..clear()
+          ..addAll(result.strengths);
+        _savedNodeIndexes.removeWhere((item) => item >= index);
+      });
+      return;
+    }
+
+    if (result != true) return;
 
     setState(() {
       _nodeFeatureIds[index].add('expand');
@@ -665,12 +773,120 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     });
   }
 
+  Widget _buildExpandPage(String id, int index) {
+    switch (id) {
+      case 'chakra':
+        return chakra_page.ChakraExpandPage(
+          initialStrengths: _nodeChakraStrengths[index],
+        );
+      case 'terahertz':
+        return const terahertz_page.TerahertzExpandPage();
+      case 'hifem':
+        return const hifem_page.HifemExpandPage();
+      case 'fragrance':
+        return const fragrance_page.FragranceExpandPage();
+      default:
+        return chakra_page.ChakraExpandPage(
+          initialStrengths: _nodeChakraStrengths[index],
+        );
+    }
+  }
+
+  Future<void> _precacheExpandPageAssets(String id) async {
+    final List<String> assetPaths = switch (id) {
+      'chakra' => [
+        Assets.chakraBody,
+        Assets.chakraConfirmDisabled,
+        Assets.chakraConfirmEnabled,
+        Assets.chakraIntensityPanel,
+        Assets.chakraCrown,
+        Assets.chakraCrownSelected,
+        Assets.chakraThirdEye,
+        Assets.chakraThirdEyeSelected,
+        Assets.chakraThroat,
+        Assets.chakraThroatSelected,
+        Assets.chakraHeart,
+        Assets.chakraHeartSelected,
+        Assets.chakraSolarPlexus,
+        Assets.chakraSolarPlexusSelected,
+        Assets.chakraSacral,
+        Assets.chakraSacralSelected,
+        Assets.chakraRoot,
+        Assets.chakraRootSelected,
+      ],
+      'terahertz' => [
+        Assets.terahertzBody,
+        Assets.terahertzConfirmDisabled,
+        Assets.terahertzConfirmEnabled,
+        Assets.terahertzRadioDefault,
+        Assets.terahertzRadioSelected,
+        Assets.terahertzProgressDefaultBar,
+        Assets.terahertzProgressDefaultThumb,
+        Assets.terahertzFrequencyBar,
+        Assets.terahertzFrequencyThumb,
+        Assets.terahertzPowerBar,
+        Assets.terahertzPowerThumb,
+      ],
+      'hifem' => [
+        Assets.hifemConfirmButton,
+        Assets.hifemHeadBase,
+        Assets.hifemForeheadLeftDefault,
+        Assets.hifemForeheadLeftSelected,
+        Assets.hifemForeheadRightDefault,
+        Assets.hifemForeheadRightSelected,
+        Assets.hifemCheekLeftDefault,
+        Assets.hifemCheekLeftSelected,
+        Assets.hifemCheekRightDefault,
+        Assets.hifemCheekRightSelected,
+        Assets.hifemRfIcon,
+        Assets.hifemRfDisabledIcon,
+        Assets.hifemHifesIcon,
+        Assets.hifemHifesDisabledIcon,
+        Assets.hifemTimeIcon,
+        Assets.hifemTimeDisabledIcon,
+        Assets.hifemProgressDefaultBar,
+        Assets.hifemProgressDefaultThumb,
+        Assets.hifemRfBar,
+        Assets.hifemRfThumb,
+        Assets.hifemHifesBar,
+        Assets.hifemHifesThumb,
+        Assets.hifemTimeBar,
+        Assets.hifemTimeThumb,
+      ],
+      'fragrance' => [
+        Assets.fragranceDiffuser,
+        Assets.fragranceChoicePanel,
+        Assets.fragranceChoiceLine,
+        Assets.fragranceConfirmDisabled,
+        Assets.fragranceConfirmEnabled,
+        Assets.fragranceSoftDefault,
+        Assets.fragranceSoftSelected,
+        Assets.fragranceStrongDefault,
+        Assets.fragranceStrongSelected,
+        Assets.fragranceSleepDefault,
+        Assets.fragranceSleepSelected,
+        Assets.fragranceFlowDefault,
+        Assets.fragranceFlowSelected,
+        Assets.fragranceMeditationDefault,
+        Assets.fragranceMeditationSelected,
+      ],
+      _ => <String>[],
+    };
+
+    await Future.wait(
+      assetPaths.map((String path) => precacheImage(AssetImage(path), context)),
+    );
+  }
+
   // 保存当前节点参数。
   void _saveCurrentNodeParams() {
     final int? index = _activeNodeIndex;
     if (index == null || _nodeFeatureIds[index].isEmpty) return;
 
-    setState(() => _savedNodeIndexes.add(index));
+    setState(() {
+      _savedNodeIndexes.add(index);
+      _activeNodeIndex = null;
+    });
     _showMessage('第 ${(index + 1) * 5} 分钟节点参数已保存');
   }
 
@@ -700,6 +916,14 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     final int? index = _activeNodeIndex;
     if (index == null) return <String>{};
     return _nodeFeatureIds[index];
+  }
+
+  List<int> get _lightedTimelineIndexes {
+    final Set<int> result = <int>{..._savedNodeIndexes};
+    final int? activeIndex = _activeNodeIndex;
+    if (activeIndex != null) result.add(activeIndex);
+
+    return result.toList()..sort();
   }
 
   Set<String> get _activeExpandFeatures {
@@ -752,6 +976,29 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
           .toSet();
     }
 
+    for (final String text in featureIds) {
+      if (!text.startsWith('chakra:')) continue;
+
+      final List<String> parts = text.split(':');
+      if (parts.length < 3) continue;
+
+      final int? index = int.tryParse(parts[1]);
+      if (index == null || index < 0 || index >= _nodeChakraStrengths.length) {
+        continue;
+      }
+
+      final Map<String, String> strengths = _parseChakraStrengths(parts[2]);
+      if (strengths.isEmpty) continue;
+
+      _nodeChakraStrengths[index]
+        ..clear()
+        ..addAll(strengths);
+      _nodeFeatureIds[index].add('expand');
+      _nodeExpandIds[index].add('chakra');
+      _savedNodeIndexes.add(index);
+      hasPhaseData = true;
+    }
+
     if (!hasPhaseData && _editingPlan != null) {
       final Set<String> ids = knownFeatureIds(featureIds).toSet();
       if (ids.isNotEmpty) {
@@ -763,6 +1010,11 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
 
   // 生成保存到数据库的功能数据。
   List<String> _buildPlanFeatureIds() {
+    // 保存到数据库的是字符串列表：
+    // - redlight/pemf/vat/hydrogen/expand 表示方案用到了哪些大模块；
+    // - phase:index:a|b|c 表示某个 5 分钟节点启用哪些模块；
+    // - expand:index:chakra|hifem 表示某个节点启用了哪些拓展功能；
+    // - chakra:index:id=value|id=value 表示脉轮强度参数。
     final Set<String> allFeatureIds = <String>{};
     final List<String> phaseTexts = [];
     final List<int> indexes = _savedNodeIndexes.toList()..sort();
@@ -775,6 +1027,11 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
       phaseTexts.add('phase:$index:${ids.join('|')}');
       if (_nodeExpandIds[index].isNotEmpty) {
         phaseTexts.add('expand:$index:${_nodeExpandIds[index].join('|')}');
+      }
+      if (_nodeChakraStrengths[index].isNotEmpty) {
+        phaseTexts.add(
+          'chakra:$index:${_formatChakraStrengths(_nodeChakraStrengths[index])}',
+        );
       }
     }
 
@@ -790,6 +1047,30 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
 
   bool _isKnownModuleId(String id) {
     return _modules.any((item) => item.id == id);
+  }
+
+  Map<String, String> _parseChakraStrengths(String text) {
+    final Map<String, String> result = <String, String>{};
+
+    for (final String pair in text.split('|')) {
+      final int separator = pair.indexOf('=');
+      if (separator <= 0 || separator == pair.length - 1) continue;
+
+      final String id = pair.substring(0, separator);
+      final String value = pair.substring(separator + 1);
+      if (id.trim().isEmpty || value.trim().isEmpty) continue;
+
+      result[id] = value;
+    }
+
+    return result;
+  }
+
+  String _formatChakraStrengths(Map<String, String> strengths) {
+    return strengths.entries
+        .where((entry) => entry.value.trim().isNotEmpty)
+        .map((entry) => '${entry.key}=${entry.value.trim()}')
+        .join('|');
   }
 
   _ModuleItem _moduleById(String id) {
@@ -823,14 +1104,20 @@ class _ModuleItem {
   const _ModuleItem({
     required this.id,
     required this.title,
-    required this.icon,
+    required this.iconOff,
+    required this.iconOn,
+    required this.addIcon,
+    required this.rowBgAsset,
     required this.color,
     required this.bgColors,
   });
 
   final String id;
   final String title;
-  final String icon;
+  final String iconOff;
+  final String iconOn;
+  final String addIcon;
+  final String rowBgAsset;
   final Color color;
   final List<Color> bgColors;
 }
@@ -858,16 +1145,13 @@ class _ModuleRow extends StatelessWidget {
           alignment: Alignment.centerLeft,
           children: [
             Positioned.fill(child: _buildBackground()),
-            Positioned(
-              left: 12,
-              child: Image.asset(item.icon, width: 43, height: 43),
-            ),
+            Positioned(left: 12, child: _buildIcon()),
             Positioned(
               left: 67,
               child: Text(
                 item.title,
-                style: const TextStyle(
-                  color: Colors.white,
+                style: TextStyle(
+                  color: isSelected ? Colors.white : const Color(0xFF9B9DA6),
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
                 ),
@@ -875,17 +1159,17 @@ class _ModuleRow extends StatelessWidget {
             ),
             Positioned(
               right: 12,
-              child: CircleAvatar(
-                radius: 12,
-                backgroundColor: item.color.withValues(
-                  alpha: isSelected ? 0.88 : 0.38,
-                ),
-                child: Icon(
-                  isSelected ? Icons.check : Icons.add,
-                  color: Colors.white,
-                  size: 17,
-                ),
-              ),
+              child: isSelected
+                  ? Image.asset(item.addIcon, width: 24, height: 24)
+                  : const CircleAvatar(
+                      radius: 12,
+                      backgroundColor: Color(0xFF4A4D56),
+                      child: Icon(
+                        Icons.add,
+                        color: Color(0xFFC4C7D0),
+                        size: 17,
+                      ),
+                    ),
             ),
           ],
         ),
@@ -893,21 +1177,19 @@ class _ModuleRow extends StatelessWidget {
     );
   }
 
-  // 构建模块按钮背景。
+  // 构建模块图标，未选择时显示灰色图标，选择后显示彩色图标。
+  Widget _buildIcon() {
+    return Image.asset(
+      isSelected ? item.iconOn : item.iconOff,
+      width: 43,
+      height: 43,
+    );
+  }
+
   Widget _buildBackground() {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(7),
-        border: Border.all(
-          color: Colors.white.withValues(alpha: 0.16),
-          width: 1,
-        ),
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: item.bgColors,
-        ),
-      ),
+    return Image.asset(
+      isSelected ? item.rowBgAsset : Assets.addTreatmentRowDefault,
+      fit: BoxFit.fill,
     );
   }
 }
@@ -1014,30 +1296,34 @@ class _TimelineAddButton extends StatelessWidget {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
-      child: Container(
-        width: 25,
-        height: 25,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: isSaved || isActive
-                ? const [Color(0xFF75B6FF), Color(0xFF1F6EF2)]
-                : const [Color(0xFF4D83E8), Color(0xFF244EBC)],
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: isSaved || isActive
-                  ? const Color(0xDD3B8DFF)
-                  : const Color(0x883B73E8),
-              blurRadius: isSaved || isActive ? 16 : 9,
-              spreadRadius: isSaved || isActive ? 3 : 1,
-            ),
-          ],
+      child: _buildButton(),
+    );
+  }
+
+  Widget _buildButton() {
+    return Container(
+      width: 25,
+      height: 25,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: isSaved || isActive
+              ? const [Color(0xFF75B6FF), Color(0xFF1F6EF2)]
+              : const [Color(0xFF4D83E8), Color(0xFF244EBC)],
         ),
-        child: const Icon(Icons.add, color: Colors.white, size: 16),
+        boxShadow: [
+          BoxShadow(
+            color: isSaved || isActive
+                ? const Color(0xDD3B8DFF)
+                : const Color(0x883B73E8),
+            blurRadius: isSaved || isActive ? 16 : 9,
+            spreadRadius: isSaved || isActive ? 3 : 1,
+          ),
+        ],
       ),
+      child: const Icon(Icons.add, color: Colors.white, size: 16),
     );
   }
 }

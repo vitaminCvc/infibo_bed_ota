@@ -1,3 +1,6 @@
+// 自定义方案列表页的本地数据库逻辑。
+//
+// 负责保存方案名和 featureIds 字符串列表，并提供新增、编辑、删除、搜索、选择方案等方法。
 import 'package:get/get.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';

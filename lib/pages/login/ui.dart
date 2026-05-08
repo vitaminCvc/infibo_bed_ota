@@ -1,16 +1,21 @@
+// 登录页。
+//
+// 用户在这里输入账号密码并勾选协议；当前版本点击登录后进入主页面。
 import 'package:flutter/material.dart';
 import 'package:infibo_app/constants/assets.dart';
 import 'package:infibo_app/pages/login/logic.dart';
 import 'package:infibo_app/constants/color.dart';
+
 //可选登录角色（管理员、操作员、用户）
 // enum LoginRole { admin, operator, user }
 //登录页UI
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
-//登录页UI状态管理
+  //登录页UI状态管理
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
+
 //登录页UI状态管理
 class _LoginPageState extends State<LoginPage> {
   // //登录角色 默认值为管理员
@@ -21,7 +26,7 @@ class _LoginPageState extends State<LoginPage> {
   //bool _obscurePassword = true;
   //手机号输入框控制器
   final TextEditingController _phoneController = TextEditingController();
-  //密码输入框控制器  
+  //密码输入框控制器
   final TextEditingController _passwordController = TextEditingController();
   final LoginLogic _logic = LoginLogic();
 
@@ -32,7 +37,8 @@ class _LoginPageState extends State<LoginPage> {
     _passwordController.dispose();
     super.dispose();
   }
-///////////////////////////////////////////////////登录页界面布局///////////////////////////////////////////////////
+
+  ///////////////////////////////////////////////////登录页界面布局///////////////////////////////////////////////////
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,11 +53,11 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   ///构建品牌页头
-                   _buildBrandHeader(),
+                  _buildBrandHeader(),
                   const SizedBox(height: 120),
                   _buildInputPhone(),
                   const SizedBox(height: 30),
-                   _buildInputPassword(),
+                  _buildInputPassword(),
                   const SizedBox(height: 30),
                   _buildForgotPassword(),
                   const SizedBox(height: 54),
@@ -69,132 +75,121 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-///////////////////////////////////////////////////登录页组件构建///////////////////////////////////////////////////
-///构建品牌页头
+
+  ///////////////////////////////////////////////////登录页组件构建///////////////////////////////////////////////////
+  ///构建品牌页头
   Widget _buildBrandHeader() {
-    return Image.asset(Assets.logo,fit: BoxFit.cover);
+    return Image.asset(Assets.logo, fit: BoxFit.cover);
   }
-///构建手机号输入框容器
-Widget _buildInputPhone() {
-  return Stack(
-    children: [
-      //毛玻璃
-      Image.asset(Assets.glassLogo),
-      //手机号输入框
-      Positioned(
-        left: 22,
-        right: 22,
-        top: 0,
-        bottom: 0,
-        child: _inputPhone(),
-      ),
-    ],
-  );
-}
 
+  ///构建手机号输入框容器
+  Widget _buildInputPhone() {
+    return Stack(
+      children: [
+        //毛玻璃
+        Image.asset(Assets.glassLogo),
+        //手机号输入框
+        Positioned(
+          left: 22,
+          right: 22,
+          top: 0,
+          bottom: 0,
+          child: _inputPhone(),
+        ),
+      ],
+    );
+  }
 
-///构建手机号输入框
-Widget _inputPhone() {
-  return Row(
-    crossAxisAlignment: CrossAxisAlignment.center,
-    children: [
-      //电话图标
-      Image.asset(
-        Assets.phoneLogo,
-      ),
-      const SizedBox(width: 12),
-      // 宽度撑开（不加会报错）
-      Expanded(
-        child: TextField(
-          controller: _phoneController,
-          keyboardType: TextInputType.phone,
-          onChanged: (value) {
-            setState(() {});
-          },
-          //输入框内容样式
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-          ),
-          textAlignVertical: TextAlignVertical.center,
-          //输入框装饰
-          decoration: const InputDecoration(
-            isCollapsed: true,
-            hintText: '输入手机号',
-            hintStyle: TextStyle(
-              color: Color.fromARGB(255, 129, 133, 145),
-              fontSize: 18,
+  ///构建手机号输入框
+  Widget _inputPhone() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        //电话图标
+        Image.asset(Assets.phoneLogo),
+        const SizedBox(width: 12),
+        // 宽度撑开（不加会报错）
+        Expanded(
+          child: TextField(
+            controller: _phoneController,
+            keyboardType: TextInputType.phone,
+            onChanged: (value) {
+              setState(() {});
+            },
+            //输入框内容样式
+            style: const TextStyle(color: Colors.white, fontSize: 18),
+            textAlignVertical: TextAlignVertical.center,
+            //输入框装饰
+            decoration: const InputDecoration(
+              isCollapsed: true,
+              hintText: '输入手机号',
+              hintStyle: TextStyle(
+                color: Color.fromARGB(255, 129, 133, 145),
+                fontSize: 18,
+              ),
+              border: InputBorder.none, //
+              contentPadding: EdgeInsets.zero,
             ),
-            border: InputBorder.none, // 
-            contentPadding: EdgeInsets.zero,
           ),
         ),
-      ),
-    ],
-  );
-}
+      ],
+    );
+  }
 
+  ///构建密码输入框容器
+  Widget _buildInputPassword() {
+    return Stack(
+      children: [
+        //毛玻璃
+        Image.asset(Assets.glassLogo),
+        //手机号输入框
+        Positioned(
+          left: 22,
+          right: 22,
+          top: 0,
+          bottom: 0,
+          child: _inputPassword(),
+        ),
+      ],
+    );
+  }
 
-
-
-///构建密码输入框容器
-Widget _buildInputPassword() {
-  return Stack(
-    children: [
-      //毛玻璃
-      Image.asset(Assets.glassLogo),
-      //手机号输入框
-      Positioned(
-        left: 22,
-        right: 22,
-        top: 0,
-        bottom: 0,
-        child: _inputPassword(),
-      ),
-    ],
-  );
-}
-
-Widget _inputPassword() {
-  return Row(
-    crossAxisAlignment: CrossAxisAlignment.center,
-    children: [
-      //密码图标
-      Image.asset(
-        Assets.passwordLogo,
-      ),
-      const SizedBox(width: 12),
-      // 宽度撑开（不加会报错）
-      Expanded(
-        child: TextField(
-          controller: _passwordController,
-          keyboardType: TextInputType.text,
-          onChanged: (value) {
-            setState(() {});
-          },
-          //输入框内容样式
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-          ),
-          textAlignVertical: TextAlignVertical.center,
-          //输入框装饰
-          decoration: const InputDecoration(
-            isCollapsed: true,
-            hintText: '输入密码',
-            hintStyle: TextStyle(
-              color: Color.fromARGB(255, 129, 133, 145),
-              fontSize: 18,
+  Widget _inputPassword() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        //密码图标
+        Image.asset(Assets.passwordLogo),
+        const SizedBox(width: 12),
+        // 宽度撑开（不加会报错）
+        Expanded(
+          child: TextField(
+            controller: _passwordController,
+            keyboardType: TextInputType.text,
+            onChanged: (value) {
+              setState(() {});
+            },
+            //输入框内容样式
+            style: const TextStyle(color: Colors.white, fontSize: 18),
+            textAlignVertical: TextAlignVertical.center,
+            //输入框装饰
+            decoration: const InputDecoration(
+              isCollapsed: true,
+              hintText: '输入密码',
+              hintStyle: TextStyle(
+                color: Color.fromARGB(255, 129, 133, 145),
+                fontSize: 18,
+              ),
+              border: InputBorder.none, //
+              contentPadding: EdgeInsets.zero,
             ),
-            border: InputBorder.none, // 
-            contentPadding: EdgeInsets.zero,
           ),
         ),
-      ),
-    ],
-  );
-}
-///构建忘记密码按钮
+      ],
+    );
+  }
+
+  ///构建忘记密码按钮
   Widget _buildForgotPassword() {
     return Padding(
       padding: const EdgeInsets.only(right: 28),
@@ -211,16 +206,14 @@ Widget _inputPassword() {
           ),
           child: const Text(
             '忘记密码?',
-            style: TextStyle(
-              color: Color(0xFFC9CBD2),
-              fontSize: 17,
-            ),
+            style: TextStyle(color: Color(0xFFC9CBD2), fontSize: 17),
           ),
         ),
       ),
     );
   }
-///构建登录按钮
+
+  ///构建登录按钮
   Widget _buildLoginButton() {
     return Stack(
       children: [
@@ -260,17 +253,15 @@ Widget _inputPassword() {
             ),
             child: const Text(
               '登录',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w900,
-              ),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
             ),
           ),
         ),
       ],
     );
   }
-///构建注册按钮
+
+  ///构建注册按钮
   Widget _buildRegisterButton() {
     return TextButton(
       onPressed: () {},
@@ -284,7 +275,8 @@ Widget _inputPassword() {
       ),
     );
   }
-///构建用户协议行
+
+  ///构建用户协议行
   Widget _buildAgreementRow() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -334,7 +326,8 @@ Widget _inputPassword() {
       ],
     );
   }
-///判断是否可以登录
+
+  ///判断是否可以登录
   bool _canLogin() {
     //判断是否同意用户协议
     return _agreed &&
@@ -342,10 +335,6 @@ Widget _inputPassword() {
         _passwordController.text.trim().isNotEmpty;
   }
 }
-
-
-
-
 
 //   ///构建角色选择器
 //   Widget _buildRoleSelector()
@@ -390,7 +379,7 @@ Widget _inputPassword() {
 //   }) {
 //     final bool selected = _role == role;
 //     //根据是否选中，设置颜色
-//     final Color color = Colors.white; 
+//     final Color color = Colors.white;
 
 //     return Expanded(
 //       child: InkWell(
@@ -435,7 +424,7 @@ Widget _inputPassword() {
 //                     fontSize: 16,
 //                     //根据是否选中，设置字体粗细
 //                     //选中时，字体粗细为w800
-//                     //未选中时，字体粗细为w400 
+//                     //未选中时，字体粗细为w400
 //                     fontWeight: selected ? FontWeight.w800 : FontWeight.w400,
 //                   ),
 //                 ),

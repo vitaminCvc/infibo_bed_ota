@@ -1,3 +1,6 @@
+// 选择用户页面。
+//
+// 用户在这里选择或新增接受理疗的用户，然后带着当前模式或自定义方案进入启动理疗页。
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -258,24 +261,24 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
             extentRatio: 0.22,
             children: [
               CustomSlidableAction(
-                  onPressed: (_) => _deleteUser(index),
-                  backgroundColor: const Color(0xFFE8473B),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        Assets.customizedDeleteIcon,
-                        width: 16,
-                        height: 16,
-                      ),
-                      const SizedBox(height: 8),
-                      const Text(
-                        '删除',
-                        style: TextStyle(color: Colors.white, fontSize: 13),
-                      ),
-                    ],
-                  ),
+                onPressed: (_) => _deleteUser(index),
+                backgroundColor: const Color(0xFFE8473B),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      Assets.customizedDeleteIcon,
+                      width: 16,
+                      height: 16,
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      '删除',
+                      style: TextStyle(color: Colors.white, fontSize: 13),
+                    ),
+                  ],
                 ),
+              ),
             ],
           ),
           child: _buildUserCard(item, index, _logic.highlightedIndex == index),

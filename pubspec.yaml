@@ -39,6 +39,7 @@ dependencies:
   sqflite: ^2.4.2+1
   path: ^1.9.1
   flutter_slidable: ^4.0.3
+  flutter_libserialport: ^0.6.0
 
 dev_dependencies:
   flutter_test:
@@ -75,6 +76,21 @@ flutter:
     - assets/Start/icon/
     - assets/Start/Switch/
     - assets/customized/
+    - assets/customized/editor/
+    - assets/customized/editor/expand_icons/
+    - assets/customized/editor/module_rows/
+    - assets/customized/editor/panels/
+    - assets/expand_settings/common/
+    - assets/expand_settings/chakra/
+    - assets/expand_settings/chakra/icons/
+    - assets/expand_settings/fragrance/
+    - assets/expand_settings/fragrance/icons/
+    - assets/expand_settings/hifem/
+    - assets/expand_settings/hifem/head/
+    - assets/expand_settings/hifem/icons/
+    - assets/expand_settings/hifem/progress/
+    - assets/expand_settings/terahertz/
+    - assets/expand_settings/terahertz/progress/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

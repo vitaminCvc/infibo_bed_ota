@@ -1,3 +1,6 @@
+// 主页面。
+//
+// 展示预设理疗模式、顶部 Header 和氛围灯开关，并提供进入自定义方案页的入口。
 import 'package:flutter/material.dart';
 import 'package:infibo_app/components/index.dart';
 import 'package:infibo_app/constants/assets.dart';

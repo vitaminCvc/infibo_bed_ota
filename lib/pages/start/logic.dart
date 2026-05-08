@@ -1,3 +1,6 @@
+// 启动理疗页的倒计时和阶段逻辑。
+//
+// 负责总时长、当前 5 分钟阶段、运行/暂停状态，以及解析自定义方案传入的节点配置。
 import 'package:infibo_app/pages/customized/logic.dart';
 
 // 启动理疗页逻辑。
