@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:math' as math;
-
+import 'package:infibo_app/api/modbus_rtu_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:infibo_app/components/index.dart';
@@ -16,6 +16,8 @@ class StartPage extends StatefulWidget {
 }
 
 class _StartPageState extends State<StartPage> {
+  // 这里使用 AndroidSerialPortService，默认路径为 /dev/ttyS0。
+  final ModbusRtuService modbusService = const ModbusRtuService();
   // 启动页按 800x1160 的设计稿坐标摆放，再根据屏幕宽度整体缩放。
   static const double _designWidth = 800;
   static const double _designHeight = 1160;
@@ -36,6 +38,7 @@ class _StartPageState extends State<StartPage> {
   @override
   void initState() {
     super.initState();
+    _logic.configure(Get.arguments);
     _startTimer();
   }
 
@@ -444,14 +447,24 @@ class _StartPageState extends State<StartPage> {
 
   Widget _buildPlayButton() {
     final bool isActive =
-        !_logic.isRunning && _logic.elapsedSeconds < StartLogic.totalSeconds;
+        !_logic.isRunning && _logic.elapsedSeconds < _logic.totalSeconds;
 
     return SizedBox(
       width: 167,
       height: 156,
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onTap: isActive ? () => setState(_logic.play) : null,
+        onTap: isActive
+            ? () async {
+                try {
+                  await modbusService.start(); // Write register 0 = 1.
+                  setState(_logic.play); // 页面开始倒计时
+                  debugPrint('开始指令发送成功');
+                } catch (e) {
+                  debugPrint('开始指令发送失败：$e');
+                }
+              }
+            : null,
         child: Opacity(
           opacity: isActive ? 1 : 0.45,
           child: Center(

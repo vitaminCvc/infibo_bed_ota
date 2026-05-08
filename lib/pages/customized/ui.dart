@@ -1,3 +1,6 @@
+// 自定义方案列表页。
+//
+// 展示用户保存过的自定义理疗方案，支持搜索、编辑、删除和选择方案进入用户选择页。
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';

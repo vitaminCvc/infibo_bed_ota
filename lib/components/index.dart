@@ -1,3 +1,6 @@
+// 公共组件集合。
+//
+// 这里放多个页面都会用到的顶部 Header、返回主页按钮、阴影文字等通用 UI 组件。
 import 'dart:async';
 
 import 'package:flutter/material.dart';

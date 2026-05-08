@@ -1,3 +1,6 @@
+// 选择用户页的数据和导航逻辑。
+//
+// 负责本地用户数据库的增删改查、搜索高亮，以及进入启动理疗页时传递模式/方案参数。
 import 'package:get/get.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -20,6 +23,12 @@ class ChoseUsersLogic {
       return args['modeTitle'] as String;
     }
     return defaultModeTitle;
+  }
+
+  Object? get selectedCustomizedPlan {
+    final Object? args = Get.arguments;
+    if (args is Map) return args['customizedPlan'];
+    return null;
   }
 
   // 初始化数据库并加载用户。
@@ -100,7 +109,11 @@ class ChoseUsersLogic {
   void selectUser(UserItemData user) {
     Get.toNamed(
       startRoute,
-      arguments: {'modeTitle': selectedModeTitle, 'user': user},
+      arguments: {
+        'modeTitle': selectedModeTitle,
+        'user': user,
+        'customizedPlan': selectedCustomizedPlan,
+      },
     );
   }
 

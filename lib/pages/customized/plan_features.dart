@@ -1,3 +1,6 @@
+// 自定义方案功能点目录。
+//
+// 把方案里保存的功能 id 转成页面展示需要的标题、图标和颜色。
 import 'package:flutter/material.dart';
 import 'package:infibo_app/constants/assets.dart';
 

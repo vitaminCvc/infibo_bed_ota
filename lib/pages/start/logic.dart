@@ -1,11 +1,18 @@
+// 启动理疗页的倒计时和阶段逻辑。
+//
+// 负责总时长、当前 5 分钟阶段、运行/暂停状态，以及解析自定义方案传入的节点配置。
+import 'package:infibo_app/pages/customized/logic.dart';
+
 // 启动理疗页逻辑。
 class StartLogic {
-  static const int totalSeconds = 30 * 60;
   static const int phaseSeconds = 5 * 60;
-  static const int phaseCount = totalSeconds ~/ phaseSeconds;
 
+  int totalSeconds = 30 * 60;
   int elapsedSeconds = 0;
   bool isRunning = false;
+  List<List<String>>? customizedPhases;
+
+  int get phaseCount => totalSeconds ~/ phaseSeconds;
 
   // 当前倒计时进度。
   double get progress => (elapsedSeconds / totalSeconds).clamp(0, 1).toDouble();
@@ -31,9 +38,43 @@ class StartLogic {
   // 当前阶段工作的功能。
   List<String> activeDevices(String modeTitle) {
     final List<List<String>> phases =
-        modePhases[modeTitle] ?? modePhases['深度放松']!;
+        customizedPhases ?? modePhases[modeTitle] ?? modePhases['深度放松']!;
     final int index = activePhaseIndex.clamp(0, phases.length - 1);
     return phases[index];
+  }
+
+  // 根据页面参数配置自定义方案。
+  void configure(Object? args) {
+    if (args is! Map || args['customizedPlan'] is! CustomizedPlanData) return;
+
+    final CustomizedPlanData plan =
+        args['customizedPlan'] as CustomizedPlanData;
+    final List<List<String>> phases = List.generate(12, (_) => <String>[]);
+    int maxIndex = -1;
+
+    for (final String text in plan.featureIds) {
+      if (!text.startsWith('phase:')) continue;
+
+      final List<String> parts = text.split(':');
+      if (parts.length < 3) continue;
+
+      final int? index = int.tryParse(parts[1]);
+      if (index == null || index < 0 || index >= phases.length) continue;
+
+      phases[index] = parts[2]
+          .split('|')
+          .map(_startDeviceId)
+          .where((id) => id.isNotEmpty)
+          .toList();
+      if (phases[index].isNotEmpty && index > maxIndex) maxIndex = index;
+    }
+
+    if (maxIndex < 0) return;
+
+    customizedPhases = phases.take(maxIndex + 1).toList();
+    totalSeconds = (maxIndex + 1) * phaseSeconds;
+    elapsedSeconds = 0;
+    isRunning = false;
   }
 
   // 每秒推进倒计时。
@@ -57,6 +98,15 @@ class StartLogic {
   void play() {
     if (isRunning || elapsedSeconds >= totalSeconds) return;
     isRunning = true;
+  }
+
+  String _startDeviceId(String id) {
+    if (id == 'redlight') return 'red';
+    if (id == 'pemf') return 'pemf';
+    if (id == 'vat') return 'vat';
+    if (id == 'hydrogen') return 'hydrogen';
+    if (id == 'expand') return 'expand';
+    return '';
   }
 }
 
