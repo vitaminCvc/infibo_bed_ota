@@ -28,6 +28,8 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _phoneController = TextEditingController();
   //密码输入框控制器
   final TextEditingController _passwordController = TextEditingController();
+  final FocusNode _phoneFocusNode = FocusNode();
+  final FocusNode _passwordFocusNode = FocusNode();
   final LoginLogic _logic = LoginLogic();
 
   @override
@@ -35,6 +37,8 @@ class _LoginPageState extends State<LoginPage> {
   void dispose() {
     _phoneController.dispose();
     _passwordController.dispose();
+    _phoneFocusNode.dispose();
+    _passwordFocusNode.dispose();
     super.dispose();
   }
 
@@ -84,19 +88,23 @@ class _LoginPageState extends State<LoginPage> {
 
   ///构建手机号输入框容器
   Widget _buildInputPhone() {
-    return Stack(
-      children: [
-        //毛玻璃
-        Image.asset(Assets.glassLogo),
-        //手机号输入框
-        Positioned(
-          left: 22,
-          right: 22,
-          top: 0,
-          bottom: 0,
-          child: _inputPhone(),
-        ),
-      ],
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () => FocusScope.of(context).requestFocus(_phoneFocusNode),
+      child: Stack(
+        children: [
+          //毛玻璃
+          Image.asset(Assets.glassLogo),
+          //手机号输入框
+          Positioned(
+            left: 22,
+            right: 22,
+            top: 0,
+            bottom: 0,
+            child: _inputPhone(),
+          ),
+        ],
+      ),
     );
   }
 
@@ -112,6 +120,7 @@ class _LoginPageState extends State<LoginPage> {
         Expanded(
           child: TextField(
             controller: _phoneController,
+            focusNode: _phoneFocusNode,
             keyboardType: TextInputType.phone,
             onChanged: (value) {
               setState(() {});
@@ -138,19 +147,23 @@ class _LoginPageState extends State<LoginPage> {
 
   ///构建密码输入框容器
   Widget _buildInputPassword() {
-    return Stack(
-      children: [
-        //毛玻璃
-        Image.asset(Assets.glassLogo),
-        //手机号输入框
-        Positioned(
-          left: 22,
-          right: 22,
-          top: 0,
-          bottom: 0,
-          child: _inputPassword(),
-        ),
-      ],
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () => FocusScope.of(context).requestFocus(_passwordFocusNode),
+      child: Stack(
+        children: [
+          //毛玻璃
+          Image.asset(Assets.glassLogo),
+          //密码输入框
+          Positioned(
+            left: 22,
+            right: 22,
+            top: 0,
+            bottom: 0,
+            child: _inputPassword(),
+          ),
+        ],
+      ),
     );
   }
 
@@ -165,6 +178,7 @@ class _LoginPageState extends State<LoginPage> {
         Expanded(
           child: TextField(
             controller: _passwordController,
+            focusNode: _passwordFocusNode,
             keyboardType: TextInputType.text,
             onChanged: (value) {
               setState(() {});
@@ -281,24 +295,33 @@ class _LoginPageState extends State<LoginPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SizedBox(
-          width: 22,
-          height: 22,
-          child: Checkbox(
-            value: _agreed,
-            onChanged: (value) {
-              setState(() {
-                _agreed = value ?? false;
-              });
-            },
-            shape: const CircleBorder(),
-            side: const BorderSide(color: Color(0xFF7F8491)),
-            activeColor: const Color(0xFF1464DF),
-            checkColor: Colors.white,
-            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () => setState(() => _agreed = !_agreed),
+          child: SizedBox(
+            width: 48,
+            height: 48,
+            child: Center(
+              child: SizedBox(
+                width: 22,
+                height: 22,
+                child: Checkbox(
+                  value: _agreed,
+                  onChanged: (value) {
+                    setState(() {
+                      _agreed = value ?? false;
+                    });
+                  },
+                  shape: const CircleBorder(),
+                  side: const BorderSide(color: Color(0xFF7F8491)),
+                  activeColor: const Color(0xFF1464DF),
+                  checkColor: Colors.white,
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+              ),
+            ),
           ),
         ),
-        const SizedBox(width: 8),
         const Flexible(
           child: Text.rich(
             TextSpan(

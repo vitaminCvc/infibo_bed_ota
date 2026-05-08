@@ -7,7 +7,7 @@ import 'package:infibo_app/components/index.dart';
 import 'package:infibo_app/constants/assets.dart';
 import 'package:infibo_app/pages/start/logic.dart';
 
-// 启动理疗页面。
+// 启动理疗页面
 class StartPage extends StatefulWidget {
   const StartPage({super.key});
 
@@ -16,23 +16,23 @@ class StartPage extends StatefulWidget {
 }
 
 class _StartPageState extends State<StartPage> {
-  // 这里使用 AndroidSerialPortService，默认路径为 /dev/ttyS0。
+  // 这里使用 AndroidSerialPortService，默认路径为 /dev/ttyS0
   final ModbusRtuService modbusService = const ModbusRtuService();
-  // 启动页按 800x1160 的设计稿坐标摆放，再根据屏幕宽度整体缩放。
+  // 启动页按 800x1160 的设计稿坐标摆放，再根据屏幕宽度整体缩放
   static const double _designWidth = 800;
   static const double _designHeight = 1160;
   static const double _minPageScale = 0.72;
 
-  // 倒计时素材尺寸，countdownPoint 允许超出外圈，所以 Stack 会关闭裁剪。
-  static const double _timerSize = 250; //倒计时圆的尺寸大小
-  static const double _timerRingSize = 255; //中间的圆环大小
-  static const double _timerDotSize = 29; //控制小圆点大小.改大小后，位置也会自动按中心点对齐。
-  static const double _timerDotRadius = 121; //控制小圆点离圆心多远数字越大，点越往外；数字越小，点越往里。
+  // 倒计时素材尺寸，countdownPoint 允许超出外圈，所以 Stack 会关闭裁剪
+  static const double _timerSize = 250; //倒计时圆的尺寸
+  static const double _timerRingSize = 255; //中间的圆环尺寸
+  static const double _timerDotSize = 29; //控制小圆点尺寸，位置也会自动按中心点对齐
+  static const double _timerDotRadius = 121; //控制小圆点离圆心多远数字越大，点越往外；数字越小，点越往里
 
-  // 页面逻辑控制器：倒计时、运行/暂停状态、当前工作设备都放在 logic.dart。
+  // 页面逻辑控制器：倒计时、运行、暂停状态、当前工作设备都放在 logic.dart 中
   final StartLogic _logic = StartLogic();
 
-  // 每秒推进一次倒计时。
+  // 每秒推进一次倒计时
   Timer? _timer;
 
   @override
@@ -50,10 +50,10 @@ class _StartPageState extends State<StartPage> {
 
   @override
   Widget build(BuildContext context) {
-    // 从 Get.arguments 中获取启动参数。
+    // 从 Get.arguments 中获取启动参数
     final _StartArguments args = _StartArguments.from(Get.arguments);
 
-    // 页面横向留 32px 安全边距，然后按设计稿宽度等比缩放。
+    // 页面横向留 32px 安全边距，然后按设计稿宽度等比缩放
     final double scale =
         ((MediaQuery.sizeOf(context).width - 32) / _designWidth)
             .clamp(_minPageScale, 1.0)
@@ -86,22 +86,22 @@ class _StartPageState extends State<StartPage> {
     );
   }
 
-  /// 构建启动页主画布。
+  /// 构建启动页主画布
   ///
-  /// 这里所有 Positioned 的 left/top 都是基于 800x1160 设计稿的固定坐标。
+  /// 这里的 Positioned 的 left/top 都是基于 800x1160 设计稿的固定坐标，
   /// 页面外层会统一缩放，所以调整 UI 位置时只需要改这里的设计稿坐标。
   Widget _buildCanvas(_StartArguments args) {
-    // 暂停时所有设备都视为未运行；运行时根据当前 5 分钟阶段点亮对应 icon。
+    // 暂停时所有设备都视为未运行；运行时根据当前 5 分钟阶段点亮对应 icon
     final List<String> activeDevices = _logic.isRunning
         ? _logic.activeDevices(args.modeTitle)
         : const [];
 
     return Stack(
       children: [
-        // 当前理疗模式标题。
+        // 当前理疗模式标题
         Positioned(left: 36, top: 30, child: _buildTitle(args)),
 
-        // 中间人体图。它需要盖住左右功能框的手部边缘，所以放在功能框之前。
+        // 中间人体图，它需要盖住左右功能框的手部边缘，所以放在功能框之前
         Positioned(
           left: 50,
           top: -10,
@@ -113,7 +113,7 @@ class _StartPageState extends State<StartPage> {
           ),
         ),
 
-        // 左侧红光功能框。
+        // 左侧红光功能框
         _buildFunctionPanel(
           id: 'red',
           left: 46,
@@ -126,7 +126,7 @@ class _StartPageState extends State<StartPage> {
           activeDevices: activeDevices,
         ),
 
-        // 左侧 PEMF 功能框。
+        // 左侧 PEMF 功能框
         _buildFunctionPanel(
           id: 'pemf',
           left: 46,
@@ -139,7 +139,7 @@ class _StartPageState extends State<StartPage> {
           activeDevices: activeDevices,
         ),
 
-        // 右侧 VAT 功能框。
+        // 右侧 VAT 功能框
         _buildFunctionPanel(
           id: 'vat',
           left: 486,
@@ -152,7 +152,7 @@ class _StartPageState extends State<StartPage> {
           activeDevices: activeDevices,
         ),
 
-        // 右侧分子氢功能框。
+        // 右侧分子氢功能框
         _buildFunctionPanel(
           id: 'hydrogen',
           left: 486,
@@ -165,7 +165,7 @@ class _StartPageState extends State<StartPage> {
           activeDevices: activeDevices,
         ),
 
-        // 右侧扩展功能状态框，内部显示脉轮、太赫兹、HIFEM、香氛状态。
+        // 右侧扩展功能状态框，内部显示脉轮、太赫兹、HIFEM、香氛状态
         _buildFunctionPanel(
           id: 'expand',
           left: 486,
@@ -178,7 +178,7 @@ class _StartPageState extends State<StartPage> {
           activeDevices: activeDevices,
         ),
 
-        // 底部倒计时与暂停/启动按钮。
+        // 底部倒计时与暂停/启动按钮
         Positioned(left: 278, top: 840, child: _buildTimer()),
         Positioned(left: 126, top: 970, child: _buildPauseButton()),
         Positioned(left: 508, top: 970, child: _buildPlayButton()),
@@ -226,6 +226,7 @@ class _StartPageState extends State<StartPage> {
           children: [
             Positioned.fill(child: Image.asset(panelAsset, fit: BoxFit.fill)),
             ..._buildFunctionPanelEffects(id, isActive),
+            if (id == 'red') _buildRedLightPanelInfo(isActive),
             if (id != 'expand')
               Positioned(
                 right: id == 'red' || id == 'pemf' ? 40 : 18,
@@ -234,6 +235,76 @@ class _StartPageState extends State<StartPage> {
               ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildRedLightPanelInfo(bool isActive) {
+    final RedLightPhaseSetting? setting = _logic.activeRedLightSetting;
+    if (setting == null) return const SizedBox.shrink();
+
+    final String modeText = setting.mode == RedLightWorkMode.continuous
+        ? '连续'
+        : '脉冲';
+    final String modeAsset = setting.mode == RedLightWorkMode.continuous
+        ? Assets.startExpandContinuous
+        : Assets.redLightPulseWave;
+
+    return Positioned(
+      left: 28,
+      top: 72,
+      child: IgnorePointer(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '红光',
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(height: 10),
+            _buildRedLightInfoRow('660', setting.strength660),
+            const SizedBox(height: 6),
+            _buildRedLightInfoRow('850', setting.strength850),
+            const SizedBox(height: 9),
+            Row(
+              children: [
+                Text(
+                  modeText,
+                  style: const TextStyle(
+                    color: Color(0xFFE4E7EE),
+                    fontSize: 14,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Image.asset(
+                  modeAsset,
+                  width: 138,
+                  height: 24,
+                  fit: BoxFit.contain,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRedLightInfoRow(String wavelength, int strength) {
+    return SizedBox(
+      width: 210,
+      child: Row(
+        children: [
+          Text(
+            '$strength%',
+            style: const TextStyle(color: Colors.white, fontSize: 14),
+          ),
+          const Spacer(),
+        ],
       ),
     );
   }
@@ -458,7 +529,7 @@ class _StartPageState extends State<StartPage> {
             ? () async {
                 try {
                   await modbusService.start(); // Write register 0 = 1.
-                  setState(_logic.play); // 页面开始倒计时
+                  setState(_logic.play); // 页面开始计时
                   debugPrint('开始指令发送成功');
                 } catch (e) {
                   debugPrint('开始指令发送失败：$e');
@@ -527,7 +598,7 @@ class _CountdownProgressClipper extends CustomClipper<Path> {
   }
 }
 
-// 启动参数类，用于传递启动时的参数。
+// 启动参数类，用于传递启动时的参数
 class _StartArguments {
   const _StartArguments({required this.modeTitle});
 

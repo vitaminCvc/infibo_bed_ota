@@ -44,10 +44,16 @@ class CustomizedLogic {
   Future<void> loadPlans() async {
     await _openDatabaseIfNeeded();
 
-    final List<Map<String, Object?>> rows = await _db.query(
-      _tableName,
-      orderBy: 'id ASC',
-    );
+    List<Map<String, Object?>> rows;
+    try {
+      rows = await _db.query(_tableName, orderBy: 'id ASC');
+    } on DatabaseException catch (error) {
+      if (!error.toString().contains('database_closed')) rethrow;
+
+      _database = null;
+      await _openDatabaseIfNeeded();
+      rows = await _db.query(_tableName, orderBy: 'id ASC');
+    }
 
     plans
       ..clear()
@@ -164,8 +170,8 @@ class CustomizedLogic {
   }
 
   Future<void> dispose() async {
-    await _database?.close();
-    _database = null;
+    // 不在页面 dispose 时主动关闭 sqflite 连接。
+    // 页面跳转返回时可能还有 loadPlans() 在等待执行，立即 close 会导致 database_closed。
   }
 
   Future<void> _createPlansTable(Database db) async {

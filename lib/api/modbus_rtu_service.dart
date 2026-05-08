@@ -6,39 +6,222 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_libserialport/flutter_libserialport.dart';
 import 'package:infibo_app/services/android_serial_port_service.dart';
 
 class ModbusRtuService {
+  /// 红光总命令地址。
+  static const int redLightTotalEnableAddress = 0x0063;
+
+  /// 红光总模式地址。
+  static const int redLightTotalModeAddress = 0x0065;
+
+  /// 红光总命令地址。
+  static const int redLightTotalCommandAddress = 0x0066;
+
+  /// 红光660nm 启用地址。
+  static const int redLight660EnableAddress = 0x0077;
+
+  /// 红光660nm 模式地址。
+  static const int redLight660ModeAddress = 0x0079;
+
+  /// 红光660nm 功率地址。
+  static const int redLight660PowerAddress = 0x007C;
+
+  /// 红光850nm 启用地址。
+  static const int redLight850EnableAddress = 0x008B;
+
+  /// 红光850nm 模式地址。
+  static const int redLight850ModeAddress = 0x008D;
+
+  /// 红光850nm 功率地址。
+  static const int redLight850PowerAddress = 0x0090;
+
   final String portName;
   final int baudRate;
   final int slaveId;
   final Duration timeout;
+  final Duration commandDelay;
+  final int maxRetries;
 
   const ModbusRtuService({
     this.portName = AndroidSerialPortService.defaultPath,
     this.baudRate = AndroidSerialPortService.defaultBaudRate,
     this.slaveId = 16,
     this.timeout = const Duration(seconds: 1),
+    this.commandDelay = const Duration(milliseconds: 40),
+    this.maxRetries = 2,
   });
 
   /// 启动，发送 0x0004 = 1 命令。
   Future<void> start() async {
-    await writeSingleRegister(address: 0x0004, value: 1);
+    await sendCommandQueue([
+      const ModbusWriteCommand(address: 0x0004, value: 1),
+    ]);
   }
 
   /// 停止，发送 0x0004 = 2 命令。
   Future<void> pause() async {
-    await writeSingleRegister(address: 0x0004, value: 2);
+    await sendCommandQueue([
+      const ModbusWriteCommand(address: 0x0004, value: 2),
+    ]);
+  }
+
+  /// 按自定义方案的当前 5 分钟节点配置红光模块。
+  ///
+  /// mode: 0=连续，1=脉冲；strength660/strength850 均为 0-100%。
+  /// 写完参数后，如果至少一个波长强度大于 0，会向红光总命令写 1 启动红光模块。
+  Future<void> applyRedLightSetting({
+    required int strength660,
+    required int strength850,
+    required int mode,
+  }) async {
+    await sendCommandQueue(
+      buildRedLightCommands(
+        strength660: strength660,
+        strength850: strength850,
+        mode: mode,
+      ),
+    );
+  }
+
+  /// 当前阶段不需要红光时，停止红光模块并关闭两个波长输出。
+  Future<void> stopRedLight() async {
+    await sendCommandQueue(buildStopRedLightCommands());
+  }
+
+  /// 下发当前 5 分钟节点参数，全部成功后最后发送系统启动命令。
+  Future<void> startWithCommands(List<ModbusWriteCommand> parameterCommands) {
+    return sendCommandQueue([
+      ...parameterCommands,
+      const ModbusWriteCommand(address: 0x0004, value: 1),
+    ]);
+  }
+
+  List<ModbusWriteCommand> buildRedLightCommands({
+    required int strength660,
+    required int strength850,
+    required int mode,
+  }) {
+    final int safe660 = _clampPercent(strength660);
+    final int safe850 = _clampPercent(strength850);
+    final int safeMode = mode == 0 ? 0 : 1;
+    final bool enabled = safe660 > 0 || safe850 > 0;
+
+    return [
+      ModbusWriteCommand(
+        address: redLightTotalEnableAddress,
+        value: enabled ? 1 : 0,
+      ),
+      ModbusWriteCommand(address: redLightTotalModeAddress, value: safeMode),
+      ModbusWriteCommand(
+        address: redLight660EnableAddress,
+        value: safe660 > 0 ? 1 : 0,
+      ),
+      ModbusWriteCommand(address: redLight660ModeAddress, value: safeMode),
+      ModbusWriteCommand(address: redLight660PowerAddress, value: safe660),
+      ModbusWriteCommand(
+        address: redLight850EnableAddress,
+        value: safe850 > 0 ? 1 : 0,
+      ),
+      ModbusWriteCommand(address: redLight850ModeAddress, value: safeMode),
+      ModbusWriteCommand(address: redLight850PowerAddress, value: safe850),
+      ModbusWriteCommand(
+        address: redLightTotalCommandAddress,
+        value: enabled ? 1 : 2,
+      ),
+    ];
+  }
+
+  List<ModbusWriteCommand> buildStopRedLightCommands() {
+    return const [
+      ModbusWriteCommand(address: redLightTotalCommandAddress, value: 2),
+      ModbusWriteCommand(address: redLight660EnableAddress, value: 0),
+      ModbusWriteCommand(address: redLight660PowerAddress, value: 0),
+      ModbusWriteCommand(address: redLight850EnableAddress, value: 0),
+      ModbusWriteCommand(address: redLight850PowerAddress, value: 0),
+      ModbusWriteCommand(address: redLightTotalEnableAddress, value: 0),
+    ];
+  }
+
+  Future<void> sendCommandQueue(List<ModbusWriteCommand> commands) async {
+    if (commands.isEmpty) return;
+
+    final List<Uint8List> frames = [
+      for (final ModbusWriteCommand command in commands)
+        _buildWriteSingleRegisterFrame(
+          slaveId: slaveId,
+          address: command.address,
+          value: command.value,
+        ),
+    ];
+    final Stopwatch queueStopwatch = Stopwatch()..start();
+
+    if (Platform.isAndroid) {
+      try {
+        final List<Uint8List> responses = await AndroidSerialPortService
+            .instance
+            .writeModbusQueue(
+              frames: frames,
+              path: portName,
+              baudRate: baudRate,
+              timeout: timeout,
+              commandDelay: commandDelay,
+              maxRetries: maxRetries,
+            );
+        for (int index = 0; index < responses.length; index++) {
+          final ModbusWriteCommand command = commands[index];
+          final Uint8List response = responses[index];
+          debugPrint('Dart RX: ${_formatBytes(response)}');
+          _validateWriteSingleRegisterResponse(
+            response: response,
+            address: command.address,
+            value: command.value,
+          );
+          debugPrint('Dart response validate success: ${command.addressText}');
+          debugPrint(
+            'Dart queue completer frame complete: ${command.addressText}',
+          );
+        }
+        queueStopwatch.stop();
+        debugPrint(
+          'Dart queue complete: ${responses.length} responses total=${queueStopwatch.elapsedMilliseconds}ms',
+        );
+      } on PlatformException catch (error) {
+        throw ModbusRtuException(_normalizeNativeError(error.message));
+      }
+      return;
+    }
+
+    if (!Platform.isWindows) {
+      throw UnsupportedError(
+        'Modbus RTU serial test requires Android or Windows desktop.',
+      );
+    }
+
+    await _sendCommandQueueWindows(commands, frames);
   }
 
   Future<void> writeSingleRegister({
     required int address,
     required int value,
+    bool waitForResponse = true,
   }) async {
+    if (waitForResponse) {
+      await sendCommandQueue([
+        ModbusWriteCommand(address: address, value: value),
+      ]);
+      return;
+    }
+
     // Android 是正式运行环境：通过原生串口 bridge 写 /dev/ttyS0。
     if (Platform.isAndroid) {
-      await _writeSingleRegisterAndroid(address: address, value: value);
+      await _writeSingleRegisterAndroid(
+        address: address,
+        value: value,
+        waitForResponse: waitForResponse,
+      );
       return;
     }
 
@@ -82,6 +265,11 @@ class ModbusRtuService {
         );
       }
 
+      if (!waitForResponse) {
+        debugPrint('Modbus RTU write sent without waiting response.');
+        return;
+      }
+
       final Uint8List response = port.read(8, timeout: timeout.inMilliseconds);
       debugPrint('Modbus RTU RX: ${_formatBytes(response)}');
 
@@ -101,65 +289,138 @@ class ModbusRtuService {
     }
   }
 
+  Future<void> _sendCommandQueueWindows(
+    List<ModbusWriteCommand> commands,
+    List<Uint8List> frames,
+  ) async {
+    final SerialPort port = SerialPort(portName);
+    SerialPortConfig? config;
+
+    try {
+      if (!port.openReadWrite()) {
+        throw Exception(
+          'Open serial port failed: $portName, ${SerialPort.lastError}',
+        );
+      }
+
+      config = SerialPortConfig()
+        ..baudRate = baudRate
+        ..bits = 8
+        ..parity = SerialPortParity.none
+        ..stopBits = 1
+        ..setFlowControl(SerialPortFlowControl.none);
+      port.config = config;
+      config = null;
+      port.flush();
+
+      for (int index = 0; index < frames.length; index++) {
+        await _writeFrameWithRetryWindows(
+          port: port,
+          command: commands[index],
+          frame: frames[index],
+        );
+      }
+    } finally {
+      if (port.isOpen) {
+        port.close();
+      }
+      config?.dispose();
+      port.dispose();
+    }
+  }
+
+  Future<void> _writeFrameWithRetryWindows({
+    required SerialPort port,
+    required ModbusWriteCommand command,
+    required Uint8List frame,
+  }) async {
+    Object? lastError;
+
+    for (int attempt = 0; attempt <= maxRetries; attempt++) {
+      try {
+        port.flush();
+        debugPrint(
+          'Modbus RTU TX[${attempt + 1}/${maxRetries + 1}]: ${_formatBytes(frame)}',
+        );
+        final int written = port.write(frame, timeout: timeout.inMilliseconds);
+        if (written != frame.length) {
+          throw TimeoutException(
+            'Serial write timeout: $written/${frame.length} bytes',
+          );
+        }
+
+        final Uint8List response = port.read(
+          8,
+          timeout: timeout.inMilliseconds,
+        );
+        debugPrint('Modbus RTU RX: ${_formatBytes(response)}');
+
+        _validateWriteSingleRegisterResponse(
+          response: response,
+          address: command.address,
+          value: command.value,
+        );
+
+        debugPrint(
+          'Modbus RTU write success: ${command.addressText} = ${command.value}',
+        );
+        if (commandDelay > Duration.zero) {
+          await Future<void>.delayed(commandDelay);
+        }
+        return;
+      } catch (error) {
+        lastError = error;
+        if (attempt < maxRetries) {
+          await Future<void>.delayed(commandDelay);
+        }
+      }
+    }
+
+    throw ModbusRtuException(
+      '参数下发失败：寄存器 ${command.addressText} ${_failureReason(lastError)}',
+    );
+  }
+
   Future<void> _writeSingleRegisterAndroid({
     required int address,
     required int value,
+    required bool waitForResponse,
   }) async {
-    // 订阅接收事件，等待本次写寄存器的 8 字节回包。
-    final AndroidSerialPortService serialPort =
-        AndroidSerialPortService.instance;
-    final Completer<Uint8List> responseCompleter = Completer<Uint8List>();
+    final Uint8List request = _buildWriteSingleRegisterFrame(
+      slaveId: slaveId,
+      address: address,
+      value: value,
+    );
 
-    final StreamSubscription<AndroidSerialPortEvent> subscription = serialPort
-        .events
-        .listen((AndroidSerialPortEvent event) {
-          if (responseCompleter.isCompleted) return;
-
-          switch (event.type) {
-            case AndroidSerialPortEventType.rx:
-              responseCompleter.complete(event.bytes ?? Uint8List(0));
-              break;
-            case AndroidSerialPortEventType.error:
-              responseCompleter.completeError(
-                Exception(event.message ?? 'Unknown serial error'),
-              );
-              break;
-          }
-        });
-
-    try {
-      await serialPort.openSerialPort(path: portName, baudRate: baudRate);
-
-      final Uint8List request = _buildWriteSingleRegisterFrame(
-        slaveId: slaveId,
-        address: address,
-        value: value,
-      );
-
-      debugPrint('Modbus RTU TX: ${_formatBytes(request)}');
-      final int written = await serialPort.sendBytes(request);
+    debugPrint('Modbus RTU TX: ${_formatBytes(request)}');
+    if (!waitForResponse) {
+      final int written = await AndroidSerialPortService.instance
+          .writeBytesOnce(bytes: request, path: portName, baudRate: baudRate);
       if (written != request.length) {
         throw TimeoutException(
           'Serial write timeout: $written/${request.length} bytes',
         );
       }
-
-      final Uint8List response = await responseCompleter.future.timeout(
-        timeout,
-      );
-      debugPrint('Modbus RTU RX: ${_formatBytes(response)}');
-
-      _validateWriteSingleRegisterResponse(
-        response: response,
-        address: address,
-        value: value,
-      );
-
-      debugPrint('Modbus RTU write success: address $address = $value');
-    } finally {
-      await subscription.cancel();
-      await serialPort.closeSerialPort();
+      debugPrint('Modbus RTU write sent without waiting response.');
+      return;
     }
+
+    final Uint8List response = await AndroidSerialPortService.instance
+        .transceiveBytes(
+          bytes: request,
+          path: portName,
+          baudRate: baudRate,
+          timeout: timeout,
+        );
+    debugPrint('Modbus RTU RX: ${_formatBytes(response)}');
+
+    _validateWriteSingleRegisterResponse(
+      response: response,
+      address: address,
+      value: value,
+    );
+
+    debugPrint('Modbus RTU write success: address $address = $value');
   }
 
   Uint8List _buildWriteSingleRegisterFrame({
@@ -201,11 +462,33 @@ class ModbusRtuService {
     return crc & 0xFFFF;
   }
 
+  int _clampPercent(int value) => value.clamp(0, 100).toInt();
+
   void _validateWriteSingleRegisterResponse({
     required Uint8List response,
     required int address,
     required int value,
   }) {
+    if (response.length >= 2 && response[1] == 0x86) {
+      if (response.length != 5) {
+        throw Exception(
+          'Modbus RTU exception response length error: ${response.length}',
+        );
+      }
+
+      final int responseCrc = response[3] | (response[4] << 8);
+      final int expectedCrc = _crc16(response.sublist(0, 3));
+      if (responseCrc != expectedCrc) {
+        throw Exception(
+          'Modbus RTU exception CRC mismatch: response=0x${responseCrc.toRadixString(16)}, expected=0x${expectedCrc.toRadixString(16)}',
+        );
+      }
+
+      throw Exception(
+        'Modbus RTU exception response: function=0x86, code=${response[2]}',
+      );
+    }
+
     if (response.length != 8) {
       throw Exception('Modbus RTU response length error: ${response.length}');
     }
@@ -249,4 +532,36 @@ class ModbusRtuService {
         .join(' ')
         .toUpperCase();
   }
+
+  String _normalizeNativeError(String? message) {
+    final String text = (message ?? '').trim();
+    if (text.isEmpty) return '参数下发失败：未知串口错误';
+    return text;
+  }
+
+  String _failureReason(Object? error) {
+    final String text = error?.toString() ?? '';
+    if (text.toLowerCase().contains('timeout')) return '写入超时';
+    if (text.isEmpty) return '写入失败';
+    return '写入失败：$text';
+  }
+}
+
+class ModbusWriteCommand {
+  const ModbusWriteCommand({required this.address, required this.value});
+
+  final int address;
+  final int value;
+
+  String get addressText =>
+      '0x${address.toRadixString(16).toUpperCase().padLeft(4, '0')}';
+}
+
+class ModbusRtuException implements Exception {
+  const ModbusRtuException(this.message);
+
+  final String message;
+
+  @override
+  String toString() => message;
 }

@@ -5,6 +5,7 @@
 // 用户在这里选择每个节点启用哪些功能，点击“保存参数”固化当前节点，
 // 最后点击“保存方案”把节点配置保存到本地方案数据里。
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:infibo_app/components/index.dart';
 import 'package:infibo_app/constants/assets.dart';
@@ -59,6 +60,11 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
   late final List<Set<String>> _nodeFeatureIds;
   late final List<Set<String>> _nodeExpandIds;
   late final List<Map<String, String>> _nodeChakraStrengths;
+  late final List<TextEditingController> _redLight660Controllers;
+  late final List<TextEditingController> _redLight850Controllers;
+  late final List<FocusNode> _redLight660FocusNodes;
+  late final List<FocusNode> _redLight850FocusNodes;
+  late final List<_RedLightMode> _nodeRedLightModes;
   late final Set<int> _savedNodeIndexes;
   int? _activeNodeIndex;
 
@@ -124,6 +130,11 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     _nodeFeatureIds = List.generate(12, (_) => <String>{});
     _nodeExpandIds = List.generate(12, (_) => <String>{});
     _nodeChakraStrengths = List.generate(12, (_) => <String, String>{});
+    _redLight660Controllers = List.generate(12, (_) => TextEditingController());
+    _redLight850Controllers = List.generate(12, (_) => TextEditingController());
+    _redLight660FocusNodes = List.generate(12, (_) => FocusNode());
+    _redLight850FocusNodes = List.generate(12, (_) => FocusNode());
+    _nodeRedLightModes = List.generate(12, (_) => _RedLightMode.continuous);
     _savedNodeIndexes = <int>{};
     _restoreEditingPlan();
   }
@@ -131,6 +142,18 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
   @override
   void dispose() {
     _nameController.dispose();
+    for (final TextEditingController controller in _redLight660Controllers) {
+      controller.dispose();
+    }
+    for (final TextEditingController controller in _redLight850Controllers) {
+      controller.dispose();
+    }
+    for (final FocusNode node in _redLight660FocusNodes) {
+      node.dispose();
+    }
+    for (final FocusNode node in _redLight850FocusNodes) {
+      node.dispose();
+    }
     super.dispose();
   }
 
@@ -226,8 +249,8 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
           for (final int index in lightedIndexes) _buildLightedTimeline(index),
           for (int index = 0; index < 12; index++)
             Positioned(
-              right: -2,
-              top: _timelineNodeTop + index * _timelineNodeGap,
+              right: -18,
+              top: _timelineNodeTop + index * _timelineNodeGap - 16,
               child: _TimelineAddButton(
                 isSaved: _savedNodeIndexes.contains(index),
                 isActive: _activeNodeIndex == index,
@@ -445,9 +468,12 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
   }
 
   Widget _buildRedLightPanel() {
+    final int? index = _activeNodeIndex;
+    if (index == null) return const SizedBox.shrink();
+
     return _NotchedPanel(
       width: 270,
-      height: 250,
+      height: 255,
       notchSide: _NotchSide.left,
       gradient: const LinearGradient(
         begin: Alignment.topLeft,
@@ -464,25 +490,53 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
             const SizedBox(height: 18),
             _buildTwoColumnLabels('波长', '强度'),
             const SizedBox(height: 6),
-            _buildWavelengthRow('660'),
+            _buildWavelengthRow(
+              '660',
+              controller: _redLight660Controllers[index],
+              focusNode: _redLight660FocusNodes[index],
+            ),
             const SizedBox(height: 16),
             _buildTwoColumnLabels('波长', '强度'),
             const SizedBox(height: 6),
-            _buildWavelengthRow('660'),
+            _buildWavelengthRow(
+              '850',
+              controller: _redLight850Controllers[index],
+              focusNode: _redLight850FocusNodes[index],
+            ),
             const Spacer(),
             Row(
-              children: const [
-                Text('模式选择', style: _smallLabelStyle),
-                SizedBox(width: 25),
-                Text('连续', style: _smallLabelStyle),
-                SizedBox(width: 5),
-                _RadioDot(active: false, color: Color(0xFFF08A23)),
-                SizedBox(width: 12),
-                Text('脉冲', style: _smallLabelStyle),
-                SizedBox(width: 5),
-                _RadioDot(active: true, color: Color(0xFFF08A23)),
+              children: [
+                const Text('模式选择', style: _smallLabelStyle),
+                const SizedBox(width: 25),
+                _buildModeOption(index, _RedLightMode.continuous, '连续'),
+                const SizedBox(width: 12),
+                _buildModeOption(index, _RedLightMode.pulse, '脉冲'),
               ],
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildModeOption(int index, _RedLightMode mode, String text) {
+    final bool active = _nodeRedLightModes[index] == mode;
+
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () {
+        setState(() {
+          _nodeRedLightModes[index] = mode;
+          _savedNodeIndexes.removeWhere((item) => item >= index);
+        });
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+        child: Row(
+          children: [
+            Text(text, style: _smallLabelStyle),
+            const SizedBox(width: 5),
+            _RadioDot(active: active, color: const Color(0xFFF08A23)),
           ],
         ),
       ),
@@ -602,7 +656,11 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     );
   }
 
-  Widget _buildWavelengthRow(String value) {
+  Widget _buildWavelengthRow(
+    String value, {
+    required TextEditingController controller,
+    required FocusNode focusNode,
+  }) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -624,7 +682,16 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
           ),
         ),
         const SizedBox(width: 30),
-        const _InputBox(width: 88),
+        _InputBox(
+          width: 88,
+          controller: controller,
+          focusNode: focusNode,
+          keyboardType: TextInputType.number,
+          inputFormatters: [
+            FilteringTextInputFormatter.digitsOnly,
+            LengthLimitingTextInputFormatter(3),
+          ],
+        ),
       ],
     );
   }
@@ -883,6 +950,11 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     final int? index = _activeNodeIndex;
     if (index == null || _nodeFeatureIds[index].isEmpty) return;
 
+    if (_nodeFeatureIds[index].contains('redlight')) {
+      _normalizeRedLightPercent(_redLight660Controllers[index]);
+      _normalizeRedLightPercent(_redLight850Controllers[index]);
+    }
+
     setState(() {
       _savedNodeIndexes.add(index);
       _activeNodeIndex = null;
@@ -999,6 +1071,26 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
       hasPhaseData = true;
     }
 
+    for (final String text in featureIds) {
+      if (!text.startsWith('redlight:')) continue;
+
+      final List<String> parts = text.split(':');
+      if (parts.length < 3) continue;
+
+      final int? index = int.tryParse(parts[1]);
+      if (index == null || index < 0 || index >= _nodeFeatureIds.length) {
+        continue;
+      }
+
+      final _RedLightSetting setting = _parseRedLightSetting(parts[2]);
+      _redLight660Controllers[index].text = setting.strength660Text;
+      _redLight850Controllers[index].text = setting.strength850Text;
+      _nodeRedLightModes[index] = setting.mode;
+      _nodeFeatureIds[index].add('redlight');
+      _savedNodeIndexes.add(index);
+      hasPhaseData = true;
+    }
+
     if (!hasPhaseData && _editingPlan != null) {
       final Set<String> ids = knownFeatureIds(featureIds).toSet();
       if (ids.isNotEmpty) {
@@ -1032,6 +1124,9 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
         phaseTexts.add(
           'chakra:$index:${_formatChakraStrengths(_nodeChakraStrengths[index])}',
         );
+      }
+      if (_nodeFeatureIds[index].contains('redlight')) {
+        phaseTexts.add('redlight:$index:${_formatRedLightSetting(index)}');
       }
     }
 
@@ -1073,6 +1168,55 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
         .join('|');
   }
 
+  void _normalizeRedLightPercent(TextEditingController controller) {
+    controller.text = _percentValue(controller.text).toString();
+  }
+
+  int _percentValue(String text) {
+    final int? value = int.tryParse(text.trim());
+    if (value == null) return 0;
+    return value.clamp(0, 100).toInt();
+  }
+
+  String _formatRedLightSetting(int index) {
+    final int strength660 = _percentValue(_redLight660Controllers[index].text);
+    final int strength850 = _percentValue(_redLight850Controllers[index].text);
+    final String mode = _nodeRedLightModes[index].storageValue;
+
+    return '660=$strength660|850=$strength850|mode=$mode';
+  }
+
+  _RedLightSetting _parseRedLightSetting(String text) {
+    int strength660 = 0;
+    int strength850 = 0;
+    _RedLightMode mode = _RedLightMode.continuous;
+
+    for (final String pair in text.split('|')) {
+      final int separator = pair.indexOf('=');
+      if (separator <= 0 || separator == pair.length - 1) continue;
+
+      final String key = pair.substring(0, separator).trim();
+      final String value = pair.substring(separator + 1).trim();
+      switch (key) {
+        case '660':
+          strength660 = _percentValue(value);
+          break;
+        case '850':
+          strength850 = _percentValue(value);
+          break;
+        case 'mode':
+          mode = _redLightModeFromStorageValue(value);
+          break;
+      }
+    }
+
+    return _RedLightSetting(
+      strength660: strength660,
+      strength850: strength850,
+      mode: mode,
+    );
+  }
+
   _ModuleItem _moduleById(String id) {
     return _modules.firstWhere((item) => item.id == id);
   }
@@ -1083,6 +1227,38 @@ const TextStyle _smallLabelStyle = TextStyle(
   fontSize: 14,
   height: 1,
 );
+
+enum _RedLightMode { continuous, pulse }
+
+extension _RedLightModeX on _RedLightMode {
+  String get storageValue {
+    switch (this) {
+      case _RedLightMode.continuous:
+        return 'continuous';
+      case _RedLightMode.pulse:
+        return 'pulse';
+    }
+  }
+}
+
+_RedLightMode _redLightModeFromStorageValue(String value) {
+  return value == 'pulse' ? _RedLightMode.pulse : _RedLightMode.continuous;
+}
+
+class _RedLightSetting {
+  const _RedLightSetting({
+    required this.strength660,
+    required this.strength850,
+    required this.mode,
+  });
+
+  final int strength660;
+  final int strength850;
+  final _RedLightMode mode;
+
+  String get strength660Text => strength660.toString();
+  String get strength850Text => strength850.toString();
+}
 
 class _PageTitle extends StatelessWidget {
   const _PageTitle();
@@ -1222,10 +1398,21 @@ class _PanelTitle extends StatelessWidget {
 }
 
 class _InputBox extends StatelessWidget {
-  const _InputBox({required this.width, this.hasArrow = false});
+  const _InputBox({
+    required this.width,
+    this.hasArrow = false,
+    this.controller,
+    this.focusNode,
+    this.keyboardType,
+    this.inputFormatters,
+  });
 
   final double width;
   final bool hasArrow;
+  final TextEditingController? controller;
+  final FocusNode? focusNode;
+  final TextInputType? keyboardType;
+  final List<TextInputFormatter>? inputFormatters;
 
   @override
   Widget build(BuildContext context) {
@@ -1242,13 +1429,50 @@ class _InputBox extends StatelessWidget {
       ),
       alignment: Alignment.centerRight,
       padding: const EdgeInsets.only(right: 6),
-      child: hasArrow
-          ? Icon(
-              Icons.keyboard_arrow_down,
-              color: Colors.white.withValues(alpha: 0.65),
-              size: 18,
-            )
-          : null,
+      child: _buildChild(context),
+    );
+  }
+
+  Widget? _buildChild(BuildContext context) {
+    final TextEditingController? textController = controller;
+    if (textController != null) {
+      return GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => FocusScope.of(context).requestFocus(focusNode),
+        child: TextField(
+          controller: textController,
+          focusNode: focusNode,
+          keyboardType: keyboardType,
+          inputFormatters: inputFormatters,
+          textAlign: TextAlign.center,
+          textAlignVertical: TextAlignVertical.center,
+          style: const TextStyle(color: Colors.white, fontSize: 14, height: 1),
+          cursorColor: Colors.white,
+          decoration: const InputDecoration(
+            isCollapsed: true,
+            border: InputBorder.none,
+            contentPadding: EdgeInsets.zero,
+          ),
+          onChanged: (value) {
+            final int? number = int.tryParse(value);
+            if (number == null || number <= 100) return;
+
+            textController
+              ..text = '100'
+              ..selection = TextSelection.collapsed(
+                offset: textController.text.length,
+              );
+          },
+        ),
+      );
+    }
+
+    if (!hasArrow) return null;
+
+    return Icon(
+      Icons.keyboard_arrow_down,
+      color: Colors.white.withValues(alpha: 0.65),
+      size: 18,
     );
   }
 }
@@ -1296,7 +1520,11 @@ class _TimelineAddButton extends StatelessWidget {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
-      child: _buildButton(),
+      child: SizedBox(
+        width: 56,
+        height: 56,
+        child: Center(child: _buildButton()),
+      ),
     );
   }
 

@@ -50,6 +50,67 @@ class AndroidSerialPortService {
     return count ?? 0;
   }
 
+  Future<Uint8List> transceiveBytes({
+    required Uint8List bytes,
+    String path = defaultPath,
+    int baudRate = defaultBaudRate,
+    required Duration timeout,
+  }) async {
+    _ensureAndroid();
+    final Object? response = await _channel
+        .invokeMethod<Object>('transceiveBytes', {
+          'path': path,
+          'baudRate': baudRate,
+          'timeoutMs': timeout.inMilliseconds,
+          'bytes': bytes,
+        });
+
+    if (response is Uint8List) return response;
+    return Uint8List.fromList(List<int>.from(response as List? ?? []));
+  }
+
+  Future<int> writeBytesOnce({
+    required Uint8List bytes,
+    String path = defaultPath,
+    int baudRate = defaultBaudRate,
+  }) async {
+    _ensureAndroid();
+    final int? count = await _channel.invokeMethod<int>('writeBytesOnce', {
+      'path': path,
+      'baudRate': baudRate,
+      'bytes': bytes,
+    });
+    return count ?? 0;
+  }
+
+  Future<List<Uint8List>> writeModbusQueue({
+    required List<Uint8List> frames,
+    String path = defaultPath,
+    int baudRate = defaultBaudRate,
+    required Duration timeout,
+    required Duration commandDelay,
+    required int maxRetries,
+  }) async {
+    _ensureAndroid();
+    final Object? response = await _channel
+        .invokeMethod<Object>('writeModbusQueue', {
+          'path': path,
+          'baudRate': baudRate,
+          'timeoutMs': timeout.inMilliseconds,
+          'delayMs': commandDelay.inMilliseconds,
+          'maxRetries': maxRetries,
+          'frames': frames,
+        });
+
+    final List<dynamic> items = response is List ? response : const [];
+    return [
+      for (final dynamic item in items)
+        item is Uint8List
+            ? item
+            : Uint8List.fromList(List<int>.from(item as List? ?? [])),
+    ];
+  }
+
   Future<void> closeSerialPort() async {
     _ensureAndroid();
     await _channel.invokeMethod<bool>('closeSerialPort');

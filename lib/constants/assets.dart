@@ -154,6 +154,9 @@ class Assets {
   // 启动治疗页：拓展功能正弦波图标。
   static const String startExpandSine = "assets/Start/Expand/sine.png";
 
+  // 自定义红光 / 启动页：脉冲模式曲线图。
+  static const String redLightPulseWave = "assets/10个波形图/脉冲.png";
+
   // 启动治疗页：红光未启动状态图标。
   static const String startRedLightIconOff = "assets/Start/icon/redlight.png";
 
