@@ -34,6 +34,7 @@ class _StartPageState extends State<StartPage> {
 
   // 每秒推进一次倒计时
   Timer? _timer;
+  bool _isStarting = false;
 
   @override
   void initState() {
@@ -241,69 +242,138 @@ class _StartPageState extends State<StartPage> {
 
   Widget _buildRedLightPanelInfo(bool isActive) {
     final RedLightPhaseSetting? setting = _logic.activeRedLightSetting;
-    if (setting == null) return const SizedBox.shrink();
 
-    final String modeText = setting.mode == RedLightWorkMode.continuous
-        ? '连续'
-        : '脉冲';
-    final String modeAsset = setting.mode == RedLightWorkMode.continuous
-        ? Assets.startExpandContinuous
-        : Assets.redLightPulseWave;
+    final String strength660Text = setting == null
+        ? ''
+        : setting.strength660.toString();
+    final String strength850Text = setting == null
+        ? ''
+        : setting.strength850.toString();
+
+    final String modeText = setting?.mode == RedLightWorkMode.pulse
+        ? '脉冲'
+        : '连续';
+
+    final String modeAsset = setting?.mode == RedLightWorkMode.pulse
+        ? Assets.redLightPulseWave
+        : Assets.startExpandContinuous;
 
     return Positioned(
-      left: 28,
-      top: 72,
+      left: 18,
+      top: 22,
       child: IgnorePointer(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               '红光',
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-              ),
+              style: TextStyle(color: Colors.white, fontSize: 20),
             ),
-            const SizedBox(height: 10),
-            _buildRedLightInfoRow('660', setting.strength660),
-            const SizedBox(height: 6),
-            _buildRedLightInfoRow('850', setting.strength850),
-            const SizedBox(height: 9),
-            Row(
+
+            const SizedBox(height: 24),
+
+            const Row(
               children: [
-                Text(
-                  modeText,
-                  style: const TextStyle(
-                    color: Color(0xFFE4E7EE),
-                    fontSize: 14,
+                SizedBox(
+                  width: 100,
+                  child: Text(
+                    '波长',
+                    style: TextStyle(color: Color(0xffb9bcc6), fontSize: 17),
                   ),
                 ),
-                const SizedBox(width: 8),
-                Image.asset(
-                  modeAsset,
-                  width: 138,
-                  height: 24,
-                  fit: BoxFit.contain,
+                SizedBox(width: 20),
+                SizedBox(
+                  width: 100,
+                  child: Text(
+                    '强度',
+                    style: TextStyle(color: Color(0xffb9bcc6), fontSize: 17),
+                  ),
                 ),
               ],
             ),
+
+            const SizedBox(height: 4),
+
+            _buildRedLightInfoRow('660', strength660Text),
+
+            const SizedBox(height: 8),
+
+            const Row(
+              children: [
+                SizedBox(
+                  width: 100,
+                  child: Text(
+                    '波长',
+                    style: TextStyle(color: Color(0xffb9bcc6), fontSize: 17),
+                  ),
+                ),
+                SizedBox(width: 20),
+                SizedBox(
+                  width: 100,
+                  child: Text(
+                    '强度',
+                    style: TextStyle(color: Color(0xffb9bcc6), fontSize: 17),
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 6),
+
+            _buildRedLightInfoRow('850', strength850Text),
+
+            const SizedBox(height: 22),
+
+            if (setting != null)
+              Row(
+                children: [
+                  Text(
+                    modeText,
+                    style: const TextStyle(
+                      color: Color(0xFFE4E7EE),
+                      fontSize: 13,
+                    ),
+                  ),
+                  const SizedBox(width: 5),
+                  Image.asset(
+                    modeAsset,
+                    width: 170,
+                    height: 24,
+                    fit: BoxFit.contain,
+                  ),
+                ],
+              ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildRedLightInfoRow(String wavelength, int strength) {
+  Widget _buildRedLightInfoRow(String wavelength, String strengthText) {
     return SizedBox(
-      width: 210,
+      width: 215,
       child: Row(
         children: [
-          Text(
-            '$strength%',
-            style: const TextStyle(color: Colors.white, fontSize: 14),
+          SizedBox(
+            width: 105,
+            child: Text(
+              wavelength,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 21,
+                height: 1,
+              ),
+            ),
           ),
-          const Spacer(),
+          SizedBox(width: 17), // 波长和强度之间的间距(调节长度值)
+          Text(
+            strengthText,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              height: 1,
+            ),
+          ),
         ],
       ),
     );
@@ -499,7 +569,21 @@ class _StartPageState extends State<StartPage> {
       height: 156,
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onTap: isActive ? () => setState(_logic.pause) : null,
+        onTap: isActive
+            ? () async {
+                try {
+                  await modbusService.sendCommandQueue([
+                    const ModbusWriteCommand(address: 0x0004, value: 2),
+                    ...modbusService.buildStopRedLightCommands(),
+                  ]);
+                  if (!mounted) return;
+                  setState(_logic.pause);
+                  debugPrint('stop command sent successfully');
+                } catch (e) {
+                  debugPrint('stop command failed: $e');
+                }
+              }
+            : null,
         child: Opacity(
           opacity: isActive ? 1 : 0.45,
           child: Center(
@@ -518,24 +602,16 @@ class _StartPageState extends State<StartPage> {
 
   Widget _buildPlayButton() {
     final bool isActive =
-        !_logic.isRunning && _logic.elapsedSeconds < _logic.totalSeconds;
+        !_isStarting &&
+        !_logic.isRunning &&
+        _logic.elapsedSeconds < _logic.totalSeconds;
 
     return SizedBox(
       width: 167,
       height: 156,
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onTap: isActive
-            ? () async {
-                try {
-                  await modbusService.start(); // Write register 0 = 1.
-                  setState(_logic.play); // 页面开始计时
-                  debugPrint('开始指令发送成功');
-                } catch (e) {
-                  debugPrint('开始指令发送失败：$e');
-                }
-              }
-            : null,
+        onTap: isActive ? _handleStartPressed : null,
         child: Opacity(
           opacity: isActive ? 1 : 0.45,
           child: Center(
@@ -548,6 +624,44 @@ class _StartPageState extends State<StartPage> {
         ),
       ),
     );
+  }
+
+  Future<void> _handleStartPressed() async {
+    if (_isStarting || _logic.isRunning) return;
+
+    setState(() => _isStarting = true);
+    try {
+      await modbusService.startWithCommands(_currentPhaseCommands());
+      if (!mounted) return;
+      setState(_logic.play);
+      debugPrint('start command sent successfully');
+    } catch (e) {
+      debugPrint('start command failed: $e');
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('参数下发失败：$e')));
+    } finally {
+      if (mounted) setState(() => _isStarting = false);
+    }
+  }
+
+  List<ModbusWriteCommand> _currentPhaseCommands() {
+    if (!_logic.isCustomizedPlan) return const [];
+
+    final _StartArguments args = _StartArguments.from(Get.arguments);
+    final List<String> activeDevices = _logic.activeDevices(args.modeTitle);
+    final RedLightPhaseSetting? redLightSetting = _logic.activeRedLightSetting;
+
+    if (activeDevices.contains('red') && redLightSetting != null) {
+      return modbusService.buildRedLightCommands(
+        strength660: redLightSetting.strength660,
+        strength850: redLightSetting.strength850,
+        mode: redLightSetting.modbusMode,
+      );
+    }
+
+    return const [];
   }
 
   void _startTimer() {
