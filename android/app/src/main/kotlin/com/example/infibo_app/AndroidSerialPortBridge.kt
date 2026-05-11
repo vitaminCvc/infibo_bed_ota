@@ -337,7 +337,14 @@ class AndroidSerialPortBridge(messenger: BinaryMessenger) : MethodChannel.Method
 
     private fun expectedModbusResponseLength(bytes: ByteArray): Int? {
         if (bytes.size < 2) return null
-        return if ((bytes[1].toInt() and 0x80) != 0) 5 else 8
+        val function = bytes[1].toInt() and 0xFF
+        if ((function and 0x80) != 0) return 5
+
+        return when (function) {
+            0x03 -> if (bytes.size < 3) null else (bytes[2].toInt() and 0xFF) + 5
+            0x06 -> 8
+            else -> 8
+        }
     }
 
     private fun validateWriteSingleRegisterResponse(request: ByteArray, response: ByteArray) {

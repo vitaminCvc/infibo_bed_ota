@@ -10,6 +10,7 @@ import 'package:infibo_app/pages/customized/ui.dart';
 import 'package:infibo_app/pages/debug/serial_test_page.dart';
 import 'package:infibo_app/pages/login/ui.dart';
 import 'package:infibo_app/pages/main/ui.dart';
+import 'package:infibo_app/pages/music/ui.dart';
 import 'package:infibo_app/pages/start/ui.dart';
 
 const String _initialRoute = String.fromEnvironment(
@@ -47,6 +48,8 @@ List<GetPage> getRoutes() {
       name: "/customized/edit/mailun",
       page: () => const ChakraExpandPage(),
     ),
+    // 音乐选择页
+    GetPage(name: "/music", page: () => const MusicSelectPage()),
     // 隐藏调试路由：不在正式页面提供入口。
     GetPage(name: "/debug/serial-test", page: () => const SerialTestPage()),
   ];

@@ -20,6 +20,7 @@ import 'package:infibo_app/pages/customized/customizedPage/xiangfen/ui.dart'
 import 'package:infibo_app/pages/customized/customizedPage/logic.dart';
 import 'package:infibo_app/pages/customized/logic.dart';
 import 'package:infibo_app/pages/customized/plan_features.dart';
+import 'package:infibo_app/pages/music/logic.dart';
 
 class CustomizedEditPage extends StatefulWidget {
   const CustomizedEditPage({super.key});
@@ -69,6 +70,15 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
   late final List<FocusNode> _redLight850FocusNodes;
   late final List<FocusNode> _pemfFrequencyFocusNodes;
   late final List<FocusNode> _pemfIntensityFocusNodes;
+  late final List<TextEditingController> _vatFrequencyControllers;
+  late final List<TextEditingController> _vatIntensityControllers;
+  late final List<FocusNode> _vatFrequencyFocusNodes;
+  late final List<FocusNode> _vatIntensityFocusNodes;
+  late final List<_VatMusicSetting> _nodeVatMusicSettings;
+  late final List<TextEditingController> _hydrogenConcentrationControllers;
+  late final List<TextEditingController> _hydrogenFlowControllers;
+  late final List<FocusNode> _hydrogenConcentrationFocusNodes;
+  late final List<FocusNode> _hydrogenFlowFocusNodes;
   late final List<_RedLightMode> _nodeRedLightModes;
   late final List<_PemfWave?> _nodePemfWaves;
   late final Set<int> _savedNodeIndexes;
@@ -152,6 +162,24 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     _redLight850FocusNodes = List.generate(12, (_) => FocusNode());
     _pemfFrequencyFocusNodes = List.generate(12, (_) => FocusNode());
     _pemfIntensityFocusNodes = List.generate(12, (_) => FocusNode());
+    _vatFrequencyControllers = List.generate(12, (_) => TextEditingController());
+    _vatIntensityControllers = List.generate(
+      12,
+      (_) => TextEditingController(),
+    );
+    _vatFrequencyFocusNodes = List.generate(12, (_) => FocusNode());
+    _vatIntensityFocusNodes = List.generate(12, (_) => FocusNode());
+    _nodeVatMusicSettings = List.generate(
+      12,
+      (_) => const _VatMusicSetting(),
+    );
+    _hydrogenConcentrationControllers = List.generate(
+      12,
+      (_) => TextEditingController(),
+    );
+    _hydrogenFlowControllers = List.generate(12, (_) => TextEditingController());
+    _hydrogenConcentrationFocusNodes = List.generate(12, (_) => FocusNode());
+    _hydrogenFlowFocusNodes = List.generate(12, (_) => FocusNode());
     _nodeRedLightModes = List.generate(12, (_) => _RedLightMode.continuous);
     _nodePemfWaves = List.generate(12, (_) => null);
     _savedNodeIndexes = <int>{};
@@ -183,6 +211,31 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
       node.dispose();
     }
     for (final FocusNode node in _pemfIntensityFocusNodes) {
+      node.dispose();
+    }
+    for (final TextEditingController controller in _vatFrequencyControllers) {
+      controller.dispose();
+    }
+    for (final TextEditingController controller in _vatIntensityControllers) {
+      controller.dispose();
+    }
+    for (final FocusNode node in _vatFrequencyFocusNodes) {
+      node.dispose();
+    }
+    for (final FocusNode node in _vatIntensityFocusNodes) {
+      node.dispose();
+    }
+    for (final TextEditingController controller
+        in _hydrogenConcentrationControllers) {
+      controller.dispose();
+    }
+    for (final TextEditingController controller in _hydrogenFlowControllers) {
+      controller.dispose();
+    }
+    for (final FocusNode node in _hydrogenConcentrationFocusNodes) {
+      node.dispose();
+    }
+    for (final FocusNode node in _hydrogenFlowFocusNodes) {
       node.dispose();
     }
     super.dispose();
@@ -657,6 +710,9 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
   }
 
   Widget _buildVatPanel() {
+    final int? index = _activeNodeIndex;
+    if (index == null) return const SizedBox.shrink();
+
     return _NotchedPanel(
       width: 270,
       height: 160,
@@ -672,15 +728,35 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _PanelTitle(title: 'VAT', icon: _moduleById('vat').iconOn),
+            _buildVatTitleRow(index),
             const SizedBox(height: 17),
             _buildTwoColumnLabels('频率', '强度'),
             const SizedBox(height: 7),
             Row(
-              children: const [
-                _InputBox(width: 88),
-                SizedBox(width: 30),
-                _InputBox(width: 88),
+              children: [
+                _InputBox(
+                  width: 88,
+                  controller: _vatFrequencyControllers[index],
+                  focusNode: _vatFrequencyFocusNodes[index],
+                  keyboardType: TextInputType.number,
+                  maxValue: 100,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(3),
+                  ],
+                ),
+                const SizedBox(width: 30),
+                _InputBox(
+                  width: 88,
+                  controller: _vatIntensityControllers[index],
+                  focusNode: _vatIntensityFocusNodes[index],
+                  keyboardType: TextInputType.number,
+                  maxValue: 100,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(3),
+                  ],
+                ),
               ],
             ),
           ],
@@ -689,7 +765,61 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     );
   }
 
+  Widget _buildVatTitleRow(int index) {
+    return Row(
+      children: [
+        const Expanded(
+          child: Text('VAT',
+              style: TextStyle(
+                  color: Colors.white, fontSize: 22, fontWeight: FontWeight.w500)),
+        ),
+        GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () => _openVatMusicPage(index),
+          child: SizedBox(
+            width: 67,
+            height: 43,
+            child: Center(
+              child: Image.asset(_moduleById('vat').iconOn, width: 43, height: 43),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _openVatMusicPage(int index) async {
+    final _VatMusicSetting current = _nodeVatMusicSettings[index];
+    final Object? result = await Get.toNamed(
+      '/music',
+      arguments: {
+        'fromPage': 'customized',
+        'currentSelectedSongId': current.songId,
+        'currentVatFrequency': _vatFrequencyControllers[index].text,
+        'currentVatStrength': _vatIntensityControllers[index].text,
+        'activeNodeIndex': index,
+      },
+    );
+
+    if (!mounted) return;
+    if (result is! VatMusicSelection) return;
+
+    setState(() {
+      _vatFrequencyControllers[index].text = result.frequency;
+      _vatIntensityControllers[index].text = result.intensity;
+      _nodeVatMusicSettings[index] = _VatMusicSetting(
+        songId: result.songId,
+        songName: result.songName,
+        seriesName: result.seriesName,
+      );
+      _savedNodeIndexes.removeWhere((item) => item >= index);
+    });
+  }
+
   Widget _buildHydrogenPanel() {
+    final int? index = _activeNodeIndex;
+    if (index == null) return const SizedBox.shrink();
+
     return _NotchedPanel(
       width: 270,
       height: 160,
@@ -710,10 +840,30 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
             _buildTwoColumnLabels('氢气浓度', '流量'),
             const SizedBox(height: 7),
             Row(
-              children: const [
-                _InputBox(width: 88),
-                SizedBox(width: 30),
-                _InputBox(width: 88),
+              children: [
+                _InputBox(
+                  width: 88,
+                  controller: _hydrogenConcentrationControllers[index],
+                  focusNode: _hydrogenConcentrationFocusNodes[index],
+                  keyboardType: TextInputType.number,
+                  maxValue: 100,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(3),
+                  ],
+                ),
+                const SizedBox(width: 30),
+                _InputBox(
+                  width: 88,
+                  controller: _hydrogenFlowControllers[index],
+                  focusNode: _hydrogenFlowFocusNodes[index],
+                  keyboardType: TextInputType.number,
+                  maxValue: 100,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(3),
+                  ],
+                ),
               ],
             ),
           ],
@@ -1034,6 +1184,14 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
       _normalizeRangedNumber(_pemfFrequencyControllers[index], 75);
       _normalizeRangedNumber(_pemfIntensityControllers[index], 100);
     }
+    if (_nodeFeatureIds[index].contains('vat')) {
+      _normalizeRangedNumber(_vatFrequencyControllers[index], 100);
+      _normalizeRangedNumber(_vatIntensityControllers[index], 100);
+    }
+    if (_nodeFeatureIds[index].contains('hydrogen')) {
+      _normalizeRangedNumber(_hydrogenConcentrationControllers[index], 100);
+      _normalizeRangedNumber(_hydrogenFlowControllers[index], 100);
+    }
 
     setState(() {
       _savedNodeIndexes.add(index);
@@ -1228,6 +1386,46 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
       hasPhaseData = true;
     }
 
+    for (final String text in featureIds) {
+      if (!text.startsWith('vat:')) continue;
+
+      final List<String> parts = text.split(':');
+      if (parts.length < 3) continue;
+
+      final int? index = int.tryParse(parts[1]);
+      if (index == null || index < 0 || index >= _nodeFeatureIds.length) {
+        continue;
+      }
+
+      final _VatSetting vatSetting = _parseVatSetting(parts[2]);
+      _vatFrequencyControllers[index].text = vatSetting.frequencyText;
+      _vatIntensityControllers[index].text = vatSetting.intensityText;
+      _nodeVatMusicSettings[index] = vatSetting.music;
+      _nodeFeatureIds[index].add('vat');
+      _savedNodeIndexes.add(index);
+      hasPhaseData = true;
+    }
+
+    for (final String text in featureIds) {
+      if (!text.startsWith('hydrogen:')) continue;
+
+      final List<String> parts = text.split(':');
+      if (parts.length < 3) continue;
+
+      final int? index = int.tryParse(parts[1]);
+      if (index == null || index < 0 || index >= _nodeFeatureIds.length) {
+        continue;
+      }
+
+      final _HydrogenSetting hSetting = _parseHydrogenSetting(parts[2]);
+      _hydrogenConcentrationControllers[index].text =
+          hSetting.concentrationText;
+      _hydrogenFlowControllers[index].text = hSetting.flowText;
+      _nodeFeatureIds[index].add('hydrogen');
+      _savedNodeIndexes.add(index);
+      hasPhaseData = true;
+    }
+
     if (!hasPhaseData && _editingPlan != null) {
       final Set<String> ids = knownFeatureIds(featureIds).toSet();
       if (ids.isNotEmpty) {
@@ -1267,6 +1465,14 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
       }
       if (_nodeFeatureIds[index].contains('pemf')) {
         phaseTexts.add('pemf:$index:${_formatPemfSetting(index)}');
+      }
+      if (_nodeFeatureIds[index].contains('vat')) {
+        phaseTexts.add('vat:$index:${_formatVatSetting(index)}');
+      }
+      if (_nodeFeatureIds[index].contains('hydrogen')) {
+        phaseTexts.add(
+          'hydrogen:$index:${_formatHydrogenSetting(index)}',
+        );
       }
     }
 
@@ -1404,6 +1610,121 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     }
 
     return _PemfSetting(frequency: frequency, intensity: intensity, wave: wave);
+  }
+
+  String _formatVatSetting(int index) {
+    final int frequency = _rangedValue(
+      _vatFrequencyControllers[index].text,
+      100,
+    );
+    final int intensity = _rangedValue(
+      _vatIntensityControllers[index].text,
+      100,
+    );
+    final _VatMusicSetting music = _nodeVatMusicSettings[index];
+    final String songId = music.songId.isNotEmpty ? music.songId : defaultSongId;
+    final String songName = music.songName.isNotEmpty
+        ? Uri.encodeComponent(music.songName)
+        : '';
+    final String seriesName = music.seriesName.isNotEmpty
+        ? Uri.encodeComponent(music.seriesName)
+        : '';
+
+    return 'frequency=$frequency|intensity=$intensity|songId=$songId|songName=$songName|seriesName=$seriesName';
+  }
+
+  _VatSetting _parseVatSetting(String text) {
+    int frequency = 0;
+    int intensity = 0;
+    _VatMusicSetting music = const _VatMusicSetting();
+
+    for (final String pair in text.split('|')) {
+      final int separator = pair.indexOf('=');
+      if (separator <= 0 || separator == pair.length - 1) continue;
+
+      final String key = pair.substring(0, separator).trim();
+      final String value = pair.substring(separator + 1).trim();
+      switch (key) {
+        case 'frequency':
+          frequency = _rangedValue(value, 100);
+          break;
+        case 'intensity':
+          intensity = _rangedValue(value, 100);
+          break;
+        case 'songId':
+          music = _VatMusicSetting(
+            songId: value,
+            songName: music.songName,
+            seriesName: music.seriesName,
+          );
+          break;
+        case 'songName':
+          music = _VatMusicSetting(
+            songId: music.songId,
+            songName: Uri.decodeComponent(value),
+            seriesName: music.seriesName,
+          );
+          break;
+        case 'seriesName':
+          music = _VatMusicSetting(
+            songId: music.songId,
+            songName: music.songName,
+            seriesName: Uri.decodeComponent(value),
+          );
+          break;
+        // backward compat: old format used 'music' key
+        case 'music':
+          final Song? song = findSongById(value);
+          music = _VatMusicSetting(
+            songId: value,
+            songName: song?.name ?? '',
+            seriesName: song?.seriesName ?? '',
+          );
+          break;
+      }
+    }
+
+    return _VatSetting(
+      frequency: frequency,
+      intensity: intensity,
+      music: music,
+    );
+  }
+
+  String _formatHydrogenSetting(int index) {
+    final int concentration = _rangedValue(
+      _hydrogenConcentrationControllers[index].text,
+      100,
+    );
+    final int flow = _rangedValue(
+      _hydrogenFlowControllers[index].text,
+      100,
+    );
+
+    return 'concentration=$concentration|flow=$flow';
+  }
+
+  _HydrogenSetting _parseHydrogenSetting(String text) {
+    int concentration = 0;
+    int flow = 0;
+
+    for (final String pair in text.split('|')) {
+      final int separator = pair.indexOf('=');
+      if (separator <= 0 || separator == pair.length - 1) continue;
+
+      final String key = pair.substring(0, separator).trim();
+      final String value = pair.substring(separator + 1).trim();
+      switch (key) {
+        case 'concentration':
+          concentration = _rangedValue(value, 100);
+          break;
+        case 'flow':
+          flow = _rangedValue(value, 100);
+          break;
+      }
+    }
+
+    return _HydrogenSetting(concentration: concentration, flow: flow);
   }
 
   _ModuleItem _moduleById(String id) {
@@ -1853,6 +2174,46 @@ class _PemfWavePopupState extends State<_PemfWavePopup> {
         position.dy >= _buttonTop &&
         position.dy <= _buttonTop + _buttonHeight;
   }
+}
+
+class _VatMusicSetting {
+  const _VatMusicSetting({
+    this.songId = '',
+    this.songName = '',
+    this.seriesName = '',
+  });
+
+  final String songId;
+  final String songName;
+  final String seriesName;
+}
+
+class _VatSetting {
+  const _VatSetting({
+    required this.frequency,
+    required this.intensity,
+    required this.music,
+  });
+
+  final int frequency;
+  final int intensity;
+  final _VatMusicSetting music;
+
+  String get frequencyText => frequency.toString();
+  String get intensityText => intensity.toString();
+}
+
+class _HydrogenSetting {
+  const _HydrogenSetting({
+    required this.concentration,
+    required this.flow,
+  });
+
+  final int concentration;
+  final int flow;
+
+  String get concentrationText => concentration.toString();
+  String get flowText => flow.toString();
 }
 
 class _RadioDot extends StatelessWidget {

@@ -6,6 +6,8 @@ import 'package:get/get.dart';
 import 'package:infibo_app/components/index.dart';
 import 'package:infibo_app/components/logic.dart';
 import 'package:infibo_app/constants/assets.dart';
+import 'package:infibo_app/pages/joystick/ui.dart';
+import 'package:infibo_app/pages/music/logic.dart';
 import 'package:infibo_app/pages/start/logic.dart';
 
 // 启动理疗页面
@@ -36,17 +38,27 @@ class _StartPageState extends State<StartPage> {
   // 每秒推进一次倒计时
   Timer? _timer;
   bool _isCommanding = false;
+  int _lastPhaseIndex = 0;
+  final Set<String> _runningModules = <String>{};
+  bool _isSwitchingPhase = false;
+  bool _isCompletingSession = false;
+  Timer? _hydrogenFlowTimer;
+  bool _isReadingHydrogenFlow = false;
+  int? _hydrogenFlowValue;
+  VatMusicSelection? _vatMusicSelection;
 
   @override
   void initState() {
     super.initState();
     _logic.configure(Get.arguments);
+    _lastPhaseIndex = _logic.activePhaseIndex;
     _startTimer();
   }
 
   @override
   void dispose() {
     _timer?.cancel();
+    _hydrogenFlowTimer?.cancel();
     super.dispose();
   }
 
@@ -184,6 +196,11 @@ class _StartPageState extends State<StartPage> {
         Positioned(left: 278, top: 840, child: _buildTimer()),
         Positioned(left: 126, top: 970, child: _buildPauseButton()),
         Positioned(left: 508, top: 970, child: _buildPlayButton()),
+        Positioned(
+          left: 590,
+          top: 830,
+          child: JoystickControl(modbusService: modbusService),
+        ),
       ],
     );
   }
@@ -229,11 +246,18 @@ class _StartPageState extends State<StartPage> {
             Positioned.fill(child: Image.asset(panelAsset, fit: BoxFit.fill)),
             ..._buildFunctionPanelEffects(id, isActive),
             if (id == 'red') _buildRedLightPanelInfo(isActive),
+            if (id == 'pemf') _buildPemfPanelInfo(isActive),
+            if (id == 'vat') _buildVatPanelInfo(isActive),
+            if (id == 'hydrogen') _buildHydrogenPanelInfo(isActive),
             if (id != 'expand')
               Positioned(
                 right: id == 'red' || id == 'pemf' ? 40 : 18,
                 top: 15,
-                child: Image.asset(isActive ? iconOn : iconOff, width: 43),
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: id == 'vat' ? _openStartVatMusicPage : null,
+                  child: Image.asset(isActive ? iconOn : iconOff, width: 43),
+                ),
               ),
           ],
         ),
@@ -378,6 +402,261 @@ class _StartPageState extends State<StartPage> {
         ],
       ),
     );
+  }
+
+  Widget _buildPemfPanelInfo(bool isActive) {
+    final PemfPhaseSetting? setting = _logic.activePemfSetting;
+
+    final String frequencyText = setting?.frequency.toString() ?? '';
+    final String intensityText = setting?.intensity.toString() ?? '';
+    final String waveformAsset = _getWaveformAsset(setting?.waveform ?? '');
+
+    return Positioned(
+      left: 18,
+      top: 22,
+      child: IgnorePointer(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'PEMF',
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            const SizedBox(height: 24),
+            const Row(
+              children: [
+                SizedBox(
+                  width: 100,
+                  child: Text(
+                    '频率',
+                    style: TextStyle(color: Color(0xffb9bcc6), fontSize: 17),
+                  ),
+                ),
+                SizedBox(width: 20),
+                SizedBox(
+                  width: 100,
+                  child: Text(
+                    '强度',
+                    style: TextStyle(color: Color(0xffb9bcc6), fontSize: 17),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 6),
+            Row(
+              children: [
+                SizedBox(
+                  width: 100,
+                  child: Text(
+                    frequencyText,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 21,
+                      height: 1,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 17),
+                Text(
+                  intensityText,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    height: 1,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            if (waveformAsset.isNotEmpty)
+              Image.asset(
+                waveformAsset,
+                width: 170,
+                height: 24,
+                fit: BoxFit.contain,
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildVatPanelInfo(bool isActive) {
+    final VatPhaseSetting? setting = _logic.activeVatSetting;
+    final VatMusicSelection? musicSelection = _vatMusicSelection;
+
+    final String frequencyText = setting?.frequency.toString() ?? '';
+    final String intensityText = setting?.intensity.toString() ?? '';
+    final String songName =
+        musicSelection?.songName ??
+        setting?.songName ??
+        findSongById(setting?.songId ?? defaultSongId)?.name ??
+        '';
+
+    return Positioned(
+      left: 40,
+      top: 22,
+      child: IgnorePointer(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'VAT',
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            const SizedBox(height: 24),
+            const Row(
+              children: [
+                SizedBox(
+                  width: 100,
+                  child: Text(
+                    '频率',
+                    style: TextStyle(color: Color(0xffb9bcc6), fontSize: 17),
+                  ),
+                ),
+                SizedBox(width: 20),
+                SizedBox(
+                  width: 100,
+                  child: Text(
+                    '强度',
+                    style: TextStyle(color: Color(0xffb9bcc6), fontSize: 17),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 6),
+            Row(
+              children: [
+                SizedBox(
+                  width: 100,
+                  child: Text(
+                    frequencyText,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 21,
+                      height: 1,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 17),
+                Text(
+                  intensityText,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    height: 1,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            if (songName.isNotEmpty)
+              Text(
+                songName,
+                style: const TextStyle(color: Color(0xFFE4E7EE), fontSize: 13),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHydrogenPanelInfo(bool isActive) {
+    final HydrogenPhaseSetting? setting = _logic.activeHydrogenSetting;
+
+    final String concentrationText = setting?.concentration.toString() ?? '';
+    final String flowDisplay = _hydrogenFlowValue == null
+        ? '--'
+        : '$_hydrogenFlowValue';
+
+    return Positioned(
+      left: 40,
+      top: 22,
+      child: IgnorePointer(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              '分子氢',
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            const SizedBox(height: 24),
+            const Row(
+              children: [
+                SizedBox(
+                  width: 100,
+                  child: Text(
+                    '氢气浓度',
+                    style: TextStyle(color: Color(0xffb9bcc6), fontSize: 17),
+                  ),
+                ),
+                SizedBox(width: 20),
+                SizedBox(
+                  width: 100,
+                  child: Text(
+                    '流量',
+                    style: TextStyle(color: Color(0xffb9bcc6), fontSize: 17),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 6),
+            Row(
+              children: [
+                SizedBox(
+                  width: 100,
+                  child: Text(
+                    concentrationText,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 21,
+                      height: 1,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 17),
+                Text(
+                  flowDisplay,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    height: 1,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _getWaveformAsset(String waveform) {
+    switch (waveform) {
+      case 'sine':
+        return Assets.startPemfWaveSine;
+      case 'standardSine':
+        return Assets.startPemfWaveStandardSine;
+      case 'halfSine':
+        return Assets.startPemfWaveHalfSine;
+      case 'pulse':
+        return Assets.startPemfWavePulse;
+      case 'square':
+        return Assets.startPemfWaveSquare;
+      case 'fastRise':
+        return Assets.startPemfWaveFastRise;
+      case 'saw':
+      case 'sawtooth':
+        return Assets.startPemfWaveSawtooth;
+      case 'triangle':
+        return Assets.startPemfWaveTriangle;
+      case 'trapezoid':
+        return Assets.startPemfWaveTrapezoid;
+      case 'dualFrequency':
+        return Assets.startPemfWaveDualFrequency;
+      default:
+        return '';
+    }
   }
 
   // 构建功能框效果图
@@ -629,9 +908,14 @@ class _StartPageState extends State<StartPage> {
 
     setState(() => _isCommanding = true);
     try {
-      await modbusService.startWithCommands(_currentPhaseCommands());
+      final List<ModbusWriteCommand> commands = _buildPhaseCommands();
+      await modbusService.startWithCommands(commands);
       if (!mounted) return;
-      setState(_logic.play);
+      setState(() {
+        _logic.play();
+        _runningModules.addAll(_modulesForPhase());
+      });
+      _syncHydrogenFlowPolling();
       debugPrint('start command sent successfully');
     } catch (e) {
       debugPrint('start command failed: $e');
@@ -647,9 +931,16 @@ class _StartPageState extends State<StartPage> {
 
     setState(() => _isCommanding = true);
     try {
-      await modbusService.pauseTherapy();
+      await modbusService.pauseTherapy(
+        pauseVat: _runningModules.contains('vat'),
+        pausePemf: _runningModules.contains('pemf'),
+        pauseHydrogen: _runningModules.contains('hydrogen'),
+      );
       if (!mounted) return;
-      setState(_logic.pause);
+      setState(() {
+        _logic.pause();
+        _stopHydrogenFlowPolling(clearValue: false);
+      });
       debugPrint('pause command sent successfully');
     } catch (e) {
       debugPrint('pause command failed: $e');
@@ -665,9 +956,16 @@ class _StartPageState extends State<StartPage> {
 
     setState(() => _isCommanding = true);
     try {
-      await modbusService.resumeTherapy();
+      await modbusService.resumeTherapy(
+        resumeVat: _runningModules.contains('vat'),
+        resumePemf: _runningModules.contains('pemf'),
+        resumeHydrogen: _runningModules.contains('hydrogen'),
+      );
       if (!mounted) return;
-      setState(_logic.play);
+      setState(() {
+        _logic.play();
+      });
+      _syncHydrogenFlowPolling();
       debugPrint('resume command sent successfully');
     } catch (e) {
       debugPrint('resume command failed: $e');
@@ -684,9 +982,17 @@ class _StartPageState extends State<StartPage> {
     final _StartArguments args = _StartArguments.from(Get.arguments);
     setState(() => _isCommanding = true);
     try {
-      await modbusService.stopTherapy();
+      await modbusService.stopTherapy(
+        stopVat: _runningModules.contains('vat'),
+        stopPemf: _runningModules.contains('pemf'),
+        stopHydrogen: _runningModules.contains('hydrogen'),
+      );
       if (!mounted) return;
-      setState(_logic.stop);
+      setState(() {
+        _logic.stop();
+        _runningModules.clear();
+        _stopHydrogenFlowPolling(clearValue: true);
+      });
       await _showCompletionDialog(args);
     } catch (e) {
       debugPrint('stop command failed: $e');
@@ -697,22 +1003,169 @@ class _StartPageState extends State<StartPage> {
     }
   }
 
-  List<ModbusWriteCommand> _currentPhaseCommands() {
-    if (!_logic.isCustomizedPlan) return const [];
-
+  /// 构建当前阶段的所有模块参数命令列表，包含红光/PEMF/HYDROGEN/VAT。
+  List<ModbusWriteCommand> _buildPhaseCommands() {
     final _StartArguments args = _StartArguments.from(Get.arguments);
-    final List<String> activeDevices = _logic.activeDevices(args.modeTitle);
-    final RedLightPhaseSetting? redLightSetting = _logic.activeRedLightSetting;
+    final List<ModbusWriteCommand> commands = <ModbusWriteCommand>[];
 
-    if (activeDevices.contains('red') && redLightSetting != null) {
-      return modbusService.buildRedLightCommands(
-        strength660: redLightSetting.strength660,
-        strength850: redLightSetting.strength850,
-        mode: redLightSetting.modbusMode,
-      );
+    if (!_logic.isCustomizedPlan) return commands;
+
+    final List<String> activeDevices = _logic.activeDevices(args.modeTitle);
+
+    // 红光
+    if (activeDevices.contains('red')) {
+      final RedLightPhaseSetting? setting = _logic.activeRedLightSetting;
+      if (setting != null) {
+        commands.addAll(
+          modbusService.buildRedLightCommands(
+            strength660: setting.strength660,
+            strength850: setting.strength850,
+            mode: setting.modbusMode,
+          ),
+        );
+      }
+    } else {
+      commands.addAll(modbusService.buildStopRedLightCommands());
     }
 
-    return const [];
+    // PEMF
+    debugPrint('active features = $activeDevices');
+    debugPrint('PEMF hasPemf=${activeDevices.contains('pemf')}');
+    if (activeDevices.contains('pemf')) {
+      final PemfPhaseSetting? setting = _logic.activePemfSetting;
+      if (setting != null) {
+        final int waveformNum = setting.waveformNumber;
+        debugPrint('PEMF TX address=0x00C7 value=1');
+        debugPrint('PEMF TX address=0x00CE value=${setting.frequency}');
+        debugPrint('PEMF TX address=0x00D0 value=${setting.intensity}');
+        debugPrint('PEMF TX address=0x00D1 value=$waveformNum');
+        debugPrint('PEMF TX address=0x00CA value=1');
+        commands.addAll([
+          const ModbusWriteCommand(
+            address: ModbusRtuService.pemfTotalModeAddress,
+            value: 1,
+          ),
+          ModbusWriteCommand(
+            address: ModbusRtuService.pemfTotalFrequencyAddress,
+            value: setting.frequency,
+          ),
+          ModbusWriteCommand(
+            address: ModbusRtuService.pemfTotalIntensityAddress,
+            value: setting.intensity,
+          ),
+          ModbusWriteCommand(
+            address: ModbusRtuService.pemfTotalWaveformAddress,
+            value: waveformNum,
+          ),
+          const ModbusWriteCommand(
+            address: ModbusRtuService.pemfTotalCommandAddress,
+            value: 1,
+          ),
+        ]);
+      }
+    }
+
+    // 分子氢
+    final bool hasHydrogen = activeDevices.contains('hydrogen');
+    debugPrint('Hydrogen hasHydrogen=$hasHydrogen');
+    if (hasHydrogen) {
+      final HydrogenPhaseSetting? setting = _logic.activeHydrogenSetting;
+      if (setting != null) {
+        commands.addAll(
+          modbusService.buildHydrogenParamCommands(
+            concentration: setting.concentration,
+          ),
+        );
+        commands.add(
+          const ModbusWriteCommand(
+            address: ModbusRtuService.hydrogenCommandAddress,
+            value: 1,
+          ),
+        );
+        debugPrint('Hydrogen flow polling start');
+      }
+    } else {
+      debugPrint('skip hydrogen commands and flow polling because current phase has no hydrogen');
+    }
+
+    // VAT
+    if (activeDevices.contains('vat')) {
+      final VatPhaseSetting? setting = _logic.activeVatSetting;
+      if (setting != null) {
+        final int musicIndex = _resolveVatMusicIndex(setting);
+        commands.addAll(
+          modbusService.buildVatParamCommands(
+            frequency: setting.frequency,
+            intensity: setting.intensity,
+            musicIndex: musicIndex,
+          ),
+        );
+        commands.add(
+          const ModbusWriteCommand(
+            address: ModbusRtuService.vatCommandAddress,
+            value: 1,
+          ),
+        );
+      }
+    }
+
+    return commands;
+  }
+
+  int _resolveVatMusicIndex(VatPhaseSetting? planSetting) {
+    final VatMusicSelection? runtimeSelection = _vatMusicSelection;
+    if (runtimeSelection != null) {
+      final int idx = allSongs.indexWhere(
+        (s) => s.id == runtimeSelection.songId,
+      );
+      return idx >= 0 ? idx : 0;
+    }
+    if (planSetting?.songId != null) {
+      final int idx = allSongs.indexWhere((s) => s.id == planSetting!.songId);
+      return idx >= 0 ? idx : 0;
+    }
+    return 0;
+  }
+
+  /// 获取当前阶段启用的模块列表。
+  Set<String> _modulesForPhase() {
+    final _StartArguments args = _StartArguments.from(Get.arguments);
+    return _logic.activeDevices(args.modeTitle).toSet();
+  }
+
+  /// 打开 VAT 音乐选择页面。
+  Future<void> _openStartVatMusicPage() async {
+    final VatPhaseSetting? setting = _logic.activeVatSetting;
+    final VatMusicSelection? current = _vatMusicSelection;
+
+    final String currentSongId =
+        current?.songId ?? setting?.songId ?? defaultSongId;
+
+    final Object? result = await Get.toNamed(
+      '/music',
+      arguments: {
+        'fromPage': 'start',
+        'currentSelectedSongId': currentSongId,
+        'phaseIndex': _logic.activePhaseIndex,
+      },
+    );
+
+    if (!mounted) return;
+    if (result is! VatMusicSelection) return;
+
+    setState(() => _vatMusicSelection = result);
+
+    final bool isVatRunning =
+        _logic.isRunning && _runningModules.contains('vat');
+    if (isVatRunning) {
+      final int idx = allSongs.indexWhere((s) => s.id == result.songId);
+      final int musicIndex = idx >= 0 ? idx : 0;
+      try {
+        await modbusService.writeVatMusicIndex(musicIndex);
+      } catch (e) {
+        debugPrint('VAT runtime music change failed: $e');
+      }
+    }
   }
 
   void _showError(String message) {
@@ -825,10 +1278,166 @@ class _StartPageState extends State<StartPage> {
   }
 
   void _startTimer() {
+    _timer?.cancel();
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
       if (!_logic.isRunning) return;
-      setState(_logic.tick);
+      setState(() {
+        _logic.tick();
+        _trySwitchPhase();
+      });
     });
+  }
+
+  /// 检测阶段切换，并下发新阶段参数。
+  void _trySwitchPhase() {
+    if (_isSwitchingPhase || _isCompletingSession) return;
+
+    final int currentIndex = _logic.activePhaseIndex;
+    if (currentIndex == _lastPhaseIndex && _logic.isRunning) return;
+
+    if (_logic.elapsedSeconds >= _logic.totalSeconds) {
+      _isCompletingSession = true;
+      _handleStopPressed();
+      return;
+    }
+
+    final _StartArguments args = _StartArguments.from(Get.arguments);
+    final List<String> prevDevices = _logic.isRunning
+        ? _runningModules.toList()
+        : <String>[];
+    final List<String> currentDevices = _logic.activeDevices(args.modeTitle);
+    final Set<String> prevSet = prevDevices.toSet();
+    final Set<String> currSet = currentDevices.toSet();
+
+    debugPrint('phase switch:');
+    debugPrint('prev modules = $prevDevices');
+    debugPrint('current modules = $currentDevices');
+
+    _lastPhaseIndex = currentIndex;
+    _isSwitchingPhase = true;
+
+    final List<ModbusWriteCommand> commands = <ModbusWriteCommand>[];
+
+    // 1. Stop removed modules
+    for (final String module in prevSet.difference(currSet)) {
+      debugPrint('stop removed module: $module');
+      switch (module) {
+        case 'red':
+          commands.addAll([
+            const ModbusWriteCommand(address: ModbusRtuService.redLightTotalCommandAddress, value: 2),
+            const ModbusWriteCommand(address: ModbusRtuService.redLight660EnableAddress, value: 0),
+            const ModbusWriteCommand(address: ModbusRtuService.redLight660PowerAddress, value: 0),
+            const ModbusWriteCommand(address: ModbusRtuService.redLight850EnableAddress, value: 0),
+            const ModbusWriteCommand(address: ModbusRtuService.redLight850PowerAddress, value: 0),
+            const ModbusWriteCommand(address: ModbusRtuService.redLightTotalEnableAddress, value: 0),
+          ]);
+          break;
+        case 'pemf':
+          commands.addAll([
+            const ModbusWriteCommand(address: ModbusRtuService.pemfTotalCommandAddress, value: 2),
+            const ModbusWriteCommand(address: ModbusRtuService.pemfTotalIntensityAddress, value: 0),
+            const ModbusWriteCommand(address: ModbusRtuService.pemfTotalModeAddress, value: 0),
+          ]);
+          break;
+        case 'hydrogen':
+          commands.addAll([
+            const ModbusWriteCommand(address: ModbusRtuService.hydrogenCommandAddress, value: 2),
+            const ModbusWriteCommand(address: ModbusRtuService.hydrogenConcentrationAddress, value: 0),
+            const ModbusWriteCommand(address: ModbusRtuService.hydrogenEnableAddress, value: 0),
+          ]);
+          break;
+        case 'vat':
+          commands.addAll([
+            const ModbusWriteCommand(address: ModbusRtuService.vatCommandAddress, value: 2),
+            const ModbusWriteCommand(address: ModbusRtuService.vatIntensityAddress, value: 0),
+            const ModbusWriteCommand(address: ModbusRtuService.vatEnableAddress, value: 0),
+          ]);
+          break;
+      }
+    }
+
+    // 2. Update params for kept modules + start new modules
+    for (final String module in currSet) {
+      if (prevSet.contains(module)) {
+        debugPrint('keep running module: $module');
+      } else {
+        debugPrint('start new module: $module');
+      }
+    }
+    commands.addAll(_buildPhaseCommands());
+
+    debugPrint('skip system restart because already running');
+
+    setState(() {
+      _runningModules.clear();
+      _runningModules.addAll(currentDevices);
+    });
+
+    if (commands.isNotEmpty) {
+      modbusService
+          .sendCommandQueue(commands)
+          .then((_) {
+            if (mounted) setState(() => _isSwitchingPhase = false);
+            _syncHydrogenFlowPolling();
+          })
+          .catchError((Object e) {
+            debugPrint('Phase switch command failed: $e');
+            if (mounted) setState(() => _isSwitchingPhase = false);
+          });
+    } else {
+      _isSwitchingPhase = false;
+      _syncHydrogenFlowPolling();
+    }
+  }
+
+  /// 根据当前阶段是否包含分子氢，启动或停止流量轮询。
+  void _syncHydrogenFlowPolling() {
+    final _StartArguments args = _StartArguments.from(Get.arguments);
+    final List<String> activeDevices = _logic.activeDevices(args.modeTitle);
+
+    if (activeDevices.contains('hydrogen')) {
+      _startHydrogenFlowPolling();
+    } else {
+      _stopHydrogenFlowPolling(clearValue: false);
+    }
+  }
+
+  void _startHydrogenFlowPolling() {
+    if (_hydrogenFlowTimer != null && _hydrogenFlowTimer!.isActive) return;
+    _readHydrogenFlowOnce();
+    _hydrogenFlowTimer = Timer.periodic(const Duration(seconds: 5), (_) {
+      if (!_logic.isRunning) return;
+      _readHydrogenFlowOnce();
+    });
+  }
+
+  void _stopHydrogenFlowPolling({required bool clearValue}) {
+    _hydrogenFlowTimer?.cancel();
+    _hydrogenFlowTimer = null;
+    if (clearValue) {
+      _hydrogenFlowValue = null;
+    }
+  }
+
+  Future<void> _readHydrogenFlowOnce() async {
+    if (_isReadingHydrogenFlow) return;
+    if (!_logic.isRunning) return;
+    final _StartArguments args = _StartArguments.from(Get.arguments);
+    final List<String> activeDevices = _logic.activeDevices(args.modeTitle);
+    if (!activeDevices.contains('hydrogen')) return;
+    _isReadingHydrogenFlow = true;
+    try {
+      final int flow = await modbusService.readHydrogenFlow();
+      if (mounted) {
+        setState(() => _hydrogenFlowValue = flow);
+      }
+    } catch (e) {
+      debugPrint('readHydrogenFlow failed: $e');
+    } finally {
+      if (mounted) {
+        _isReadingHydrogenFlow = false;
+      }
+    }
   }
 
   String _formatRemainingTime() {

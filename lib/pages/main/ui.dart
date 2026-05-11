@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:infibo_app/components/index.dart';
 import 'package:infibo_app/constants/assets.dart';
 import 'package:infibo_app/constants/color.dart';
+import 'package:infibo_app/pages/joystick/ui.dart';
 import 'package:infibo_app/pages/main/logic.dart';
 
 // 主页面UI
@@ -190,6 +191,7 @@ class _MainPageState extends State<MainPage> {
         ..._leftModeCards.map((card) => _buildModeCard(card)),
         ..._rightModeCards.map((card) => _buildModeCard(card)),
         _buildBottomActions(),
+        const Positioned(left: 590, top: 1010, child: JoystickControl()),
       ],
     );
   }

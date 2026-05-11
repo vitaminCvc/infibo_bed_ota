@@ -50,6 +50,9 @@ class ModbusRtuService {
   /// PEMF总命令地址。
   static const int pemfTotalCommandAddress = 0x00CA;
 
+  /// PEMF总启用地址。
+  static const int pemfTotalEnableAddress = 0x00C8;
+
   /// PEMF总模式地址。
   static const int pemfTotalModeAddress = 0x00C7;
 
@@ -61,6 +64,42 @@ class ModbusRtuService {
 
   /// PEMF输出波形地址。
   static const int pemfTotalWaveformAddress = 0x00D1;
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //////////////////VAT模块相关寄存器地址//////////////////
+
+  /// VAT总启用地址。
+  static const int vatEnableAddress = 0x01F3;
+
+  /// VAT模式地址。
+  static const int vatModeAddress = 0x01F5;
+
+  /// VAT命令地址。
+  static const int vatCommandAddress = 0x01F6;
+
+  /// VAT频率地址。
+  static const int vatFrequencyAddress = 0x01F9;
+
+  /// VAT强度地址。
+  static const int vatIntensityAddress = 0x01FC;
+
+  /// VAT音乐索引地址。
+  static const int vatMusicIndexAddress = 0x0201;
+
+  /// 分子氢使能地址。
+  static const int hydrogenEnableAddress = 0x0257;
+
+  /// 分子氢模式地址。
+  static const int hydrogenModeAddress = 0x0259;
+
+  /// 分子氢命令地址。
+  static const int hydrogenCommandAddress = 0x025A;
+
+  /// 分子氢浓度地址。
+  static const int hydrogenConcentrationAddress = 0x025D;
+
+  /// 分子氢流量地址（只读）。
+  static const int hydrogenFlowAddress = 0x025F;
 
   final String portName; // Android 上通常是 /dev/ttyS0。
   final int baudRate; // 115200。
@@ -94,25 +133,50 @@ class ModbusRtuService {
   }
 
   //暂停按钮
-  /// 红光总命令地址，发送 0x0066 = 3 和 0x0004 = 3 命令。
-  Future<void> pauseTherapy() {
-    return sendCommandQueue(const [
-      ModbusWriteCommand(address: redLightTotalCommandAddress, value: 3),
-      ModbusWriteCommand(address: systemCommandAddress, value: 3),
+  Future<void> pauseTherapy({
+    bool pauseVat = false,
+    bool pausePemf = false,
+    bool pauseHydrogen = false,
+  }) {
+    return sendCommandQueue([
+      ...buildModulePauseCommands(
+        pauseVat: pauseVat,
+        pausePemf: pausePemf,
+        pauseHydrogen: pauseHydrogen,
+      ),
+      const ModbusWriteCommand(address: systemCommandAddress, value: 3),
     ]);
   }
 
-  // 继续总命令，发送 0x0004 = 4 和 0x0066 = 4 命令。
-  Future<void> resumeTherapy() {
-    return sendCommandQueue(const [
-      ModbusWriteCommand(address: redLightTotalCommandAddress, value: 4),
-      ModbusWriteCommand(address: systemCommandAddress, value: 4),
+  // 继续总命令。
+  Future<void> resumeTherapy({
+    bool resumeVat = false,
+    bool resumePemf = false,
+    bool resumeHydrogen = false,
+  }) {
+    return sendCommandQueue([
+      ...buildModuleResumeCommands(
+        resumeVat: resumeVat,
+        resumePemf: resumePemf,
+        resumeHydrogen: resumeHydrogen,
+      ),
+      const ModbusWriteCommand(address: systemCommandAddress, value: 4),
     ]);
   }
 
   // 停止总命令。
-  Future<void> stopTherapy() {
-    return sendCommandQueue(buildStopTherapyCommands());
+  Future<void> stopTherapy({
+    bool stopVat = false,
+    bool stopPemf = false,
+    bool stopHydrogen = false,
+  }) {
+    return sendCommandQueue(
+      buildStopTherapyCommands(
+        stopVat: stopVat,
+        stopPemf: stopPemf,
+        stopHydrogen: stopHydrogen,
+      ),
+    );
   }
 
   /// 按自定义方案的当前 5 分钟节点配置红光模块。
@@ -194,17 +258,199 @@ class ModbusRtuService {
     ];
   }
 
-  // 构建停止治疗的命令列表，除了关闭红光模块，还发送系统停止命令。
-  List<ModbusWriteCommand> buildStopTherapyCommands() {
-    return const [
-      ModbusWriteCommand(address: redLightTotalCommandAddress, value: 2),
-      ModbusWriteCommand(address: systemCommandAddress, value: 2),
-      ModbusWriteCommand(address: redLight660EnableAddress, value: 0),
-      ModbusWriteCommand(address: redLight660PowerAddress, value: 0),
-      ModbusWriteCommand(address: redLight850EnableAddress, value: 0),
-      ModbusWriteCommand(address: redLight850PowerAddress, value: 0),
-      ModbusWriteCommand(address: redLightTotalEnableAddress, value: 0),
+  // 构建停止治疗的命令列表，系统命令必须最后发送。
+  List<ModbusWriteCommand> buildStopTherapyCommands({
+    bool stopVat = false,
+    bool stopPemf = false,
+    bool stopHydrogen = false,
+  }) {
+    return [
+      if (stopPemf) ...[
+        const ModbusWriteCommand(address: pemfTotalCommandAddress, value: 2),
+        const ModbusWriteCommand(address: pemfTotalIntensityAddress, value: 0),
+        const ModbusWriteCommand(address: pemfTotalModeAddress, value: 0),
+      ],
+      if (stopHydrogen) ...[
+        const ModbusWriteCommand(address: hydrogenCommandAddress, value: 2),
+        const ModbusWriteCommand(address: hydrogenConcentrationAddress, value: 0),
+        const ModbusWriteCommand(address: hydrogenEnableAddress, value: 0),
+      ],
+      if (stopVat) ...[
+        const ModbusWriteCommand(address: vatCommandAddress, value: 2),
+        const ModbusWriteCommand(address: vatIntensityAddress, value: 0),
+        const ModbusWriteCommand(address: vatEnableAddress, value: 0),
+      ],
+      const ModbusWriteCommand(address: redLightTotalCommandAddress, value: 2),
+      const ModbusWriteCommand(address: redLight660EnableAddress, value: 0),
+      const ModbusWriteCommand(address: redLight660PowerAddress, value: 0),
+      const ModbusWriteCommand(address: redLight850EnableAddress, value: 0),
+      const ModbusWriteCommand(address: redLight850PowerAddress, value: 0),
+      const ModbusWriteCommand(address: redLightTotalEnableAddress, value: 0),
+      const ModbusWriteCommand(address: systemCommandAddress, value: 2),
     ];
+  }
+
+  /// 构建模块暂停命令列表（不含系统命令）。
+  List<ModbusWriteCommand> buildModulePauseCommands({
+    bool pauseVat = false,
+    bool pausePemf = false,
+    bool pauseHydrogen = false,
+  }) {
+    return [
+      if (pauseHydrogen)
+        const ModbusWriteCommand(address: hydrogenCommandAddress, value: 3),
+      if (pausePemf)
+        const ModbusWriteCommand(address: pemfTotalCommandAddress, value: 3),
+      if (pauseVat)
+        const ModbusWriteCommand(address: vatCommandAddress, value: 3),
+      const ModbusWriteCommand(address: redLightTotalCommandAddress, value: 3),
+    ];
+  }
+
+  /// 构建模块恢复命令列表（不含系统命令）。
+  List<ModbusWriteCommand> buildModuleResumeCommands({
+    bool resumeVat = false,
+    bool resumePemf = false,
+    bool resumeHydrogen = false,
+  }) {
+    return [
+      if (resumeHydrogen)
+        const ModbusWriteCommand(address: hydrogenCommandAddress, value: 4),
+      if (resumePemf)
+        const ModbusWriteCommand(address: pemfTotalCommandAddress, value: 4),
+      if (resumeVat)
+        const ModbusWriteCommand(address: vatCommandAddress, value: 4),
+      const ModbusWriteCommand(address: redLightTotalCommandAddress, value: 4),
+    ];
+  }
+
+  /// 构建 VAT 参数命令列表。
+  List<ModbusWriteCommand> buildVatParamCommands({
+    required int frequency,
+    required int intensity,
+    required int musicIndex,
+  }) {
+    final int safeFrequency = frequency.clamp(0, 100);
+    final int safeIntensity = intensity.clamp(0, 100);
+    final int safeMusicIndex = musicIndex.clamp(0, 255);
+    debugPrint(
+      'VAT params: freq=$safeFrequency intensity=$safeIntensity musicIndex=$safeMusicIndex',
+    );
+
+    return [
+      const ModbusWriteCommand(address: vatEnableAddress, value: 1),
+      const ModbusWriteCommand(address: vatModeAddress, value: 0),
+      ModbusWriteCommand(address: vatFrequencyAddress, value: safeFrequency),
+      ModbusWriteCommand(address: vatIntensityAddress, value: safeIntensity),
+      ModbusWriteCommand(address: vatMusicIndexAddress, value: safeMusicIndex),
+    ];
+  }
+
+  /// 写入 VAT 音乐索引到硬件。
+  Future<void> writeVatMusicIndex(int musicIndex) async {
+    final int safeIndex = musicIndex.clamp(0, 255);
+    await sendCommandQueue([
+      ModbusWriteCommand(address: vatMusicIndexAddress, value: safeIndex),
+    ]);
+    debugPrint('VAT music index written: $safeIndex');
+  }
+
+  List<ModbusWriteCommand> buildHydrogenParamCommands({
+    required int concentration,
+  }) {
+    final int safeConcentration = _clampPercent(concentration);
+    debugPrint('Hydrogen concentration=$safeConcentration%');
+    debugPrint('Hydrogen TX address=0x0257 value=1');
+    debugPrint('Hydrogen TX address=0x0259 value=0');
+    debugPrint('Hydrogen TX address=0x025D value=$safeConcentration');
+
+    return [
+      const ModbusWriteCommand(address: hydrogenEnableAddress, value: 1),
+      const ModbusWriteCommand(address: hydrogenModeAddress, value: 0),
+      ModbusWriteCommand(
+        address: hydrogenConcentrationAddress,
+        value: safeConcentration,
+      ),
+    ];
+  }
+
+  /// 读取氢气流量（0x03 读保持寄存器）。
+  Future<int> readHydrogenFlow() async {
+    try {
+      final int value = await readHoldingRegister(hydrogenFlowAddress);
+      debugPrint('Hydrogen flow RX address=0x025F value=$value');
+      debugPrint('Hydrogen flow parsed value=$value');
+      return value;
+    } catch (error) {
+      debugPrint('Hydrogen modbus failed: $error');
+      rethrow;
+    }
+  }
+
+  Future<int> readHoldingRegister(int address) async {
+    final Uint8List frame = _buildReadHoldingRegistersFrame(
+      slaveId: slaveId,
+      address: address,
+      quantity: 1,
+    );
+
+    if (Platform.isAndroid) {
+      try {
+        debugPrint('Hydrogen TX: ${_formatBytes(frame)}');
+        final Uint8List response = await AndroidSerialPortService.instance
+            .transceiveBytes(
+              bytes: frame,
+              path: portName,
+              baudRate: baudRate,
+              timeout: timeout,
+            );
+        debugPrint('Hydrogen RX: ${_formatBytes(response)}');
+        return _parseReadSingleRegisterResponse(response: response);
+      } on PlatformException catch (error) {
+        throw ModbusRtuException(_normalizeNativeError(error.message));
+      }
+    }
+
+    if (!Platform.isWindows) {
+      throw UnsupportedError(
+        'Modbus RTU serial test requires Android or Windows desktop.',
+      );
+    }
+
+    final SerialPort port = SerialPort(portName);
+    SerialPortConfig? config;
+    try {
+      if (!port.openReadWrite()) {
+        throw Exception(
+          'Open serial port failed: $portName, ${SerialPort.lastError}',
+        );
+      }
+
+      config = SerialPortConfig()
+        ..baudRate = baudRate
+        ..bits = 8
+        ..parity = SerialPortParity.none
+        ..stopBits = 1
+        ..setFlowControl(SerialPortFlowControl.none);
+      port.config = config;
+      config = null;
+      port.flush();
+
+      debugPrint('Hydrogen TX: ${_formatBytes(frame)}');
+      final int written = port.write(frame, timeout: timeout.inMilliseconds);
+      if (written != frame.length) {
+        throw TimeoutException(
+          'Serial write timeout: $written/${frame.length} bytes',
+        );
+      }
+      final Uint8List response = port.read(7, timeout: timeout.inMilliseconds);
+      debugPrint('Hydrogen RX: ${_formatBytes(response)}');
+      return _parseReadSingleRegisterResponse(response: response);
+    } finally {
+      if (port.isOpen) port.close();
+      config?.dispose();
+      port.dispose();
+    }
   }
 
   // 其他模块如 PEMF 的命令构建方法可以类似添加。
@@ -510,6 +756,44 @@ class ModbusRtuService {
     data.setUint8(7, (crc >> 8) & 0xFF);
 
     return frame;
+  }
+
+  Uint8List _buildReadHoldingRegistersFrame({
+    required int slaveId,
+    required int address,
+    required int quantity,
+  }) {
+    final Uint8List frame = Uint8List(8);
+    final ByteData data = ByteData.sublistView(frame);
+
+    data.setUint8(0, slaveId);
+    data.setUint8(1, 0x03);
+    data.setUint16(2, address);
+    data.setUint16(4, quantity);
+
+    final int crc = _crc16(frame.sublist(0, 6));
+    data.setUint8(6, crc & 0xFF);
+    data.setUint8(7, (crc >> 8) & 0xFF);
+    return frame;
+  }
+
+  int _parseReadSingleRegisterResponse({required Uint8List response}) {
+    if (response.length < 7) {
+      throw ModbusRtuException('流量读取失败：响应长度不足 ${response.length}/7');
+    }
+    if (response[0] != slaveId || response[1] != 0x03 || response[2] != 0x02) {
+      throw ModbusRtuException('流量读取失败：响应头错误 ${_formatBytes(response)}');
+    }
+
+    final int expectedCrc = _crc16(response.sublist(0, 5));
+    final int actualCrc = response[5] | (response[6] << 8);
+    if (expectedCrc != actualCrc) {
+      throw ModbusRtuException(
+        '流量读取失败：CRC错误 expected=${expectedCrc.toRadixString(16)} actual=${actualCrc.toRadixString(16)}',
+      );
+    }
+
+    return ByteData.sublistView(response).getUint16(3);
   }
 
   int _crc16(List<int> bytes) {
