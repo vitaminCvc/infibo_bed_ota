@@ -128,7 +128,7 @@ class Assets {
       "assets/Start/Switch/startClick.png";
 
   // 启动治疗页：暂停按钮默认状态。
-  static const String startPauseButton = "assets/Start/Switch/Stop.png";
+  static const String startPauseButton = "assets/Start/Switch/stop.png";
 
   // 启动治疗页：暂停按钮按下状态。
   static const String startPauseActiveButton =
@@ -151,11 +151,8 @@ class Assets {
   static const String startExpandContinuous =
       "assets/Start/Expand/continuous.png";
 
-  // 启动治疗页：拓展功能正弦波图标。
-  static const String startExpandSine = "assets/Start/Expand/sine.png";
-
   // 自定义红光 / 启动页：脉冲模式曲线图。
-  static const String redLightPulseWave = "assets/10个波形图/脉冲.png";
+  static const String redLightPulseWave = "assets/waveforms/pulse.png";
 
   // 启动治疗页：红光未启动状态图标。
   static const String startRedLightIconOff = "assets/Start/icon/redlight.png";
@@ -288,6 +285,29 @@ class Assets {
   // 自定义方案编辑页：PEMF 右侧参数面板背景。
   static const String customizedPemfPanelBg =
       "assets/customized/editor/panels/pemf_panel_bg.png";
+
+  static const String customizedPemfWaveDialog =
+      "assets/customized/PEMF/Waveform/dialogBox.png";
+  static const String customizedPemfWaveSine =
+      "assets/customized/PEMF/Waveform/sine.png";
+  static const String customizedPemfWaveStandardSine =
+      "assets/customized/PEMF/Waveform/standardSine.png";
+  static const String customizedPemfWaveHalfSine =
+      "assets/customized/PEMF/Waveform/halfSine.png";
+  static const String customizedPemfWavePulse =
+      "assets/customized/PEMF/Waveform/pulse.png";
+  static const String customizedPemfWaveCubic =
+      "assets/customized/PEMF/Waveform/cubic.png";
+  static const String customizedPemfWaveDualFrequency =
+      "assets/customized/PEMF/Waveform/dualFrequency.png";
+  static const String customizedPemfWaveFastRise =
+      "assets/customized/PEMF/Waveform/fastRise.png";
+  static const String customizedPemfWaveSaw =
+      "assets/customized/PEMF/Waveform/Saw.png";
+  static const String customizedPemfWaveTriangle =
+      "assets/customized/PEMF/Waveform/triangle.png";
+  static const String customizedPemfWaveTrapezoid =
+      "assets/customized/PEMF/Waveform/trapezoid.png";
 
   // 自定义方案编辑页：VAT 右侧参数面板背景。
   static const String customizedVatPanelBg =

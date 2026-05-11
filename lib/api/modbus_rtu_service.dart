@@ -11,6 +11,12 @@ import 'package:flutter_libserialport/flutter_libserialport.dart';
 import 'package:infibo_app/services/android_serial_port_service.dart';
 
 class ModbusRtuService {
+  /// 系统控制命令寄存器地址。
+  static const int systemCommandAddress = 0x0004;
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //////////////////红光模块相关寄存器地址//////////////////
+
   /// 红光总命令地址。
   static const int redLightTotalEnableAddress = 0x0063;
 
@@ -38,13 +44,32 @@ class ModbusRtuService {
   /// 红光850nm 功率地址。
   static const int redLight850PowerAddress = 0x0090;
 
-  final String portName;
-  final int baudRate;
-  final int slaveId;
-  final Duration timeout;
-  final Duration commandDelay;
-  final int maxRetries;
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //////////////////PEMF模块相关寄存器地址//////////////////
 
+  /// PEMF总命令地址。
+  static const int pemfTotalCommandAddress = 0x00CA;
+
+  /// PEMF总模式地址。
+  static const int pemfTotalModeAddress = 0x00C7;
+
+  ///PEMF总频率地址。
+  static const int pemfTotalFrequencyAddress = 0x00CE;
+
+  /// PEMF输出强度地址。
+  static const int pemfTotalIntensityAddress = 0x00D0;
+
+  /// PEMF输出波形地址。
+  static const int pemfTotalWaveformAddress = 0x00D1;
+
+  final String portName; // Android 上通常是 /dev/ttyS0。
+  final int baudRate; // 115200。
+  final int slaveId; // 16。
+  final Duration timeout; // 1 秒。
+  final Duration commandDelay; // 命令间延迟，默认 40ms，兼顾性能和稳定性。
+  final int maxRetries; // 最大重试次数，默认 2 次。
+
+  // 其他参数如数据位、停止位、校验等 Modbus RTU 标准配置固定为 8N1，无需暴露。
   const ModbusRtuService({
     this.portName = AndroidSerialPortService.defaultPath,
     this.baudRate = AndroidSerialPortService.defaultBaudRate,
@@ -57,15 +82,37 @@ class ModbusRtuService {
   /// 启动，发送 0x0004 = 1 命令。
   Future<void> start() async {
     await sendCommandQueue([
-      const ModbusWriteCommand(address: 0x0004, value: 1),
+      const ModbusWriteCommand(address: systemCommandAddress, value: 1),
     ]);
   }
 
   /// 停止，发送 0x0004 = 2 命令。
   Future<void> pause() async {
     await sendCommandQueue([
-      const ModbusWriteCommand(address: 0x0004, value: 2),
+      const ModbusWriteCommand(address: systemCommandAddress, value: 2),
     ]);
+  }
+
+  //暂停按钮
+  /// 红光总命令地址，发送 0x0066 = 3 和 0x0004 = 3 命令。
+  Future<void> pauseTherapy() {
+    return sendCommandQueue(const [
+      ModbusWriteCommand(address: redLightTotalCommandAddress, value: 3),
+      ModbusWriteCommand(address: systemCommandAddress, value: 3),
+    ]);
+  }
+
+  // 继续总命令，发送 0x0004 = 4 和 0x0066 = 4 命令。
+  Future<void> resumeTherapy() {
+    return sendCommandQueue(const [
+      ModbusWriteCommand(address: redLightTotalCommandAddress, value: 4),
+      ModbusWriteCommand(address: systemCommandAddress, value: 4),
+    ]);
+  }
+
+  // 停止总命令。
+  Future<void> stopTherapy() {
+    return sendCommandQueue(buildStopTherapyCommands());
   }
 
   /// 按自定义方案的当前 5 分钟节点配置红光模块。
@@ -95,10 +142,11 @@ class ModbusRtuService {
   Future<void> startWithCommands(List<ModbusWriteCommand> parameterCommands) {
     return sendCommandQueue([
       ...parameterCommands,
-      const ModbusWriteCommand(address: 0x0004, value: 1),
+      const ModbusWriteCommand(address: systemCommandAddress, value: 1),
     ]);
   }
 
+  // 构建红光模块相关寄存器的写命令列表。
   List<ModbusWriteCommand> buildRedLightCommands({
     required int strength660,
     required int strength850,
@@ -134,6 +182,7 @@ class ModbusRtuService {
     ];
   }
 
+  // 构建红光模块相关寄存器的写命令列表。
   List<ModbusWriteCommand> buildStopRedLightCommands() {
     return const [
       ModbusWriteCommand(address: redLightTotalCommandAddress, value: 2),
@@ -145,6 +194,20 @@ class ModbusRtuService {
     ];
   }
 
+  // 构建停止治疗的命令列表，除了关闭红光模块，还发送系统停止命令。
+  List<ModbusWriteCommand> buildStopTherapyCommands() {
+    return const [
+      ModbusWriteCommand(address: redLightTotalCommandAddress, value: 2),
+      ModbusWriteCommand(address: systemCommandAddress, value: 2),
+      ModbusWriteCommand(address: redLight660EnableAddress, value: 0),
+      ModbusWriteCommand(address: redLight660PowerAddress, value: 0),
+      ModbusWriteCommand(address: redLight850EnableAddress, value: 0),
+      ModbusWriteCommand(address: redLight850PowerAddress, value: 0),
+      ModbusWriteCommand(address: redLightTotalEnableAddress, value: 0),
+    ];
+  }
+
+  // 其他模块如 PEMF 的命令构建方法可以类似添加。
   Future<void> sendCommandQueue(List<ModbusWriteCommand> commands) async {
     if (commands.isEmpty) return;
 
@@ -203,6 +266,7 @@ class ModbusRtuService {
     await _sendCommandQueueWindows(commands, frames);
   }
 
+  // 直接写单寄存器命令，通常用于调试或特殊场景。
   Future<void> writeSingleRegister({
     required int address,
     required int value,
@@ -289,6 +353,7 @@ class ModbusRtuService {
     }
   }
 
+  // Windows 桌面环境下的串口命令队列发送实现，包含重试机制和响应验证。
   Future<void> _sendCommandQueueWindows(
     List<ModbusWriteCommand> commands,
     List<Uint8List> frames,
@@ -329,6 +394,7 @@ class ModbusRtuService {
     }
   }
 
+  // Windows 桌面环境下的串口写帧实现，包含重试机制和响应验证。
   Future<void> _writeFrameWithRetryWindows({
     required SerialPort port,
     required ModbusWriteCommand command,
@@ -381,6 +447,7 @@ class ModbusRtuService {
     );
   }
 
+  // 其他模块如 PEMF 的命令构建方法可以类似添加。
   Future<void> _writeSingleRegisterAndroid({
     required int address,
     required int value,

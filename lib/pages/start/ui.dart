@@ -4,6 +4,7 @@ import 'package:infibo_app/api/modbus_rtu_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:infibo_app/components/index.dart';
+import 'package:infibo_app/components/logic.dart';
 import 'package:infibo_app/constants/assets.dart';
 import 'package:infibo_app/pages/start/logic.dart';
 
@@ -34,7 +35,7 @@ class _StartPageState extends State<StartPage> {
 
   // 每秒推进一次倒计时
   Timer? _timer;
-  bool _isStarting = false;
+  bool _isCommanding = false;
 
   @override
   void initState() {
@@ -562,28 +563,14 @@ class _StartPageState extends State<StartPage> {
   }
 
   Widget _buildPauseButton() {
-    final bool isActive = _logic.isRunning;
+    final bool isActive = !_isCommanding && _logic.canPause;
 
     return SizedBox(
       width: 167,
       height: 156,
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onTap: isActive
-            ? () async {
-                try {
-                  await modbusService.sendCommandQueue([
-                    const ModbusWriteCommand(address: 0x0004, value: 2),
-                    ...modbusService.buildStopRedLightCommands(),
-                  ]);
-                  if (!mounted) return;
-                  setState(_logic.pause);
-                  debugPrint('stop command sent successfully');
-                } catch (e) {
-                  debugPrint('stop command failed: $e');
-                }
-              }
-            : null,
+        onTap: isActive ? _handlePausePressed : null,
         child: Opacity(
           opacity: isActive ? 1 : 0.45,
           child: Center(
@@ -601,22 +588,33 @@ class _StartPageState extends State<StartPage> {
   }
 
   Widget _buildPlayButton() {
+    final bool isStopMode = _logic.isRunning;
+    final bool isResumeMode = _logic.canResume;
+    final bool isStartMode = _logic.canStart;
     final bool isActive =
-        !_isStarting &&
-        !_logic.isRunning &&
-        _logic.elapsedSeconds < _logic.totalSeconds;
+        !_isCommanding && (isStopMode || isResumeMode || isStartMode);
 
     return SizedBox(
       width: 167,
       height: 156,
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onTap: isActive ? _handleStartPressed : null,
+        onTap: isActive
+            ? isStopMode
+                  ? _handleStopPressed
+                  : isResumeMode
+                  ? _handleResumePressed
+                  : _handleStartPressed
+            : null,
         child: Opacity(
           opacity: isActive ? 1 : 0.45,
           child: Center(
             child: Image.asset(
-              isActive ? Assets.startPlayActiveButton : Assets.pausePlayButton,
+              isStopMode
+                  ? Assets.pausePlayButton
+                  : isActive
+                  ? Assets.startPlayActiveButton
+                  : Assets.pausePlayButton,
               width: isActive ? 167 : 120,
               height: isActive ? 156 : 65,
             ),
@@ -627,9 +625,9 @@ class _StartPageState extends State<StartPage> {
   }
 
   Future<void> _handleStartPressed() async {
-    if (_isStarting || _logic.isRunning) return;
+    if (_isCommanding || !_logic.canStart) return;
 
-    setState(() => _isStarting = true);
+    setState(() => _isCommanding = true);
     try {
       await modbusService.startWithCommands(_currentPhaseCommands());
       if (!mounted) return;
@@ -638,11 +636,64 @@ class _StartPageState extends State<StartPage> {
     } catch (e) {
       debugPrint('start command failed: $e');
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('参数下发失败：$e')));
+      _showError('参数下发失败：$e');
     } finally {
-      if (mounted) setState(() => _isStarting = false);
+      if (mounted) setState(() => _isCommanding = false);
+    }
+  }
+
+  Future<void> _handlePausePressed() async {
+    if (_isCommanding || !_logic.canPause) return;
+
+    setState(() => _isCommanding = true);
+    try {
+      await modbusService.pauseTherapy();
+      if (!mounted) return;
+      setState(_logic.pause);
+      debugPrint('pause command sent successfully');
+    } catch (e) {
+      debugPrint('pause command failed: $e');
+      if (!mounted) return;
+      _showError('暂停失败：$e');
+    } finally {
+      if (mounted) setState(() => _isCommanding = false);
+    }
+  }
+
+  Future<void> _handleResumePressed() async {
+    if (_isCommanding || !_logic.canResume) return;
+
+    setState(() => _isCommanding = true);
+    try {
+      await modbusService.resumeTherapy();
+      if (!mounted) return;
+      setState(_logic.play);
+      debugPrint('resume command sent successfully');
+    } catch (e) {
+      debugPrint('resume command failed: $e');
+      if (!mounted) return;
+      _showError('继续失败：$e');
+    } finally {
+      if (mounted) setState(() => _isCommanding = false);
+    }
+  }
+
+  Future<void> _handleStopPressed() async {
+    if (_isCommanding || !_logic.canStop) return;
+
+    final _StartArguments args = _StartArguments.from(Get.arguments);
+    setState(() => _isCommanding = true);
+    try {
+      await modbusService.stopTherapy();
+      if (!mounted) return;
+      setState(_logic.stop);
+      await _showCompletionDialog(args);
+    } catch (e) {
+      debugPrint('stop command failed: $e');
+      if (!mounted) return;
+      _showError('停止失败：$e');
+    } finally {
+      if (mounted) setState(() => _isCommanding = false);
     }
   }
 
@@ -662,6 +713,115 @@ class _StartPageState extends State<StartPage> {
     }
 
     return const [];
+  }
+
+  void _showError(String message) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  Future<void> _showCompletionDialog(_StartArguments args) async {
+    final int actualSeconds = _logic.elapsedSeconds
+        .clamp(0, _logic.totalSeconds)
+        .toInt();
+    final Map<String, int> moduleSeconds = _logic.actualWorkSecondsByDevice(
+      args.modeTitle,
+    );
+
+    await showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: const Color(0xFF1E2129),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+            side: const BorderSide(color: Color(0xFF535B6A)),
+          ),
+          title: const Text(
+            '治疗完成',
+            style: TextStyle(color: Colors.white, fontSize: 22),
+          ),
+          content: SizedBox(
+            width: 360,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _completionRow('使用者', args.userName),
+                _completionRow(
+                  '本次使用',
+                  StartLogic.formatDurationText(actualSeconds),
+                ),
+                const SizedBox(height: 12),
+                const Text(
+                  '模块时长',
+                  style: TextStyle(color: Color(0xFFB9BCC6), fontSize: 15),
+                ),
+                const SizedBox(height: 8),
+                ..._moduleDurationRows(moduleSeconds),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('确认'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (!mounted) return;
+    AppComponentLogic.backToMainPage();
+  }
+
+  Widget _completionRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 92,
+            child: Text(
+              label,
+              style: const TextStyle(color: Color(0xFFB9BCC6), fontSize: 15),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: const TextStyle(color: Colors.white, fontSize: 16),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  List<Widget> _moduleDurationRows(Map<String, int> moduleSeconds) {
+    final List<MapEntry<String, int>> entries = moduleSeconds.entries
+        .where((entry) => entry.value > 0)
+        .toList();
+    if (entries.isEmpty) {
+      return const [
+        Text(
+          '暂无模块运行记录',
+          style: TextStyle(color: Color(0xFFB9BCC6), fontSize: 14),
+        ),
+      ];
+    }
+
+    return entries
+        .map(
+          (entry) => _completionRow(
+            StartLogic.deviceName(entry.key),
+            StartLogic.formatDurationText(entry.value),
+          ),
+        )
+        .toList();
   }
 
   void _startTimer() {
@@ -714,14 +874,35 @@ class _CountdownProgressClipper extends CustomClipper<Path> {
 
 // 启动参数类，用于传递启动时的参数
 class _StartArguments {
-  const _StartArguments({required this.modeTitle});
+  const _StartArguments({required this.modeTitle, required this.userName});
 
   final String modeTitle;
+  final String userName;
 
   factory _StartArguments.from(Object? args) {
     if (args is Map) {
-      return _StartArguments(modeTitle: args['modeTitle'] as String? ?? '深度放松');
+      return _StartArguments(
+        modeTitle: args['modeTitle'] as String? ?? '深度放松',
+        userName: _readName(args['user']),
+      );
     }
-    return const _StartArguments(modeTitle: '深度放松');
+    return const _StartArguments(modeTitle: '深度放松', userName: '未选择用户');
+  }
+
+  static String _readName(Object? user) {
+    if (user is Map && user['name'] is String) {
+      final String name = (user['name'] as String).trim();
+      if (name.isNotEmpty) return name;
+    }
+
+    try {
+      final dynamic dynamicUser = user;
+      final Object? value = dynamicUser?.name;
+      if (value is String && value.trim().isNotEmpty) return value.trim();
+    } catch (_) {
+      // Ignore unsupported user argument shapes.
+    }
+
+    return '未选择用户';
   }
 }

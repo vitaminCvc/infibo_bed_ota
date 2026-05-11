@@ -52,6 +52,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
   static const String _bodyAsset = Assets.customizedBody;
   static const String _timelineAsset = Assets.customizedTimeline;
   static const String _saveBgAsset = Assets.customizedSavePlanBox;
+  static const String _pemfWaveDialogAsset = Assets.customizedPemfWaveDialog;
 
   final CustomizedEditLogic _logic = CustomizedEditLogic();
   final TextEditingController _nameController = TextEditingController();
@@ -62,11 +63,18 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
   late final List<Map<String, String>> _nodeChakraStrengths;
   late final List<TextEditingController> _redLight660Controllers;
   late final List<TextEditingController> _redLight850Controllers;
+  late final List<TextEditingController> _pemfFrequencyControllers;
+  late final List<TextEditingController> _pemfIntensityControllers;
   late final List<FocusNode> _redLight660FocusNodes;
   late final List<FocusNode> _redLight850FocusNodes;
+  late final List<FocusNode> _pemfFrequencyFocusNodes;
+  late final List<FocusNode> _pemfIntensityFocusNodes;
   late final List<_RedLightMode> _nodeRedLightModes;
+  late final List<_PemfWave?> _nodePemfWaves;
   late final Set<int> _savedNodeIndexes;
   int? _activeNodeIndex;
+  int? _pemfWavePickerNodeIndex;
+  bool _didPrecachePemfWaveDialog = false;
 
   // 治疗模块列表。
   final List<_ModuleItem> _modules = const [
@@ -132,9 +140,20 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     _nodeChakraStrengths = List.generate(12, (_) => <String, String>{});
     _redLight660Controllers = List.generate(12, (_) => TextEditingController());
     _redLight850Controllers = List.generate(12, (_) => TextEditingController());
+    _pemfFrequencyControllers = List.generate(
+      12,
+      (_) => TextEditingController(),
+    );
+    _pemfIntensityControllers = List.generate(
+      12,
+      (_) => TextEditingController(),
+    );
     _redLight660FocusNodes = List.generate(12, (_) => FocusNode());
     _redLight850FocusNodes = List.generate(12, (_) => FocusNode());
+    _pemfFrequencyFocusNodes = List.generate(12, (_) => FocusNode());
+    _pemfIntensityFocusNodes = List.generate(12, (_) => FocusNode());
     _nodeRedLightModes = List.generate(12, (_) => _RedLightMode.continuous);
+    _nodePemfWaves = List.generate(12, (_) => null);
     _savedNodeIndexes = <int>{};
     _restoreEditingPlan();
   }
@@ -148,13 +167,43 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     for (final TextEditingController controller in _redLight850Controllers) {
       controller.dispose();
     }
+    for (final TextEditingController controller in _pemfFrequencyControllers) {
+      controller.dispose();
+    }
+    for (final TextEditingController controller in _pemfIntensityControllers) {
+      controller.dispose();
+    }
     for (final FocusNode node in _redLight660FocusNodes) {
       node.dispose();
     }
     for (final FocusNode node in _redLight850FocusNodes) {
       node.dispose();
     }
+    for (final FocusNode node in _pemfFrequencyFocusNodes) {
+      node.dispose();
+    }
+    for (final FocusNode node in _pemfIntensityFocusNodes) {
+      node.dispose();
+    }
     super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_didPrecachePemfWaveDialog) return;
+
+    _didPrecachePemfWaveDialog = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      precacheImage(
+        const AssetImage(_pemfWaveDialogAsset),
+        context,
+        onError: (error, stackTrace) {
+          debugPrint('Failed to precache PEMF wave dialog: $error');
+        },
+      );
+    });
   }
 
   @override
@@ -217,6 +266,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
         if (showSaveParamsButton)
           Positioned(left: 660, top: 936, child: _buildSaveParamsButton()),
         Positioned(left: 175, bottom: 22, child: _buildSavePlanButton()),
+        if (_pemfWavePickerNodeIndex != null) ..._buildPemfWavePickerOverlay(),
       ],
     );
   }
@@ -544,6 +594,9 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
   }
 
   Widget _buildPemfPanel() {
+    final int? index = _activeNodeIndex;
+    if (index == null) return const SizedBox.shrink();
+
     return _NotchedPanel(
       width: 270,
       height: 238,
@@ -564,16 +617,39 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
             _buildTwoColumnLabels('频率', '强度'),
             const SizedBox(height: 7),
             Row(
-              children: const [
-                _InputBox(width: 88),
-                SizedBox(width: 30),
-                _InputBox(width: 88),
+              children: [
+                _InputBox(
+                  width: 88,
+                  controller: _pemfFrequencyControllers[index],
+                  focusNode: _pemfFrequencyFocusNodes[index],
+                  keyboardType: TextInputType.number,
+                  maxValue: 75,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(2),
+                  ],
+                ),
+                const SizedBox(width: 30),
+                _InputBox(
+                  width: 88,
+                  controller: _pemfIntensityControllers[index],
+                  focusNode: _pemfIntensityFocusNodes[index],
+                  keyboardType: TextInputType.number,
+                  maxValue: 100,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(3),
+                  ],
+                ),
               ],
             ),
             const SizedBox(height: 16),
             const Text('波形', style: _smallLabelStyle),
             const SizedBox(height: 7),
-            const _InputBox(width: 206, hasArrow: true),
+            _PemfWaveSelector(
+              wave: _nodePemfWaves[index],
+              onTap: () => _openPemfWavePicker(index),
+            ),
           ],
         ),
       ),
@@ -954,6 +1030,10 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
       _normalizeRedLightPercent(_redLight660Controllers[index]);
       _normalizeRedLightPercent(_redLight850Controllers[index]);
     }
+    if (_nodeFeatureIds[index].contains('pemf')) {
+      _normalizeRangedNumber(_pemfFrequencyControllers[index], 75);
+      _normalizeRangedNumber(_pemfIntensityControllers[index], 100);
+    }
 
     setState(() {
       _savedNodeIndexes.add(index);
@@ -982,6 +1062,43 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
 
   void _showMessage(String text) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
+  }
+
+  void _openPemfWavePicker(int index) {
+    FocusScope.of(context).unfocus();
+    setState(() => _pemfWavePickerNodeIndex = index);
+  }
+
+  void _selectPemfWave(int index, _PemfWave wave) {
+    setState(() {
+      _nodePemfWaves[index] = wave;
+      _pemfWavePickerNodeIndex = null;
+      _savedNodeIndexes.removeWhere((item) => item >= index);
+    });
+  }
+
+  List<Widget> _buildPemfWavePickerOverlay() {
+    final int index = _pemfWavePickerNodeIndex!;
+
+    return [
+      Positioned.fill(
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () => setState(() => _pemfWavePickerNodeIndex = null),
+          child: Container(color: Colors.black.withValues(alpha: 0.45)),
+        ),
+      ),
+      Positioned(
+        left: 260,
+        top: 295,
+        child: _PemfWavePopup(
+          selected: _nodePemfWaves[index],
+          dialogAsset: _pemfWaveDialogAsset,
+          onCancel: () => setState(() => _pemfWavePickerNodeIndex = null),
+          onConfirm: (wave) => _selectPemfWave(index, wave),
+        ),
+      ),
+    ];
   }
 
   Set<String> get _activeFeatures {
@@ -1091,6 +1208,26 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
       hasPhaseData = true;
     }
 
+    for (final String text in featureIds) {
+      if (!text.startsWith('pemf:')) continue;
+
+      final List<String> parts = text.split(':');
+      if (parts.length < 3) continue;
+
+      final int? index = int.tryParse(parts[1]);
+      if (index == null || index < 0 || index >= _nodeFeatureIds.length) {
+        continue;
+      }
+
+      final _PemfSetting setting = _parsePemfSetting(parts[2]);
+      _pemfFrequencyControllers[index].text = setting.frequencyText;
+      _pemfIntensityControllers[index].text = setting.intensityText;
+      _nodePemfWaves[index] = setting.wave;
+      _nodeFeatureIds[index].add('pemf');
+      _savedNodeIndexes.add(index);
+      hasPhaseData = true;
+    }
+
     if (!hasPhaseData && _editingPlan != null) {
       final Set<String> ids = knownFeatureIds(featureIds).toSet();
       if (ids.isNotEmpty) {
@@ -1127,6 +1264,9 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
       }
       if (_nodeFeatureIds[index].contains('redlight')) {
         phaseTexts.add('redlight:$index:${_formatRedLightSetting(index)}');
+      }
+      if (_nodeFeatureIds[index].contains('pemf')) {
+        phaseTexts.add('pemf:$index:${_formatPemfSetting(index)}');
       }
     }
 
@@ -1172,10 +1312,18 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     controller.text = _percentValue(controller.text).toString();
   }
 
+  void _normalizeRangedNumber(TextEditingController controller, int maxValue) {
+    controller.text = _rangedValue(controller.text, maxValue).toString();
+  }
+
   int _percentValue(String text) {
+    return _rangedValue(text, 100);
+  }
+
+  int _rangedValue(String text, int maxValue) {
     final int? value = int.tryParse(text.trim());
     if (value == null) return 0;
-    return value.clamp(0, 100).toInt();
+    return value.clamp(0, maxValue).toInt();
   }
 
   String _formatRedLightSetting(int index) {
@@ -1215,6 +1363,47 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
       strength850: strength850,
       mode: mode,
     );
+  }
+
+  String _formatPemfSetting(int index) {
+    final int frequency = _rangedValue(
+      _pemfFrequencyControllers[index].text,
+      75,
+    );
+    final int intensity = _rangedValue(
+      _pemfIntensityControllers[index].text,
+      100,
+    );
+    final String wave = _nodePemfWaves[index]?.id ?? '';
+
+    return 'frequency=$frequency|intensity=$intensity|wave=$wave';
+  }
+
+  _PemfSetting _parsePemfSetting(String text) {
+    int frequency = 0;
+    int intensity = 0;
+    _PemfWave? wave;
+
+    for (final String pair in text.split('|')) {
+      final int separator = pair.indexOf('=');
+      if (separator <= 0 || separator == pair.length - 1) continue;
+
+      final String key = pair.substring(0, separator).trim();
+      final String value = pair.substring(separator + 1).trim();
+      switch (key) {
+        case 'frequency':
+          frequency = _rangedValue(value, 75);
+          break;
+        case 'intensity':
+          intensity = _rangedValue(value, 100);
+          break;
+        case 'wave':
+          wave = _pemfWaveFromId(value);
+          break;
+      }
+    }
+
+    return _PemfSetting(frequency: frequency, intensity: intensity, wave: wave);
   }
 
   _ModuleItem _moduleById(String id) {
@@ -1258,6 +1447,73 @@ class _RedLightSetting {
 
   String get strength660Text => strength660.toString();
   String get strength850Text => strength850.toString();
+}
+
+class _PemfSetting {
+  const _PemfSetting({
+    required this.frequency,
+    required this.intensity,
+    required this.wave,
+  });
+
+  final int frequency;
+  final int intensity;
+  final _PemfWave? wave;
+
+  String get frequencyText => frequency.toString();
+  String get intensityText => intensity.toString();
+}
+
+class _PemfWave {
+  const _PemfWave({required this.id, required this.label, required this.asset});
+
+  final String id;
+  final String label;
+  final String asset;
+}
+
+const List<_PemfWave> _pemfWaves = [
+  _PemfWave(id: 'sine', label: 'sine', asset: Assets.customizedPemfWaveSine),
+  _PemfWave(
+    id: 'halfSine',
+    label: 'halfSine',
+    asset: Assets.customizedPemfWaveHalfSine,
+  ),
+  _PemfWave(
+    id: 'trapezoid',
+    label: 'trapezoid',
+    asset: Assets.customizedPemfWaveTrapezoid,
+  ),
+  _PemfWave(
+    id: 'standardSine',
+    label: 'standardSine',
+    asset: Assets.customizedPemfWaveStandardSine,
+  ),
+  _PemfWave(id: 'saw', label: 'saw', asset: Assets.customizedPemfWaveSaw),
+  _PemfWave(
+    id: 'triangle',
+    label: 'triangle',
+    asset: Assets.customizedPemfWaveTriangle,
+  ),
+  _PemfWave(id: 'pulse', label: 'pulse', asset: Assets.customizedPemfWavePulse),
+  _PemfWave(
+    id: 'fastRise',
+    label: 'fastRise',
+    asset: Assets.customizedPemfWaveFastRise,
+  ),
+  _PemfWave(
+    id: 'dualFrequency',
+    label: 'dualFrequency',
+    asset: Assets.customizedPemfWaveDualFrequency,
+  ),
+  _PemfWave(id: 'cubic', label: 'cubic', asset: Assets.customizedPemfWaveCubic),
+];
+
+_PemfWave? _pemfWaveFromId(String id) {
+  for (final _PemfWave wave in _pemfWaves) {
+    if (wave.id == id) return wave;
+  }
+  return null;
 }
 
 class _PageTitle extends StatelessWidget {
@@ -1400,19 +1656,19 @@ class _PanelTitle extends StatelessWidget {
 class _InputBox extends StatelessWidget {
   const _InputBox({
     required this.width,
-    this.hasArrow = false,
     this.controller,
     this.focusNode,
     this.keyboardType,
     this.inputFormatters,
+    this.maxValue = 100,
   });
 
   final double width;
-  final bool hasArrow;
   final TextEditingController? controller;
   final FocusNode? focusNode;
   final TextInputType? keyboardType;
   final List<TextInputFormatter>? inputFormatters;
+  final int maxValue;
 
   @override
   Widget build(BuildContext context) {
@@ -1455,10 +1711,10 @@ class _InputBox extends StatelessWidget {
           ),
           onChanged: (value) {
             final int? number = int.tryParse(value);
-            if (number == null || number <= 100) return;
+            if (number == null || number <= maxValue) return;
 
             textController
-              ..text = '100'
+              ..text = maxValue.toString()
               ..selection = TextSelection.collapsed(
                 offset: textController.text.length,
               );
@@ -1467,13 +1723,135 @@ class _InputBox extends StatelessWidget {
       );
     }
 
-    if (!hasArrow) return null;
+    return null;
+  }
+}
 
-    return Icon(
-      Icons.keyboard_arrow_down,
-      color: Colors.white.withValues(alpha: 0.65),
-      size: 18,
+class _PemfWaveSelector extends StatelessWidget {
+  const _PemfWaveSelector({required this.wave, required this.onTap});
+
+  final _PemfWave? wave;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap,
+      child: Container(
+        width: 206,
+        height: 37,
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.04),
+          borderRadius: BorderRadius.circular(5),
+          border: Border.all(
+            color: Colors.white.withValues(alpha: 0.20),
+            width: 1,
+          ),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: wave == null
+                  ? const SizedBox.shrink()
+                  : Image.asset(wave!.asset, height: 24, fit: BoxFit.contain),
+            ),
+            Icon(
+              Icons.keyboard_arrow_down,
+              color: Colors.white.withValues(alpha: 0.65),
+              size: 18,
+            ),
+          ],
+        ),
+      ),
     );
+  }
+}
+
+class _PemfWavePopup extends StatefulWidget {
+  const _PemfWavePopup({
+    required this.selected,
+    required this.dialogAsset,
+    required this.onCancel,
+    required this.onConfirm,
+  });
+
+  final _PemfWave? selected;
+  final String dialogAsset;
+  final VoidCallback onCancel;
+  final ValueChanged<_PemfWave> onConfirm;
+
+  @override
+  State<_PemfWavePopup> createState() => _PemfWavePopupState();
+}
+
+class _PemfWavePopupState extends State<_PemfWavePopup> {
+  static const double _width = 279;
+  static const double _height = 658;
+  static const double _listTop = 67;
+  static const double _rowHeight = 44;
+  static const double _rowGap = 8;
+  static const double _cancelLeft = 64;
+  static const double _confirmLeft = 144;
+  static const double _buttonTop = 601;
+  static const double _buttonWidth = 72;
+  static const double _buttonHeight = 32;
+
+  late _PemfWave? _selected;
+
+  @override
+  void initState() {
+    super.initState();
+    _selected = widget.selected;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTapUp: (details) => _handleTap(details.localPosition),
+      child: SizedBox(
+        width: _width,
+        height: _height,
+        child: Image.asset(widget.dialogAsset, fit: BoxFit.fill),
+      ),
+    );
+  }
+
+  void _handleTap(Offset position) {
+    if (_isInsideButton(position, _cancelLeft)) {
+      widget.onCancel();
+      return;
+    }
+
+    if (_isInsideButton(position, _confirmLeft)) {
+      final _PemfWave? selected = _selected;
+      if (selected != null) widget.onConfirm(selected);
+      return;
+    }
+
+    final int rowIndex = ((position.dy - _listTop) / (_rowHeight + _rowGap))
+        .floor();
+    final double rowTop = _listTop + rowIndex * (_rowHeight + _rowGap);
+    final bool inRow =
+        rowIndex >= 0 &&
+        rowIndex < _pemfWaves.length &&
+        position.dy >= rowTop &&
+        position.dy <= rowTop + _rowHeight;
+
+    if (!inRow) return;
+
+    final _PemfWave tappedWave = _pemfWaves[rowIndex];
+    setState(() => _selected = tappedWave);
+    widget.onConfirm(tappedWave);
+  }
+
+  bool _isInsideButton(Offset position, double left) {
+    return position.dx >= left &&
+        position.dx <= left + _buttonWidth &&
+        position.dy >= _buttonTop &&
+        position.dy <= _buttonTop + _buttonHeight;
   }
 }
 

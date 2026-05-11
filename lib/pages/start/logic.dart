@@ -10,11 +10,17 @@ class StartLogic {
   int totalSeconds = 30 * 60;
   int elapsedSeconds = 0;
   bool isRunning = false;
+  bool isPaused = false;
   List<List<String>>? customizedPhases;
   List<RedLightPhaseSetting?>? customizedRedLightSettings;
 
   int get phaseCount => totalSeconds ~/ phaseSeconds;
   bool get isCustomizedPlan => customizedPhases != null;
+  bool get hasStarted => elapsedSeconds > 0 || isRunning || isPaused;
+  bool get canStart => !hasStarted && elapsedSeconds < totalSeconds;
+  bool get canPause => isRunning;
+  bool get canResume => isPaused && elapsedSeconds < totalSeconds;
+  bool get canStop => hasStarted && elapsedSeconds <= totalSeconds;
 
   // 当前倒计时进度。
   double get progress => (elapsedSeconds / totalSeconds).clamp(0, 1).toDouble();
@@ -67,6 +73,51 @@ class StartLogic {
     return result;
   }
 
+  Map<String, int> actualWorkSecondsByDevice(String modeTitle) {
+    final List<List<String>> phases =
+        customizedPhases ?? modePhases[modeTitle] ?? modePhases['深度放松']!;
+    final Map<String, int> result = <String, int>{};
+    int remainingElapsed = elapsedSeconds.clamp(0, totalSeconds).toInt();
+
+    for (final List<String> phase in phases) {
+      if (remainingElapsed <= 0) break;
+
+      final int phaseWorkedSeconds = remainingElapsed >= phaseSeconds
+          ? phaseSeconds
+          : remainingElapsed;
+      for (final String device in phase.toSet()) {
+        result[device] = (result[device] ?? 0) + phaseWorkedSeconds;
+      }
+      remainingElapsed -= phaseWorkedSeconds;
+    }
+
+    return result;
+  }
+
+  static String formatDurationText(int seconds) {
+    final int safeSeconds = seconds < 0 ? 0 : seconds;
+    final int minutes = safeSeconds ~/ 60;
+    final int restSeconds = safeSeconds % 60;
+    return '$minutes分${restSeconds.toString().padLeft(2, '0')}秒';
+  }
+
+  static String deviceName(String id) {
+    switch (id) {
+      case 'red':
+        return '红光';
+      case 'pemf':
+        return 'PEMF';
+      case 'vat':
+        return 'VAT';
+      case 'hydrogen':
+        return '分子氢';
+      case 'expand':
+        return '拓展功能';
+      default:
+        return id;
+    }
+  }
+
   // 根据页面参数配置自定义方案。
   void configure(Object? args) {
     if (args is! Map || args['customizedPlan'] is! CustomizedPlanData) return;
@@ -107,6 +158,7 @@ class StartLogic {
     totalSeconds = (maxIndex + 1) * phaseSeconds;
     elapsedSeconds = 0;
     isRunning = false;
+    isPaused = false;
   }
 
   // 每秒推进倒计时。
@@ -117,6 +169,7 @@ class StartLogic {
     if (elapsedSeconds >= totalSeconds) {
       elapsedSeconds = totalSeconds;
       isRunning = false;
+      isPaused = false;
     }
   }
 
@@ -124,12 +177,19 @@ class StartLogic {
   void pause() {
     if (!isRunning) return;
     isRunning = false;
+    isPaused = true;
   }
 
   // 启动或继续倒计时。
   void play() {
     if (isRunning || elapsedSeconds >= totalSeconds) return;
     isRunning = true;
+    isPaused = false;
+  }
+
+  void stop() {
+    isRunning = false;
+    isPaused = false;
   }
 
   String _startDeviceId(String id) {
