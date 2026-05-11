@@ -120,17 +120,17 @@ class Assets {
   static const String startTimerDot =
       "assets/Start/Countdown/countdownPoint.png";
 
-  // 启动治疗页：开始按钮默认状态。
-  static const String startPlayButton = "assets/Start/Switch/Start.png";
+  // 启动治疗页：停止按钮默认状态。
+  static const String pausePlayButton = "assets/Start/Switch/pause.png";
 
   // 启动治疗页：开始按钮按下状态。
   static const String startPlayActiveButton =
       "assets/Start/Switch/startClick.png";
 
-  // 启动治疗页：停止按钮默认状态。
-  static const String startPauseButton = "assets/Start/Switch/stop.png";
+  // 启动治疗页：暂停按钮默认状态。
+  static const String startPauseButton = "assets/Start/Switch/Stop.png";
 
-  // 启动治疗页：停止按钮按下状态。
+  // 启动治疗页：暂停按钮按下状态。
   static const String startPauseActiveButton =
       "assets/Start/Switch/stopClick.png";
 
@@ -155,7 +155,7 @@ class Assets {
   static const String startExpandSine = "assets/Start/Expand/sine.png";
 
   // 自定义红光 / 启动页：脉冲模式曲线图。
-  static const String redLightPulseWave = "assets/Start/Expand/maichong.png";
+  static const String redLightPulseWave = "assets/10个波形图/脉冲.png";
 
   // 启动治疗页：红光未启动状态图标。
   static const String startRedLightIconOff = "assets/Start/icon/redlight.png";

@@ -616,7 +616,7 @@ class _StartPageState extends State<StartPage> {
           opacity: isActive ? 1 : 0.45,
           child: Center(
             child: Image.asset(
-              isActive ? Assets.startPlayActiveButton : Assets.startPlayButton,
+              isActive ? Assets.startPlayActiveButton : Assets.pausePlayButton,
               width: isActive ? 167 : 120,
               height: isActive ? 156 : 65,
             ),
