@@ -10,9 +10,17 @@ class StartLogic {
   int totalSeconds = 30 * 60;
   int elapsedSeconds = 0;
   bool isRunning = false;
+  bool isPaused = false;
   List<List<String>>? customizedPhases;
+  List<RedLightPhaseSetting?>? customizedRedLightSettings;
 
   int get phaseCount => totalSeconds ~/ phaseSeconds;
+  bool get isCustomizedPlan => customizedPhases != null;
+  bool get hasStarted => elapsedSeconds > 0 || isRunning || isPaused;
+  bool get canStart => !hasStarted && elapsedSeconds < totalSeconds;
+  bool get canPause => isRunning;
+  bool get canResume => isPaused && elapsedSeconds < totalSeconds;
+  bool get canStop => hasStarted && elapsedSeconds <= totalSeconds;
 
   // 当前倒计时进度。
   double get progress => (elapsedSeconds / totalSeconds).clamp(0, 1).toDouble();
@@ -43,6 +51,73 @@ class StartLogic {
     return phases[index];
   }
 
+  RedLightPhaseSetting? get activeRedLightSetting {
+    final List<RedLightPhaseSetting?>? settings = customizedRedLightSettings;
+    if (settings == null || settings.isEmpty) return null;
+
+    final int index = activePhaseIndex.clamp(0, settings.length - 1);
+    return settings[index];
+  }
+
+  Map<String, int> workSecondsByDevice(String modeTitle) {
+    final List<List<String>> phases =
+        customizedPhases ?? modePhases[modeTitle] ?? modePhases['深度放松']!;
+    final Map<String, int> result = <String, int>{};
+
+    for (final List<String> phase in phases) {
+      for (final String device in phase.toSet()) {
+        result[device] = (result[device] ?? 0) + phaseSeconds;
+      }
+    }
+
+    return result;
+  }
+
+  Map<String, int> actualWorkSecondsByDevice(String modeTitle) {
+    final List<List<String>> phases =
+        customizedPhases ?? modePhases[modeTitle] ?? modePhases['深度放松']!;
+    final Map<String, int> result = <String, int>{};
+    int remainingElapsed = elapsedSeconds.clamp(0, totalSeconds).toInt();
+
+    for (final List<String> phase in phases) {
+      if (remainingElapsed <= 0) break;
+
+      final int phaseWorkedSeconds = remainingElapsed >= phaseSeconds
+          ? phaseSeconds
+          : remainingElapsed;
+      for (final String device in phase.toSet()) {
+        result[device] = (result[device] ?? 0) + phaseWorkedSeconds;
+      }
+      remainingElapsed -= phaseWorkedSeconds;
+    }
+
+    return result;
+  }
+
+  static String formatDurationText(int seconds) {
+    final int safeSeconds = seconds < 0 ? 0 : seconds;
+    final int minutes = safeSeconds ~/ 60;
+    final int restSeconds = safeSeconds % 60;
+    return '$minutes分${restSeconds.toString().padLeft(2, '0')}秒';
+  }
+
+  static String deviceName(String id) {
+    switch (id) {
+      case 'red':
+        return '红光';
+      case 'pemf':
+        return 'PEMF';
+      case 'vat':
+        return 'VAT';
+      case 'hydrogen':
+        return '分子氢';
+      case 'expand':
+        return '拓展功能';
+      default:
+        return id;
+    }
+  }
+
   // 根据页面参数配置自定义方案。
   void configure(Object? args) {
     if (args is! Map || args['customizedPlan'] is! CustomizedPlanData) return;
@@ -50,31 +125,40 @@ class StartLogic {
     final CustomizedPlanData plan =
         args['customizedPlan'] as CustomizedPlanData;
     final List<List<String>> phases = List.generate(12, (_) => <String>[]);
+    final List<RedLightPhaseSetting?> redLightSettings = List.generate(
+      12,
+      (_) => null,
+    );
     int maxIndex = -1;
 
     for (final String text in plan.featureIds) {
-      if (!text.startsWith('phase:')) continue;
-
       final List<String> parts = text.split(':');
       if (parts.length < 3) continue;
 
       final int? index = int.tryParse(parts[1]);
       if (index == null || index < 0 || index >= phases.length) continue;
 
-      phases[index] = parts[2]
-          .split('|')
-          .map(_startDeviceId)
-          .where((id) => id.isNotEmpty)
-          .toList();
-      if (phases[index].isNotEmpty && index > maxIndex) maxIndex = index;
+      if (text.startsWith('phase:')) {
+        phases[index] = parts[2]
+            .split('|')
+            .map(_startDeviceId)
+            .where((id) => id.isNotEmpty)
+            .toList();
+        if (phases[index].isNotEmpty && index > maxIndex) maxIndex = index;
+      } else if (text.startsWith('redlight:')) {
+        redLightSettings[index] = RedLightPhaseSetting.parse(parts[2]);
+        if (index > maxIndex) maxIndex = index;
+      }
     }
 
     if (maxIndex < 0) return;
 
     customizedPhases = phases.take(maxIndex + 1).toList();
+    customizedRedLightSettings = redLightSettings.take(maxIndex + 1).toList();
     totalSeconds = (maxIndex + 1) * phaseSeconds;
     elapsedSeconds = 0;
     isRunning = false;
+    isPaused = false;
   }
 
   // 每秒推进倒计时。
@@ -85,6 +169,7 @@ class StartLogic {
     if (elapsedSeconds >= totalSeconds) {
       elapsedSeconds = totalSeconds;
       isRunning = false;
+      isPaused = false;
     }
   }
 
@@ -92,12 +177,19 @@ class StartLogic {
   void pause() {
     if (!isRunning) return;
     isRunning = false;
+    isPaused = true;
   }
 
   // 启动或继续倒计时。
   void play() {
     if (isRunning || elapsedSeconds >= totalSeconds) return;
     isRunning = true;
+    isPaused = false;
+  }
+
+  void stop() {
+    isRunning = false;
+    isPaused = false;
   }
 
   String _startDeviceId(String id) {
@@ -107,6 +199,63 @@ class StartLogic {
     if (id == 'hydrogen') return 'hydrogen';
     if (id == 'expand') return 'expand';
     return '';
+  }
+}
+
+enum RedLightWorkMode { continuous, pulse }
+
+class RedLightPhaseSetting {
+  const RedLightPhaseSetting({
+    required this.strength660,
+    required this.strength850,
+    required this.mode,
+  });
+
+  final int strength660;
+  final int strength850;
+  final RedLightWorkMode mode;
+
+  bool get hasOutput => strength660 > 0 || strength850 > 0;
+  int get modbusMode => mode == RedLightWorkMode.continuous ? 0 : 1;
+
+  factory RedLightPhaseSetting.parse(String text) {
+    int strength660 = 0;
+    int strength850 = 0;
+    RedLightWorkMode mode = RedLightWorkMode.continuous;
+
+    for (final String pair in text.split('|')) {
+      final int separator = pair.indexOf('=');
+      if (separator <= 0 || separator == pair.length - 1) continue;
+
+      final String key = pair.substring(0, separator).trim();
+      final String value = pair.substring(separator + 1).trim();
+
+      switch (key) {
+        case '660':
+          strength660 = _percentValue(value);
+          break;
+        case '850':
+          strength850 = _percentValue(value);
+          break;
+        case 'mode':
+          mode = value == 'pulse'
+              ? RedLightWorkMode.pulse
+              : RedLightWorkMode.continuous;
+          break;
+      }
+    }
+
+    return RedLightPhaseSetting(
+      strength660: strength660,
+      strength850: strength850,
+      mode: mode,
+    );
+  }
+
+  static int _percentValue(String text) {
+    final int? value = int.tryParse(text);
+    if (value == null) return 0;
+    return value.clamp(0, 100).toInt();
   }
 }
 

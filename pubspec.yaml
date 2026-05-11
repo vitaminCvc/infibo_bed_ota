@@ -75,7 +75,10 @@ flutter:
     - assets/Start/Function/
     - assets/Start/icon/
     - assets/Start/Switch/
+    - assets/waveforms/
     - assets/customized/
+    - assets/customized/PEMF/
+    - assets/customized/PEMF/Waveform/
     - assets/customized/editor/
     - assets/customized/editor/expand_icons/
     - assets/customized/editor/module_rows/

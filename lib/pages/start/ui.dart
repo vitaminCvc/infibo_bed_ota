@@ -4,10 +4,11 @@ import 'package:infibo_app/api/modbus_rtu_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:infibo_app/components/index.dart';
+import 'package:infibo_app/components/logic.dart';
 import 'package:infibo_app/constants/assets.dart';
 import 'package:infibo_app/pages/start/logic.dart';
 
-// 启动理疗页面。
+// 启动理疗页面
 class StartPage extends StatefulWidget {
   const StartPage({super.key});
 
@@ -16,24 +17,25 @@ class StartPage extends StatefulWidget {
 }
 
 class _StartPageState extends State<StartPage> {
-  // 这里使用 AndroidSerialPortService，默认路径为 /dev/ttyS0。
+  // 这里使用 AndroidSerialPortService，默认路径为 /dev/ttyS0
   final ModbusRtuService modbusService = const ModbusRtuService();
-  // 启动页按 800x1160 的设计稿坐标摆放，再根据屏幕宽度整体缩放。
+  // 启动页按 800x1160 的设计稿坐标摆放，再根据屏幕宽度整体缩放
   static const double _designWidth = 800;
   static const double _designHeight = 1160;
   static const double _minPageScale = 0.72;
 
-  // 倒计时素材尺寸，countdownPoint 允许超出外圈，所以 Stack 会关闭裁剪。
-  static const double _timerSize = 250; //倒计时圆的尺寸大小
-  static const double _timerRingSize = 255; //中间的圆环大小
-  static const double _timerDotSize = 29; //控制小圆点大小.改大小后，位置也会自动按中心点对齐。
-  static const double _timerDotRadius = 121; //控制小圆点离圆心多远数字越大，点越往外；数字越小，点越往里。
+  // 倒计时素材尺寸，countdownPoint 允许超出外圈，所以 Stack 会关闭裁剪
+  static const double _timerSize = 250; //倒计时圆的尺寸
+  static const double _timerRingSize = 255; //中间的圆环尺寸
+  static const double _timerDotSize = 29; //控制小圆点尺寸，位置也会自动按中心点对齐
+  static const double _timerDotRadius = 121; //控制小圆点离圆心多远数字越大，点越往外；数字越小，点越往里
 
-  // 页面逻辑控制器：倒计时、运行/暂停状态、当前工作设备都放在 logic.dart。
+  // 页面逻辑控制器：倒计时、运行、暂停状态、当前工作设备都放在 logic.dart 中
   final StartLogic _logic = StartLogic();
 
-  // 每秒推进一次倒计时。
+  // 每秒推进一次倒计时
   Timer? _timer;
+  bool _isCommanding = false;
 
   @override
   void initState() {
@@ -50,10 +52,10 @@ class _StartPageState extends State<StartPage> {
 
   @override
   Widget build(BuildContext context) {
-    // 从 Get.arguments 中获取启动参数。
+    // 从 Get.arguments 中获取启动参数
     final _StartArguments args = _StartArguments.from(Get.arguments);
 
-    // 页面横向留 32px 安全边距，然后按设计稿宽度等比缩放。
+    // 页面横向留 32px 安全边距，然后按设计稿宽度等比缩放
     final double scale =
         ((MediaQuery.sizeOf(context).width - 32) / _designWidth)
             .clamp(_minPageScale, 1.0)
@@ -86,22 +88,22 @@ class _StartPageState extends State<StartPage> {
     );
   }
 
-  /// 构建启动页主画布。
+  /// 构建启动页主画布
   ///
-  /// 这里所有 Positioned 的 left/top 都是基于 800x1160 设计稿的固定坐标。
+  /// 这里的 Positioned 的 left/top 都是基于 800x1160 设计稿的固定坐标，
   /// 页面外层会统一缩放，所以调整 UI 位置时只需要改这里的设计稿坐标。
   Widget _buildCanvas(_StartArguments args) {
-    // 暂停时所有设备都视为未运行；运行时根据当前 5 分钟阶段点亮对应 icon。
+    // 暂停时所有设备都视为未运行；运行时根据当前 5 分钟阶段点亮对应 icon
     final List<String> activeDevices = _logic.isRunning
         ? _logic.activeDevices(args.modeTitle)
         : const [];
 
     return Stack(
       children: [
-        // 当前理疗模式标题。
+        // 当前理疗模式标题
         Positioned(left: 36, top: 30, child: _buildTitle(args)),
 
-        // 中间人体图。它需要盖住左右功能框的手部边缘，所以放在功能框之前。
+        // 中间人体图，它需要盖住左右功能框的手部边缘，所以放在功能框之前
         Positioned(
           left: 50,
           top: -10,
@@ -113,7 +115,7 @@ class _StartPageState extends State<StartPage> {
           ),
         ),
 
-        // 左侧红光功能框。
+        // 左侧红光功能框
         _buildFunctionPanel(
           id: 'red',
           left: 46,
@@ -126,7 +128,7 @@ class _StartPageState extends State<StartPage> {
           activeDevices: activeDevices,
         ),
 
-        // 左侧 PEMF 功能框。
+        // 左侧 PEMF 功能框
         _buildFunctionPanel(
           id: 'pemf',
           left: 46,
@@ -139,7 +141,7 @@ class _StartPageState extends State<StartPage> {
           activeDevices: activeDevices,
         ),
 
-        // 右侧 VAT 功能框。
+        // 右侧 VAT 功能框
         _buildFunctionPanel(
           id: 'vat',
           left: 486,
@@ -152,7 +154,7 @@ class _StartPageState extends State<StartPage> {
           activeDevices: activeDevices,
         ),
 
-        // 右侧分子氢功能框。
+        // 右侧分子氢功能框
         _buildFunctionPanel(
           id: 'hydrogen',
           left: 486,
@@ -165,7 +167,7 @@ class _StartPageState extends State<StartPage> {
           activeDevices: activeDevices,
         ),
 
-        // 右侧扩展功能状态框，内部显示脉轮、太赫兹、HIFEM、香氛状态。
+        // 右侧扩展功能状态框，内部显示脉轮、太赫兹、HIFEM、香氛状态
         _buildFunctionPanel(
           id: 'expand',
           left: 486,
@@ -178,7 +180,7 @@ class _StartPageState extends State<StartPage> {
           activeDevices: activeDevices,
         ),
 
-        // 底部倒计时与暂停/启动按钮。
+        // 底部倒计时与暂停/启动按钮
         Positioned(left: 278, top: 840, child: _buildTimer()),
         Positioned(left: 126, top: 970, child: _buildPauseButton()),
         Positioned(left: 508, top: 970, child: _buildPlayButton()),
@@ -226,6 +228,7 @@ class _StartPageState extends State<StartPage> {
           children: [
             Positioned.fill(child: Image.asset(panelAsset, fit: BoxFit.fill)),
             ..._buildFunctionPanelEffects(id, isActive),
+            if (id == 'red') _buildRedLightPanelInfo(isActive),
             if (id != 'expand')
               Positioned(
                 right: id == 'red' || id == 'pemf' ? 40 : 18,
@@ -234,6 +237,145 @@ class _StartPageState extends State<StartPage> {
               ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildRedLightPanelInfo(bool isActive) {
+    final RedLightPhaseSetting? setting = _logic.activeRedLightSetting;
+
+    final String strength660Text = setting == null
+        ? ''
+        : setting.strength660.toString();
+    final String strength850Text = setting == null
+        ? ''
+        : setting.strength850.toString();
+
+    final String modeText = setting?.mode == RedLightWorkMode.pulse
+        ? '脉冲'
+        : '连续';
+
+    final String modeAsset = setting?.mode == RedLightWorkMode.pulse
+        ? Assets.redLightPulseWave
+        : Assets.startExpandContinuous;
+
+    return Positioned(
+      left: 18,
+      top: 22,
+      child: IgnorePointer(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              '红光',
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+
+            const SizedBox(height: 24),
+
+            const Row(
+              children: [
+                SizedBox(
+                  width: 100,
+                  child: Text(
+                    '波长',
+                    style: TextStyle(color: Color(0xffb9bcc6), fontSize: 17),
+                  ),
+                ),
+                SizedBox(width: 20),
+                SizedBox(
+                  width: 100,
+                  child: Text(
+                    '强度',
+                    style: TextStyle(color: Color(0xffb9bcc6), fontSize: 17),
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 4),
+
+            _buildRedLightInfoRow('660', strength660Text),
+
+            const SizedBox(height: 8),
+
+            const Row(
+              children: [
+                SizedBox(
+                  width: 100,
+                  child: Text(
+                    '波长',
+                    style: TextStyle(color: Color(0xffb9bcc6), fontSize: 17),
+                  ),
+                ),
+                SizedBox(width: 20),
+                SizedBox(
+                  width: 100,
+                  child: Text(
+                    '强度',
+                    style: TextStyle(color: Color(0xffb9bcc6), fontSize: 17),
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 6),
+
+            _buildRedLightInfoRow('850', strength850Text),
+
+            const SizedBox(height: 22),
+
+            if (setting != null)
+              Row(
+                children: [
+                  Text(
+                    modeText,
+                    style: const TextStyle(
+                      color: Color(0xFFE4E7EE),
+                      fontSize: 13,
+                    ),
+                  ),
+                  const SizedBox(width: 5),
+                  Image.asset(
+                    modeAsset,
+                    width: 170,
+                    height: 24,
+                    fit: BoxFit.contain,
+                  ),
+                ],
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRedLightInfoRow(String wavelength, String strengthText) {
+    return SizedBox(
+      width: 215,
+      child: Row(
+        children: [
+          SizedBox(
+            width: 105,
+            child: Text(
+              wavelength,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 21,
+                height: 1,
+              ),
+            ),
+          ),
+          SizedBox(width: 17), // 波长和强度之间的间距(调节长度值)
+          Text(
+            strengthText,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              height: 1,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -421,14 +563,14 @@ class _StartPageState extends State<StartPage> {
   }
 
   Widget _buildPauseButton() {
-    final bool isActive = _logic.isRunning;
+    final bool isActive = !_isCommanding && _logic.canPause;
 
     return SizedBox(
       width: 167,
       height: 156,
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onTap: isActive ? () => setState(_logic.pause) : null,
+        onTap: isActive ? _handlePausePressed : null,
         child: Opacity(
           opacity: isActive ? 1 : 0.45,
           child: Center(
@@ -446,8 +588,11 @@ class _StartPageState extends State<StartPage> {
   }
 
   Widget _buildPlayButton() {
+    final bool isStopMode = _logic.isRunning;
+    final bool isResumeMode = _logic.canResume;
+    final bool isStartMode = _logic.canStart;
     final bool isActive =
-        !_logic.isRunning && _logic.elapsedSeconds < _logic.totalSeconds;
+        !_isCommanding && (isStopMode || isResumeMode || isStartMode);
 
     return SizedBox(
       width: 167,
@@ -455,21 +600,21 @@ class _StartPageState extends State<StartPage> {
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: isActive
-            ? () async {
-                try {
-                  await modbusService.start(); // Write register 0 = 1.
-                  setState(_logic.play); // 页面开始倒计时
-                  debugPrint('开始指令发送成功');
-                } catch (e) {
-                  debugPrint('开始指令发送失败：$e');
-                }
-              }
+            ? isStopMode
+                  ? _handleStopPressed
+                  : isResumeMode
+                  ? _handleResumePressed
+                  : _handleStartPressed
             : null,
         child: Opacity(
           opacity: isActive ? 1 : 0.45,
           child: Center(
             child: Image.asset(
-              isActive ? Assets.startPlayActiveButton : Assets.startPlayButton,
+              isStopMode
+                  ? Assets.pausePlayButton
+                  : isActive
+                  ? Assets.startPlayActiveButton
+                  : Assets.pausePlayButton,
               width: isActive ? 167 : 120,
               height: isActive ? 156 : 65,
             ),
@@ -477,6 +622,206 @@ class _StartPageState extends State<StartPage> {
         ),
       ),
     );
+  }
+
+  Future<void> _handleStartPressed() async {
+    if (_isCommanding || !_logic.canStart) return;
+
+    setState(() => _isCommanding = true);
+    try {
+      await modbusService.startWithCommands(_currentPhaseCommands());
+      if (!mounted) return;
+      setState(_logic.play);
+      debugPrint('start command sent successfully');
+    } catch (e) {
+      debugPrint('start command failed: $e');
+      if (!mounted) return;
+      _showError('参数下发失败：$e');
+    } finally {
+      if (mounted) setState(() => _isCommanding = false);
+    }
+  }
+
+  Future<void> _handlePausePressed() async {
+    if (_isCommanding || !_logic.canPause) return;
+
+    setState(() => _isCommanding = true);
+    try {
+      await modbusService.pauseTherapy();
+      if (!mounted) return;
+      setState(_logic.pause);
+      debugPrint('pause command sent successfully');
+    } catch (e) {
+      debugPrint('pause command failed: $e');
+      if (!mounted) return;
+      _showError('暂停失败：$e');
+    } finally {
+      if (mounted) setState(() => _isCommanding = false);
+    }
+  }
+
+  Future<void> _handleResumePressed() async {
+    if (_isCommanding || !_logic.canResume) return;
+
+    setState(() => _isCommanding = true);
+    try {
+      await modbusService.resumeTherapy();
+      if (!mounted) return;
+      setState(_logic.play);
+      debugPrint('resume command sent successfully');
+    } catch (e) {
+      debugPrint('resume command failed: $e');
+      if (!mounted) return;
+      _showError('继续失败：$e');
+    } finally {
+      if (mounted) setState(() => _isCommanding = false);
+    }
+  }
+
+  Future<void> _handleStopPressed() async {
+    if (_isCommanding || !_logic.canStop) return;
+
+    final _StartArguments args = _StartArguments.from(Get.arguments);
+    setState(() => _isCommanding = true);
+    try {
+      await modbusService.stopTherapy();
+      if (!mounted) return;
+      setState(_logic.stop);
+      await _showCompletionDialog(args);
+    } catch (e) {
+      debugPrint('stop command failed: $e');
+      if (!mounted) return;
+      _showError('停止失败：$e');
+    } finally {
+      if (mounted) setState(() => _isCommanding = false);
+    }
+  }
+
+  List<ModbusWriteCommand> _currentPhaseCommands() {
+    if (!_logic.isCustomizedPlan) return const [];
+
+    final _StartArguments args = _StartArguments.from(Get.arguments);
+    final List<String> activeDevices = _logic.activeDevices(args.modeTitle);
+    final RedLightPhaseSetting? redLightSetting = _logic.activeRedLightSetting;
+
+    if (activeDevices.contains('red') && redLightSetting != null) {
+      return modbusService.buildRedLightCommands(
+        strength660: redLightSetting.strength660,
+        strength850: redLightSetting.strength850,
+        mode: redLightSetting.modbusMode,
+      );
+    }
+
+    return const [];
+  }
+
+  void _showError(String message) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  Future<void> _showCompletionDialog(_StartArguments args) async {
+    final int actualSeconds = _logic.elapsedSeconds
+        .clamp(0, _logic.totalSeconds)
+        .toInt();
+    final Map<String, int> moduleSeconds = _logic.actualWorkSecondsByDevice(
+      args.modeTitle,
+    );
+
+    await showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: const Color(0xFF1E2129),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+            side: const BorderSide(color: Color(0xFF535B6A)),
+          ),
+          title: const Text(
+            '治疗完成',
+            style: TextStyle(color: Colors.white, fontSize: 22),
+          ),
+          content: SizedBox(
+            width: 360,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _completionRow('使用者', args.userName),
+                _completionRow(
+                  '本次使用',
+                  StartLogic.formatDurationText(actualSeconds),
+                ),
+                const SizedBox(height: 12),
+                const Text(
+                  '模块时长',
+                  style: TextStyle(color: Color(0xFFB9BCC6), fontSize: 15),
+                ),
+                const SizedBox(height: 8),
+                ..._moduleDurationRows(moduleSeconds),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('确认'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (!mounted) return;
+    AppComponentLogic.backToMainPage();
+  }
+
+  Widget _completionRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 92,
+            child: Text(
+              label,
+              style: const TextStyle(color: Color(0xFFB9BCC6), fontSize: 15),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: const TextStyle(color: Colors.white, fontSize: 16),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  List<Widget> _moduleDurationRows(Map<String, int> moduleSeconds) {
+    final List<MapEntry<String, int>> entries = moduleSeconds.entries
+        .where((entry) => entry.value > 0)
+        .toList();
+    if (entries.isEmpty) {
+      return const [
+        Text(
+          '暂无模块运行记录',
+          style: TextStyle(color: Color(0xFFB9BCC6), fontSize: 14),
+        ),
+      ];
+    }
+
+    return entries
+        .map(
+          (entry) => _completionRow(
+            StartLogic.deviceName(entry.key),
+            StartLogic.formatDurationText(entry.value),
+          ),
+        )
+        .toList();
   }
 
   void _startTimer() {
@@ -527,16 +872,37 @@ class _CountdownProgressClipper extends CustomClipper<Path> {
   }
 }
 
-// 启动参数类，用于传递启动时的参数。
+// 启动参数类，用于传递启动时的参数
 class _StartArguments {
-  const _StartArguments({required this.modeTitle});
+  const _StartArguments({required this.modeTitle, required this.userName});
 
   final String modeTitle;
+  final String userName;
 
   factory _StartArguments.from(Object? args) {
     if (args is Map) {
-      return _StartArguments(modeTitle: args['modeTitle'] as String? ?? '深度放松');
+      return _StartArguments(
+        modeTitle: args['modeTitle'] as String? ?? '深度放松',
+        userName: _readName(args['user']),
+      );
     }
-    return const _StartArguments(modeTitle: '深度放松');
+    return const _StartArguments(modeTitle: '深度放松', userName: '未选择用户');
+  }
+
+  static String _readName(Object? user) {
+    if (user is Map && user['name'] is String) {
+      final String name = (user['name'] as String).trim();
+      if (name.isNotEmpty) return name;
+    }
+
+    try {
+      final dynamic dynamicUser = user;
+      final Object? value = dynamicUser?.name;
+      if (value is String && value.trim().isNotEmpty) return value.trim();
+    } catch (_) {
+      // Ignore unsupported user argument shapes.
+    }
+
+    return '未选择用户';
   }
 }
