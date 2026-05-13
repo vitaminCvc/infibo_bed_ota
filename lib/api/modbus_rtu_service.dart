@@ -272,7 +272,10 @@ class ModbusRtuService {
       ],
       if (stopHydrogen) ...[
         const ModbusWriteCommand(address: hydrogenCommandAddress, value: 2),
-        const ModbusWriteCommand(address: hydrogenConcentrationAddress, value: 0),
+        const ModbusWriteCommand(
+          address: hydrogenConcentrationAddress,
+          value: 0,
+        ),
         const ModbusWriteCommand(address: hydrogenEnableAddress, value: 0),
       ],
       if (stopVat) ...[
@@ -689,7 +692,7 @@ class ModbusRtuService {
     }
 
     throw ModbusRtuException(
-      '参数下发失败：寄存器 ${command.addressText} ${_failureReason(lastError)}',
+      'Send failed: register ${command.addressText} ${_failureReason(lastError)}',
     );
   }
 
@@ -779,17 +782,21 @@ class ModbusRtuService {
 
   int _parseReadSingleRegisterResponse({required Uint8List response}) {
     if (response.length < 7) {
-      throw ModbusRtuException('流量读取失败：响应长度不足 ${response.length}/7');
+      throw ModbusRtuException(
+        'Flow read failed: insufficient response ${response.length}/7',
+      );
     }
     if (response[0] != slaveId || response[1] != 0x03 || response[2] != 0x02) {
-      throw ModbusRtuException('流量读取失败：响应头错误 ${_formatBytes(response)}');
+      throw ModbusRtuException(
+        'Flow read failed: header error ${_formatBytes(response)}',
+      );
     }
 
     final int expectedCrc = _crc16(response.sublist(0, 5));
     final int actualCrc = response[5] | (response[6] << 8);
     if (expectedCrc != actualCrc) {
       throw ModbusRtuException(
-        '流量读取失败：CRC错误 expected=${expectedCrc.toRadixString(16)} actual=${actualCrc.toRadixString(16)}',
+        'Flow read failed: CRC error expected=${expectedCrc.toRadixString(16)} actual=${actualCrc.toRadixString(16)}',
       );
     }
 
@@ -886,15 +893,15 @@ class ModbusRtuService {
 
   String _normalizeNativeError(String? message) {
     final String text = (message ?? '').trim();
-    if (text.isEmpty) return '参数下发失败：未知串口错误';
+    if (text.isEmpty) return 'Send failed: unknown serial error';
     return text;
   }
 
   String _failureReason(Object? error) {
     final String text = error?.toString() ?? '';
-    if (text.toLowerCase().contains('timeout')) return '写入超时';
-    if (text.isEmpty) return '写入失败';
-    return '写入失败：$text';
+    if (text.toLowerCase().contains('timeout')) return 'Write timeout';
+    if (text.isEmpty) return 'Write failed';
+    return 'Write failed: $text';
   }
 }
 

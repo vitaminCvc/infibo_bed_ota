@@ -2,6 +2,7 @@
 //
 // 展示预设理疗模式、顶部 Header 和氛围灯开关，并提供进入自定义方案页的入口。
 import 'package:flutter/material.dart';
+import 'package:infibo_app/api/modbus_rtu_service.dart';
 import 'package:infibo_app/components/index.dart';
 import 'package:infibo_app/constants/assets.dart';
 import 'package:infibo_app/constants/color.dart';
@@ -20,6 +21,10 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   // 主页面底部氛围灯默认按钮
   bool _isLightOn = false;
+  bool _isLightCommanding = false;
+  bool _pendingLightState = false;
+  bool _hasPendingLight = false;
+  final ModbusRtuService _modbusService = const ModbusRtuService();
   // 主页面逻辑控制器
   final MainLogic _logic = MainLogic();
 
@@ -321,9 +326,7 @@ class _MainPageState extends State<MainPage> {
           child:
               //检测用户手势操作
               GestureDetector(
-                onTap: () {
-                  setState(() => _isLightOn = !_isLightOn);
-                },
+                onTap: _toggleLight,
                 child: Image.asset(
                   _isLightOn ? Assets.lightOpenLogo : Assets.lightCloseLogo,
                   width: 56,
@@ -333,6 +336,42 @@ class _MainPageState extends State<MainPage> {
         ),
       ],
     );
+  }
+
+  // ── 氛围灯开关 ──────────────────────────────────────────────────
+
+  void _toggleLight() {
+    final bool newState = !_isLightOn;
+    setState(() => _isLightOn = newState);
+
+    if (_isLightCommanding) {
+      _pendingLightState = newState;
+      _hasPendingLight = true;
+      return;
+    }
+    _sendLightCommand(newState);
+  }
+
+  Future<void> _sendLightCommand(bool state) async {
+    _isLightCommanding = true;
+    try {
+      await _modbusService.sendCommandQueue([
+        ModbusWriteCommand(address: 0x0012, value: state ? 1 : 0),
+      ]);
+      debugPrint(
+        'Ambient light ${state ? "ON" : "OFF"} TX 0x0012=${state ? 1 : 0}',
+      );
+    } catch (e) {
+      debugPrint('Ambient light command failed: $e');
+    } finally {
+      if (mounted) {
+        _isLightCommanding = false;
+        if (_hasPendingLight) {
+          _hasPendingLight = false;
+          _sendLightCommand(_pendingLightState);
+        }
+      }
+    }
   }
 }
 
