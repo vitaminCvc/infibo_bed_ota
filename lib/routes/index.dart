@@ -11,6 +11,7 @@ import 'package:infibo_app/pages/debug/serial_test_page.dart';
 import 'package:infibo_app/pages/login/ui.dart';
 import 'package:infibo_app/pages/main/ui.dart';
 import 'package:infibo_app/pages/music/ui.dart';
+import 'package:infibo_app/pages/settingpage/ui.dart';
 import 'package:infibo_app/pages/start/ui.dart';
 
 const String _initialRoute = String.fromEnvironment(
@@ -50,6 +51,8 @@ List<GetPage> getRoutes() {
     ),
     // 音乐选择页
     GetPage(name: "/music", page: () => const MusicSelectPage()),
+    // 设置页
+    GetPage(name: "/setting", page: () => const SettingWidget()),
     // 隐藏调试路由：不在正式页面提供入口。
     GetPage(name: "/debug/serial-test", page: () => const SerialTestPage()),
   ];

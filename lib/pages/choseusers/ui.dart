@@ -6,7 +6,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:infibo_app/components/index.dart';
+import 'package:infibo_app/components/userindex.dart';
 import 'package:infibo_app/constants/assets.dart';
 import 'package:infibo_app/pages/choseusers/logic.dart';
 
@@ -64,7 +64,7 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
   // 构建页面
   Widget build(BuildContext context) {
     //构建页表头
-    return AppHeaderPage(
+    return AppUsersHeaderPage(
       // 点击添加用户按钮时调用
       onAddTap: _toggleAddPopup,
       children: [

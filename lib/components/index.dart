@@ -72,7 +72,6 @@ class AppHeaderPage extends StatelessWidget {
   const AppHeaderPage({
     super.key,
     this.children = const [],
-    this.onAddTap, //用户弹窗
     this.onSettingTap, //设置按钮
     this.onUserTap, //用户区域
     this.enableLogoBack = true,
@@ -81,9 +80,6 @@ class AppHeaderPage extends StatelessWidget {
 
   // 页面主体内容，通常传入 Positioned 组件。
   final List<Widget> children;
-
-  // 点击顶部添加按钮。
-  final VoidCallback? onAddTap;
 
   // 点击顶部设置按钮。
   final VoidCallback? onSettingTap;
@@ -108,6 +104,7 @@ class AppHeaderPage extends StatelessWidget {
           height: double.infinity,
           child: Stack(
             children: [
+              ...children,
               Positioned(
                 left: 48,
                 top: 25,
@@ -116,12 +113,10 @@ class AppHeaderPage extends StatelessWidget {
                   onLogoTap: enableLogoBack
                       ? AppComponentLogic.backToMainPage
                       : null,
-                  onAddTap: onAddTap,
                   onSettingTap: onSettingTap,
                   onUserTap: onUserTap,
                 ),
               ),
-              ...children,
             ],
           ),
         ),
@@ -135,16 +130,12 @@ class AppTopHeader extends StatelessWidget {
   const AppTopHeader({
     super.key,
     this.onLogoTap,
-    this.onAddTap,
     this.onSettingTap,
     this.onUserTap,
   });
 
   // 点击品牌logo。
   final VoidCallback? onLogoTap;
-
-  // 点击添加按钮
-  final VoidCallback? onAddTap;
 
   // 点击设置按钮
   final VoidCallback? onSettingTap;
@@ -168,20 +159,37 @@ class AppTopHeader extends StatelessWidget {
           width: 108,
           height: 48,
           onTap: onUserTap,
+          child: const Positioned(
+            left: 50,
+            top: 13,
+            child: Text(
+              '管理员',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
         ),
-        const SizedBox(width: 12),
-        _buildImageButton(
-          asset: Assets.addLogo,
-          width: 48,
-          height: 48,
-          onTap: onAddTap,
-        ),
-        const SizedBox(width: 12),
+        const SizedBox(width: 8),
         _buildImageButton(
           asset: Assets.settingLogo,
           width: 90,
           height: 48,
-          onTap: onSettingTap,
+          onTap: AppComponentLogic.openSettingPage,
+          child: const Positioned(
+            left: 41,
+            top: 13,
+            child: Text(
+              '设置',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
         ),
       ],
     );
@@ -243,22 +251,27 @@ class AppTopHeader extends StatelessWidget {
     required double width,
     required double height,
     VoidCallback? onTap,
+    Widget? child,
   }) {
-    final Widget image = Image.asset(
-      asset,
+    final button = SizedBox(
       width: width,
       height: height,
-      fit: BoxFit.contain,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Image.asset(asset, width: width, height: height, fit: BoxFit.contain),
+          ?child,
+        ],
+      ),
     );
-
     if (onTap == null) {
-      return image;
+      return button;
     }
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
-      child: image,
+      child: button,
     );
   }
 }
