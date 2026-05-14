@@ -9,8 +9,24 @@ import 'package:infibo_app/constants/assets.dart';
 import 'package:infibo_app/pages/customized/customizedPage/setting_page_helpers.dart';
 import 'package:infibo_app/pages/customized/customizedPage/taihezi/logic.dart';
 
+class TerahertzExpandResult {
+  const TerahertzExpandResult({
+    required this.frequency,
+    required this.power,
+    required this.mode,
+    required this.wave,
+  });
+
+  final int frequency;
+  final int power;
+  final String mode;
+  final String wave;
+}
+
 class TerahertzExpandPage extends StatefulWidget {
-  const TerahertzExpandPage({super.key});
+  const TerahertzExpandPage({super.key, this.initialSetting});
+
+  final TerahertzExpandResult? initialSetting;
 
   @override
   State<TerahertzExpandPage> createState() => _TerahertzExpandPageState();
@@ -32,6 +48,15 @@ class _TerahertzExpandPageState extends State<TerahertzExpandPage> {
   void initState() {
     super.initState();
     _controller = TerahertzSettingController.instance;
+    final TerahertzExpandResult? initialSetting = widget.initialSetting;
+    if (initialSetting != null) {
+      _frequency = initialSetting.frequency.toDouble();
+      _power = initialSetting.power.toDouble();
+      _mode = initialSetting.mode;
+      _wave = initialSetting.wave;
+      return;
+    }
+
     final TerahertzSettingSnapshot snapshot = _controller.snapshot();
     _frequency = snapshot.frequency;
     _power = snapshot.power;
@@ -213,14 +238,23 @@ class _TerahertzExpandPageState extends State<TerahertzExpandPage> {
   void _selectWave(String value) => setState(() => _wave = value);
 
   void _confirm(BuildContext pageContext) {
+    if (!_canConfirm) return;
+
+    final TerahertzExpandResult result = TerahertzExpandResult(
+      frequency: _frequency.round().clamp(0, 100),
+      power: _power.round().clamp(0, 100),
+      mode: _mode!,
+      wave: _wave!,
+    );
+
     // 只有确认时才保存到 controller；直接返回不会覆盖上次确认过的设置。
     _controller.save(
-      frequency: _frequency,
-      power: _power,
-      mode: _mode,
-      wave: _wave,
+      frequency: result.frequency.toDouble(),
+      power: result.power.toDouble(),
+      mode: result.mode,
+      wave: result.wave,
     );
-    popExpandPage(pageContext, true);
+    popExpandPage(pageContext, result);
   }
 }
 

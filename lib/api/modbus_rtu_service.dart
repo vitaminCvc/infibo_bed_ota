@@ -78,10 +78,10 @@ class ModbusRtuService {
   static const int vatCommandAddress = 0x01F6;
 
   /// VAT频率地址。
-  static const int vatFrequencyAddress = 0x01F9;
+  static const int vatFrequencyAddress = 0x01FC;
 
   /// VAT强度地址。
-  static const int vatIntensityAddress = 0x01FC;
+  static const int vatIntensityAddress = 0x01F9;
 
   /// VAT音乐索引地址。
   static const int vatMusicIndexAddress = 0x0201;
@@ -100,6 +100,37 @@ class ModbusRtuService {
 
   /// 分子氢流量地址（只读）。
   static const int hydrogenFlowAddress = 0x025F;
+  static const int chakraEnableAddress = 0x02BB;
+  static const int chakraModeAddress = 0x02BD;
+  static const int chakraCommandAddress = 0x02BE;
+  static const Map<String, int> chakraStrengthAddressMap = <String, int>{
+    'crown': 0x02C1,
+    'third_eye': 0x02C2,
+    'throat': 0x02C3,
+    'heart': 0x02C4,
+    'solar_plexus': 0x02C5,
+    'sacral': 0x02C6,
+    'root': 0x02C7,
+  };
+  static const int terahertzEnableAddress = 0x031F;
+  static const int terahertzModeAddress = 0x0321;
+  static const int terahertzCommandAddress = 0x0322;
+  static const int terahertzPowerAddress = 0x0325;
+  static const int terahertzFrequencyAddress = 0x0326;
+  static const int terahertzWaveAddress = 0x0327;
+  static const int fragranceEnableAddress = 0x0383;
+  static const int fragranceModeAddress = 0x0385;
+  static const int fragranceCommandAddress = 0x0386;
+  static const int fragranceTypeAddress = 0x0389;
+  static const int hifemEnableAddress = 0x03E7;
+  static const int hifemModeAddress = 0x03E9;
+  static const int hifemCommandAddress = 0x03EA;
+  static const int hifemForeheadRfAddress = 0x03ED;
+  static const int hifemForeheadHifesAddress = 0x03EE;
+  static const int hifemLeftCheekRfAddress = 0x03EF;
+  static const int hifemLeftCheekHifesAddress = 0x03F0;
+  static const int hifemRightCheekRfAddress = 0x03F1;
+  static const int hifemRightCheekHifesAddress = 0x03F2;
 
   final String portName; // Android 上通常是 /dev/ttyS0。
   final int baudRate; // 115200。
@@ -134,15 +165,25 @@ class ModbusRtuService {
 
   //暂停按钮
   Future<void> pauseTherapy({
+    bool pauseRed = false,
     bool pauseVat = false,
     bool pausePemf = false,
     bool pauseHydrogen = false,
+    bool pauseChakra = false,
+    bool pauseTerahertz = false,
+    bool pauseHifem = false,
+    bool pauseFragrance = false,
   }) {
     return sendCommandQueue([
       ...buildModulePauseCommands(
+        pauseRed: pauseRed,
         pauseVat: pauseVat,
         pausePemf: pausePemf,
         pauseHydrogen: pauseHydrogen,
+        pauseChakra: pauseChakra,
+        pauseTerahertz: pauseTerahertz,
+        pauseHifem: pauseHifem,
+        pauseFragrance: pauseFragrance,
       ),
       const ModbusWriteCommand(address: systemCommandAddress, value: 3),
     ]);
@@ -150,15 +191,25 @@ class ModbusRtuService {
 
   // 继续总命令。
   Future<void> resumeTherapy({
+    bool resumeRed = false,
     bool resumeVat = false,
     bool resumePemf = false,
     bool resumeHydrogen = false,
+    bool resumeChakra = false,
+    bool resumeTerahertz = false,
+    bool resumeHifem = false,
+    bool resumeFragrance = false,
   }) {
     return sendCommandQueue([
       ...buildModuleResumeCommands(
+        resumeRed: resumeRed,
         resumeVat: resumeVat,
         resumePemf: resumePemf,
         resumeHydrogen: resumeHydrogen,
+        resumeChakra: resumeChakra,
+        resumeTerahertz: resumeTerahertz,
+        resumeHifem: resumeHifem,
+        resumeFragrance: resumeFragrance,
       ),
       const ModbusWriteCommand(address: systemCommandAddress, value: 4),
     ]);
@@ -166,15 +217,25 @@ class ModbusRtuService {
 
   // 停止总命令。
   Future<void> stopTherapy({
+    bool stopRed = false,
     bool stopVat = false,
     bool stopPemf = false,
     bool stopHydrogen = false,
+    bool stopChakra = false,
+    bool stopTerahertz = false,
+    bool stopHifem = false,
+    bool stopFragrance = false,
   }) {
     return sendCommandQueue(
       buildStopTherapyCommands(
+        stopRed: stopRed,
         stopVat: stopVat,
         stopPemf: stopPemf,
         stopHydrogen: stopHydrogen,
+        stopChakra: stopChakra,
+        stopTerahertz: stopTerahertz,
+        stopHifem: stopHifem,
+        stopFragrance: stopFragrance,
       ),
     );
   }
@@ -260,11 +321,17 @@ class ModbusRtuService {
 
   // 构建停止治疗的命令列表，系统命令必须最后发送。
   List<ModbusWriteCommand> buildStopTherapyCommands({
+    bool stopRed = false,
     bool stopVat = false,
     bool stopPemf = false,
     bool stopHydrogen = false,
+    bool stopChakra = false,
+    bool stopTerahertz = false,
+    bool stopHifem = false,
+    bool stopFragrance = false,
   }) {
     return [
+      if (stopRed) ...buildStopRedLightCommands(),
       if (stopPemf) ...[
         const ModbusWriteCommand(address: pemfTotalCommandAddress, value: 2),
         const ModbusWriteCommand(address: pemfTotalIntensityAddress, value: 0),
@@ -283,21 +350,49 @@ class ModbusRtuService {
         const ModbusWriteCommand(address: vatIntensityAddress, value: 0),
         const ModbusWriteCommand(address: vatEnableAddress, value: 0),
       ],
-      const ModbusWriteCommand(address: redLightTotalCommandAddress, value: 2),
-      const ModbusWriteCommand(address: redLight660EnableAddress, value: 0),
-      const ModbusWriteCommand(address: redLight660PowerAddress, value: 0),
-      const ModbusWriteCommand(address: redLight850EnableAddress, value: 0),
-      const ModbusWriteCommand(address: redLight850PowerAddress, value: 0),
-      const ModbusWriteCommand(address: redLightTotalEnableAddress, value: 0),
+      if (stopChakra) ...[
+        const ModbusWriteCommand(address: chakraCommandAddress, value: 2),
+        ...chakraStrengthAddressMap.values.map(
+          (address) => ModbusWriteCommand(address: address, value: 0),
+        ),
+        const ModbusWriteCommand(address: chakraEnableAddress, value: 0),
+      ],
+      if (stopTerahertz) ...[
+        const ModbusWriteCommand(address: terahertzCommandAddress, value: 2),
+        const ModbusWriteCommand(address: terahertzPowerAddress, value: 0),
+        const ModbusWriteCommand(address: terahertzEnableAddress, value: 0),
+      ],
+      if (stopHifem) ...[
+        const ModbusWriteCommand(address: hifemCommandAddress, value: 2),
+        const ModbusWriteCommand(address: hifemForeheadRfAddress, value: 0),
+        const ModbusWriteCommand(address: hifemForeheadHifesAddress, value: 0),
+        const ModbusWriteCommand(address: hifemLeftCheekRfAddress, value: 0),
+        const ModbusWriteCommand(address: hifemLeftCheekHifesAddress, value: 0),
+        const ModbusWriteCommand(address: hifemRightCheekRfAddress, value: 0),
+        const ModbusWriteCommand(
+          address: hifemRightCheekHifesAddress,
+          value: 0,
+        ),
+        const ModbusWriteCommand(address: hifemEnableAddress, value: 0),
+      ],
+      if (stopFragrance) ...[
+        const ModbusWriteCommand(address: fragranceCommandAddress, value: 2),
+        const ModbusWriteCommand(address: fragranceEnableAddress, value: 0),
+      ],
       const ModbusWriteCommand(address: systemCommandAddress, value: 2),
     ];
   }
 
   /// 构建模块暂停命令列表（不含系统命令）。
   List<ModbusWriteCommand> buildModulePauseCommands({
+    bool pauseRed = false,
     bool pauseVat = false,
     bool pausePemf = false,
     bool pauseHydrogen = false,
+    bool pauseChakra = false,
+    bool pauseTerahertz = false,
+    bool pauseHifem = false,
+    bool pauseFragrance = false,
   }) {
     return [
       if (pauseHydrogen)
@@ -306,15 +401,29 @@ class ModbusRtuService {
         const ModbusWriteCommand(address: pemfTotalCommandAddress, value: 3),
       if (pauseVat)
         const ModbusWriteCommand(address: vatCommandAddress, value: 3),
-      const ModbusWriteCommand(address: redLightTotalCommandAddress, value: 3),
+      if (pauseChakra)
+        const ModbusWriteCommand(address: chakraCommandAddress, value: 3),
+      if (pauseTerahertz)
+        const ModbusWriteCommand(address: terahertzCommandAddress, value: 3),
+      if (pauseHifem)
+        const ModbusWriteCommand(address: hifemCommandAddress, value: 3),
+      if (pauseFragrance)
+        const ModbusWriteCommand(address: fragranceCommandAddress, value: 3),
+      if (pauseRed)
+        const ModbusWriteCommand(address: redLightTotalCommandAddress, value: 3),
     ];
   }
 
   /// 构建模块恢复命令列表（不含系统命令）。
   List<ModbusWriteCommand> buildModuleResumeCommands({
+    bool resumeRed = false,
     bool resumeVat = false,
     bool resumePemf = false,
     bool resumeHydrogen = false,
+    bool resumeChakra = false,
+    bool resumeTerahertz = false,
+    bool resumeHifem = false,
+    bool resumeFragrance = false,
   }) {
     return [
       if (resumeHydrogen)
@@ -323,7 +432,116 @@ class ModbusRtuService {
         const ModbusWriteCommand(address: pemfTotalCommandAddress, value: 4),
       if (resumeVat)
         const ModbusWriteCommand(address: vatCommandAddress, value: 4),
-      const ModbusWriteCommand(address: redLightTotalCommandAddress, value: 4),
+      if (resumeChakra)
+        const ModbusWriteCommand(address: chakraCommandAddress, value: 4),
+      if (resumeTerahertz)
+        const ModbusWriteCommand(address: terahertzCommandAddress, value: 4),
+      if (resumeHifem)
+        const ModbusWriteCommand(address: hifemCommandAddress, value: 4),
+      if (resumeFragrance)
+        const ModbusWriteCommand(address: fragranceCommandAddress, value: 4),
+      if (resumeRed)
+        const ModbusWriteCommand(address: redLightTotalCommandAddress, value: 4),
+    ];
+  }
+
+  /// 构建脉轮模块参数与启动命令
+  List<ModbusWriteCommand> buildChakraCommands({
+    required Map<String, int> strengths,
+    int mode = 0,
+  }) {
+    final int safeMode = mode.clamp(0, 1).toInt();
+    final List<ModbusWriteCommand> commands = <ModbusWriteCommand>[
+      const ModbusWriteCommand(address: chakraEnableAddress, value: 1),
+      ModbusWriteCommand(address: chakraModeAddress, value: safeMode),
+    ];
+
+    for (final MapEntry<String, int> entry in strengths.entries) {
+      final int? address = chakraStrengthAddressMap[entry.key];
+      if (address == null) continue;
+      commands.add(
+        ModbusWriteCommand(address: address, value: _clampPercent(entry.value)),
+      );
+    }
+
+    commands.add(
+      const ModbusWriteCommand(address: chakraCommandAddress, value: 1),
+    );
+    return commands;
+  }
+
+  /// 构建太赫兹模块参数与启动命令
+  List<ModbusWriteCommand> buildTerahertzCommands({
+    required int frequency,
+    required int power,
+    required int mode,
+    required int wave,
+  }) {
+    final int safeFrequency = frequency.clamp(1, 100).toInt();
+    final int safePower = _clampPercent(power);
+    final int safeMode = mode.clamp(0, 2).toInt();
+    final int safeWave = wave.clamp(0, 2).toInt();
+
+    return [
+      const ModbusWriteCommand(address: terahertzEnableAddress, value: 1),
+      ModbusWriteCommand(address: terahertzModeAddress, value: safeMode),
+      ModbusWriteCommand(address: terahertzPowerAddress, value: safePower),
+      ModbusWriteCommand(
+        address: terahertzFrequencyAddress,
+        value: safeFrequency,
+      ),
+      ModbusWriteCommand(address: terahertzWaveAddress, value: safeWave),
+      const ModbusWriteCommand(address: terahertzCommandAddress, value: 1),
+    ];
+  }
+
+  /// 构建 HIFEM 模块参数与启动命令。
+  List<ModbusWriteCommand> buildHifemCommands({
+    required int foreheadRf,
+    required int foreheadHifes,
+    required int leftCheekRf,
+    required int leftCheekHifes,
+    required int rightCheekRf,
+    required int rightCheekHifes,
+  }) {
+    return [
+      const ModbusWriteCommand(address: hifemEnableAddress, value: 1),
+      ModbusWriteCommand(
+        address: hifemForeheadRfAddress,
+        value: _clampPercent(foreheadRf),
+      ),
+      ModbusWriteCommand(
+        address: hifemForeheadHifesAddress,
+        value: _clampPercent(foreheadHifes),
+      ),
+      ModbusWriteCommand(
+        address: hifemLeftCheekRfAddress,
+        value: _clampPercent(leftCheekRf),
+      ),
+      ModbusWriteCommand(
+        address: hifemLeftCheekHifesAddress,
+        value: _clampPercent(leftCheekHifes),
+      ),
+      ModbusWriteCommand(
+        address: hifemRightCheekRfAddress,
+        value: _clampPercent(rightCheekRf),
+      ),
+      ModbusWriteCommand(
+        address: hifemRightCheekHifesAddress,
+        value: _clampPercent(rightCheekHifes),
+      ),
+      const ModbusWriteCommand(address: hifemCommandAddress, value: 1),
+    ];
+  }
+
+  /// 构建香氛模块参数与启动命令。
+  List<ModbusWriteCommand> buildFragranceCommands({required int type}) {
+    final int safeType = type.clamp(0, 4).toInt();
+
+    return [
+      const ModbusWriteCommand(address: fragranceEnableAddress, value: 1),
+      ModbusWriteCommand(address: fragranceTypeAddress, value: safeType),
+      const ModbusWriteCommand(address: fragranceCommandAddress, value: 1),
     ];
   }
 
@@ -335,7 +553,7 @@ class ModbusRtuService {
   }) {
     final int safeFrequency = frequency.clamp(0, 100);
     final int safeIntensity = intensity.clamp(0, 100);
-    final int safeMusicIndex = musicIndex.clamp(0, 255);
+    final int safeMusicIndex = musicIndex.clamp(0, 65535);
     debugPrint(
       'VAT params: freq=$safeFrequency intensity=$safeIntensity musicIndex=$safeMusicIndex',
     );

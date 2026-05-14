@@ -19,11 +19,13 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
   late int _currentIndex;
   late final TextEditingController _frequencyController;
   late final TextEditingController _intensityController;
+  late final bool _musicOnlyMode;
 
   @override
   void initState() {
     super.initState();
     final Object? args = Get.arguments;
+    _musicOnlyMode = true;
     final String initialSongId =
         (args is Map ? args['currentSelectedSongId'] as String? : null) ??
         defaultSongId;
@@ -139,7 +141,11 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
               gradient: const RadialGradient(
                 center: Alignment.center,
                 radius: 0.95,
-                colors: [Color(0xFF3A3050), Color(0xFF1E1A2C), Color(0xFF11101A)],
+                colors: [
+                  Color(0xFF3A3050),
+                  Color(0xFF1E1A2C),
+                  Color(0xFF11101A),
+                ],
                 stops: [0.0, 0.55, 1.0],
               ),
               boxShadow: [
@@ -222,7 +228,8 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
             ),
           ),
         ),
-        for (int i = 0; i < series.songs.length; i++) _buildSongRow(series.songs[i]),
+        for (int i = 0; i < series.songs.length; i++)
+          _buildSongRow(series.songs[i]),
         const SizedBox(height: 4),
       ],
     );
@@ -245,7 +252,9 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
               : Colors.transparent,
           borderRadius: BorderRadius.circular(10),
           border: isSelected
-              ? Border.all(color: const Color(0xFF8C45D5).withValues(alpha: 0.35))
+              ? Border.all(
+                  color: const Color(0xFF8C45D5).withValues(alpha: 0.35),
+                )
               : null,
         ),
         child: Row(
@@ -270,7 +279,11 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
                   shape: BoxShape.circle,
                   color: const Color(0xFF8C45D5).withValues(alpha: 0.3),
                 ),
-                child: const Icon(Icons.check, color: Color(0xFFB388E8), size: 14),
+                child: const Icon(
+                  Icons.check,
+                  color: Color(0xFFB388E8),
+                  size: 14,
+                ),
               ),
           ],
         ),
@@ -279,6 +292,13 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
   }
 
   Widget _buildBottomControls() {
+    if (_musicOnlyMode) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [_buildConfirmButton()],
+      );
+    }
+
     return Row(
       children: [
         Expanded(child: _buildInputField('频率', _frequencyController)),
@@ -294,8 +314,13 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
               backgroundColor: const Color(0xFF8C45D5),
               foregroundColor: Colors.white,
               elevation: 0,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-              textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14),
+              ),
+              textStyle: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
             ),
             child: const Text('确认选择'),
           ),
@@ -304,11 +329,36 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
     );
   }
 
+  Widget _buildConfirmButton() {
+    return SizedBox(
+      width: 360,
+      height: 56,
+      child: ElevatedButton(
+        onPressed: _confirmSelection,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFF8C45D5),
+          foregroundColor: Colors.white,
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(28),
+          ),
+          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        ),
+        child: const Text('确认选择'),
+      ),
+    );
+  }
+
   Widget _buildInputField(String label, TextEditingController controller) {
+    final bool enabled = !_musicOnlyMode;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(color: Color(0xFFB9BCC6), fontSize: 14)),
+        Text(
+          label,
+          style: const TextStyle(color: Color(0xFFB9BCC6), fontSize: 14),
+        ),
         const SizedBox(height: 6),
         Container(
           height: 44,
@@ -319,6 +369,7 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
           ),
           child: TextField(
             controller: controller,
+            enabled: enabled,
             keyboardType: TextInputType.number,
             textAlign: TextAlign.center,
             style: const TextStyle(color: Colors.white, fontSize: 16),
@@ -337,7 +388,9 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
               if (number != null && number > 100) {
                 controller
                   ..text = '100'
-                  ..selection = TextSelection.collapsed(offset: controller.text.length);
+                  ..selection = TextSelection.collapsed(
+                    offset: controller.text.length,
+                  );
               }
             },
           ),

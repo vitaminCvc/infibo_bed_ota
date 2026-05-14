@@ -9,8 +9,16 @@ import 'package:infibo_app/constants/assets.dart';
 import 'package:infibo_app/pages/customized/customizedPage/setting_page_helpers.dart';
 import 'package:infibo_app/pages/customized/customizedPage/xiangfen/logic.dart';
 
+class FragranceExpandResult {
+  const FragranceExpandResult({required this.fragranceId});
+
+  final String fragranceId;
+}
+
 class FragranceExpandPage extends StatefulWidget {
-  const FragranceExpandPage({super.key});
+  const FragranceExpandPage({super.key, this.initialSetting});
+
+  final FragranceExpandResult? initialSetting;
 
   @override
   State<FragranceExpandPage> createState() => _FragranceExpandPageState();
@@ -27,7 +35,8 @@ class _FragranceExpandPageState extends State<FragranceExpandPage> {
   void initState() {
     super.initState();
     _controller = FragranceSettingController.instance;
-    _selectedId = _controller.selectedFragranceId;
+    _selectedId =
+        widget.initialSetting?.fragranceId ?? _controller.selectedFragranceId;
   }
 
   @override
@@ -179,9 +188,13 @@ class _FragranceExpandPageState extends State<FragranceExpandPage> {
   }
 
   void _confirm(BuildContext pageContext) {
+    final FragranceExpandResult result = FragranceExpandResult(
+      fragranceId: _selectedId,
+    );
+
     // 只有确认时才写入 controller；返回按钮只是退出页面，不改变上次保存值。
-    _controller.saveSelectedFragrance(_selectedId);
-    popExpandPage(pageContext, true);
+    _controller.saveSelectedFragrance(result.fragranceId);
+    popExpandPage(pageContext, result);
   }
 }
 

@@ -9,8 +9,20 @@ import 'package:infibo_app/constants/assets.dart';
 import 'package:infibo_app/pages/customized/customizedPage/hifem/logic.dart';
 import 'package:infibo_app/pages/customized/customizedPage/setting_page_helpers.dart';
 
+class HifemExpandResult {
+  const HifemExpandResult({
+    required this.selectedRegion,
+    required this.regionSettings,
+  });
+
+  final HifemRegion? selectedRegion;
+  final Map<HifemRegion, HifemRegionSetting> regionSettings;
+}
+
 class HifemExpandPage extends StatefulWidget {
-  const HifemExpandPage({super.key});
+  const HifemExpandPage({super.key, this.initialSetting});
+
+  final HifemExpandResult? initialSetting;
 
   @override
   State<HifemExpandPage> createState() => _HifemExpandPageState();
@@ -36,6 +48,15 @@ class _HifemExpandPageState extends State<HifemExpandPage> {
   void initState() {
     super.initState();
     _controller = HifemSettingController.instance;
+    final HifemExpandResult? initialSetting = widget.initialSetting;
+    if (initialSetting != null) {
+      _selectedRegion = initialSetting.selectedRegion;
+      _regionSettings = Map<HifemRegion, HifemRegionSetting>.from(
+        initialSetting.regionSettings,
+      );
+      return;
+    }
+
     final HifemSettingSnapshot snapshot = _controller.snapshot();
     _selectedRegion = snapshot.selectedRegion;
     _regionSettings = Map<HifemRegion, HifemRegionSetting>.from(
@@ -204,11 +225,18 @@ class _HifemExpandPageState extends State<HifemExpandPage> {
   }
 
   void _confirm(BuildContext pageContext) {
-    _controller.save(
+    final HifemExpandResult result = HifemExpandResult(
       selectedRegion: _selectedRegion,
-      regionSettings: _regionSettings,
+      regionSettings: Map<HifemRegion, HifemRegionSetting>.from(
+        _regionSettings,
+      ),
     );
-    popExpandPage(pageContext, true);
+
+    _controller.save(
+      selectedRegion: result.selectedRegion,
+      regionSettings: result.regionSettings,
+    );
+    popExpandPage(pageContext, result);
   }
 }
 

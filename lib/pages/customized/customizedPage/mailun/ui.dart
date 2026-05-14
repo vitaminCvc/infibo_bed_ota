@@ -14,16 +14,26 @@ import 'package:infibo_app/pages/customized/customizedPage/setting_page_helpers.
 /// strengths 的 key 是脉轮 id，例如 crown / heart；
 /// value 是用户在强度输入框中输入的数字文本。
 class ChakraExpandResult {
-  const ChakraExpandResult({required this.strengths});
+  const ChakraExpandResult({required this.strengths, this.mode = 'rotation'});
 
   final Map<String, String> strengths;
+
+  /// 脉轮模块模式：rotation=轮转，independent=独立，对应 0x02BD。
+  final String mode;
 }
 
 class ChakraExpandPage extends StatefulWidget {
-  const ChakraExpandPage({super.key, this.initialStrengths = const {}});
+  const ChakraExpandPage({
+    super.key,
+    this.initialStrengths = const {},
+    this.initialMode = 'rotation',
+  });
 
   /// 编辑已有方案时，上级页面会把之前保存过的脉轮强度传进来。
   final Map<String, String> initialStrengths;
+
+  /// 编辑已有方案时恢复之前保存的模式；默认轮转。
+  final String initialMode;
 
   @override
   State<ChakraExpandPage> createState() => _ChakraExpandPageState();
@@ -45,9 +55,15 @@ class _ChakraExpandPageState extends State<ChakraExpandPage> {
   /// 当前展开强度输入框的脉轮下标。
   int? _selectedIndex;
 
+  /// 当前选择的脉轮工作模式，默认轮转。
+  late String _selectedMode;
+
   @override
   void initState() {
     super.initState();
+    _selectedMode = widget.initialMode == 'independent'
+        ? 'independent'
+        : 'rotation';
 
     _strengthControllers = List.generate(_chakras.length, (int index) {
       final String text =
@@ -127,6 +143,12 @@ class _ChakraExpandPageState extends State<ChakraExpandPage> {
                           ),
                         ),
                         Positioned(
+                          left: 0,
+                          right: 0,
+                          top: 930,
+                          child: _buildModeSelector(),
+                        ),
+                        Positioned(
                           left: 133,
                           top: 1005,
                           child: _buildConfirm(context),
@@ -195,33 +217,110 @@ class _ChakraExpandPageState extends State<ChakraExpandPage> {
   }
 
   /// 点击脉轮图标或标题时，只展开对应的强度输入框。
+  Widget _buildModeSelector() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Text('模式选择', style: TextStyle(color: Colors.white, fontSize: 16)),
+        const SizedBox(width: 18),
+        _buildModeOption(label: '轮转', value: 'rotation'),
+        const SizedBox(width: 22),
+        _buildModeOption(label: '独立', value: 'independent'),
+      ],
+    );
+  }
+
+  Widget _buildModeOption({required String label, required String value}) {
+    final bool selected = _selectedMode == value;
+
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () => setState(() => _selectedMode = value),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 14,
+            height: 14,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: selected ? const Color(0xFF1F7AFF) : Colors.white,
+                width: 1.5,
+              ),
+            ),
+            child: selected
+                ? Center(
+                    child: Container(
+                      width: 7,
+                      height: 7,
+                      decoration: const BoxDecoration(
+                        color: Color(0xFF1F7AFF),
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  )
+                : null,
+          ),
+          const SizedBox(width: 6),
+          Text(
+            label,
+            style: const TextStyle(color: Colors.white, fontSize: 16),
+          ),
+        ],
+      ),
+    );
+  }
+
   void _toggleChakra(int index) {
     setState(() {
       _selectedIndex = _selectedIndex == index ? null : index;
     });
   }
 
-  /// 用户直接在强度框里输入时同步页面状态。
+  /// 用户直接在***强度框***里输入时同步页面状态。
   ///
   /// 输入为空表示取消该脉轮配置，确认按钮也会随之变成不可点击状态。
   void _saveStrength(int index, String value) {
+    //表示输入框传进来的文字,把用户输入的内容去掉前后空格。
     final String text = value.trim();
-
+    //刷新页面状态,如果输入框里没有内容了,就把这个脉轮的配置从已提交的强度里移除掉;如果有内容了,就更新这个脉轮的强度值。
     setState(() {
+      //保存设置脉轮编号
       _selectedIndex = index;
+      //保存设置的强度值,如果输入框里没有内容了,就把这个脉轮的配置从已提交的强度里移除掉;如果有内容了,就更新这个脉轮的强度值。
       if (text.isEmpty) {
         _committedStrengths.remove(index);
-      } else {
-        _committedStrengths[index] = text;
+        return;
+      }
+      // 非数字输入直接忽略
+      final int? parsed = int.tryParse(text);
+      if (parsed == null) {
+        return;
+      }
+      // 强度限制在 0~100
+      final int normalized = parsed.clamp(0, 100);
+      _committedStrengths[index] = normalized.toString();
+      // 同步修正输入框文本，避免 UI 显示与实际值不一致
+      if (controllerText(index) != normalized.toString()) {
+        _strengthControllers[index].text = normalized.toString();
+        _strengthControllers[index].selection = TextSelection.fromPosition(
+          TextPosition(offset: _strengthControllers[index].text.length),
+        );
       }
     });
   }
+
+  String controllerText(int index) => _strengthControllers[index].text.trim();
 
   /// 确认时把页面状态转换成业务 id -> 强度值，然后返回给上级编辑页。
   void _confirm(BuildContext pageContext) {
     popExpandPage(
       pageContext,
-      ChakraExpandResult(strengths: _buildResultStrengths()),
+      ChakraExpandResult(
+        strengths: _buildResultStrengths(),
+        mode: _selectedMode,
+      ),
     );
   }
 
@@ -433,7 +532,7 @@ const List<_ChakraData> _chakras = [
   ),
   _ChakraData(
     id: 'solar_plexus',
-    title: '太阳神\n经丛',
+    title: '太阳神轮',
     subtitle: '(肾)',
     icon: Assets.chakraSolarPlexus,
     selectedIcon: Assets.chakraSolarPlexusSelected,

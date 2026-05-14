@@ -40,6 +40,11 @@ class _StartPageState extends State<StartPage> {
   bool _isCommanding = false;
   int _lastPhaseIndex = 0;
   final Set<String> _runningModules = <String>{};
+  // 记录每个模块在上一个已下发节点的“参数签名”，用于快速判断是否有参数变化。
+  final Map<String, String> _runningModuleSignatures = <String, String>{};
+  // 记录每个模块在上一个已下发节点的“寄存器地址 -> 值”，用于做按地址的增量下发。
+  final Map<String, Map<int, int>> _runningModuleParamValues =
+      <String, Map<int, int>>{};
   bool _isSwitchingPhase = false;
   bool _isCompletingSession = false;
   Timer? _hydrogenFlowTimer;
@@ -107,7 +112,7 @@ class _StartPageState extends State<StartPage> {
   Widget _buildCanvas(_StartArguments args) {
     // 暂停时所有设备都视为未运行；运行时根据当前 5 分钟阶段点亮对应 icon
     final List<String> activeDevices = _logic.isRunning
-        ? _logic.activeDevices(args.modeTitle)
+        ? _modulesForPhase().toList()
         : const [];
 
     return Stack(
@@ -244,7 +249,7 @@ class _StartPageState extends State<StartPage> {
         child: Stack(
           children: [
             Positioned.fill(child: Image.asset(panelAsset, fit: BoxFit.fill)),
-            ..._buildFunctionPanelEffects(id, isActive),
+            ..._buildFunctionPanelEffects(id, isActive, activeDevices),
             if (id == 'red') _buildRedLightPanelInfo(isActive),
             if (id == 'pemf') _buildPemfPanelInfo(isActive),
             if (id == 'vat') _buildVatPanelInfo(isActive),
@@ -483,15 +488,9 @@ class _StartPageState extends State<StartPage> {
 
   Widget _buildVatPanelInfo(bool isActive) {
     final VatPhaseSetting? setting = _logic.activeVatSetting;
-    final VatMusicSelection? musicSelection = _vatMusicSelection;
 
     final String frequencyText = setting?.frequency.toString() ?? '';
     final String intensityText = setting?.intensity.toString() ?? '';
-    final String songName =
-        musicSelection?.songName ??
-        setting?.songName ??
-        findSongById(setting?.songId ?? defaultSongId)?.name ??
-        '';
 
     return Positioned(
       left: 40,
@@ -549,12 +548,6 @@ class _StartPageState extends State<StartPage> {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
-            if (songName.isNotEmpty)
-              Text(
-                songName,
-                style: const TextStyle(color: Color(0xFFE4E7EE), fontSize: 13),
-              ),
           ],
         ),
       ),
@@ -660,7 +653,11 @@ class _StartPageState extends State<StartPage> {
   }
 
   // 构建功能框效果图
-  List<Widget> _buildFunctionPanelEffects(String id, bool isActive) {
+  List<Widget> _buildFunctionPanelEffects(
+    String id,
+    bool isActive,
+    List<String> activeDevices,
+  ) {
     switch (id) {
       case 'red':
         return [
@@ -717,9 +714,9 @@ class _StartPageState extends State<StartPage> {
       case 'expand':
         return [
           Positioned(
-            left: 45,
-            top: 18,
-            child: _buildExpandStatusIcons(isActive),
+            left: 35,
+            top: 20,
+            child: _buildExpandStatusList(activeDevices),
           ),
         ];
       default:
@@ -727,22 +724,104 @@ class _StartPageState extends State<StartPage> {
     }
   }
 
-  // 构建扩展功能状态图标
-  Widget _buildExpandStatusIcons(bool isActive) {
-    final List<String> iconAssets = [
-      isActive ? Assets.startExpandIconOn : Assets.startExpandIconOff,
-      isActive ? Assets.startTerahertzIconOn : Assets.startTerahertzIconOff,
-      isActive ? Assets.startHifemIconOn : Assets.startHifemIconOff,
-      isActive ? Assets.startFragranceIconOn : Assets.startFragranceIconOff,
+  // 构建扩展功能状态列表：未运行显示等待，运行时对应子模块点亮。
+  Widget _buildExpandStatusList(List<String> activeDevices) {
+    final Set<String> activeSet = activeDevices.toSet();
+    final List<_ExpandStatusItem> items = [
+      _ExpandStatusItem(
+        id: 'chakra',
+        label: '脉轮',
+        iconOn: Assets.startExpandIconOn,
+        iconOff: Assets.startExpandIconOff,
+      ),
+      _ExpandStatusItem(
+        id: 'terahertz',
+        label: '太赫兹',
+        iconOn: Assets.startTerahertzIconOn,
+        iconOff: Assets.startTerahertzIconOff,
+      ),
+      _ExpandStatusItem(
+        id: 'hifem',
+        label: 'HIFEM',
+        iconOn: Assets.startHifemIconOn,
+        iconOff: Assets.startHifemIconOff,
+      ),
+      _ExpandStatusItem(
+        id: 'fragrance',
+        label: '香氛',
+        iconOn: Assets.startFragranceIconOn,
+        iconOff: Assets.startFragranceIconOff,
+      ),
     ];
 
-    return Column(
-      children: [
-        for (final String asset in iconAssets) ...[
-          Image.asset(asset, width: 24, height: 24),
-          if (asset != iconAssets.last) const SizedBox(height: 14),
+    return SizedBox(
+      width: 220,
+      child: Column(
+        children: [
+          for (final _ExpandStatusItem item in items)
+            _buildExpandStatusRow(
+              item: item,
+              running: activeSet.contains(item.id),
+            ),
         ],
-      ],
+      ),
+    );
+  }
+
+  Widget _buildExpandStatusRow({
+    required _ExpandStatusItem item,
+    required bool running,
+  }) {
+    final Color textColor = running ? Colors.white : const Color(0xFFB7BBC5);
+    final Color statusColor = running
+        ? const Color(0xFF31E982)
+        : const Color(0xFFC0C4CE);
+
+    return SizedBox(
+      height: 34,
+      child: Row(
+        children: [
+          Image.asset(
+            running ? item.iconOn : item.iconOff,
+            width: 24,
+            height: 24,
+          ),
+          const SizedBox(width: 12),
+          SizedBox(
+            width: 78,
+            child: Text(
+              item.label,
+              style: TextStyle(
+                color: textColor,
+                fontSize: 17,
+                fontWeight: FontWeight.w500,
+                height: 1,
+              ),
+            ),
+          ),
+          const Spacer(),
+          if (running) ...[
+            Container(
+              width: 6,
+              height: 6,
+              decoration: const BoxDecoration(
+                color: Color(0xFF31E982),
+                shape: BoxShape.circle,
+              ),
+            ),
+            const SizedBox(width: 5),
+          ],
+          Text(
+            running ? '正在运行' : '等待运行',
+            style: TextStyle(
+              color: statusColor,
+              fontSize: 13,
+              fontWeight: FontWeight.w400,
+              height: 1,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -914,6 +993,12 @@ class _StartPageState extends State<StartPage> {
       setState(() {
         _logic.play();
         _runningModules.addAll(_modulesForPhase());
+        _runningModuleSignatures
+          ..clear()
+          ..addAll(_currentModuleSignatures(_runningModules));
+        _runningModuleParamValues
+          ..clear()
+          ..addAll(_currentModuleParamValues(_runningModules));
       });
       _syncHydrogenFlowPolling();
       debugPrint('start command sent successfully');
@@ -932,9 +1017,14 @@ class _StartPageState extends State<StartPage> {
     setState(() => _isCommanding = true);
     try {
       await modbusService.pauseTherapy(
+        pauseRed: _runningModules.contains('red'),
         pauseVat: _runningModules.contains('vat'),
         pausePemf: _runningModules.contains('pemf'),
         pauseHydrogen: _runningModules.contains('hydrogen'),
+        pauseChakra: _runningModules.contains('chakra'),
+        pauseTerahertz: _runningModules.contains('terahertz'),
+        pauseHifem: _runningModules.contains('hifem'),
+        pauseFragrance: _runningModules.contains('fragrance'),
       );
       if (!mounted) return;
       setState(() {
@@ -957,9 +1047,14 @@ class _StartPageState extends State<StartPage> {
     setState(() => _isCommanding = true);
     try {
       await modbusService.resumeTherapy(
+        resumeRed: _runningModules.contains('red'),
         resumeVat: _runningModules.contains('vat'),
         resumePemf: _runningModules.contains('pemf'),
         resumeHydrogen: _runningModules.contains('hydrogen'),
+        resumeChakra: _runningModules.contains('chakra'),
+        resumeTerahertz: _runningModules.contains('terahertz'),
+        resumeHifem: _runningModules.contains('hifem'),
+        resumeFragrance: _runningModules.contains('fragrance'),
       );
       if (!mounted) return;
       setState(() {
@@ -983,14 +1078,21 @@ class _StartPageState extends State<StartPage> {
     setState(() => _isCommanding = true);
     try {
       await modbusService.stopTherapy(
+        stopRed: _runningModules.contains('red'),
         stopVat: _runningModules.contains('vat'),
         stopPemf: _runningModules.contains('pemf'),
         stopHydrogen: _runningModules.contains('hydrogen'),
+        stopChakra: _runningModules.contains('chakra'),
+        stopTerahertz: _runningModules.contains('terahertz'),
+        stopHifem: _runningModules.contains('hifem'),
+        stopFragrance: _runningModules.contains('fragrance'),
       );
       if (!mounted) return;
       setState(() {
         _logic.stop();
         _runningModules.clear();
+        _runningModuleSignatures.clear();
+        _runningModuleParamValues.clear();
         _stopHydrogenFlowPolling(clearValue: true);
       });
       await _showCompletionDialog(args);
@@ -1004,19 +1106,37 @@ class _StartPageState extends State<StartPage> {
   }
 
   /// 构建当前阶段的所有模块参数命令列表，包含红光/PEMF/HYDROGEN/VAT。
-  List<ModbusWriteCommand> _buildPhaseCommands() {
+  List<ModbusWriteCommand> _buildPhaseCommands({
+    Set<String>? moduleFilter,
+    bool includeStartCommands = true,
+  }) {
     final _StartArguments args = _StartArguments.from(Get.arguments);
     final List<ModbusWriteCommand> commands = <ModbusWriteCommand>[];
 
     if (!_logic.isCustomizedPlan) return commands;
 
     final List<String> activeDevices = _logic.activeDevices(args.modeTitle);
+    bool shouldBuild(String module) {
+      return moduleFilter == null || moduleFilter.contains(module);
+    }
+
+    void addModuleCommands(
+      String module,
+      List<ModbusWriteCommand> moduleCommands,
+    ) {
+      commands.addAll(
+        includeStartCommands
+            ? moduleCommands
+            : _withoutModuleStartCommand(module, moduleCommands),
+      );
+    }
 
     // 红光
-    if (activeDevices.contains('red')) {
+    if (activeDevices.contains('red') && shouldBuild('red')) {
       final RedLightPhaseSetting? setting = _logic.activeRedLightSetting;
       if (setting != null) {
-        commands.addAll(
+        addModuleCommands(
+          'red',
           modbusService.buildRedLightCommands(
             strength660: setting.strength660,
             strength850: setting.strength850,
@@ -1024,14 +1144,12 @@ class _StartPageState extends State<StartPage> {
           ),
         );
       }
-    } else {
-      commands.addAll(modbusService.buildStopRedLightCommands());
     }
 
     // PEMF
     debugPrint('active features = $activeDevices');
     debugPrint('PEMF hasPemf=${activeDevices.contains('pemf')}');
-    if (activeDevices.contains('pemf')) {
+    if (activeDevices.contains('pemf') && shouldBuild('pemf')) {
       final PemfPhaseSetting? setting = _logic.activePemfSetting;
       if (setting != null) {
         final int waveformNum = setting.waveformNumber;
@@ -1040,7 +1158,7 @@ class _StartPageState extends State<StartPage> {
         debugPrint('PEMF TX address=0x00D0 value=${setting.intensity}');
         debugPrint('PEMF TX address=0x00D1 value=$waveformNum');
         debugPrint('PEMF TX address=0x00CA value=1');
-        commands.addAll([
+        addModuleCommands('pemf', [
           const ModbusWriteCommand(
             address: ModbusRtuService.pemfTotalModeAddress,
             value: 1,
@@ -1068,48 +1186,269 @@ class _StartPageState extends State<StartPage> {
     // 分子氢
     final bool hasHydrogen = activeDevices.contains('hydrogen');
     debugPrint('Hydrogen hasHydrogen=$hasHydrogen');
-    if (hasHydrogen) {
+    if (hasHydrogen && shouldBuild('hydrogen')) {
       final HydrogenPhaseSetting? setting = _logic.activeHydrogenSetting;
       if (setting != null) {
-        commands.addAll(
-          modbusService.buildHydrogenParamCommands(
-            concentration: setting.concentration,
-          ),
-        );
-        commands.add(
+        final List<ModbusWriteCommand> hydrogenCommands = modbusService
+            .buildHydrogenParamCommands(concentration: setting.concentration);
+        addModuleCommands('hydrogen', [
+          ...hydrogenCommands,
           const ModbusWriteCommand(
             address: ModbusRtuService.hydrogenCommandAddress,
             value: 1,
           ),
-        );
+        ]);
         debugPrint('Hydrogen flow polling start');
       }
     } else {
-      debugPrint('skip hydrogen commands and flow polling because current phase has no hydrogen');
+      debugPrint(
+        'skip hydrogen commands and flow polling because current phase has no hydrogen',
+      );
     }
 
     // VAT
-    if (activeDevices.contains('vat')) {
+    if (activeDevices.contains('vat') && shouldBuild('vat')) {
       final VatPhaseSetting? setting = _logic.activeVatSetting;
       if (setting != null) {
         final int musicIndex = _resolveVatMusicIndex(setting);
-        commands.addAll(
-          modbusService.buildVatParamCommands(
-            frequency: setting.frequency,
-            intensity: setting.intensity,
-            musicIndex: musicIndex,
-          ),
-        );
-        commands.add(
+        final List<ModbusWriteCommand> vatCommands = modbusService
+            .buildVatParamCommands(
+              frequency: setting.frequency,
+              intensity: setting.intensity,
+              musicIndex: musicIndex,
+            );
+        addModuleCommands('vat', [
+          ...vatCommands,
           const ModbusWriteCommand(
             address: ModbusRtuService.vatCommandAddress,
             value: 1,
           ),
-        );
+        ]);
+      }
+    }
+
+    // 脉轮（拓展功能子模块）
+    final ChakraPhaseSetting? chakraSetting = _logic.activeChakraSetting;
+    if (activeDevices.contains('expand') &&
+        shouldBuild('chakra') &&
+        chakraSetting != null &&
+        chakraSetting.hasStrengths) {
+      addModuleCommands(
+        'chakra',
+        modbusService.buildChakraCommands(
+          strengths: chakraSetting.strengths,
+          mode: chakraSetting.modbusMode,
+        ),
+      );
+    }
+
+    // 太赫兹（拓展功能子模块）
+    final TerahertzPhaseSetting? terahertzSetting =
+        _logic.activeTerahertzSetting;
+    if (activeDevices.contains('expand') &&
+        shouldBuild('terahertz') &&
+        terahertzSetting != null) {
+      addModuleCommands(
+        'terahertz',
+        modbusService.buildTerahertzCommands(
+          frequency: terahertzSetting.frequency,
+          power: terahertzSetting.power,
+          mode: terahertzSetting.modbusMode,
+          wave: terahertzSetting.modbusWave,
+        ),
+      );
+    }
+
+    // HIFEM（拓展功能子模块）
+    final HifemPhaseSetting? hifemSetting = _logic.activeHifemSetting;
+    if (activeDevices.contains('expand') &&
+        shouldBuild('hifem') &&
+        hifemSetting != null &&
+        hifemSetting.hasOutput) {
+      addModuleCommands(
+        'hifem',
+        modbusService.buildHifemCommands(
+          foreheadRf: hifemSetting.foreheadRf,
+          foreheadHifes: hifemSetting.foreheadHifes,
+          leftCheekRf: hifemSetting.leftCheekRf,
+          leftCheekHifes: hifemSetting.leftCheekHifes,
+          rightCheekRf: hifemSetting.rightCheekRf,
+          rightCheekHifes: hifemSetting.rightCheekHifes,
+        ),
+      );
+    }
+
+    // 香氛（拓展功能子模块）
+    final FragrancePhaseSetting? fragranceSetting =
+        _logic.activeFragranceSetting;
+    if (activeDevices.contains('expand') &&
+        shouldBuild('fragrance') &&
+        fragranceSetting != null) {
+      addModuleCommands(
+        'fragrance',
+        modbusService.buildFragranceCommands(type: fragranceSetting.modbusType),
+      );
+    }
+
+    return commands;
+  }
+
+  List<ModbusWriteCommand> _withoutModuleStartCommand(
+    String module,
+    List<ModbusWriteCommand> commands,
+  ) {
+    // 模块处于 modulesToKeep 时，启动类/使能类指令应被过滤，只保留参数更新指令。
+    final Set<int> excludedAddresses = _moduleKeepExcludedAddresses(module);
+    if (excludedAddresses.isEmpty) return commands;
+
+    return commands.where((command) {
+      return !excludedAddresses.contains(command.address);
+    }).toList();
+  }
+
+  Set<int> _moduleKeepExcludedAddresses(String module) {
+    // keep 状态下要排除：启动 command + 该模块使能寄存器。
+    final int? commandAddress = _moduleStartCommandAddress(module);
+    return <int>{?commandAddress, ..._moduleEnableAddresses(module)};
+  }
+
+  Set<int> _moduleEnableAddresses(String module) {
+    // 这些地址在模块保持运行时不应重复写 1。
+    switch (module) {
+      case 'red':
+        return const <int>{
+          ModbusRtuService.redLightTotalEnableAddress,
+          ModbusRtuService.redLight660EnableAddress,
+          ModbusRtuService.redLight850EnableAddress,
+        };
+      case 'pemf':
+        return const <int>{ModbusRtuService.pemfTotalModeAddress};
+      case 'hydrogen':
+        return const <int>{ModbusRtuService.hydrogenEnableAddress};
+      case 'vat':
+        return const <int>{ModbusRtuService.vatEnableAddress};
+      case 'chakra':
+        return const <int>{ModbusRtuService.chakraEnableAddress};
+      case 'terahertz':
+        return const <int>{ModbusRtuService.terahertzEnableAddress};
+      case 'hifem':
+        return const <int>{ModbusRtuService.hifemEnableAddress};
+      case 'fragrance':
+        return const <int>{ModbusRtuService.fragranceEnableAddress};
+      default:
+        return const <int>{};
+    }
+  }
+
+  int? _moduleStartCommandAddress(String module) {
+    switch (module) {
+      case 'red':
+        return ModbusRtuService.redLightTotalCommandAddress;
+      case 'pemf':
+        return ModbusRtuService.pemfTotalCommandAddress;
+      case 'hydrogen':
+        return ModbusRtuService.hydrogenCommandAddress;
+      case 'vat':
+        return ModbusRtuService.vatCommandAddress;
+      case 'chakra':
+        return ModbusRtuService.chakraCommandAddress;
+      case 'terahertz':
+        return ModbusRtuService.terahertzCommandAddress;
+      case 'hifem':
+        return ModbusRtuService.hifemCommandAddress;
+      case 'fragrance':
+        return ModbusRtuService.fragranceCommandAddress;
+      default:
+        return null;
+    }
+  }
+
+  Map<String, String> _currentModuleSignatures(Set<String> modules) {
+    return <String, String>{
+      for (final String module in modules)
+        if (_moduleSignature(module) != null) module: _moduleSignature(module)!,
+    };
+  }
+
+  Map<String, Map<int, int>> _currentModuleParamValues(Set<String> modules) {
+    // 提取当前节点每个模块的“参数寄存器快照”（已去除启动/使能类指令）。
+    return <String, Map<int, int>>{
+      for (final String module in modules)
+        module: {
+          for (final ModbusWriteCommand command in _buildPhaseCommands(
+            moduleFilter: <String>{module},
+            includeStartCommands: false,
+          ))
+            command.address: command.value,
+        },
+    };
+  }
+
+  List<ModbusWriteCommand> _buildChangedModuleParamCommands(
+    Set<String> modules,
+  ) {
+    // 对 modulesToKeep 中参数有变化的模块，按“地址值变化”做最小增量下发。
+    final List<ModbusWriteCommand> commands = <ModbusWriteCommand>[];
+
+    for (final String module in modules) {
+      final Map<int, int> previousValues =
+          _runningModuleParamValues[module] ?? const <int, int>{};
+      final List<ModbusWriteCommand> currentCommands = _buildPhaseCommands(
+        moduleFilter: <String>{module},
+        includeStartCommands: false,
+      );
+
+      for (final ModbusWriteCommand command in currentCommands) {
+        // 同地址值未变化则不重复下发。
+        if (previousValues[command.address] == command.value) continue;
+        commands.add(command);
       }
     }
 
     return commands;
+  }
+
+  String? _moduleSignature(String module) {
+    switch (module) {
+      case 'red':
+        final RedLightPhaseSetting? setting = _logic.activeRedLightSetting;
+        if (setting == null) return null;
+        return '${setting.strength660}|${setting.strength850}|${setting.modbusMode}';
+      case 'pemf':
+        final PemfPhaseSetting? setting = _logic.activePemfSetting;
+        if (setting == null) return null;
+        return '${setting.frequency}|${setting.intensity}|${setting.waveformNumber}';
+      case 'hydrogen':
+        final HydrogenPhaseSetting? setting = _logic.activeHydrogenSetting;
+        if (setting == null) return null;
+        return '${setting.concentration}|${setting.flowRate}';
+      case 'vat':
+        final VatPhaseSetting? setting = _logic.activeVatSetting;
+        if (setting == null) return null;
+        return '${setting.frequency}|${setting.intensity}|${_resolveVatMusicIndex(setting)}';
+      case 'chakra':
+        final ChakraPhaseSetting? setting = _logic.activeChakraSetting;
+        if (setting == null) return null;
+        final List<String> keys = setting.strengths.keys.toList()..sort();
+        return [
+          'mode=${setting.modbusMode}',
+          ...keys.map((key) => '$key=${setting.strengths[key]}'),
+        ].join('|');
+      case 'terahertz':
+        final TerahertzPhaseSetting? setting = _logic.activeTerahertzSetting;
+        if (setting == null) return null;
+        return '${setting.frequency}|${setting.power}|${setting.modbusMode}|${setting.modbusWave}';
+      case 'hifem':
+        final HifemPhaseSetting? setting = _logic.activeHifemSetting;
+        if (setting == null) return null;
+        return '${setting.foreheadRf}|${setting.foreheadHifes}|${setting.leftCheekRf}|${setting.leftCheekHifes}|${setting.rightCheekRf}|${setting.rightCheekHifes}';
+      case 'fragrance':
+        final FragrancePhaseSetting? setting = _logic.activeFragranceSetting;
+        if (setting == null) return null;
+        return '${setting.modbusType}';
+      default:
+        return null;
+    }
   }
 
   int _resolveVatMusicIndex(VatPhaseSetting? planSetting) {
@@ -1130,7 +1469,30 @@ class _StartPageState extends State<StartPage> {
   /// 获取当前阶段启用的模块列表。
   Set<String> _modulesForPhase() {
     final _StartArguments args = _StartArguments.from(Get.arguments);
-    return _logic.activeDevices(args.modeTitle).toSet();
+    final Set<String> modules = _logic.activeDevices(args.modeTitle).toSet();
+    final ChakraPhaseSetting? chakraSetting = _logic.activeChakraSetting;
+    if (modules.contains('expand') &&
+        chakraSetting != null &&
+        chakraSetting.hasStrengths) {
+      modules.add('chakra');
+    }
+    final TerahertzPhaseSetting? terahertzSetting =
+        _logic.activeTerahertzSetting;
+    if (modules.contains('expand') && terahertzSetting != null) {
+      modules.add('terahertz');
+    }
+    final HifemPhaseSetting? hifemSetting = _logic.activeHifemSetting;
+    if (modules.contains('expand') &&
+        hifemSetting != null &&
+        hifemSetting.hasOutput) {
+      modules.add('hifem');
+    }
+    final FragrancePhaseSetting? fragranceSetting =
+        _logic.activeFragranceSetting;
+    if (modules.contains('expand') && fragranceSetting != null) {
+      modules.add('fragrance');
+    }
+    return modules;
   }
 
   /// 打开 VAT 音乐选择页面。
@@ -1301,11 +1663,10 @@ class _StartPageState extends State<StartPage> {
       return;
     }
 
-    final _StartArguments args = _StartArguments.from(Get.arguments);
     final List<String> prevDevices = _logic.isRunning
         ? _runningModules.toList()
         : <String>[];
-    final List<String> currentDevices = _logic.activeDevices(args.modeTitle);
+    final List<String> currentDevices = _modulesForPhase().toList();
     final Set<String> prevSet = prevDevices.toSet();
     final Set<String> currSet = currentDevices.toSet();
 
@@ -1313,71 +1674,224 @@ class _StartPageState extends State<StartPage> {
     debugPrint('prev modules = $prevDevices');
     debugPrint('current modules = $currentDevices');
 
-    _lastPhaseIndex = currentIndex;
     _isSwitchingPhase = true;
 
     final List<ModbusWriteCommand> commands = <ModbusWriteCommand>[];
+    // 三类模块集合：
+    // 1) Stop: 上一节点有、本节点无
+    // 2) Start: 上一节点无、本节点有
+    // 3) Keep: 上下节点都有
+    final Set<String> modulesToStop = prevSet.difference(currSet);
+    final Set<String> modulesToStart = currSet.difference(prevSet);
+    final Set<String> modulesToKeep = prevSet.intersection(currSet);
+    final Map<String, String> currentSignatures = _currentModuleSignatures(
+      currSet,
+    );
+    final Map<String, Map<int, int>> currentParamValues =
+        _currentModuleParamValues(currSet);
+    // Keep 集合里再挑出“参数签名变化”的模块，才进入参数更新流程。
+    final Set<String> modulesToUpdate = modulesToKeep.where((module) {
+      return currentSignatures[module] != _runningModuleSignatures[module];
+    }).toSet();
 
     // 1. Stop removed modules
-    for (final String module in prevSet.difference(currSet)) {
+    for (final String module in modulesToStop) {
       debugPrint('stop removed module: $module');
       switch (module) {
         case 'red':
           commands.addAll([
-            const ModbusWriteCommand(address: ModbusRtuService.redLightTotalCommandAddress, value: 2),
-            const ModbusWriteCommand(address: ModbusRtuService.redLight660EnableAddress, value: 0),
-            const ModbusWriteCommand(address: ModbusRtuService.redLight660PowerAddress, value: 0),
-            const ModbusWriteCommand(address: ModbusRtuService.redLight850EnableAddress, value: 0),
-            const ModbusWriteCommand(address: ModbusRtuService.redLight850PowerAddress, value: 0),
-            const ModbusWriteCommand(address: ModbusRtuService.redLightTotalEnableAddress, value: 0),
+            const ModbusWriteCommand(
+              address: ModbusRtuService.redLightTotalCommandAddress,
+              value: 2,
+            ),
+            const ModbusWriteCommand(
+              address: ModbusRtuService.redLight660EnableAddress,
+              value: 0,
+            ),
+            const ModbusWriteCommand(
+              address: ModbusRtuService.redLight660PowerAddress,
+              value: 0,
+            ),
+            const ModbusWriteCommand(
+              address: ModbusRtuService.redLight850EnableAddress,
+              value: 0,
+            ),
+            const ModbusWriteCommand(
+              address: ModbusRtuService.redLight850PowerAddress,
+              value: 0,
+            ),
+            const ModbusWriteCommand(
+              address: ModbusRtuService.redLightTotalEnableAddress,
+              value: 0,
+            ),
           ]);
           break;
         case 'pemf':
           commands.addAll([
-            const ModbusWriteCommand(address: ModbusRtuService.pemfTotalCommandAddress, value: 2),
-            const ModbusWriteCommand(address: ModbusRtuService.pemfTotalIntensityAddress, value: 0),
-            const ModbusWriteCommand(address: ModbusRtuService.pemfTotalModeAddress, value: 0),
+            const ModbusWriteCommand(
+              address: ModbusRtuService.pemfTotalCommandAddress,
+              value: 2,
+            ),
+            const ModbusWriteCommand(
+              address: ModbusRtuService.pemfTotalIntensityAddress,
+              value: 0,
+            ),
+            const ModbusWriteCommand(
+              address: ModbusRtuService.pemfTotalModeAddress,
+              value: 0,
+            ),
           ]);
           break;
         case 'hydrogen':
           commands.addAll([
-            const ModbusWriteCommand(address: ModbusRtuService.hydrogenCommandAddress, value: 2),
-            const ModbusWriteCommand(address: ModbusRtuService.hydrogenConcentrationAddress, value: 0),
-            const ModbusWriteCommand(address: ModbusRtuService.hydrogenEnableAddress, value: 0),
+            const ModbusWriteCommand(
+              address: ModbusRtuService.hydrogenCommandAddress,
+              value: 2,
+            ),
+            const ModbusWriteCommand(
+              address: ModbusRtuService.hydrogenConcentrationAddress,
+              value: 0,
+            ),
+            const ModbusWriteCommand(
+              address: ModbusRtuService.hydrogenEnableAddress,
+              value: 0,
+            ),
           ]);
           break;
         case 'vat':
           commands.addAll([
-            const ModbusWriteCommand(address: ModbusRtuService.vatCommandAddress, value: 2),
-            const ModbusWriteCommand(address: ModbusRtuService.vatIntensityAddress, value: 0),
-            const ModbusWriteCommand(address: ModbusRtuService.vatEnableAddress, value: 0),
+            const ModbusWriteCommand(
+              address: ModbusRtuService.vatCommandAddress,
+              value: 2,
+            ),
+            const ModbusWriteCommand(
+              address: ModbusRtuService.vatIntensityAddress,
+              value: 0,
+            ),
+            const ModbusWriteCommand(
+              address: ModbusRtuService.vatEnableAddress,
+              value: 0,
+            ),
+          ]);
+          break;
+        case 'chakra':
+          commands.addAll([
+            const ModbusWriteCommand(
+              address: ModbusRtuService.chakraCommandAddress,
+              value: 2,
+            ),
+            for (final int address
+                in ModbusRtuService.chakraStrengthAddressMap.values)
+              ModbusWriteCommand(address: address, value: 0),
+            const ModbusWriteCommand(
+              address: ModbusRtuService.chakraEnableAddress,
+              value: 0,
+            ),
+          ]);
+          break;
+        case 'terahertz':
+          commands.addAll([
+            const ModbusWriteCommand(
+              address: ModbusRtuService.terahertzCommandAddress,
+              value: 2,
+            ),
+            const ModbusWriteCommand(
+              address: ModbusRtuService.terahertzPowerAddress,
+              value: 0,
+            ),
+            const ModbusWriteCommand(
+              address: ModbusRtuService.terahertzEnableAddress,
+              value: 0,
+            ),
+          ]);
+          break;
+        case 'hifem':
+          commands.addAll([
+            const ModbusWriteCommand(
+              address: ModbusRtuService.hifemCommandAddress,
+              value: 2,
+            ),
+            const ModbusWriteCommand(
+              address: ModbusRtuService.hifemForeheadRfAddress,
+              value: 0,
+            ),
+            const ModbusWriteCommand(
+              address: ModbusRtuService.hifemForeheadHifesAddress,
+              value: 0,
+            ),
+            const ModbusWriteCommand(
+              address: ModbusRtuService.hifemLeftCheekRfAddress,
+              value: 0,
+            ),
+            const ModbusWriteCommand(
+              address: ModbusRtuService.hifemLeftCheekHifesAddress,
+              value: 0,
+            ),
+            const ModbusWriteCommand(
+              address: ModbusRtuService.hifemRightCheekRfAddress,
+              value: 0,
+            ),
+            const ModbusWriteCommand(
+              address: ModbusRtuService.hifemRightCheekHifesAddress,
+              value: 0,
+            ),
+            const ModbusWriteCommand(
+              address: ModbusRtuService.hifemEnableAddress,
+              value: 0,
+            ),
+          ]);
+          break;
+        case 'fragrance':
+          commands.addAll([
+            const ModbusWriteCommand(
+              address: ModbusRtuService.fragranceCommandAddress,
+              value: 2,
+            ),
+            const ModbusWriteCommand(
+              address: ModbusRtuService.fragranceEnableAddress,
+              value: 0,
+            ),
           ]);
           break;
       }
     }
 
-    // 2. Update params for kept modules + start new modules
-    for (final String module in currSet) {
-      if (prevSet.contains(module)) {
-        debugPrint('keep running module: $module');
-      } else {
-        debugPrint('start new module: $module');
-      }
+    // 2. Only start newly added modules; kept modules are left running.
+    for (final String module in modulesToStart) {
+      debugPrint('start new module: $module');
     }
-    commands.addAll(_buildPhaseCommands());
+    for (final String module in modulesToKeep.difference(modulesToUpdate)) {
+      debugPrint('keep running module without command: $module');
+    }
+    for (final String module in modulesToUpdate) {
+      debugPrint('update kept module params without restart: $module');
+    }
+    // Start: 发完整启动序列（使能/参数/启动）。
+    commands.addAll(_buildPhaseCommands(moduleFilter: modulesToStart));
+    // Keep+Update: 只发变化参数，不发启动/使能。
+    commands.addAll(_buildChangedModuleParamCommands(modulesToUpdate));
 
     debugPrint('skip system restart because already running');
-
-    setState(() {
-      _runningModules.clear();
-      _runningModules.addAll(currentDevices);
-    });
 
     if (commands.isNotEmpty) {
       modbusService
           .sendCommandQueue(commands)
           .then((_) {
-            if (mounted) setState(() => _isSwitchingPhase = false);
+            if (mounted) {
+              setState(() {
+                _lastPhaseIndex = currentIndex;
+                _runningModules
+                  ..clear()
+                  ..addAll(currentDevices);
+                _runningModuleSignatures
+                  ..clear()
+                  ..addAll(currentSignatures);
+                _runningModuleParamValues
+                  ..clear()
+                  ..addAll(currentParamValues);
+                _isSwitchingPhase = false;
+              });
+            }
             _syncHydrogenFlowPolling();
           })
           .catchError((Object e) {
@@ -1385,6 +1899,16 @@ class _StartPageState extends State<StartPage> {
             if (mounted) setState(() => _isSwitchingPhase = false);
           });
     } else {
+      _lastPhaseIndex = currentIndex;
+      _runningModules
+        ..clear()
+        ..addAll(currentDevices);
+      _runningModuleSignatures
+        ..clear()
+        ..addAll(currentSignatures);
+      _runningModuleParamValues
+        ..clear()
+        ..addAll(currentParamValues);
       _isSwitchingPhase = false;
       _syncHydrogenFlowPolling();
     }
@@ -1514,4 +2038,18 @@ class _StartArguments {
 
     return '未选择用户';
   }
+}
+
+class _ExpandStatusItem {
+  const _ExpandStatusItem({
+    required this.id,
+    required this.label,
+    required this.iconOn,
+    required this.iconOff,
+  });
+
+  final String id;
+  final String label;
+  final String iconOn;
+  final String iconOff;
 }

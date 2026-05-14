@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:infibo_app/components/index.dart';
 import 'package:infibo_app/constants/assets.dart';
+import 'package:infibo_app/pages/customized/customizedPage/hifem/logic.dart';
 import 'package:infibo_app/pages/customized/customizedPage/hifem/ui.dart'
     as hifem_page;
 import 'package:infibo_app/pages/customized/customizedPage/mailun/ui.dart'
@@ -62,6 +63,10 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
   late final List<Set<String>> _nodeFeatureIds;
   late final List<Set<String>> _nodeExpandIds;
   late final List<Map<String, String>> _nodeChakraStrengths;
+  late final List<String> _nodeChakraModes;
+  late final List<terahertz_page.TerahertzExpandResult?> _nodeTerahertzSettings;
+  late final List<hifem_page.HifemExpandResult?> _nodeHifemSettings;
+  late final List<fragrance_page.FragranceExpandResult?> _nodeFragranceSettings;
   late final List<TextEditingController> _redLight660Controllers;
   late final List<TextEditingController> _redLight850Controllers;
   late final List<TextEditingController> _pemfFrequencyControllers;
@@ -148,6 +153,10 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     _nodeFeatureIds = List.generate(12, (_) => <String>{});
     _nodeExpandIds = List.generate(12, (_) => <String>{});
     _nodeChakraStrengths = List.generate(12, (_) => <String, String>{});
+    _nodeChakraModes = List.generate(12, (_) => 'rotation');
+    _nodeTerahertzSettings = List.generate(12, (_) => null);
+    _nodeHifemSettings = List.generate(12, (_) => null);
+    _nodeFragranceSettings = List.generate(12, (_) => null);
     _redLight660Controllers = List.generate(12, (_) => TextEditingController());
     _redLight850Controllers = List.generate(12, (_) => TextEditingController());
     _pemfFrequencyControllers = List.generate(
@@ -162,22 +171,25 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     _redLight850FocusNodes = List.generate(12, (_) => FocusNode());
     _pemfFrequencyFocusNodes = List.generate(12, (_) => FocusNode());
     _pemfIntensityFocusNodes = List.generate(12, (_) => FocusNode());
-    _vatFrequencyControllers = List.generate(12, (_) => TextEditingController());
+    _vatFrequencyControllers = List.generate(
+      12,
+      (_) => TextEditingController(),
+    );
     _vatIntensityControllers = List.generate(
       12,
       (_) => TextEditingController(),
     );
     _vatFrequencyFocusNodes = List.generate(12, (_) => FocusNode());
     _vatIntensityFocusNodes = List.generate(12, (_) => FocusNode());
-    _nodeVatMusicSettings = List.generate(
-      12,
-      (_) => const _VatMusicSetting(),
-    );
+    _nodeVatMusicSettings = List.generate(12, (_) => const _VatMusicSetting());
     _hydrogenConcentrationControllers = List.generate(
       12,
       (_) => TextEditingController(),
     );
-    _hydrogenFlowControllers = List.generate(12, (_) => TextEditingController());
+    _hydrogenFlowControllers = List.generate(
+      12,
+      (_) => TextEditingController(),
+    );
     _hydrogenConcentrationFocusNodes = List.generate(12, (_) => FocusNode());
     _hydrogenFlowFocusNodes = List.generate(12, (_) => FocusNode());
     _nodeRedLightModes = List.generate(12, (_) => _RedLightMode.continuous);
@@ -769,9 +781,14 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     return Row(
       children: [
         const Expanded(
-          child: Text('VAT',
-              style: TextStyle(
-                  color: Colors.white, fontSize: 22, fontWeight: FontWeight.w500)),
+          child: Text(
+            'VAT',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 22,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
         ),
         GestureDetector(
           behavior: HitTestBehavior.opaque,
@@ -780,7 +797,11 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
             width: 67,
             height: 43,
             child: Center(
-              child: Image.asset(_moduleById('vat').iconOn, width: 43, height: 43),
+              child: Image.asset(
+                _moduleById('vat').iconOn,
+                width: 43,
+                height: 43,
+              ),
             ),
           ),
         ),
@@ -1052,6 +1073,43 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
         _nodeChakraStrengths[index]
           ..clear()
           ..addAll(result.strengths);
+        _nodeChakraModes[index] = result.mode;
+        _savedNodeIndexes.removeWhere((item) => item >= index);
+      });
+      return;
+    }
+
+    if (id == 'terahertz') {
+      if (result is! terahertz_page.TerahertzExpandResult) return;
+
+      setState(() {
+        _nodeFeatureIds[index].add('expand');
+        _nodeExpandIds[index].add(id);
+        _nodeTerahertzSettings[index] = result;
+        _savedNodeIndexes.removeWhere((item) => item >= index);
+      });
+      return;
+    }
+
+    if (id == 'hifem') {
+      if (result is! hifem_page.HifemExpandResult) return;
+
+      setState(() {
+        _nodeFeatureIds[index].add('expand');
+        _nodeExpandIds[index].add(id);
+        _nodeHifemSettings[index] = result;
+        _savedNodeIndexes.removeWhere((item) => item >= index);
+      });
+      return;
+    }
+
+    if (id == 'fragrance') {
+      if (result is! fragrance_page.FragranceExpandResult) return;
+
+      setState(() {
+        _nodeFeatureIds[index].add('expand');
+        _nodeExpandIds[index].add(id);
+        _nodeFragranceSettings[index] = result;
         _savedNodeIndexes.removeWhere((item) => item >= index);
       });
       return;
@@ -1071,16 +1129,24 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
       case 'chakra':
         return chakra_page.ChakraExpandPage(
           initialStrengths: _nodeChakraStrengths[index],
+          initialMode: _nodeChakraModes[index],
         );
       case 'terahertz':
-        return const terahertz_page.TerahertzExpandPage();
+        return terahertz_page.TerahertzExpandPage(
+          initialSetting: _nodeTerahertzSettings[index],
+        );
       case 'hifem':
-        return const hifem_page.HifemExpandPage();
+        return hifem_page.HifemExpandPage(
+          initialSetting: _nodeHifemSettings[index],
+        );
       case 'fragrance':
-        return const fragrance_page.FragranceExpandPage();
+        return fragrance_page.FragranceExpandPage(
+          initialSetting: _nodeFragranceSettings[index],
+        );
       default:
         return chakra_page.ChakraExpandPage(
           initialStrengths: _nodeChakraStrengths[index],
+          initialMode: _nodeChakraModes[index],
         );
     }
   }
@@ -1340,8 +1406,80 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
       _nodeChakraStrengths[index]
         ..clear()
         ..addAll(strengths);
+      _nodeChakraModes[index] = _parseChakraMode(parts[2]);
       _nodeFeatureIds[index].add('expand');
       _nodeExpandIds[index].add('chakra');
+      _savedNodeIndexes.add(index);
+      hasPhaseData = true;
+    }
+
+    for (final String text in featureIds) {
+      if (!text.startsWith('terahertz:')) continue;
+
+      final List<String> parts = text.split(':');
+      if (parts.length < 3) continue;
+
+      final int? index = int.tryParse(parts[1]);
+      if (index == null ||
+          index < 0 ||
+          index >= _nodeTerahertzSettings.length) {
+        continue;
+      }
+
+      final terahertz_page.TerahertzExpandResult? setting =
+          _parseTerahertzSetting(parts[2]);
+      if (setting == null) continue;
+
+      _nodeTerahertzSettings[index] = setting;
+      _nodeFeatureIds[index].add('expand');
+      _nodeExpandIds[index].add('terahertz');
+      _savedNodeIndexes.add(index);
+      hasPhaseData = true;
+    }
+
+    for (final String text in featureIds) {
+      if (!text.startsWith('hifem:')) continue;
+
+      final List<String> parts = text.split(':');
+      if (parts.length < 3) continue;
+
+      final int? index = int.tryParse(parts[1]);
+      if (index == null || index < 0 || index >= _nodeHifemSettings.length) {
+        continue;
+      }
+
+      final hifem_page.HifemExpandResult? setting = _parseHifemSetting(
+        parts[2],
+      );
+      if (setting == null) continue;
+
+      _nodeHifemSettings[index] = setting;
+      _nodeFeatureIds[index].add('expand');
+      _nodeExpandIds[index].add('hifem');
+      _savedNodeIndexes.add(index);
+      hasPhaseData = true;
+    }
+
+    for (final String text in featureIds) {
+      if (!text.startsWith('fragrance:')) continue;
+
+      final List<String> parts = text.split(':');
+      if (parts.length < 3) continue;
+
+      final int? index = int.tryParse(parts[1]);
+      if (index == null ||
+          index < 0 ||
+          index >= _nodeFragranceSettings.length) {
+        continue;
+      }
+
+      final fragrance_page.FragranceExpandResult? setting =
+          _parseFragranceSetting(parts[2]);
+      if (setting == null) continue;
+
+      _nodeFragranceSettings[index] = setting;
+      _nodeFeatureIds[index].add('expand');
+      _nodeExpandIds[index].add('fragrance');
       _savedNodeIndexes.add(index);
       hasPhaseData = true;
     }
@@ -1457,7 +1595,26 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
       }
       if (_nodeChakraStrengths[index].isNotEmpty) {
         phaseTexts.add(
-          'chakra:$index:${_formatChakraStrengths(_nodeChakraStrengths[index])}',
+          'chakra:$index:${_formatChakraSetting(index)}',
+        );
+      }
+      final terahertz_page.TerahertzExpandResult? terahertzSetting =
+          _nodeTerahertzSettings[index];
+      if (terahertzSetting != null) {
+        phaseTexts.add(
+          'terahertz:$index:${_formatTerahertzSetting(terahertzSetting)}',
+        );
+      }
+      final hifem_page.HifemExpandResult? hifemSetting =
+          _nodeHifemSettings[index];
+      if (hifemSetting != null) {
+        phaseTexts.add('hifem:$index:${_formatHifemSetting(hifemSetting)}');
+      }
+      final fragrance_page.FragranceExpandResult? fragranceSetting =
+          _nodeFragranceSettings[index];
+      if (fragranceSetting != null) {
+        phaseTexts.add(
+          'fragrance:$index:${_formatFragranceSetting(fragranceSetting)}',
         );
       }
       if (_nodeFeatureIds[index].contains('redlight')) {
@@ -1470,9 +1627,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
         phaseTexts.add('vat:$index:${_formatVatSetting(index)}');
       }
       if (_nodeFeatureIds[index].contains('hydrogen')) {
-        phaseTexts.add(
-          'hydrogen:$index:${_formatHydrogenSetting(index)}',
-        );
+        phaseTexts.add('hydrogen:$index:${_formatHydrogenSetting(index)}');
       }
     }
 
@@ -1499,6 +1654,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
 
       final String id = pair.substring(0, separator);
       final String value = pair.substring(separator + 1);
+      if (id.trim() == 'mode') continue;
       if (id.trim().isEmpty || value.trim().isEmpty) continue;
 
       result[id] = value;
@@ -1507,11 +1663,154 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     return result;
   }
 
+  String _parseChakraMode(String text) {
+    for (final String pair in text.split('|')) {
+      final int separator = pair.indexOf('=');
+      if (separator <= 0 || separator == pair.length - 1) continue;
+
+      final String key = pair.substring(0, separator).trim();
+      final String value = pair.substring(separator + 1).trim();
+      if (key == 'mode' && value == 'independent') return 'independent';
+    }
+
+    return 'rotation';
+  }
+
+  String _formatChakraSetting(int index) {
+    final String strengths = _formatChakraStrengths(
+      _nodeChakraStrengths[index],
+    );
+    return 'mode=${_nodeChakraModes[index]}|$strengths';
+  }
+
   String _formatChakraStrengths(Map<String, String> strengths) {
     return strengths.entries
         .where((entry) => entry.value.trim().isNotEmpty)
         .map((entry) => '${entry.key}=${entry.value.trim()}')
         .join('|');
+  }
+
+  terahertz_page.TerahertzExpandResult? _parseTerahertzSetting(String text) {
+    int frequency = 0;
+    int power = 0;
+    String? mode;
+    String? wave;
+
+    for (final String pair in text.split('|')) {
+      final int separator = pair.indexOf('=');
+      if (separator <= 0 || separator == pair.length - 1) continue;
+
+      final String key = pair.substring(0, separator).trim();
+      final String value = pair.substring(separator + 1).trim();
+      switch (key) {
+        case 'frequency':
+          frequency = _rangedValue(value, 100);
+          break;
+        case 'power':
+          power = _rangedValue(value, 100);
+          break;
+        case 'mode':
+          mode = value;
+          break;
+        case 'wave':
+          wave = value;
+          break;
+      }
+    }
+
+    if (mode == null || wave == null) return null;
+    return terahertz_page.TerahertzExpandResult(
+      frequency: frequency,
+      power: power,
+      mode: mode,
+      wave: wave,
+    );
+  }
+
+  String _formatTerahertzSetting(terahertz_page.TerahertzExpandResult setting) {
+    return 'frequency=${setting.frequency}|power=${setting.power}|mode=${setting.mode}|wave=${setting.wave}';
+  }
+
+  hifem_page.HifemExpandResult? _parseHifemSetting(String text) {
+    HifemRegion? selectedRegion;
+    final Map<HifemRegion, HifemRegionSetting> regionSettings =
+        <HifemRegion, HifemRegionSetting>{};
+
+    for (final String pair in text.split('|')) {
+      final int separator = pair.indexOf('=');
+      if (separator <= 0 || separator == pair.length - 1) continue;
+
+      final String key = pair.substring(0, separator).trim();
+      final String value = pair.substring(separator + 1).trim();
+      if (key == 'selected') {
+        selectedRegion = _hifemRegionFromId(value);
+        continue;
+      }
+
+      final List<String> keyParts = key.split('.');
+      if (keyParts.length != 2) continue;
+
+      final HifemRegion? region = _hifemRegionFromId(keyParts[0]);
+      if (region == null) continue;
+
+      final HifemRegionSetting current =
+          regionSettings[region] ?? const HifemRegionSetting();
+      switch (keyParts[1]) {
+        case 'rf':
+          regionSettings[region] = current.copyWith(
+            rfPercent: _rangedValue(value, 100),
+          );
+          break;
+        case 'hifes':
+          regionSettings[region] = current.copyWith(
+            hifesPercent: _rangedValue(value, 100),
+          );
+          break;
+      }
+    }
+
+    if (selectedRegion == null && regionSettings.isEmpty) return null;
+    return hifem_page.HifemExpandResult(
+      selectedRegion: selectedRegion,
+      regionSettings: regionSettings,
+    );
+  }
+
+  String _formatHifemSetting(hifem_page.HifemExpandResult setting) {
+    final List<String> pairs = <String>[];
+    final HifemRegion? selectedRegion = setting.selectedRegion;
+    if (selectedRegion != null) {
+      pairs.add('selected=${_hifemRegionId(selectedRegion)}');
+    }
+
+    for (final MapEntry<HifemRegion, HifemRegionSetting> entry
+        in setting.regionSettings.entries) {
+      if (!entry.value.hasOutput) continue;
+      final String id = _hifemRegionId(entry.key);
+      pairs.add('$id.rf=${entry.value.rfPercent}');
+      pairs.add('$id.hifes=${entry.value.hifesPercent}');
+    }
+
+    return pairs.join('|');
+  }
+
+  fragrance_page.FragranceExpandResult? _parseFragranceSetting(String text) {
+    for (final String pair in text.split('|')) {
+      final int separator = pair.indexOf('=');
+      if (separator <= 0 || separator == pair.length - 1) continue;
+
+      final String key = pair.substring(0, separator).trim();
+      final String value = pair.substring(separator + 1).trim();
+      if (key == 'type' && value.isNotEmpty) {
+        return fragrance_page.FragranceExpandResult(fragranceId: value);
+      }
+    }
+
+    return null;
+  }
+
+  String _formatFragranceSetting(fragrance_page.FragranceExpandResult setting) {
+    return 'type=${setting.fragranceId}';
   }
 
   void _normalizeRedLightPercent(TextEditingController controller) {
@@ -1622,7 +1921,9 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
       100,
     );
     final _VatMusicSetting music = _nodeVatMusicSettings[index];
-    final String songId = music.songId.isNotEmpty ? music.songId : defaultSongId;
+    final String songId = music.songId.isNotEmpty
+        ? music.songId
+        : defaultSongId;
     final String songName = music.songName.isNotEmpty
         ? Uri.encodeComponent(music.songName)
         : '';
@@ -1696,10 +1997,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
       _hydrogenConcentrationControllers[index].text,
       100,
     );
-    final int flow = _rangedValue(
-      _hydrogenFlowControllers[index].text,
-      100,
-    );
+    final int flow = _rangedValue(_hydrogenFlowControllers[index].text, 100);
 
     return 'concentration=$concentration|flow=$flow';
   }
@@ -1835,6 +2133,34 @@ _PemfWave? _pemfWaveFromId(String id) {
     if (wave.id == id) return wave;
   }
   return null;
+}
+
+String _hifemRegionId(HifemRegion region) {
+  switch (region) {
+    case HifemRegion.foreheadLeft:
+      return 'forehead_left';
+    case HifemRegion.foreheadRight:
+      return 'forehead_right';
+    case HifemRegion.cheekLeft:
+      return 'cheek_left';
+    case HifemRegion.cheekRight:
+      return 'cheek_right';
+  }
+}
+
+HifemRegion? _hifemRegionFromId(String id) {
+  switch (id) {
+    case 'forehead_left':
+      return HifemRegion.foreheadLeft;
+    case 'forehead_right':
+      return HifemRegion.foreheadRight;
+    case 'cheek_left':
+      return HifemRegion.cheekLeft;
+    case 'cheek_right':
+      return HifemRegion.cheekRight;
+    default:
+      return null;
+  }
 }
 
 class _PageTitle extends StatelessWidget {
@@ -2204,10 +2530,7 @@ class _VatSetting {
 }
 
 class _HydrogenSetting {
-  const _HydrogenSetting({
-    required this.concentration,
-    required this.flow,
-  });
+  const _HydrogenSetting({required this.concentration, required this.flow});
 
   final int concentration;
   final int flow;
