@@ -14,6 +14,23 @@ import 'package:infibo_app/pages/music/ui.dart';
 import 'package:infibo_app/pages/settingpage/ui.dart';
 import 'package:infibo_app/pages/start/ui.dart';
 
+//新增一个翻译类
+class AppTranslations extends Translations {
+  @override
+  Map<String, Map<String, String>> get keys => {
+    'zh_CN': {
+      'setting_menu': '设置菜单',
+      'language_setting': '语言设置',
+      'save_changes': '保存更改',
+    },
+    'en_US': {
+      'setting_menu': 'Settings',
+      'language_setting': 'Language',
+      'save_changes': 'Save Changes',
+    },
+  };
+}
+
 const String _initialRoute = String.fromEnvironment(
   'INFIBO_INITIAL_ROUTE',
   defaultValue: '/login',
@@ -24,9 +41,13 @@ Widget getRootWidget() {
   return GetMaterialApp(
     // 初始路由为登录页
     initialRoute: _initialRoute,
+    // 国际化配置
     defaultTransition: Transition.noTransition,
     transitionDuration: Duration.zero,
     getPages: getRoutes(),
+    translations: AppTranslations(),
+    locale: const Locale('zh', 'CN'),
+    fallbackLocale: const Locale('zh', 'CN'),
   );
 }
 
