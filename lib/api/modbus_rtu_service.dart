@@ -40,16 +40,16 @@ class ModbusRtuService {
   static const int redLight660ModeAddress = 0x006A;
 
   /// 红光660nm 功率地址。
-  static const int redLight660PowerAddress = 0x006D;
+  static const int redLight660PowerAddress = 0x0069;
 
   /// 红光850nm 启用地址。
-  static const int redLight850EnableAddress = 0x006E;
+  static const int redLight850EnableAddress = 0x006D;
 
   /// 红光850nm 模式地址。
   static const int redLight850ModeAddress = 0x006F;
 
   /// 红光850nm 功率地址。
-  static const int redLight850PowerAddress = 0x0071;
+  static const int redLight850PowerAddress = 0x006E;
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //////////////////PEMF模块相关寄存器地址//////////////////
@@ -839,6 +839,13 @@ class ModbusRtuService {
     if (payload.values.length != RedLightModbus.quantity) {
       throw StateError(
         'Red light values length invalid: ${payload.values.length}, expected ${RedLightModbus.quantity}',
+      );
+    }
+    debugPrint('RedLight full values:');
+    for (int i = 0; i < payload.values.length; i++) {
+      final int address = payload.startAddress + i;
+      debugPrint(
+        '0x${address.toRadixString(16).toUpperCase().padLeft(4, '0')} = ${payload.values[i]}',
       );
     }
     await writeMultipleRegisters(

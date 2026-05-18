@@ -1280,6 +1280,12 @@ class _StartPageState extends State<StartPage> {
 
   Set<int> _moduleKeepExcludedAddresses(String module) {
     // keep 状态下要排除：启动 command + 该模块使能寄存器。
+    if (module == 'red') {
+      return const <int>{
+        ModbusRtuService.redLightApplyAddress,
+        ModbusRtuService.redLightTotalCommandAddress,
+      };
+    }
     final int? commandAddress = _moduleStartCommandAddress(module);
     return <int>{?commandAddress, ..._moduleEnableAddresses(module)};
   }
@@ -1379,14 +1385,14 @@ class _StartPageState extends State<StartPage> {
           ...currentValues.keys,
         };
         final List<int> sortedAddresses = allAddresses.toList()..sort();
-        debugPrint('[red][diff] ===== node switch diff begin =====');
+        debugPrint('RedLight node diff:');
         for (final int address in sortedAddresses) {
           final int? before = previousValues[address];
           final int? after = currentValues[address];
           final bool changed = before != after;
           debugPrint(
-            '[red][diff] addr=0x${address.toRadixString(16).padLeft(4, '0').toUpperCase()} '
-            'before=${before ?? 'null'} -> after=${after ?? 'null'} '
+            'old 0x${address.toRadixString(16).padLeft(4, '0').toUpperCase()} = ${before ?? 'null'}, '
+            'new 0x${address.toRadixString(16).padLeft(4, '0').toUpperCase()} = ${after ?? 'null'} '
             '(${changed ? 'changed' : 'unchanged'})',
           );
         }
@@ -1396,8 +1402,7 @@ class _StartPageState extends State<StartPage> {
         if (previousValues[command.address] == command.value) {
           if (module == 'red') {
             debugPrint(
-              '[red][send-skip] addr=0x${command.address.toRadixString(16).padLeft(4, '0').toUpperCase()} '
-              'value=${command.value} (unchanged)',
+              'skip 0x${command.address.toRadixString(16).padLeft(4, '0').toUpperCase()} = ${command.value} (unchanged)',
             );
           }
           continue;
@@ -1406,8 +1411,8 @@ class _StartPageState extends State<StartPage> {
         if (module == 'red') {
           final int? before = previousValues[command.address];
           debugPrint(
-            '[red][send] addr=0x${command.address.toRadixString(16).padLeft(4, '0').toUpperCase()} '
-            'before=${before ?? 'null'} -> after=${command.value}',
+            'send 0x${command.address.toRadixString(16).padLeft(4, '0').toUpperCase()} = ${command.value} '
+            '(old=${before ?? 'null'}, new=${command.value})',
           );
         }
 
@@ -1415,7 +1420,7 @@ class _StartPageState extends State<StartPage> {
       }
 
       if (module == 'red') {
-        debugPrint('[red][diff] ===== node switch diff end =====');
+        debugPrint('RedLight node diff end');
       }
     }
 

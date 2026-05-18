@@ -283,7 +283,7 @@ class AppTranslations extends Translations {
       'meditation': 'Zen',
       'sine_wave': 'Sine',
       'square_wave': 'Square',
-      'triangle_wave': 'Tri.',
+      'triangle_wave': 'Triangle',
       'rf': 'RF',
       'crown_chakra': 'Crown Chakra',
       'crown_sub': '(Pineal Gland)',
