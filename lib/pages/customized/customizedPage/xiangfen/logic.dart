@@ -5,7 +5,7 @@
 import 'package:get/get.dart';
 
 class FragranceSettingController extends GetxController {
-  static const String defaultFragranceId = 'soft';
+  static const String defaultFragranceId = '';
 
   String _selectedFragranceId = defaultFragranceId;
 

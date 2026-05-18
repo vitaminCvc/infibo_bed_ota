@@ -225,7 +225,7 @@ class AppTopHeader extends StatelessWidget {
         alignment: Alignment.center,
         children: [
           Image.asset(asset, width: width, height: height, fit: BoxFit.contain),
-          if (child != null) child,
+          ?child,
         ],
       ),
     );

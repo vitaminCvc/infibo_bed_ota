@@ -702,6 +702,16 @@ class HifemPhaseSetting {
       final String key = pair.substring(0, separator).trim();
       final String value = pair.substring(separator + 1).trim();
       switch (key) {
+        case 'forehead.rf':
+          final int v = _clampInt(value, 100);
+          foreheadLeftRf = v;
+          foreheadRightRf = v;
+          break;
+        case 'forehead.hifes':
+          final int v = _clampInt(value, 100);
+          foreheadLeftHifes = v;
+          foreheadRightHifes = v;
+          break;
         case 'forehead_left.rf':
           foreheadLeftRf = _clampInt(value, 100);
           break;
