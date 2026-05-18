@@ -1,6 +1,3 @@
-// 公共组件集合。
-//
-// 这里放多个页面都会用到的顶部 Header、返回主页按钮、阴影文字等通用 UI 组件。
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -10,15 +7,12 @@ import 'package:infibo_app/constants/assets.dart';
 import 'package:infibo_app/constants/color.dart';
 import 'package:ntp/ntp.dart';
 
-// 公共页头时间控制器，全局只保留一份时钟。
 class AppHeaderClockController extends GetxController {
   final Rx<DateTime> _now = DateTime.now().obs;
-
   Duration _networkTimeOffset = Duration.zero;
   Timer? _clockTimer;
   bool _isStarted = false;
 
-  // 获取全局页头时间控制器，没有注册时自动创建。
   static AppHeaderClockController get instance {
     if (Get.isRegistered<AppHeaderClockController>()) {
       return Get.find<AppHeaderClockController>();
@@ -26,18 +20,14 @@ class AppHeaderClockController extends GetxController {
     return Get.put(AppHeaderClockController(), permanent: true);
   }
 
-  // 当前时间文本。
   String get timeText =>
       '${_twoDigits(_now.value.hour)}:${_twoDigits(_now.value.minute)}';
 
-  // 当前日期文本。
   String get dateText =>
       '${_now.value.year}.${_twoDigits(_now.value.month)}.${_twoDigits(_now.value.day)}';
 
-  // 启动网络时间同步和本地刷新定时器。
   void startClock() {
     if (_isStarted) return;
-
     _isStarted = true;
     _syncNetworkTime();
     _clockTimer = Timer.periodic(const Duration(seconds: 1), (_) {
@@ -45,7 +35,6 @@ class AppHeaderClockController extends GetxController {
     });
   }
 
-  // 同步网络时间，失败时使用本机时间。
   Future<void> _syncNetworkTime() async {
     try {
       final DateTime networkTime = await NTP.now();
@@ -57,7 +46,6 @@ class AppHeaderClockController extends GetxController {
     }
   }
 
-  // 数字补零。
   String _twoDigits(int value) => value.toString().padLeft(2, '0');
 
   @override
@@ -67,30 +55,20 @@ class AppHeaderClockController extends GetxController {
   }
 }
 
-// 带公共页头的基础页面。
 class AppHeaderPage extends StatelessWidget {
   const AppHeaderPage({
     super.key,
     this.children = const [],
-    this.onSettingTap, //设置按钮
-    this.onUserTap, //用户区域
+    this.onSettingTap,
+    this.onUserTap,
     this.enableLogoBack = true,
     this.resizeToAvoidBottomInset = true,
   });
 
-  // 页面主体内容，通常传入 Positioned 组件。
   final List<Widget> children;
-
-  // 点击顶部设置按钮。
   final VoidCallback? onSettingTap;
-
-  // 点击顶部用户区域。
   final VoidCallback? onUserTap;
-
-  // 是否允许点击logo返回主页，主页本身不需要返回自己。
   final bool enableLogoBack;
-
-  // 键盘弹出时是否压缩页面高度。
   final bool resizeToAvoidBottomInset;
 
   @override
@@ -125,7 +103,6 @@ class AppHeaderPage extends StatelessWidget {
   }
 }
 
-// 页面顶部公共表头
 class AppTopHeader extends StatelessWidget {
   const AppTopHeader({
     super.key,
@@ -134,13 +111,8 @@ class AppTopHeader extends StatelessWidget {
     this.onUserTap,
   });
 
-  // 点击品牌logo。
   final VoidCallback? onLogoTap;
-
-  // 点击设置按钮
   final VoidCallback? onSettingTap;
-
-  // 点击用户区域
   final VoidCallback? onUserTap;
 
   @override
@@ -159,12 +131,12 @@ class AppTopHeader extends StatelessWidget {
           width: 108,
           height: 48,
           onTap: onUserTap,
-          child: const Positioned(
-            left: 50,
+          child: Positioned(
+            left: 48,
             top: 13,
             child: Text(
-              '管理员',
-              style: TextStyle(
+              'administrator'.tr,
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
@@ -178,12 +150,12 @@ class AppTopHeader extends StatelessWidget {
           width: 90,
           height: 48,
           onTap: AppComponentLogic.openSettingPage,
-          child: const Positioned(
-            left: 41,
+          child: Positioned(
+            left: 38,
             top: 13,
             child: Text(
-              '设置',
-              style: TextStyle(
+              'settings'.tr,
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
@@ -195,7 +167,6 @@ class AppTopHeader extends StatelessWidget {
     );
   }
 
-  // 构建品牌logo
   Widget _buildLogo() {
     final Widget logo = Image.asset(
       Assets.mainLogo,
@@ -203,11 +174,7 @@ class AppTopHeader extends StatelessWidget {
       height: 44,
       fit: BoxFit.contain,
     );
-
-    if (onLogoTap == null) {
-      return logo;
-    }
-
+    if (onLogoTap == null) return logo;
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onLogoTap,
@@ -215,7 +182,6 @@ class AppTopHeader extends StatelessWidget {
     );
   }
 
-  // 构建时间日期
   Widget _buildTimeBlock(String timeText, String dateText) {
     return SizedBox(
       width: 76,
@@ -245,7 +211,6 @@ class AppTopHeader extends StatelessWidget {
     );
   }
 
-  // 构建图片按钮
   Widget _buildImageButton({
     required String asset,
     required double width,
@@ -260,14 +225,11 @@ class AppTopHeader extends StatelessWidget {
         alignment: Alignment.center,
         children: [
           Image.asset(asset, width: width, height: height, fit: BoxFit.contain),
-          ?child,
+          if (child != null) child,
         ],
       ),
     );
-    if (onTap == null) {
-      return button;
-    }
-
+    if (onTap == null) return button;
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onTap,

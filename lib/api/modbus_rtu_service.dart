@@ -8,9 +8,15 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_libserialport/flutter_libserialport.dart';
+import 'package:infibo_app/api/hydrogen_modbus.dart';
+import 'package:infibo_app/api/pemf_modbus.dart';
+import 'package:infibo_app/api/red_light_modbus.dart';
+import 'package:infibo_app/api/vat_modbus.dart';
 import 'package:infibo_app/services/android_serial_port_service.dart';
 
 class ModbusRtuService {
+  static const Duration modbusCommandInterval = Duration(milliseconds: 100);
+
   /// 系统控制命令寄存器地址。
   static const int systemCommandAddress = 0x0004;
 
@@ -18,88 +24,104 @@ class ModbusRtuService {
   //////////////////红光模块相关寄存器地址//////////////////
 
   /// 红光总命令地址。
-  static const int redLightTotalEnableAddress = 0x0063;
+  static const int redLightTotalEnableAddress = 0x0064;
 
   /// 红光总模式地址。
   static const int redLightTotalModeAddress = 0x0065;
 
   /// 红光总命令地址。
-  static const int redLightTotalCommandAddress = 0x0066;
+  static const int redLightTotalCommandAddress = 0x0073;
+  static const int redLightApplyAddress = 0x0072;
 
   /// 红光660nm 启用地址。
-  static const int redLight660EnableAddress = 0x0077;
+  static const int redLight660EnableAddress = 0x0068;
 
   /// 红光660nm 模式地址。
-  static const int redLight660ModeAddress = 0x0079;
+  static const int redLight660ModeAddress = 0x006A;
 
   /// 红光660nm 功率地址。
-  static const int redLight660PowerAddress = 0x007C;
+  static const int redLight660PowerAddress = 0x006D;
 
   /// 红光850nm 启用地址。
-  static const int redLight850EnableAddress = 0x008B;
+  static const int redLight850EnableAddress = 0x006E;
 
   /// 红光850nm 模式地址。
-  static const int redLight850ModeAddress = 0x008D;
+  static const int redLight850ModeAddress = 0x006F;
 
   /// 红光850nm 功率地址。
-  static const int redLight850PowerAddress = 0x0090;
+  static const int redLight850PowerAddress = 0x0071;
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //////////////////PEMF模块相关寄存器地址//////////////////
 
   /// PEMF总命令地址。
-  static const int pemfTotalCommandAddress = 0x00CA;
+  static const int pemfTotalCommandAddress = PemfModbus.commandAddress;
 
   /// PEMF总启用地址。
-  static const int pemfTotalEnableAddress = 0x00C8;
+  static const int pemfTotalEnableAddress = PemfModbus.enableAddress;
 
   /// PEMF总模式地址。
   static const int pemfTotalModeAddress = 0x00C7;
 
   ///PEMF总频率地址。
-  static const int pemfTotalFrequencyAddress = 0x00CE;
+  static const int pemfTotalFrequencyAddress = 0x00C3;
 
   /// PEMF输出强度地址。
-  static const int pemfTotalIntensityAddress = 0x00D0;
+  static const int pemfTotalIntensityAddress = 0x00C5;
 
   /// PEMF输出波形地址。
-  static const int pemfTotalWaveformAddress = 0x00D1;
+  static const int pemfTotalWaveformAddress = 0x00C6;
+  static const int pemfDutyCycleAddress = 0x00C4;
+  static const int pemfPolarityAddress = 0x00C7;
+  static const int pemfRiseTimeAddress = 0x00C8;
+  static const int pemfFallTimeAddress = 0x00C9;
+  static const int pemfApplyAddress = PemfModbus.applyAddress;
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //////////////////VAT模块相关寄存器地址//////////////////
 
   /// VAT总启用地址。
-  static const int vatEnableAddress = 0x01F3;
+  static const int vatEnableAddress = 0x0180;
 
   /// VAT模式地址。
-  static const int vatModeAddress = 0x01F5;
+  static const int vatModeAddress = 0x0181;
 
   /// VAT命令地址。
-  static const int vatCommandAddress = 0x01F6;
+  static const int vatCommandAddress = VatModbus.commandAddress;
 
   /// VAT频率地址。
-  static const int vatFrequencyAddress = 0x01FC;
+  static const int vatFrequencyAddress = 0x0185;
 
   /// VAT强度地址。
-  static const int vatIntensityAddress = 0x01F9;
+  static const int vatIntensityAddress = 0x0182;
 
   /// VAT音乐索引地址。
-  static const int vatMusicIndexAddress = 0x0201;
+  static const int vatMusicIndexAddress = 0x018A;
+  static const int vatApplyAddress = VatModbus.applyAddress;
+  static const int vatLeftChannelIntensityAddress = 0x0183;
+  static const int vatRightChannelIntensityAddress = 0x0184;
+  static const int vatSweepStartAddress = 0x0186;
+  static const int vatSweepEndAddress = 0x0187;
+  static const int vatSweepCycleAddress = 0x0188;
+  static const int vatVolumeAddress = 0x0189;
 
   /// 分子氢使能地址。
-  static const int hydrogenEnableAddress = 0x0257;
+  static const int hydrogenEnableAddress = 0x01C0;
 
   /// 分子氢模式地址。
-  static const int hydrogenModeAddress = 0x0259;
+  static const int hydrogenModeAddress = 0x01C1;
 
   /// 分子氢命令地址。
-  static const int hydrogenCommandAddress = 0x025A;
+  static const int hydrogenCommandAddress = HydrogenModbus.commandAddress;
 
   /// 分子氢浓度地址。
-  static const int hydrogenConcentrationAddress = 0x025D;
+  static const int hydrogenConcentrationAddress = 0x01C2;
 
   /// 分子氢流量地址（只读）。
-  static const int hydrogenFlowAddress = 0x025F;
+  static const int hydrogenFlowAddress = HydrogenModbus.flowReadAddress;
+  static const int hydrogenTargetFlowAddress = 0x01C3;
+  static const int hydrogenAutoCleanAddress = 0x01C4;
+  static const int hydrogenApplyAddress = HydrogenModbus.applyAddress;
   static const int chakraEnableAddress = 0x02BB;
   static const int chakraModeAddress = 0x02BD;
   static const int chakraCommandAddress = 0x02BE;
@@ -136,7 +158,7 @@ class ModbusRtuService {
   final int baudRate; // 115200。
   final int slaveId; // 16。
   final Duration timeout; // 1 秒。
-  final Duration commandDelay; // 命令间延迟，默认 40ms，兼顾性能和稳定性。
+  final Duration commandDelay; // 命令间延迟。
   final int maxRetries; // 最大重试次数，默认 2 次。
 
   // 其他参数如数据位、停止位、校验等 Modbus RTU 标准配置固定为 8N1，无需暴露。
@@ -145,7 +167,7 @@ class ModbusRtuService {
     this.baudRate = AndroidSerialPortService.defaultBaudRate,
     this.slaveId = 16,
     this.timeout = const Duration(seconds: 1),
-    this.commandDelay = const Duration(milliseconds: 40),
+    this.commandDelay = modbusCommandInterval,
     this.maxRetries = 2,
   });
 
@@ -249,13 +271,12 @@ class ModbusRtuService {
     required int strength850,
     required int mode,
   }) async {
-    await sendCommandQueue(
-      buildRedLightCommands(
-        strength660: strength660,
-        strength850: strength850,
-        mode: mode,
-      ),
+    final RedLightBatchPayload payload = RedLightModbus.buildPayload(
+      strength660: strength660,
+      strength850: strength850,
+      mode: mode,
     );
+    await _applyRedLightPayload(payload);
   }
 
   /// 当前阶段不需要红光时，停止红光模块并关闭两个波长输出。
@@ -265,8 +286,39 @@ class ModbusRtuService {
 
   /// 下发当前 5 分钟节点参数，全部成功后最后发送系统启动命令。
   Future<void> startWithCommands(List<ModbusWriteCommand> parameterCommands) {
-    return sendCommandQueue([
-      ...parameterCommands,
+    return _startWithModuleBatches(parameterCommands);
+  }
+
+  Future<void> _startWithModuleBatches(
+    List<ModbusWriteCommand> parameterCommands,
+  ) async {
+    final _RedLightBatchParseResult redParsed = _extractRedLightPayload(
+      parameterCommands,
+    );
+    final _PemfBatchParseResult pemfParsed = _extractPemfPayload(
+      redParsed.remainingCommands,
+    );
+    final _VatBatchParseResult vatParsed = _extractVatPayload(
+      pemfParsed.remainingCommands,
+    );
+    final _HydrogenBatchParseResult hydrogenParsed = _extractHydrogenPayload(
+      vatParsed.remainingCommands,
+    );
+    await sendCommandQueue(hydrogenParsed.remainingCommands);
+    if (redParsed.payload != null) {
+      await _applyRedLightPayload(redParsed.payload!);
+    }
+    if (pemfParsed.payload != null) {
+      await _applyPemfPayload(pemfParsed.payload!);
+    }
+    if (vatParsed.payload != null) {
+      await _applyVatPayload(vatParsed.payload!);
+    }
+    if (hydrogenParsed.payload != null) {
+      await _applyHydrogenPayload(hydrogenParsed.payload!);
+    }
+    debugPrint('System start command will be sent last: 0x0004 = 1');
+    await sendCommandQueue([
       const ModbusWriteCommand(address: systemCommandAddress, value: 1),
     ]);
   }
@@ -277,32 +329,63 @@ class ModbusRtuService {
     required int strength850,
     required int mode,
   }) {
-    final int safe660 = _clampPercent(strength660);
-    final int safe850 = _clampPercent(strength850);
-    final int safeMode = mode == 0 ? 0 : 1;
-    final bool enabled = safe660 > 0 || safe850 > 0;
+    final RedLightBatchPayload payload = RedLightModbus.buildPayload(
+      strength660: strength660,
+      strength850: strength850,
+      mode: mode,
+    );
+    return [
+      for (int i = 0; i < payload.values.length; i++)
+        ModbusWriteCommand(
+          address: payload.startAddress + i,
+          value: payload.values[i],
+        ),
+      ModbusWriteCommand(
+        address: payload.applyAddress,
+        value: payload.applyValue,
+      ),
+      ModbusWriteCommand(
+        address: payload.commandAddress,
+        value: payload.commandValue,
+      ),
+    ];
+  }
 
+  List<ModbusWriteCommand> buildPemfCommands({
+    required int frequencyHz,
+    required int intensity,
+    required int waveform,
+    int dutyCycle = 100,
+    int polarityMode = 0,
+    int riseTime = 0,
+    int fallTime = 0,
+  }) {
+    final PemfBatchPayload payload = PemfModbus.buildPayload(
+      frequencyHz: frequencyHz,
+      intensity: intensity,
+      waveform: waveform,
+      dutyCycle: dutyCycle,
+      polarityMode: polarityMode,
+      riseTime: riseTime,
+      fallTime: fallTime,
+    );
     return [
       ModbusWriteCommand(
-        address: redLightTotalEnableAddress,
-        value: enabled ? 1 : 0,
+        address: payload.enableAddress,
+        value: payload.enableValue,
       ),
-      ModbusWriteCommand(address: redLightTotalModeAddress, value: safeMode),
+      for (int i = 0; i < payload.values.length; i++)
+        ModbusWriteCommand(
+          address: payload.startAddress + i,
+          value: payload.values[i],
+        ),
       ModbusWriteCommand(
-        address: redLight660EnableAddress,
-        value: safe660 > 0 ? 1 : 0,
+        address: payload.applyAddress,
+        value: payload.applyValue,
       ),
-      ModbusWriteCommand(address: redLight660ModeAddress, value: safeMode),
-      ModbusWriteCommand(address: redLight660PowerAddress, value: safe660),
       ModbusWriteCommand(
-        address: redLight850EnableAddress,
-        value: safe850 > 0 ? 1 : 0,
-      ),
-      ModbusWriteCommand(address: redLight850ModeAddress, value: safeMode),
-      ModbusWriteCommand(address: redLight850PowerAddress, value: safe850),
-      ModbusWriteCommand(
-        address: redLightTotalCommandAddress,
-        value: enabled ? 1 : 2,
+        address: payload.commandAddress,
+        value: payload.commandValue,
       ),
     ];
   }
@@ -335,7 +418,7 @@ class ModbusRtuService {
       if (stopPemf) ...[
         const ModbusWriteCommand(address: pemfTotalCommandAddress, value: 2),
         const ModbusWriteCommand(address: pemfTotalIntensityAddress, value: 0),
-        const ModbusWriteCommand(address: pemfTotalModeAddress, value: 0),
+        const ModbusWriteCommand(address: pemfTotalEnableAddress, value: 0),
       ],
       if (stopHydrogen) ...[
         const ModbusWriteCommand(address: hydrogenCommandAddress, value: 2),
@@ -410,7 +493,10 @@ class ModbusRtuService {
       if (pauseFragrance)
         const ModbusWriteCommand(address: fragranceCommandAddress, value: 3),
       if (pauseRed)
-        const ModbusWriteCommand(address: redLightTotalCommandAddress, value: 3),
+        const ModbusWriteCommand(
+          address: redLightTotalCommandAddress,
+          value: 3,
+        ),
     ];
   }
 
@@ -441,7 +527,10 @@ class ModbusRtuService {
       if (resumeFragrance)
         const ModbusWriteCommand(address: fragranceCommandAddress, value: 4),
       if (resumeRed)
-        const ModbusWriteCommand(address: redLightTotalCommandAddress, value: 4),
+        const ModbusWriteCommand(
+          address: redLightTotalCommandAddress,
+          value: 4,
+        ),
     ];
   }
 
@@ -545,52 +634,65 @@ class ModbusRtuService {
     ];
   }
 
-  /// 构建 VAT 参数命令列表。
-  List<ModbusWriteCommand> buildVatParamCommands({
+  /// 构建 VAT V2.0 参数命令列表。
+  List<ModbusWriteCommand> buildVatCommands({
     required int frequency,
     required int intensity,
     required int musicIndex,
   }) {
-    final int safeFrequency = frequency.clamp(0, 100);
-    final int safeIntensity = intensity.clamp(0, 100);
-    final int safeMusicIndex = musicIndex.clamp(0, 65535);
-    debugPrint(
-      'VAT params: freq=$safeFrequency intensity=$safeIntensity musicIndex=$safeMusicIndex',
+    final VatBatchPayload payload = VatModbus.buildPayload(
+      frequencyHz: frequency,
+      intensity: intensity,
+      musicIndex: musicIndex,
     );
-
-    return [
-      const ModbusWriteCommand(address: vatEnableAddress, value: 1),
-      const ModbusWriteCommand(address: vatModeAddress, value: 0),
-      ModbusWriteCommand(address: vatFrequencyAddress, value: safeFrequency),
-      ModbusWriteCommand(address: vatIntensityAddress, value: safeIntensity),
-      ModbusWriteCommand(address: vatMusicIndexAddress, value: safeMusicIndex),
+    debugPrint(
+      'VAT V2.0 build: frequencyHz=${payload.frequencyHz} frequencyValue=${payload.frequencyValue} intensity=$intensity musicIndex=$musicIndex',
+    );
+    return <ModbusWriteCommand>[
+      for (int i = 0; i < payload.values.length; i++)
+        ModbusWriteCommand(
+          address: payload.startAddress + i,
+          value: payload.values[i],
+        ),
+      ModbusWriteCommand(
+        address: payload.applyAddress,
+        value: payload.applyValue,
+      ),
+      ModbusWriteCommand(
+        address: payload.commandAddress,
+        value: payload.commandValue,
+      ),
     ];
   }
 
   /// 写入 VAT 音乐索引到硬件。
   Future<void> writeVatMusicIndex(int musicIndex) async {
-    final int safeIndex = musicIndex.clamp(0, 255);
+    final int safeIndex = musicIndex.clamp(0, 65535);
     await sendCommandQueue([
       ModbusWriteCommand(address: vatMusicIndexAddress, value: safeIndex),
     ]);
     debugPrint('VAT music index written: $safeIndex');
   }
 
-  List<ModbusWriteCommand> buildHydrogenParamCommands({
-    required int concentration,
-  }) {
-    final int safeConcentration = _clampPercent(concentration);
-    debugPrint('Hydrogen concentration=$safeConcentration%');
-    debugPrint('Hydrogen TX address=0x0257 value=1');
-    debugPrint('Hydrogen TX address=0x0259 value=0');
-    debugPrint('Hydrogen TX address=0x025D value=$safeConcentration');
-
-    return [
-      const ModbusWriteCommand(address: hydrogenEnableAddress, value: 1),
-      const ModbusWriteCommand(address: hydrogenModeAddress, value: 0),
+  List<ModbusWriteCommand> buildHydrogenCommands({required int concentration}) {
+    final HydrogenBatchPayload payload = HydrogenModbus.buildPayload(
+      concentration: concentration,
+    );
+    debugPrint('Hydrogen concentration=${payload.concentration}');
+    debugPrint('Hydrogen power(0x01C2)=${payload.values[2]}');
+    return <ModbusWriteCommand>[
+      for (int i = 0; i < payload.values.length; i++)
+        ModbusWriteCommand(
+          address: payload.startAddress + i,
+          value: payload.values[i],
+        ),
       ModbusWriteCommand(
-        address: hydrogenConcentrationAddress,
-        value: safeConcentration,
+        address: payload.applyAddress,
+        value: payload.applyValue,
+      ),
+      ModbusWriteCommand(
+        address: payload.commandAddress,
+        value: payload.commandValue,
       ),
     ];
   }
@@ -599,7 +701,7 @@ class ModbusRtuService {
   Future<int> readHydrogenFlow() async {
     try {
       final int value = await readHoldingRegister(hydrogenFlowAddress);
-      debugPrint('Hydrogen flow RX address=0x025F value=$value');
+      debugPrint('Hydrogen flow RX address=0x01E4 value=$value');
       debugPrint('Hydrogen flow parsed value=$value');
       return value;
     } catch (error) {
@@ -731,6 +833,442 @@ class ModbusRtuService {
     }
 
     await _sendCommandQueueWindows(commands, frames);
+  }
+
+  Future<void> _applyRedLightPayload(RedLightBatchPayload payload) async {
+    if (payload.values.length != RedLightModbus.quantity) {
+      throw StateError(
+        'Red light values length invalid: ${payload.values.length}, expected ${RedLightModbus.quantity}',
+      );
+    }
+    await writeMultipleRegisters(
+      startAddress: payload.startAddress,
+      values: payload.values,
+      logTag: 'RedLight',
+    );
+    if (commandDelay > Duration.zero) await Future<void>.delayed(commandDelay);
+    debugPrint(
+      'RedLight apply address=0x${payload.applyAddress.toRadixString(16).toUpperCase()} value=${payload.applyValue}',
+    );
+    await sendCommandQueue([
+      ModbusWriteCommand(
+        address: payload.applyAddress,
+        value: payload.applyValue,
+      ),
+    ]);
+    if (commandDelay > Duration.zero) await Future<void>.delayed(commandDelay);
+    debugPrint(
+      'RedLight command address=0x${payload.commandAddress.toRadixString(16).toUpperCase()} value=${payload.commandValue}',
+    );
+    await sendCommandQueue([
+      ModbusWriteCommand(
+        address: payload.commandAddress,
+        value: payload.commandValue,
+      ),
+    ]);
+  }
+
+  Future<void> _applyPemfPayload(PemfBatchPayload payload) async {
+    if (payload.values.length != PemfModbus.quantity) {
+      throw StateError(
+        'PEMF values length invalid: ${payload.values.length}, expected ${PemfModbus.quantity}',
+      );
+    }
+    debugPrint(
+      'PEMF single write 0x${payload.enableAddress.toRadixString(16).toUpperCase()} value=${payload.enableValue}',
+    );
+    await sendCommandQueue([
+      ModbusWriteCommand(
+        address: payload.enableAddress,
+        value: payload.enableValue,
+      ),
+    ]);
+    await writeMultipleRegisters(
+      startAddress: payload.startAddress,
+      values: payload.values,
+      logTag: 'PEMF',
+    );
+    if (commandDelay > Duration.zero) await Future<void>.delayed(commandDelay);
+    debugPrint(
+      'PEMF apply address=0x${payload.applyAddress.toRadixString(16).toUpperCase()} value=${payload.applyValue}',
+    );
+    await sendCommandQueue([
+      ModbusWriteCommand(
+        address: payload.applyAddress,
+        value: payload.applyValue,
+      ),
+    ]);
+    if (commandDelay > Duration.zero) await Future<void>.delayed(commandDelay);
+    debugPrint(
+      'PEMF command address=0x${payload.commandAddress.toRadixString(16).toUpperCase()} value=${payload.commandValue}',
+    );
+    await sendCommandQueue([
+      ModbusWriteCommand(
+        address: payload.commandAddress,
+        value: payload.commandValue,
+      ),
+    ]);
+  }
+
+  Future<void> _applyVatPayload(VatBatchPayload payload) async {
+    if (payload.values.length != VatModbus.quantity) {
+      throw StateError(
+        'VAT values length invalid: ${payload.values.length}, expected ${VatModbus.quantity}',
+      );
+    }
+    debugPrint(
+      'VAT frequency conversion: frequencyHz=${payload.frequencyHz} frequencyValue=${payload.frequencyValue}',
+    );
+    await writeMultipleRegisters(
+      startAddress: payload.startAddress,
+      values: payload.values,
+      logTag: 'VAT',
+    );
+    if (commandDelay > Duration.zero) await Future<void>.delayed(commandDelay);
+    debugPrint(
+      'VAT apply address=0x${payload.applyAddress.toRadixString(16).toUpperCase()} value=${payload.applyValue}',
+    );
+    await sendCommandQueue([
+      ModbusWriteCommand(
+        address: payload.applyAddress,
+        value: payload.applyValue,
+      ),
+    ]);
+    if (commandDelay > Duration.zero) await Future<void>.delayed(commandDelay);
+    debugPrint(
+      'VAT command address=0x${payload.commandAddress.toRadixString(16).toUpperCase()} value=${payload.commandValue}',
+    );
+    await sendCommandQueue([
+      ModbusWriteCommand(
+        address: payload.commandAddress,
+        value: payload.commandValue,
+      ),
+    ]);
+  }
+
+  Future<void> _applyHydrogenPayload(HydrogenBatchPayload payload) async {
+    if (payload.values.length != HydrogenModbus.quantity) {
+      throw StateError(
+        'Hydrogen values length invalid: ${payload.values.length}, expected ${HydrogenModbus.quantity}',
+      );
+    }
+    debugPrint('Hydrogen startAddress = 0x01C0');
+    debugPrint('Hydrogen quantity = 5');
+    debugPrint('Hydrogen concentration = ${payload.concentration}');
+    debugPrint('Hydrogen power(0x01C2) = ${payload.values[2]}');
+    debugPrint('Hydrogen flow read address = 0x01E4');
+    await writeMultipleRegisters(
+      startAddress: payload.startAddress,
+      values: payload.values,
+      logTag: 'Hydrogen',
+    );
+    if (commandDelay > Duration.zero) await Future<void>.delayed(commandDelay);
+    debugPrint(
+      'Hydrogen apply address=0x${payload.applyAddress.toRadixString(16).toUpperCase()} value=${payload.applyValue}',
+    );
+    await sendCommandQueue([
+      ModbusWriteCommand(
+        address: payload.applyAddress,
+        value: payload.applyValue,
+      ),
+    ]);
+    if (commandDelay > Duration.zero) await Future<void>.delayed(commandDelay);
+    debugPrint(
+      'Hydrogen command address=0x${payload.commandAddress.toRadixString(16).toUpperCase()} value=${payload.commandValue}',
+    );
+    await sendCommandQueue([
+      ModbusWriteCommand(
+        address: payload.commandAddress,
+        value: payload.commandValue,
+      ),
+    ]);
+  }
+
+  _RedLightBatchParseResult _extractRedLightPayload(
+    List<ModbusWriteCommand> commands,
+  ) {
+    final Map<int, int> redMap = <int, int>{};
+    final List<ModbusWriteCommand> remaining = <ModbusWriteCommand>[];
+    final Set<int> redAddresses = <int>{
+      for (
+        int address = RedLightModbus.startAddress;
+        address <= RedLightModbus.endAddress;
+        address++
+      )
+        address,
+      redLightApplyAddress,
+      redLightTotalCommandAddress,
+    };
+    for (final ModbusWriteCommand command in commands) {
+      if (redAddresses.contains(command.address)) {
+        redMap[command.address] = command.value;
+      } else {
+        remaining.add(command);
+      }
+    }
+    if (redMap.isEmpty) {
+      return _RedLightBatchParseResult(remainingCommands: commands);
+    }
+    final List<int> values = <int>[
+      for (
+        int address = RedLightModbus.startAddress;
+        address <= RedLightModbus.endAddress;
+        address++
+      )
+        redMap[address] ?? 0,
+    ];
+    final RedLightBatchPayload payload = RedLightBatchPayload(
+      startAddress: RedLightModbus.startAddress,
+      values: values,
+      applyAddress: redLightApplyAddress,
+      commandAddress: redLightTotalCommandAddress,
+      applyValue: redMap[redLightApplyAddress] ?? 1,
+      commandValue: redMap[redLightTotalCommandAddress] ?? 1,
+    );
+    return _RedLightBatchParseResult(
+      remainingCommands: remaining,
+      payload: payload,
+    );
+  }
+
+  _PemfBatchParseResult _extractPemfPayload(List<ModbusWriteCommand> commands) {
+    final Map<int, int> pemfMap = <int, int>{};
+    final List<ModbusWriteCommand> remaining = <ModbusWriteCommand>[];
+    final Set<int> pemfAddresses = <int>{
+      PemfModbus.enableAddress,
+      for (
+        int address = PemfModbus.startAddress;
+        address <= PemfModbus.endAddress;
+        address++
+      )
+        address,
+      PemfModbus.applyAddress,
+      PemfModbus.commandAddress,
+    };
+    for (final ModbusWriteCommand command in commands) {
+      if (pemfAddresses.contains(command.address)) {
+        pemfMap[command.address] = command.value;
+      } else {
+        remaining.add(command);
+      }
+    }
+    if (pemfMap.isEmpty) {
+      return _PemfBatchParseResult(remainingCommands: commands);
+    }
+    final List<int> values = <int>[
+      for (
+        int address = PemfModbus.startAddress;
+        address <= PemfModbus.endAddress;
+        address++
+      )
+        pemfMap[address] ?? 0,
+    ];
+    final PemfBatchPayload payload = PemfBatchPayload(
+      enableAddress: PemfModbus.enableAddress,
+      enableValue: pemfMap[PemfModbus.enableAddress] ?? 0,
+      startAddress: PemfModbus.startAddress,
+      values: values,
+      applyAddress: PemfModbus.applyAddress,
+      commandAddress: PemfModbus.commandAddress,
+      applyValue: pemfMap[PemfModbus.applyAddress] ?? 1,
+      commandValue: pemfMap[PemfModbus.commandAddress] ?? 1,
+    );
+    return _PemfBatchParseResult(
+      remainingCommands: remaining,
+      payload: payload,
+    );
+  }
+
+  _VatBatchParseResult _extractVatPayload(List<ModbusWriteCommand> commands) {
+    final Map<int, int> vatMap = <int, int>{};
+    final List<ModbusWriteCommand> remaining = <ModbusWriteCommand>[];
+    final Set<int> vatAddresses = <int>{
+      for (
+        int address = VatModbus.startAddress;
+        address <= VatModbus.endAddress;
+        address++
+      )
+        address,
+      VatModbus.applyAddress,
+      VatModbus.commandAddress,
+    };
+    for (final ModbusWriteCommand command in commands) {
+      if (vatAddresses.contains(command.address)) {
+        vatMap[command.address] = command.value;
+      } else {
+        remaining.add(command);
+      }
+    }
+    if (vatMap.isEmpty) {
+      return _VatBatchParseResult(remainingCommands: commands);
+    }
+    final List<int> values = <int>[
+      for (
+        int address = VatModbus.startAddress;
+        address <= VatModbus.endAddress;
+        address++
+      )
+        vatMap[address] ?? 0,
+    ];
+    final VatBatchPayload payload = VatBatchPayload(
+      startAddress: VatModbus.startAddress,
+      values: values,
+      applyAddress: VatModbus.applyAddress,
+      commandAddress: VatModbus.commandAddress,
+      applyValue: vatMap[VatModbus.applyAddress] ?? 1,
+      commandValue: vatMap[VatModbus.commandAddress] ?? 1,
+      frequencyHz: ((vatMap[vatFrequencyAddress] ?? 0) / 10.0),
+      frequencyValue: vatMap[vatFrequencyAddress] ?? 0,
+    );
+    return _VatBatchParseResult(remainingCommands: remaining, payload: payload);
+  }
+
+  _HydrogenBatchParseResult _extractHydrogenPayload(
+    List<ModbusWriteCommand> commands,
+  ) {
+    final Map<int, int> hydrogenMap = <int, int>{};
+    final List<ModbusWriteCommand> remaining = <ModbusWriteCommand>[];
+    final Set<int> hydrogenAddresses = <int>{
+      for (
+        int address = HydrogenModbus.startAddress;
+        address <= HydrogenModbus.endAddress;
+        address++
+      )
+        address,
+      HydrogenModbus.applyAddress,
+      HydrogenModbus.commandAddress,
+    };
+    for (final ModbusWriteCommand command in commands) {
+      if (hydrogenAddresses.contains(command.address)) {
+        hydrogenMap[command.address] = command.value;
+      } else {
+        remaining.add(command);
+      }
+    }
+    if (hydrogenMap.isEmpty) {
+      return _HydrogenBatchParseResult(remainingCommands: commands);
+    }
+    final List<int> values = <int>[
+      for (
+        int address = HydrogenModbus.startAddress;
+        address <= HydrogenModbus.endAddress;
+        address++
+      )
+        hydrogenMap[address] ?? 0,
+    ];
+    final HydrogenBatchPayload payload = HydrogenBatchPayload(
+      startAddress: HydrogenModbus.startAddress,
+      values: values,
+      applyAddress: HydrogenModbus.applyAddress,
+      commandAddress: HydrogenModbus.commandAddress,
+      applyValue: hydrogenMap[HydrogenModbus.applyAddress] ?? 1,
+      commandValue: hydrogenMap[HydrogenModbus.commandAddress] ?? 1,
+      concentration: (hydrogenMap[hydrogenConcentrationAddress] ?? 0).clamp(
+        0,
+        100,
+      ),
+    );
+    return _HydrogenBatchParseResult(
+      remainingCommands: remaining,
+      payload: payload,
+    );
+  }
+
+  Future<void> writeMultipleRegisters({
+    required int startAddress,
+    required List<int> values,
+    String logTag = 'RedLight',
+  }) async {
+    if (values.isEmpty) return;
+    final Uint8List frame = _buildWriteMultipleRegistersFrame(
+      slaveId: slaveId,
+      startAddress: startAddress,
+      values: values,
+    );
+    final int quantity = values.length;
+    debugPrint(
+      '$logTag 0x10 startAddress=0x${startAddress.toRadixString(16).toUpperCase().padLeft(4, '0')} quantity=$quantity values=$values',
+    );
+    for (int i = 0; i < values.length; i++) {
+      final int address = startAddress + i;
+      debugPrint(
+        '$logTag 0x10 map 0x${address.toRadixString(16).toUpperCase().padLeft(4, '0')} -> ${values[i]}',
+      );
+    }
+    await _writeFrameAndValidateMultiple(
+      frame: frame,
+      startAddress: startAddress,
+      quantity: quantity,
+    );
+  }
+
+  Future<void> _writeFrameAndValidateMultiple({
+    required Uint8List frame,
+    required int startAddress,
+    required int quantity,
+  }) async {
+    if (Platform.isAndroid) {
+      final Uint8List response = await AndroidSerialPortService.instance
+          .transceiveBytes(
+            bytes: frame,
+            path: portName,
+            baudRate: baudRate,
+            timeout: timeout,
+          );
+      _validateWriteMultipleRegistersResponse(
+        response: response,
+        startAddress: startAddress,
+        quantity: quantity,
+      );
+      if (commandDelay > Duration.zero) {
+        await Future<void>.delayed(commandDelay);
+      }
+      return;
+    }
+
+    if (!Platform.isWindows) {
+      throw UnsupportedError(
+        'Modbus RTU serial test requires Android or Windows desktop.',
+      );
+    }
+
+    final SerialPort port = SerialPort(portName);
+    SerialPortConfig? config;
+    try {
+      if (!port.openReadWrite()) {
+        throw Exception(
+          'Open serial port failed: $portName, ${SerialPort.lastError}',
+        );
+      }
+      config = SerialPortConfig()
+        ..baudRate = baudRate
+        ..bits = 8
+        ..parity = SerialPortParity.none
+        ..stopBits = 1
+        ..setFlowControl(SerialPortFlowControl.none);
+      port.config = config;
+      config = null;
+      port.flush();
+      final int written = port.write(frame, timeout: timeout.inMilliseconds);
+      if (written != frame.length) {
+        throw TimeoutException(
+          'Serial write timeout: $written/${frame.length} bytes',
+        );
+      }
+      final Uint8List response = port.read(8, timeout: timeout.inMilliseconds);
+      _validateWriteMultipleRegistersResponse(
+        response: response,
+        startAddress: startAddress,
+        quantity: quantity,
+      );
+      if (commandDelay > Duration.zero) {
+        await Future<void>.delayed(commandDelay);
+      }
+    } finally {
+      if (port.isOpen) port.close();
+      config?.dispose();
+      port.dispose();
+    }
   }
 
   // 直接写单寄存器命令，通常用于调试或特殊场景。
@@ -979,6 +1517,29 @@ class ModbusRtuService {
     return frame;
   }
 
+  Uint8List _buildWriteMultipleRegistersFrame({
+    required int slaveId,
+    required int startAddress,
+    required List<int> values,
+  }) {
+    final int quantity = values.length;
+    final int byteCount = quantity * 2;
+    final Uint8List frame = Uint8List(9 + byteCount);
+    final ByteData data = ByteData.sublistView(frame);
+    data.setUint8(0, slaveId);
+    data.setUint8(1, 0x10);
+    data.setUint16(2, startAddress);
+    data.setUint16(4, quantity);
+    data.setUint8(6, byteCount);
+    for (int i = 0; i < quantity; i++) {
+      data.setUint16(7 + i * 2, values[i] & 0xFFFF);
+    }
+    final int crc = _crc16(frame.sublist(0, frame.length - 2));
+    data.setUint8(frame.length - 2, crc & 0xFF);
+    data.setUint8(frame.length - 1, (crc >> 8) & 0xFF);
+    return frame;
+  }
+
   Uint8List _buildReadHoldingRegistersFrame({
     required int slaveId,
     required int address,
@@ -1100,6 +1661,41 @@ class ModbusRtuService {
     }
   }
 
+  void _validateWriteMultipleRegistersResponse({
+    required Uint8List response,
+    required int startAddress,
+    required int quantity,
+  }) {
+    if (response.length != 8) {
+      throw Exception(
+        'Modbus RTU multi-write response length error: ${response.length}',
+      );
+    }
+    final int responseCrc = response[6] | (response[7] << 8);
+    final int expectedCrc = _crc16(response.sublist(0, 6));
+    if (responseCrc != expectedCrc) {
+      throw Exception('Modbus RTU multi-write CRC mismatch');
+    }
+    if (response[0] != slaveId) {
+      throw Exception(
+        'Modbus RTU multi-write Slave ID mismatch: ${response[0]}',
+      );
+    }
+    if (response[1] != 0x10) {
+      throw Exception(
+        'Modbus RTU multi-write function code error: ${response[1]}',
+      );
+    }
+    final ByteData data = ByteData.sublistView(response);
+    final int responseStartAddress = data.getUint16(2);
+    final int responseQuantity = data.getUint16(4);
+    if (responseStartAddress != startAddress || responseQuantity != quantity) {
+      throw Exception(
+        'Modbus RTU multi-write echo mismatch: sent start=$startAddress quantity=$quantity, got start=$responseStartAddress quantity=$responseQuantity',
+      );
+    }
+  }
+
   String _formatBytes(Uint8List bytes) {
     if (bytes.isEmpty) return '<empty>';
 
@@ -1140,4 +1736,38 @@ class ModbusRtuException implements Exception {
 
   @override
   String toString() => message;
+}
+
+class _RedLightBatchParseResult {
+  const _RedLightBatchParseResult({
+    required this.remainingCommands,
+    this.payload,
+  });
+
+  final List<ModbusWriteCommand> remainingCommands;
+  final RedLightBatchPayload? payload;
+}
+
+class _PemfBatchParseResult {
+  const _PemfBatchParseResult({required this.remainingCommands, this.payload});
+
+  final List<ModbusWriteCommand> remainingCommands;
+  final PemfBatchPayload? payload;
+}
+
+class _VatBatchParseResult {
+  const _VatBatchParseResult({required this.remainingCommands, this.payload});
+
+  final List<ModbusWriteCommand> remainingCommands;
+  final VatBatchPayload? payload;
+}
+
+class _HydrogenBatchParseResult {
+  const _HydrogenBatchParseResult({
+    required this.remainingCommands,
+    this.payload,
+  });
+
+  final List<ModbusWriteCommand> remainingCommands;
+  final HydrogenBatchPayload? payload;
 }

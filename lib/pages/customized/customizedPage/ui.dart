@@ -81,9 +81,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
   late final List<FocusNode> _vatIntensityFocusNodes;
   late final List<_VatMusicSetting> _nodeVatMusicSettings;
   late final List<TextEditingController> _hydrogenConcentrationControllers;
-  late final List<TextEditingController> _hydrogenFlowControllers;
   late final List<FocusNode> _hydrogenConcentrationFocusNodes;
-  late final List<FocusNode> _hydrogenFlowFocusNodes;
   late final List<_RedLightMode> _nodeRedLightModes;
   late final List<_PemfWave?> _nodePemfWaves;
   late final Set<int> _savedNodeIndexes;
@@ -92,10 +90,10 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
   bool _didPrecachePemfWaveDialog = false;
 
   // 治疗模块列表。
-  final List<_ModuleItem> _modules = const [
+  late final List<_ModuleItem> _modules = [
     _ModuleItem(
       id: 'redlight',
-      title: '红光',
+      title: 'red_ther'.tr,
       iconOff: Assets.startRedLightIconOff,
       iconOn: Assets.startRedLightIconOn,
       addIcon: Assets.redLightAddIcon,
@@ -125,7 +123,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     ),
     _ModuleItem(
       id: 'hydrogen',
-      title: '分子氢',
+      title: 'module_hydrogen'.tr,
       iconOff: Assets.startHydrogenIconOff,
       iconOn: Assets.startHydrogenIconOn,
       addIcon: Assets.hydrogenAddIcon,
@@ -135,7 +133,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     ),
     _ModuleItem(
       id: 'expand',
-      title: '拓展功能',
+      title: 'module_expand'.tr,
       iconOff: Assets.expandIconOff,
       iconOn: Assets.expandIcon,
       addIcon: Assets.expandAddIcon,
@@ -186,12 +184,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
       12,
       (_) => TextEditingController(),
     );
-    _hydrogenFlowControllers = List.generate(
-      12,
-      (_) => TextEditingController(),
-    );
     _hydrogenConcentrationFocusNodes = List.generate(12, (_) => FocusNode());
-    _hydrogenFlowFocusNodes = List.generate(12, (_) => FocusNode());
     _nodeRedLightModes = List.generate(12, (_) => _RedLightMode.continuous);
     _nodePemfWaves = List.generate(12, (_) => null);
     _savedNodeIndexes = <int>{};
@@ -241,13 +234,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
         in _hydrogenConcentrationControllers) {
       controller.dispose();
     }
-    for (final TextEditingController controller in _hydrogenFlowControllers) {
-      controller.dispose();
-    }
     for (final FocusNode node in _hydrogenConcentrationFocusNodes) {
-      node.dispose();
-    }
-    for (final FocusNode node in _hydrogenFlowFocusNodes) {
       node.dispose();
     }
     super.dispose();
@@ -454,9 +441,9 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  '添加治疗模块',
-                  style: TextStyle(color: Colors.white, fontSize: 22),
+                Text(
+                  'add_therapy_module'.tr,
+                  style: const TextStyle(color: Colors.white, fontSize: 22),
                 ),
                 const SizedBox(height: 18),
                 for (final _ModuleItem item in _modules) ...[
@@ -493,10 +480,10 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
           children: [
             Row(
               children: [
-                const Expanded(
+                Expanded(
                   child: Text(
-                    '拓展功能',
-                    style: TextStyle(color: Colors.white, fontSize: 22),
+                    'expand_feature'.tr,
+                    style: const TextStyle(color: Colors.white, fontSize: 22),
                   ),
                 ),
                 Image.asset(Assets.expandIcon, width: 43, height: 43),
@@ -505,12 +492,12 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
             const SizedBox(height: 15),
             _buildExpandLine(
               id: 'chakra',
-              text: '脉轮',
+              text: 'chakra'.tr,
               icon: Icons.bubble_chart_outlined,
             ),
             _buildExpandLine(
               id: 'terahertz',
-              text: '太赫兹',
+              text: 'terahertz'.tr,
               icon: Icons.sensors_outlined,
             ),
             _buildExpandLine(
@@ -520,7 +507,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
             ),
             _buildExpandLine(
               id: 'fragrance',
-              text: '香氛',
+              text: 'fragrance'.tr,
               icon: Icons.waves_outlined,
             ),
           ],
@@ -601,9 +588,12 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _PanelTitle(title: '红光', icon: _moduleById('redlight').iconOn),
+            _PanelTitle(
+              title: 'red_light'.tr,
+              icon: _moduleById('redlight').iconOn,
+            ),
             const SizedBox(height: 18),
-            _buildTwoColumnLabels('波长', '强度'),
+            _buildTwoColumnLabels('wavelength'.tr, 'intensity'.tr),
             const SizedBox(height: 6),
             _buildWavelengthRow(
               '660',
@@ -611,7 +601,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
               focusNode: _redLight660FocusNodes[index],
             ),
             const SizedBox(height: 16),
-            _buildTwoColumnLabels('波长', '强度'),
+            _buildTwoColumnLabels('wavelength'.tr, 'intensity'.tr),
             const SizedBox(height: 6),
             _buildWavelengthRow(
               '850',
@@ -621,11 +611,15 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
             const Spacer(),
             Row(
               children: [
-                const Text('模式选择', style: _smallLabelStyle),
+                Text('mode_select'.tr, style: _smallLabelStyle),
                 const SizedBox(width: 25),
-                _buildModeOption(index, _RedLightMode.continuous, '连续'),
+                _buildModeOption(
+                  index,
+                  _RedLightMode.continuous,
+                  'continuous'.tr,
+                ),
                 const SizedBox(width: 12),
-                _buildModeOption(index, _RedLightMode.pulse, '脉冲'),
+                _buildModeOption(index, _RedLightMode.pulse, 'pulse'.tr),
               ],
             ),
           ],
@@ -679,7 +673,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
           children: [
             _PanelTitle(title: 'PEMF', icon: _moduleById('pemf').iconOn),
             const SizedBox(height: 20),
-            _buildTwoColumnLabels('频率', '强度'),
+            _buildTwoColumnLabels('frequency'.tr, 'intensity'.tr),
             const SizedBox(height: 7),
             Row(
               children: [
@@ -709,7 +703,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
               ],
             ),
             const SizedBox(height: 16),
-            const Text('波形', style: _smallLabelStyle),
+            Text('waveform'.tr, style: _smallLabelStyle),
             const SizedBox(height: 7),
             _PemfWaveSelector(
               wave: _nodePemfWaves[index],
@@ -742,7 +736,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
           children: [
             _buildVatTitleRow(index),
             const SizedBox(height: 17),
-            _buildTwoColumnLabels('频率', '强度'),
+            _buildTwoColumnLabels('frequency'.tr, 'intensity'.tr),
             const SizedBox(height: 7),
             Row(
               children: [
@@ -856,28 +850,19 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _PanelTitle(title: '分子氢', icon: _moduleById('hydrogen').iconOn),
+            _PanelTitle(
+              title: 'module_hydrogen'.tr,
+              icon: _moduleById('hydrogen').iconOn,
+            ),
             const SizedBox(height: 17),
-            _buildTwoColumnLabels('氢气浓度', '流量'),
+            Text('hydrogen_concentration'.tr, style: _smallLabelStyle),
             const SizedBox(height: 7),
             Row(
               children: [
                 _InputBox(
-                  width: 88,
+                  width: 206,
                   controller: _hydrogenConcentrationControllers[index],
                   focusNode: _hydrogenConcentrationFocusNodes[index],
-                  keyboardType: TextInputType.number,
-                  maxValue: 100,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(3),
-                  ],
-                ),
-                const SizedBox(width: 30),
-                _InputBox(
-                  width: 88,
-                  controller: _hydrogenFlowControllers[index],
-                  focusNode: _hydrogenFlowFocusNodes[index],
                   keyboardType: TextInputType.number,
                   maxValue: 100,
                   inputFormatters: [
@@ -959,7 +944,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
           ),
           textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
         ),
-        child: const Text('保存参数'),
+        child: Text('save_params'.tr),
       ),
     );
   }
@@ -996,7 +981,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  '保存方案',
+                  'save_plan'.tr,
                   style: TextStyle(
                     color: canSave ? Colors.white : const Color(0xFFC4C7D0),
                     fontSize: 20,
@@ -1033,7 +1018,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     }
 
     if (index > 0 && !_savedNodeIndexes.contains(index - 1)) {
-      _showMessage('请先完成上一个 5 分钟节点');
+      _showMessage('complete_previous_node'.tr);
       return;
     }
 
@@ -1256,14 +1241,15 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     }
     if (_nodeFeatureIds[index].contains('hydrogen')) {
       _normalizeRangedNumber(_hydrogenConcentrationControllers[index], 100);
-      _normalizeRangedNumber(_hydrogenFlowControllers[index], 100);
     }
 
     setState(() {
       _savedNodeIndexes.add(index);
       _activeNodeIndex = null;
     });
-    _showMessage('第 ${(index + 1) * 5} 分钟节点参数已保存');
+    _showMessage(
+      '${'node_saved_prefix'.tr}${(index + 1) * 5}${'node_saved_suffix'.tr}',
+    );
   }
 
   Future<void> _showSaveDialog() async {
@@ -1558,7 +1544,6 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
       final _HydrogenSetting hSetting = _parseHydrogenSetting(parts[2]);
       _hydrogenConcentrationControllers[index].text =
           hSetting.concentrationText;
-      _hydrogenFlowControllers[index].text = hSetting.flowText;
       _nodeFeatureIds[index].add('hydrogen');
       _savedNodeIndexes.add(index);
       hasPhaseData = true;
@@ -1594,9 +1579,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
         phaseTexts.add('expand:$index:${_nodeExpandIds[index].join('|')}');
       }
       if (_nodeChakraStrengths[index].isNotEmpty) {
-        phaseTexts.add(
-          'chakra:$index:${_formatChakraSetting(index)}',
-        );
+        phaseTexts.add('chakra:$index:${_formatChakraSetting(index)}');
       }
       final terahertz_page.TerahertzExpandResult? terahertzSetting =
           _nodeTerahertzSettings[index];
@@ -1973,7 +1956,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
             seriesName: Uri.decodeComponent(value),
           );
           break;
-        // backward compat: old format used 'music' key
+        // 向后兼容：旧格式使用 'music' 键
         case 'music':
           final Song? song = findSongById(value);
           music = _VatMusicSetting(
@@ -1997,14 +1980,11 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
       _hydrogenConcentrationControllers[index].text,
       100,
     );
-    final int flow = _rangedValue(_hydrogenFlowControllers[index].text, 100);
-
-    return 'concentration=$concentration|flow=$flow';
+    return 'concentration=$concentration';
   }
 
   _HydrogenSetting _parseHydrogenSetting(String text) {
     int concentration = 0;
-    int flow = 0;
 
     for (final String pair in text.split('|')) {
       final int separator = pair.indexOf('=');
@@ -2016,13 +1996,10 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
         case 'concentration':
           concentration = _rangedValue(value, 100);
           break;
-        case 'flow':
-          flow = _rangedValue(value, 100);
-          break;
       }
     }
 
-    return _HydrogenSetting(concentration: concentration, flow: flow);
+    return _HydrogenSetting(concentration: concentration);
   }
 
   _ModuleItem _moduleById(String id) {
@@ -2168,9 +2145,9 @@ class _PageTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Text(
-      '自定义方案',
-      style: TextStyle(
+    return Text(
+      'custom_plan_title'.tr,
+      style: const TextStyle(
         color: Colors.white,
         fontSize: 24,
         fontWeight: FontWeight.w500,
@@ -2530,13 +2507,11 @@ class _VatSetting {
 }
 
 class _HydrogenSetting {
-  const _HydrogenSetting({required this.concentration, required this.flow});
+  const _HydrogenSetting({required this.concentration});
 
   final int concentration;
-  final int flow;
 
   String get concentrationText => concentration.toString();
-  String get flowText => flow.toString();
 }
 
 class _RadioDot extends StatelessWidget {
@@ -2750,19 +2725,22 @@ class _PlanNameDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: const Color(0xFF202127),
-      title: const Text('方案命名', style: TextStyle(color: Colors.white)),
+      title: Text(
+        'plan_naming'.tr,
+        style: const TextStyle(color: Colors.white),
+      ),
       content: TextField(
         controller: controller,
         autofocus: true,
         cursorColor: Colors.white,
         style: const TextStyle(color: Colors.white),
-        decoration: const InputDecoration(
-          hintText: '输入方案名称',
-          hintStyle: TextStyle(color: Color(0xFF737782)),
-          enabledBorder: UnderlineInputBorder(
+        decoration: InputDecoration(
+          hintText: 'plan_search_hint'.tr,
+          hintStyle: const TextStyle(color: Color(0xFF737782)),
+          enabledBorder: const UnderlineInputBorder(
             borderSide: BorderSide(color: Color(0xFF4A4D57)),
           ),
-          focusedBorder: UnderlineInputBorder(
+          focusedBorder: const UnderlineInputBorder(
             borderSide: BorderSide(color: Color(0xFF1F74E8)),
           ),
         ),
@@ -2770,7 +2748,7 @@ class _PlanNameDialog extends StatelessWidget {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('取消'),
+          child: Text('cancel'.tr),
         ),
         TextButton(
           onPressed: () {
@@ -2778,12 +2756,12 @@ class _PlanNameDialog extends StatelessWidget {
             if (name.isEmpty) {
               ScaffoldMessenger.of(
                 context,
-              ).showSnackBar(const SnackBar(content: Text('方案名称不能为空')));
+              ).showSnackBar(SnackBar(content: Text('plan_name_empty'.tr)));
               return;
             }
             Navigator.of(context).pop(name);
           },
-          child: const Text('保存'),
+          child: Text('save'.tr),
         ),
       ],
     );

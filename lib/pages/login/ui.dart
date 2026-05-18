@@ -2,6 +2,7 @@
 //
 // 用户在这里输入账号密码并勾选协议；当前版本点击登录后进入主页面。
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:infibo_app/constants/assets.dart';
 import 'package:infibo_app/pages/login/logic.dart';
 import 'package:infibo_app/constants/color.dart';
@@ -129,10 +130,10 @@ class _LoginPageState extends State<LoginPage> {
             style: const TextStyle(color: Colors.white, fontSize: 18),
             textAlignVertical: TextAlignVertical.center,
             //输入框装饰
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               isCollapsed: true,
-              hintText: '输入手机号',
-              hintStyle: TextStyle(
+              hintText: 'login_phone_hint'.tr,
+              hintStyle: const TextStyle(
                 color: Color.fromARGB(255, 129, 133, 145),
                 fontSize: 18,
               ),
@@ -187,10 +188,10 @@ class _LoginPageState extends State<LoginPage> {
             style: const TextStyle(color: Colors.white, fontSize: 18),
             textAlignVertical: TextAlignVertical.center,
             //输入框装饰
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               isCollapsed: true,
-              hintText: '输入密码',
-              hintStyle: TextStyle(
+              hintText: 'login_password_hint'.tr,
+              hintStyle: const TextStyle(
                 color: Color.fromARGB(255, 129, 133, 145),
                 fontSize: 18,
               ),
@@ -218,8 +219,8 @@ class _LoginPageState extends State<LoginPage> {
             minimumSize: Size.zero,
             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           ),
-          child: const Text(
-            '忘记密码?',
+          child: Text(
+            'forgot_password'.tr,
             style: TextStyle(color: Color(0xFFC9CBD2), fontSize: 17),
           ),
         ),
@@ -265,8 +266,8 @@ class _LoginPageState extends State<LoginPage> {
               minimumSize: Size.zero,
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
-            child: const Text(
-              '登录',
+            child: Text(
+              'login'.tr,
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
             ),
           ),
@@ -279,8 +280,8 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildRegisterButton() {
     return TextButton(
       onPressed: () {},
-      child: const Text(
-        '注册',
+      child: Text(
+        'register'.tr,
         style: TextStyle(
           color: Color(0xFFD9DAE0),
           fontSize: 20,
@@ -322,18 +323,18 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
         ),
-        const Flexible(
+        Flexible(
           child: Text.rich(
             TextSpan(
-              text: '我已阅读并同意 ',
+              text: 'agree_prefix'.tr,
               children: [
                 TextSpan(
-                  text: '《用户协议》',
+                  text: 'user_agreement'.tr,
                   style: TextStyle(color: Color(0xFF1464DF)),
                 ),
-                TextSpan(text: ' 和 '),
+                TextSpan(text: 'and'.tr),
                 TextSpan(
-                  text: '《隐私政策》',
+                  text: 'privacy_policy'.tr,
                   style: TextStyle(color: Color(0xFF1464DF)),
                 ),
               ],

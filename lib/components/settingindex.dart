@@ -89,12 +89,12 @@ class AppTopHeader extends StatelessWidget {
           width: 108,
           height: 48,
           onTap: onUserTap,
-          child: const Positioned(
+          child: Positioned(
             left: 50,
             top: 13,
             child: Text(
-              '管理员',
-              style: TextStyle(
+              'administrator'.tr,
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,

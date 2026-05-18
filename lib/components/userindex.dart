@@ -1,7 +1,3 @@
-// 公共组件集合。
-//
-// 这里放多个页面都会用到的顶部 Header、返回主页按钮、阴影文字等通用 UI 组件。
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:infibo_app/components/index.dart';
@@ -9,36 +5,22 @@ import 'package:infibo_app/components/logic.dart';
 import 'package:infibo_app/constants/assets.dart';
 import 'package:infibo_app/constants/color.dart';
 
-// 公共页头时间控制器，全局只保留一份时钟。
-
-// 带公共页头的基础页面。
 class AppUsersHeaderPage extends StatelessWidget {
   const AppUsersHeaderPage({
     super.key,
     this.children = const [],
-    this.onAddTap, //用户弹窗
-    this.onSettingTap, //设置按钮
-    this.onUserTap, //用户区域
+    this.onAddTap,
+    this.onSettingTap,
+    this.onUserTap,
     this.enableLogoBack = true,
     this.resizeToAvoidBottomInset = true,
   });
 
-  // 页面主体内容，通常传入 Positioned 组件。
   final List<Widget> children;
-
-  // 点击顶部添加按钮。
   final VoidCallback? onAddTap;
-
-  // 点击顶部设置按钮。
   final VoidCallback? onSettingTap;
-
-  // 点击顶部用户区域。
   final VoidCallback? onUserTap;
-
-  // 是否允许点击logo返回主页，主页本身不需要返回自己。
   final bool enableLogoBack;
-
-  // 键盘弹出时是否压缩页面高度。
   final bool resizeToAvoidBottomInset;
 
   @override
@@ -74,7 +56,6 @@ class AppUsersHeaderPage extends StatelessWidget {
   }
 }
 
-// 页面顶部公共表头
 class AppTopHeader extends StatelessWidget {
   const AppTopHeader({
     super.key,
@@ -84,16 +65,9 @@ class AppTopHeader extends StatelessWidget {
     this.onUserTap,
   });
 
-  // 点击品牌logo。
   final VoidCallback? onLogoTap;
-
-  // 点击添加按钮
   final VoidCallback? onAddTap;
-
-  // 点击设置按钮
   final VoidCallback? onSettingTap;
-
-  // 点击用户区域
   final VoidCallback? onUserTap;
 
   @override
@@ -111,12 +85,12 @@ class AppTopHeader extends StatelessWidget {
           width: 108,
           height: 48,
           onTap: onUserTap,
-          child: const Positioned(
+          child: Positioned(
             left: 50,
             top: 13,
             child: Text(
-              '管理员',
-              style: TextStyle(
+              'administrator'.tr,
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
@@ -137,12 +111,12 @@ class AppTopHeader extends StatelessWidget {
           width: 90,
           height: 48,
           onTap: AppComponentLogic.openSettingPage,
-          child: const Positioned(
+          child: Positioned(
             left: 41,
             top: 13,
             child: Text(
-              '设置',
-              style: TextStyle(
+              'settings'.tr,
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
@@ -154,7 +128,6 @@ class AppTopHeader extends StatelessWidget {
     );
   }
 
-  // 构建品牌logo
   Widget _buildLogo() {
     final Widget logo = Image.asset(
       Assets.mainLogo,
@@ -162,11 +135,7 @@ class AppTopHeader extends StatelessWidget {
       height: 44,
       fit: BoxFit.contain,
     );
-
-    if (onLogoTap == null) {
-      return logo;
-    }
-
+    if (onLogoTap == null) return logo;
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onLogoTap,
@@ -174,7 +143,6 @@ class AppTopHeader extends StatelessWidget {
     );
   }
 
-  // 构建时间日期
   Widget _buildTimeBlock(String timeText, String dateText) {
     return SizedBox(
       width: 76,
@@ -204,7 +172,6 @@ class AppTopHeader extends StatelessWidget {
     );
   }
 
-  // 构建图片按钮
   Widget _buildImageButton({
     required String asset,
     required double width,
@@ -223,7 +190,6 @@ class AppTopHeader extends StatelessWidget {
         ],
       ),
     );
-
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onTap,

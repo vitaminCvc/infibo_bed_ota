@@ -4,6 +4,7 @@
 // 两条进度条。每个区域都有独立的百分比状态；点击确认后把本页设置保存到
 // HifemSettingController，返回自定义方案页后再次进入仍能继续修改。
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:infibo_app/components/index.dart';
 import 'package:infibo_app/constants/assets.dart';
 import 'package:infibo_app/pages/customized/customizedPage/hifem/logic.dart';
@@ -100,12 +101,12 @@ class _HifemExpandPageState extends State<HifemExpandPage> {
                             onTap: () => popExpandPage(context),
                           ),
                         ),
-                        const Positioned(
+                        Positioned(
                           left: 0,
                           right: 0,
                           top: 5,
                           child: Text(
-                            'HIFEM设置',
+                            'hifem_setting'.tr,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: Colors.white,
@@ -179,7 +180,7 @@ class _HifemExpandPageState extends State<HifemExpandPage> {
     return Column(
       children: [
         _HifemProgressRow(
-          label: '射频',
+          label: 'rf'.tr,
           value: setting.rfPercent,
           enabled: hasRegion,
           icon: Assets.hifemRfIcon,
@@ -461,7 +462,7 @@ class _HifemConfirmButton extends StatelessWidget {
               ),
             ),
           Text(
-            '确认',
+            'confirm'.tr,
             style: TextStyle(
               color: enabled ? Colors.white : const Color(0xFF8F949E),
               fontSize: 20,

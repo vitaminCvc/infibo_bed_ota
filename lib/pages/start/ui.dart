@@ -281,8 +281,8 @@ class _StartPageState extends State<StartPage> {
         : setting.strength850.toString();
 
     final String modeText = setting?.mode == RedLightWorkMode.pulse
-        ? '脉冲'
-        : '连续';
+        ? 'pulse'.tr
+        : 'continuous'.tr;
 
     final String modeAsset = setting?.mode == RedLightWorkMode.pulse
         ? Assets.redLightPulseWave
@@ -295,19 +295,19 @@ class _StartPageState extends State<StartPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              '红光',
+            Text(
+              'red_light'.tr,
               style: TextStyle(color: Colors.white, fontSize: 20),
             ),
 
             const SizedBox(height: 24),
 
-            const Row(
+            Row(
               children: [
                 SizedBox(
                   width: 100,
                   child: Text(
-                    '波长',
+                    'wavelength'.tr,
                     style: TextStyle(color: Color(0xffb9bcc6), fontSize: 17),
                   ),
                 ),
@@ -315,7 +315,7 @@ class _StartPageState extends State<StartPage> {
                 SizedBox(
                   width: 100,
                   child: Text(
-                    '强度',
+                    'intensity'.tr,
                     style: TextStyle(color: Color(0xffb9bcc6), fontSize: 17),
                   ),
                 ),
@@ -328,12 +328,12 @@ class _StartPageState extends State<StartPage> {
 
             const SizedBox(height: 8),
 
-            const Row(
+            Row(
               children: [
                 SizedBox(
                   width: 100,
                   child: Text(
-                    '波长',
+                    'wavelength'.tr,
                     style: TextStyle(color: Color(0xffb9bcc6), fontSize: 17),
                   ),
                 ),
@@ -341,7 +341,7 @@ class _StartPageState extends State<StartPage> {
                 SizedBox(
                   width: 100,
                   child: Text(
-                    '强度',
+                    'intensity'.tr,
                     style: TextStyle(color: Color(0xffb9bcc6), fontSize: 17),
                   ),
                 ),
@@ -428,12 +428,12 @@ class _StartPageState extends State<StartPage> {
               style: TextStyle(color: Colors.white, fontSize: 20),
             ),
             const SizedBox(height: 24),
-            const Row(
+            Row(
               children: [
                 SizedBox(
                   width: 100,
                   child: Text(
-                    '频率',
+                    'frequency'.tr,
                     style: TextStyle(color: Color(0xffb9bcc6), fontSize: 17),
                   ),
                 ),
@@ -441,7 +441,7 @@ class _StartPageState extends State<StartPage> {
                 SizedBox(
                   width: 100,
                   child: Text(
-                    '强度',
+                    'intensity'.tr,
                     style: TextStyle(color: Color(0xffb9bcc6), fontSize: 17),
                   ),
                 ),
@@ -504,12 +504,12 @@ class _StartPageState extends State<StartPage> {
               style: TextStyle(color: Colors.white, fontSize: 20),
             ),
             const SizedBox(height: 24),
-            const Row(
+            Row(
               children: [
                 SizedBox(
                   width: 100,
                   child: Text(
-                    '频率',
+                    'frequency'.tr,
                     style: TextStyle(color: Color(0xffb9bcc6), fontSize: 17),
                   ),
                 ),
@@ -517,7 +517,7 @@ class _StartPageState extends State<StartPage> {
                 SizedBox(
                   width: 100,
                   child: Text(
-                    '强度',
+                    'intensity'.tr,
                     style: TextStyle(color: Color(0xffb9bcc6), fontSize: 17),
                   ),
                 ),
@@ -569,17 +569,17 @@ class _StartPageState extends State<StartPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              '分子氢',
+            Text(
+              'hydrogen_molecule'.tr,
               style: TextStyle(color: Colors.white, fontSize: 20),
             ),
             const SizedBox(height: 24),
-            const Row(
+            Row(
               children: [
                 SizedBox(
                   width: 100,
                   child: Text(
-                    '氢气浓度',
+                    'hydrogen_concentration'.tr,
                     style: TextStyle(color: Color(0xffb9bcc6), fontSize: 17),
                   ),
                 ),
@@ -587,7 +587,7 @@ class _StartPageState extends State<StartPage> {
                 SizedBox(
                   width: 100,
                   child: Text(
-                    '流量',
+                    'flow'.tr,
                     style: TextStyle(color: Color(0xffb9bcc6), fontSize: 17),
                   ),
                 ),
@@ -730,13 +730,13 @@ class _StartPageState extends State<StartPage> {
     final List<_ExpandStatusItem> items = [
       _ExpandStatusItem(
         id: 'chakra',
-        label: '脉轮',
+        label: 'chakra'.tr,
         iconOn: Assets.startExpandIconOn,
         iconOff: Assets.startExpandIconOff,
       ),
       _ExpandStatusItem(
         id: 'terahertz',
-        label: '太赫兹',
+        label: 'terahertz'.tr,
         iconOn: Assets.startTerahertzIconOn,
         iconOff: Assets.startTerahertzIconOff,
       ),
@@ -748,7 +748,7 @@ class _StartPageState extends State<StartPage> {
       ),
       _ExpandStatusItem(
         id: 'fragrance',
-        label: '香氛',
+        label: 'fragrance'.tr,
         iconOn: Assets.startFragranceIconOn,
         iconOff: Assets.startFragranceIconOff,
       ),
@@ -812,7 +812,7 @@ class _StartPageState extends State<StartPage> {
             const SizedBox(width: 5),
           ],
           Text(
-            running ? '正在运行' : '等待运行',
+            running ? 'running'.tr : 'waiting'.tr,
             style: TextStyle(
               color: statusColor,
               fontSize: 13,
@@ -1005,7 +1005,7 @@ class _StartPageState extends State<StartPage> {
     } catch (e) {
       debugPrint('start command failed: $e');
       if (!mounted) return;
-      _showError('参数下发失败：$e');
+      _showError('${'error_send_params_failed'.tr}$e');
     } finally {
       if (mounted) setState(() => _isCommanding = false);
     }
@@ -1035,7 +1035,7 @@ class _StartPageState extends State<StartPage> {
     } catch (e) {
       debugPrint('pause command failed: $e');
       if (!mounted) return;
-      _showError('暂停失败：$e');
+      _showError('${'error_pause_failed'.tr}$e');
     } finally {
       if (mounted) setState(() => _isCommanding = false);
     }
@@ -1065,7 +1065,7 @@ class _StartPageState extends State<StartPage> {
     } catch (e) {
       debugPrint('resume command failed: $e');
       if (!mounted) return;
-      _showError('继续失败：$e');
+      _showError('${'error_resume_failed'.tr}$e');
     } finally {
       if (mounted) setState(() => _isCommanding = false);
     }
@@ -1099,7 +1099,7 @@ class _StartPageState extends State<StartPage> {
     } catch (e) {
       debugPrint('stop command failed: $e');
       if (!mounted) return;
-      _showError('停止失败：$e');
+      _showError('${'error_stop_failed'.tr}$e');
     } finally {
       if (mounted) setState(() => _isCommanding = false);
     }
@@ -1153,33 +1153,17 @@ class _StartPageState extends State<StartPage> {
       final PemfPhaseSetting? setting = _logic.activePemfSetting;
       if (setting != null) {
         final int waveformNum = setting.waveformNumber;
-        debugPrint('PEMF TX address=0x00C7 value=1');
-        debugPrint('PEMF TX address=0x00CE value=${setting.frequency}');
-        debugPrint('PEMF TX address=0x00D0 value=${setting.intensity}');
-        debugPrint('PEMF TX address=0x00D1 value=$waveformNum');
-        debugPrint('PEMF TX address=0x00CA value=1');
-        addModuleCommands('pemf', [
-          const ModbusWriteCommand(
-            address: ModbusRtuService.pemfTotalModeAddress,
-            value: 1,
+        debugPrint(
+          'PEMF build V2.0: 0x00C0 + 0x10(0x00C3~0x00C9) + 0x00D0 + 0x00D1',
+        );
+        addModuleCommands(
+          'pemf',
+          modbusService.buildPemfCommands(
+            frequencyHz: setting.frequency,
+            intensity: setting.intensity,
+            waveform: waveformNum,
           ),
-          ModbusWriteCommand(
-            address: ModbusRtuService.pemfTotalFrequencyAddress,
-            value: setting.frequency,
-          ),
-          ModbusWriteCommand(
-            address: ModbusRtuService.pemfTotalIntensityAddress,
-            value: setting.intensity,
-          ),
-          ModbusWriteCommand(
-            address: ModbusRtuService.pemfTotalWaveformAddress,
-            value: waveformNum,
-          ),
-          const ModbusWriteCommand(
-            address: ModbusRtuService.pemfTotalCommandAddress,
-            value: 1,
-          ),
-        ]);
+        );
       }
     }
 
@@ -1190,14 +1174,8 @@ class _StartPageState extends State<StartPage> {
       final HydrogenPhaseSetting? setting = _logic.activeHydrogenSetting;
       if (setting != null) {
         final List<ModbusWriteCommand> hydrogenCommands = modbusService
-            .buildHydrogenParamCommands(concentration: setting.concentration);
-        addModuleCommands('hydrogen', [
-          ...hydrogenCommands,
-          const ModbusWriteCommand(
-            address: ModbusRtuService.hydrogenCommandAddress,
-            value: 1,
-          ),
-        ]);
+            .buildHydrogenCommands(concentration: setting.concentration);
+        addModuleCommands('hydrogen', hydrogenCommands);
         debugPrint('Hydrogen flow polling start');
       }
     } else {
@@ -1212,18 +1190,12 @@ class _StartPageState extends State<StartPage> {
       if (setting != null) {
         final int musicIndex = _resolveVatMusicIndex(setting);
         final List<ModbusWriteCommand> vatCommands = modbusService
-            .buildVatParamCommands(
+            .buildVatCommands(
               frequency: setting.frequency,
               intensity: setting.intensity,
               musicIndex: musicIndex,
             );
-        addModuleCommands('vat', [
-          ...vatCommands,
-          const ModbusWriteCommand(
-            address: ModbusRtuService.vatCommandAddress,
-            value: 1,
-          ),
-        ]);
+        addModuleCommands('vat', vatCommands);
       }
     }
 
@@ -1322,7 +1294,7 @@ class _StartPageState extends State<StartPage> {
           ModbusRtuService.redLight850EnableAddress,
         };
       case 'pemf':
-        return const <int>{ModbusRtuService.pemfTotalModeAddress};
+        return const <int>{ModbusRtuService.pemfTotalEnableAddress};
       case 'hydrogen':
         return const <int>{ModbusRtuService.hydrogenEnableAddress};
       case 'vat':
@@ -1387,7 +1359,6 @@ class _StartPageState extends State<StartPage> {
   List<ModbusWriteCommand> _buildChangedModuleParamCommands(
     Set<String> modules,
   ) {
-    // 对 modulesToKeep 中参数有变化的模块，按“地址值变化”做最小增量下发。
     final List<ModbusWriteCommand> commands = <ModbusWriteCommand>[];
 
     for (final String module in modules) {
@@ -1397,11 +1368,54 @@ class _StartPageState extends State<StartPage> {
         moduleFilter: <String>{module},
         includeStartCommands: false,
       );
+      final Map<int, int> currentValues = <int, int>{
+        for (final ModbusWriteCommand command in currentCommands)
+          command.address: command.value,
+      };
+
+      if (module == 'red') {
+        final Set<int> allAddresses = <int>{
+          ...previousValues.keys,
+          ...currentValues.keys,
+        };
+        final List<int> sortedAddresses = allAddresses.toList()..sort();
+        debugPrint('[red][diff] ===== node switch diff begin =====');
+        for (final int address in sortedAddresses) {
+          final int? before = previousValues[address];
+          final int? after = currentValues[address];
+          final bool changed = before != after;
+          debugPrint(
+            '[red][diff] addr=0x${address.toRadixString(16).padLeft(4, '0').toUpperCase()} '
+            'before=${before ?? 'null'} -> after=${after ?? 'null'} '
+            '(${changed ? 'changed' : 'unchanged'})',
+          );
+        }
+      }
 
       for (final ModbusWriteCommand command in currentCommands) {
-        // 同地址值未变化则不重复下发。
-        if (previousValues[command.address] == command.value) continue;
+        if (previousValues[command.address] == command.value) {
+          if (module == 'red') {
+            debugPrint(
+              '[red][send-skip] addr=0x${command.address.toRadixString(16).padLeft(4, '0').toUpperCase()} '
+              'value=${command.value} (unchanged)',
+            );
+          }
+          continue;
+        }
+
+        if (module == 'red') {
+          final int? before = previousValues[command.address];
+          debugPrint(
+            '[red][send] addr=0x${command.address.toRadixString(16).padLeft(4, '0').toUpperCase()} '
+            'before=${before ?? 'null'} -> after=${command.value}',
+          );
+        }
+
         commands.add(command);
+      }
+
+      if (module == 'red') {
+        debugPrint('[red][diff] ===== node switch diff end =====');
       }
     }
 
@@ -1554,9 +1568,9 @@ class _StartPageState extends State<StartPage> {
             borderRadius: BorderRadius.circular(16),
             side: const BorderSide(color: Color(0xFF535B6A)),
           ),
-          title: const Text(
-            '治疗完成',
-            style: TextStyle(color: Colors.white, fontSize: 22),
+          title: Text(
+            'therapy_completed'.tr,
+            style: const TextStyle(color: Colors.white, fontSize: 22),
           ),
           content: SizedBox(
             width: 360,
@@ -1564,15 +1578,18 @@ class _StartPageState extends State<StartPage> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _completionRow('使用者', args.userName),
+                _completionRow('user'.tr, args.userName),
                 _completionRow(
-                  '本次使用',
+                  'session_duration'.tr,
                   StartLogic.formatDurationText(actualSeconds),
                 ),
                 const SizedBox(height: 12),
-                const Text(
-                  '模块时长',
-                  style: TextStyle(color: Color(0xFFB9BCC6), fontSize: 15),
+                Text(
+                  'module_duration'.tr,
+                  style: const TextStyle(
+                    color: Color(0xFFB9BCC6),
+                    fontSize: 15,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 ..._moduleDurationRows(moduleSeconds),
@@ -1582,7 +1599,7 @@ class _StartPageState extends State<StartPage> {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('确认'),
+              child: Text('confirm'.tr),
             ),
           ],
         );
@@ -1621,10 +1638,10 @@ class _StartPageState extends State<StartPage> {
         .where((entry) => entry.value > 0)
         .toList();
     if (entries.isEmpty) {
-      return const [
+      return [
         Text(
-          '暂无模块运行记录',
-          style: TextStyle(color: Color(0xFFB9BCC6), fontSize: 14),
+          'no_module_record'.tr,
+          style: const TextStyle(color: Color(0xFFB9BCC6), fontSize: 14),
         ),
       ];
     }
@@ -1694,7 +1711,7 @@ class _StartPageState extends State<StartPage> {
       return currentSignatures[module] != _runningModuleSignatures[module];
     }).toSet();
 
-    // 1. Stop removed modules
+    // 1. 停止已移除的模块
     for (final String module in modulesToStop) {
       debugPrint('stop removed module: $module');
       switch (module) {
@@ -1737,7 +1754,7 @@ class _StartPageState extends State<StartPage> {
               value: 0,
             ),
             const ModbusWriteCommand(
-              address: ModbusRtuService.pemfTotalModeAddress,
+              address: ModbusRtuService.pemfTotalEnableAddress,
               value: 0,
             ),
           ]);
@@ -1856,7 +1873,7 @@ class _StartPageState extends State<StartPage> {
       }
     }
 
-    // 2. Only start newly added modules; kept modules are left running.
+    // 2. 仅启动新增模块；保留的模块继续运行。
     for (final String module in modulesToStart) {
       debugPrint('start new module: $module');
     }
@@ -1866,9 +1883,9 @@ class _StartPageState extends State<StartPage> {
     for (final String module in modulesToUpdate) {
       debugPrint('update kept module params without restart: $module');
     }
-    // Start: 发完整启动序列（使能/参数/启动）。
+    // 启动：发完整启动序列（使能/参数/启动）。
     commands.addAll(_buildPhaseCommands(moduleFilter: modulesToStart));
-    // Keep+Update: 只发变化参数，不发启动/使能。
+    // 保持+更新：只发变化参数，不发启动/使能。
     commands.addAll(_buildChangedModuleParamCommands(modulesToUpdate));
 
     debugPrint('skip system restart because already running');
@@ -2015,11 +2032,14 @@ class _StartArguments {
   factory _StartArguments.from(Object? args) {
     if (args is Map) {
       return _StartArguments(
-        modeTitle: args['modeTitle'] as String? ?? '深度放松',
+        modeTitle: args['modeTitle'] as String? ?? 'default_mode_title'.tr,
         userName: _readName(args['user']),
       );
     }
-    return const _StartArguments(modeTitle: '深度放松', userName: '未选择用户');
+    return _StartArguments(
+      modeTitle: 'default_mode_title'.tr,
+      userName: 'no_user_selected'.tr,
+    );
   }
 
   static String _readName(Object? user) {
@@ -2033,10 +2053,10 @@ class _StartArguments {
       final Object? value = dynamicUser?.name;
       if (value is String && value.trim().isNotEmpty) return value.trim();
     } catch (_) {
-      // Ignore unsupported user argument shapes.
+      // 忽略不支持的用户参数格式。
     }
 
-    return '未选择用户';
+    return 'no_user_selected'.tr;
   }
 }
 

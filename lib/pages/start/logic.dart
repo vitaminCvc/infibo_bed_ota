@@ -729,7 +729,7 @@ class HifemPhaseSetting {
       }
     }
 
-    // Protocol has one forehead channel, while UI has left/right forehead areas.
+    // 协议只有一个前额通道，而界面有左右前额区域。
     return HifemPhaseSetting(
       foreheadRf: foreheadLeftRf > foreheadRightRf
           ? foreheadLeftRf

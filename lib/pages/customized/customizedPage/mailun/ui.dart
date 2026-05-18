@@ -5,6 +5,7 @@
 // 上级页面再负责把这些参数保存到方案数据里。
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:infibo_app/components/index.dart';
 import 'package:infibo_app/constants/assets.dart';
 import 'package:infibo_app/pages/customized/customizedPage/setting_page_helpers.dart';
@@ -118,12 +119,12 @@ class _ChakraExpandPageState extends State<ChakraExpandPage> {
                             onTap: () => _handleBack(context),
                           ),
                         ),
-                        const Positioned(
+                        Positioned(
                           left: 0,
                           right: 0,
                           top: 5,
                           child: Text(
-                            '脉轮设置',
+                            'chakra_setting'.tr,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: Colors.white,
@@ -204,7 +205,7 @@ class _ChakraExpandPageState extends State<ChakraExpandPage> {
             height: 56,
           ),
           Text(
-            '确认',
+            'confirm'.tr,
             style: TextStyle(
               color: canConfirm ? Colors.white : const Color(0xFF9EA2AB),
               fontSize: 20,
@@ -221,11 +222,14 @@ class _ChakraExpandPageState extends State<ChakraExpandPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text('模式选择', style: TextStyle(color: Colors.white, fontSize: 16)),
+        Text(
+          'mode_select'.tr,
+          style: const TextStyle(color: Colors.white, fontSize: 16),
+        ),
         const SizedBox(width: 18),
-        _buildModeOption(label: '轮转', value: 'rotation'),
+        _buildModeOption(label: 'rotation'.tr, value: 'rotation'),
         const SizedBox(width: 22),
-        _buildModeOption(label: '独立', value: 'independent'),
+        _buildModeOption(label: 'independent'.tr, value: 'independent'),
       ],
     );
   }
@@ -401,7 +405,7 @@ class _ChakraLine extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            data.title,
+            data.title.tr,
             style: const TextStyle(
               color: Colors.white,
               fontSize: 20,
@@ -410,7 +414,7 @@ class _ChakraLine extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            data.subtitle,
+            data.subtitle.tr,
             style: const TextStyle(
               color: Color(0xFFB8BBC5),
               fontSize: 13,
@@ -434,11 +438,11 @@ class _ChakraLine extends StatelessWidget {
       child: Stack(
         children: [
           Positioned.fill(child: Image.asset(Assets.chakraIntensityPanel)),
-          const Positioned(
+          Positioned(
             left: 31,
             top: 28,
             child: Text(
-              '强度',
+              'intensity'.tr,
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 17,
@@ -504,50 +508,50 @@ class _ChakraData {
 const List<_ChakraData> _chakras = [
   _ChakraData(
     id: 'crown',
-    title: '顶轮',
-    subtitle: '(松果体)',
+    title: 'crown_chakra',
+    subtitle: 'crown_sub',
     icon: Assets.chakraCrown,
     selectedIcon: Assets.chakraCrownSelected,
   ),
   _ChakraData(
     id: 'third_eye',
-    title: '眉心轮',
-    subtitle: '(脑垂体)',
+    title: 'third_eye_chakra',
+    subtitle: 'third_eye_sub',
     icon: Assets.chakraThirdEye,
     selectedIcon: Assets.chakraThirdEyeSelected,
   ),
   _ChakraData(
     id: 'throat',
-    title: '喉轮',
-    subtitle: '(甲状腺)',
+    title: 'throat_chakra',
+    subtitle: 'throat_sub',
     icon: Assets.chakraThroat,
     selectedIcon: Assets.chakraThroatSelected,
   ),
   _ChakraData(
     id: 'heart',
-    title: '心轮',
-    subtitle: '(胸腺)',
+    title: 'heart_chakra',
+    subtitle: 'heart_sub',
     icon: Assets.chakraHeart,
     selectedIcon: Assets.chakraHeartSelected,
   ),
   _ChakraData(
     id: 'solar_plexus',
-    title: '太阳神轮',
-    subtitle: '(肾)',
+    title: 'solar_plexus_chakra',
+    subtitle: 'solar_plexus_sub',
     icon: Assets.chakraSolarPlexus,
     selectedIcon: Assets.chakraSolarPlexusSelected,
   ),
   _ChakraData(
     id: 'sacral',
-    title: '脐轮',
-    subtitle: '(肝、肾、脾)',
+    title: 'sacral_chakra',
+    subtitle: 'sacral_sub',
     icon: Assets.chakraSacral,
     selectedIcon: Assets.chakraSacralSelected,
   ),
   _ChakraData(
     id: 'root',
-    title: '海底轮',
-    subtitle: '(生殖腺)',
+    title: 'root_chakra',
+    subtitle: 'root_sub',
     icon: Assets.chakraRoot,
     selectedIcon: Assets.chakraRootSelected,
   ),

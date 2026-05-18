@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:infibo_app/components/settingindex.dart';
 import 'package:infibo_app/pages/customized/customizedPage/setting_page_helpers.dart';
 
@@ -17,23 +18,52 @@ class _SettingWidgetState extends State<SettingWidget> {
 
   // 左侧菜单数据源：统一在这里维护标题和图标，避免在 UI 里写死重复内容。
   static const List<_SettingMenuItemData> _menuItems = [
-    _SettingMenuItemData(title: '语言设置', icon: Icons.public),
-    _SettingMenuItemData(title: '日期和时间', icon: Icons.schedule),
-    _SettingMenuItemData(title: '设备信息', icon: Icons.layers_outlined),
-    _SettingMenuItemData(title: '调试模式', icon: Icons.device_hub_outlined),
-    _SettingMenuItemData(title: '历史记录', icon: Icons.event_note_outlined),
-    _SettingMenuItemData(title: '用户管理', icon: Icons.person_outline),
+    _SettingMenuItemData(titleKey: 'language_setting', icon: Icons.public),
+    _SettingMenuItemData(titleKey: 'date_time', icon: Icons.schedule),
+    _SettingMenuItemData(titleKey: 'device_info', icon: Icons.layers_outlined),
+    _SettingMenuItemData(
+      titleKey: 'debug_mode',
+      icon: Icons.device_hub_outlined,
+    ),
+    _SettingMenuItemData(
+      titleKey: 'history_record',
+      icon: Icons.event_note_outlined,
+    ),
+    _SettingMenuItemData(
+      titleKey: 'user_management',
+      icon: Icons.person_outline,
+    ),
   ];
 
   static const List<_LanguageOptionData> _languageOptions = [
-    _LanguageOptionData(flag: '🇨🇳', name: '中文'), //中国
-    _LanguageOptionData(flag: '🇺🇸', name: 'English'), //英语
-    _LanguageOptionData(flag: '🇫🇷', name: 'Français'), //法语
-    _LanguageOptionData(flag: '🇪🇸', name: 'Español'), //西班牙语
-    _LanguageOptionData(flag: '🇵🇱', name: 'język polski'), //波兰语
-    _LanguageOptionData(flag: '🇰🇷', name: '한국어'), //韩语
-    _LanguageOptionData(flag: '🇷🇺', name: 'Русский'), //俄语
+    _LanguageOptionData(
+      flag: '🇨🇳',
+      name: '中文',
+      locale: Locale('zh', 'CN'),
+      enabled: true,
+    ),
+    _LanguageOptionData(
+      flag: '🇺🇸',
+      name: 'English',
+      locale: Locale('en', 'US'),
+      enabled: true,
+    ),
+    _LanguageOptionData(flag: '🇫🇷', name: 'Français'),
+    _LanguageOptionData(flag: '🇪🇸', name: 'Español'),
+    _LanguageOptionData(flag: '🇵🇱', name: 'język polski'),
+    _LanguageOptionData(flag: '🇰🇷', name: '한국어'),
+    _LanguageOptionData(flag: '🇷🇺', name: 'Русский'),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    final Locale? current = Get.locale;
+    final int matchedIndex = _languageOptions.indexWhere(
+      (option) => option.locale == current,
+    );
+    _selectedLanguageIndex = matchedIndex >= 0 ? matchedIndex : 0;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,8 +122,8 @@ class _SettingWidgetState extends State<SettingWidget> {
                   colors: [Color(0xFF2E323E), Color(0xFF242731)],
                 ),
               ),
-              child: const Text(
-                '设置菜单',
+              child: Text(
+                'setting_menu'.tr,
                 style: TextStyle(color: Colors.white, fontSize: 24),
               ),
             ),
@@ -152,7 +182,7 @@ class _SettingWidgetState extends State<SettingWidget> {
             ),
             const SizedBox(width: 18),
             Text(
-              item.title,
+              item.titleKey.tr,
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 18,
@@ -168,7 +198,7 @@ class _SettingWidgetState extends State<SettingWidget> {
   // 构建右侧面板标题
   Widget _buildRightPanelHeader() {
     // 右侧标题跟随左侧当前选中项，语言设置页显示专属内容。
-    final String pageTitle = _menuItems[_selectedMenuIndex].title;
+    final String pageTitle = _menuItems[_selectedMenuIndex].titleKey.tr;
     return Container(
       height: 704,
       decoration: BoxDecoration(
@@ -200,8 +230,8 @@ class _SettingWidgetState extends State<SettingWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const Text(
-          '语言切换',
+        Text(
+          'language_switch'.tr,
           style: TextStyle(
             color: Colors.white,
             fontSize: 24,
@@ -232,7 +262,7 @@ class _SettingWidgetState extends State<SettingWidget> {
         SizedBox(
           height: 40,
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: _confirmLanguageChange,
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF2E84FF),
               foregroundColor: Colors.white,
@@ -240,8 +270,8 @@ class _SettingWidgetState extends State<SettingWidget> {
                 borderRadius: BorderRadius.circular(20),
               ),
             ),
-            child: const Text(
-              '保存更改',
+            child: Text(
+              'save_changes'.tr,
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
             ),
           ),
@@ -301,18 +331,38 @@ class _SettingWidgetState extends State<SettingWidget> {
       ),
     );
   }
+
+  void _confirmLanguageChange() {
+    final _LanguageOptionData option = _languageOptions[_selectedLanguageIndex];
+    final Locale? locale = option.locale;
+    if (!option.enabled || locale == null) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('unsupported_language'.tr)));
+      return;
+    }
+    Get.updateLocale(locale);
+    Get.offAllNamed('/main');
+  }
 }
 
 class _SettingMenuItemData {
-  const _SettingMenuItemData({required this.title, required this.icon});
+  const _SettingMenuItemData({required this.titleKey, required this.icon});
 
-  final String title;
+  final String titleKey;
   final IconData icon;
 }
 
 class _LanguageOptionData {
-  const _LanguageOptionData({required this.flag, required this.name});
+  const _LanguageOptionData({
+    required this.flag,
+    required this.name,
+    this.locale,
+    this.enabled = false,
+  });
 
   final String flag;
   final String name;
+  final Locale? locale;
+  final bool enabled;
 }

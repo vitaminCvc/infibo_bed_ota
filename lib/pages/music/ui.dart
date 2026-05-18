@@ -301,9 +301,9 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
 
     return Row(
       children: [
-        Expanded(child: _buildInputField('频率', _frequencyController)),
+        Expanded(child: _buildInputField('frequency'.tr, _frequencyController)),
         const SizedBox(width: 20),
-        Expanded(child: _buildInputField('强度', _intensityController)),
+        Expanded(child: _buildInputField('intensity'.tr, _intensityController)),
         const SizedBox(width: 20),
         SizedBox(
           width: 130,
@@ -322,7 +322,7 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            child: const Text('确认选择'),
+            child: Text('confirm_selection'.tr),
           ),
         ),
       ],
@@ -344,7 +344,7 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
           ),
           textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
-        child: const Text('确认选择'),
+        child: Text('confirm_selection'.tr),
       ),
     );
   }

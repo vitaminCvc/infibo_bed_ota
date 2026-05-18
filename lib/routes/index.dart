@@ -3,6 +3,7 @@
 // 这里集中注册所有页面路由；正式入口不会展示调试页，但保留 /debug/serial-test 隐藏路由便于现场排查串口。
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:infibo_app/translation/app_translations.dart';
 import 'package:infibo_app/pages/choseusers/ui.dart';
 import 'package:infibo_app/pages/customized/customizedPage/mailun/ui.dart';
 import 'package:infibo_app/pages/customized/customizedPage/ui.dart';
@@ -13,23 +14,6 @@ import 'package:infibo_app/pages/main/ui.dart';
 import 'package:infibo_app/pages/music/ui.dart';
 import 'package:infibo_app/pages/settingpage/ui.dart';
 import 'package:infibo_app/pages/start/ui.dart';
-
-//新增一个翻译类
-class AppTranslations extends Translations {
-  @override
-  Map<String, Map<String, String>> get keys => {
-    'zh_CN': {
-      'setting_menu': '设置菜单',
-      'language_setting': '语言设置',
-      'save_changes': '保存更改',
-    },
-    'en_US': {
-      'setting_menu': 'Settings',
-      'language_setting': 'Language',
-      'save_changes': 'Save Changes',
-    },
-  };
-}
 
 const String _initialRoute = String.fromEnvironment(
   'INFIBO_INITIAL_ROUTE',
