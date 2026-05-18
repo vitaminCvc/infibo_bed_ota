@@ -9,6 +9,7 @@ import 'package:infibo_app/components/index.dart';
 import 'package:infibo_app/constants/assets.dart';
 import 'package:infibo_app/pages/customized/customizedPage/setting_page_helpers.dart';
 import 'package:infibo_app/pages/customized/customizedPage/xiangfen/logic.dart';
+import 'package:lottie/lottie.dart';
 
 class FragranceExpandResult {
   const FragranceExpandResult({required this.fragranceId});
@@ -30,14 +31,17 @@ class _FragranceExpandPageState extends State<FragranceExpandPage> {
   static const double _designHeight = 1088;
 
   late final FragranceSettingController _controller;
-  late String _selectedId;
+  String? _selectedId;
 
   @override
   void initState() {
     super.initState();
     _controller = FragranceSettingController.instance;
     _selectedId =
-        widget.initialSetting?.fragranceId ?? _controller.selectedFragranceId;
+        widget.initialSetting?.fragranceId ??
+        (_controller.selectedFragranceId.trim().isEmpty
+            ? null
+            : _controller.selectedFragranceId);
   }
 
   @override
@@ -91,9 +95,9 @@ class _FragranceExpandPageState extends State<FragranceExpandPage> {
                           ),
                         ),
                         Positioned(
-                          left: 38,
-                          top: 132,
-                          child: Image.asset(
+                          left: 28,
+                          top: 75,
+                          child: Lottie.asset(
                             Assets.fragranceDiffuser,
                             width: 725,
                             height: 846,
@@ -105,7 +109,7 @@ class _FragranceExpandPageState extends State<FragranceExpandPage> {
                           left: 45,
                           top: 1018,
                           child: AssetConfirmButton(
-                            enabled: true,
+                            enabled: _selectedId != null,
                             enabledAsset: Assets.fragranceConfirmEnabled,
                             disabledAsset: Assets.fragranceConfirmDisabled,
                             width: 711,
@@ -189,8 +193,9 @@ class _FragranceExpandPageState extends State<FragranceExpandPage> {
   }
 
   void _confirm(BuildContext pageContext) {
+    if (_selectedId == null) return;
     final FragranceExpandResult result = FragranceExpandResult(
-      fragranceId: _selectedId,
+      fragranceId: _selectedId!,
     );
 
     // 只有确认时才写入 controller；返回按钮只是退出页面，不改变上次保存值。

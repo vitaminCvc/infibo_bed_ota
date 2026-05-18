@@ -19,7 +19,7 @@ class ChakraExpandResult {
 
   final Map<String, String> strengths;
 
-  /// 脉轮模块模式：rotation=轮转，independent=独立，对应 0x02BD。
+  /// 脉轮模块模式：rotation=轮转，independent=独立，对应 0x0201。
   final String mode;
 }
 

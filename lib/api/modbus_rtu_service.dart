@@ -8,9 +8,13 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_libserialport/flutter_libserialport.dart';
+import 'package:infibo_app/api/chakra_modbus.dart';
+import 'package:infibo_app/api/fragrance_modbus.dart';
+import 'package:infibo_app/api/hifem_modbus.dart';
 import 'package:infibo_app/api/hydrogen_modbus.dart';
 import 'package:infibo_app/api/pemf_modbus.dart';
 import 'package:infibo_app/api/red_light_modbus.dart';
+import 'package:infibo_app/api/terahertz_modbus.dart';
 import 'package:infibo_app/api/vat_modbus.dart';
 import 'package:infibo_app/services/android_serial_port_service.dart';
 
@@ -122,37 +126,49 @@ class ModbusRtuService {
   static const int hydrogenTargetFlowAddress = 0x01C3;
   static const int hydrogenAutoCleanAddress = 0x01C4;
   static const int hydrogenApplyAddress = HydrogenModbus.applyAddress;
-  static const int chakraEnableAddress = 0x02BB;
-  static const int chakraModeAddress = 0x02BD;
-  static const int chakraCommandAddress = 0x02BE;
+  static const int chakraEnableAddress = ChakraModbus.enableAddress;
+  static const int chakraModeAddress = ChakraModbus.modeAddress;
+  static const int chakraCommandAddress = ChakraModbus.commandAddress;
+  static const int chakraApplyAddress = ChakraModbus.applyAddress;
   static const Map<String, int> chakraStrengthAddressMap = <String, int>{
-    'crown': 0x02C1,
-    'third_eye': 0x02C2,
-    'throat': 0x02C3,
-    'heart': 0x02C4,
-    'solar_plexus': 0x02C5,
-    'sacral': 0x02C6,
-    'root': 0x02C7,
+    'crown': 0x0202,
+    'third_eye': 0x0203,
+    'throat': 0x0204,
+    'heart': 0x0205,
+    'solar_plexus': 0x0206,
+    'sacral': 0x0207,
+    'root': 0x0208,
   };
-  static const int terahertzEnableAddress = 0x031F;
-  static const int terahertzModeAddress = 0x0321;
-  static const int terahertzCommandAddress = 0x0322;
-  static const int terahertzPowerAddress = 0x0325;
-  static const int terahertzFrequencyAddress = 0x0326;
-  static const int terahertzWaveAddress = 0x0327;
-  static const int fragranceEnableAddress = 0x0383;
-  static const int fragranceModeAddress = 0x0385;
-  static const int fragranceCommandAddress = 0x0386;
-  static const int fragranceTypeAddress = 0x0389;
-  static const int hifemEnableAddress = 0x03E7;
-  static const int hifemModeAddress = 0x03E9;
-  static const int hifemCommandAddress = 0x03EA;
-  static const int hifemForeheadRfAddress = 0x03ED;
-  static const int hifemForeheadHifesAddress = 0x03EE;
-  static const int hifemLeftCheekRfAddress = 0x03EF;
-  static const int hifemLeftCheekHifesAddress = 0x03F0;
-  static const int hifemRightCheekRfAddress = 0x03F1;
-  static const int hifemRightCheekHifesAddress = 0x03F2;
+  static const int terahertzEnableAddress = TerahertzModbus.enableAddress;
+  static const int terahertzModeAddress = TerahertzModbus.modeAddress;
+  static const int terahertzCommandAddress = TerahertzModbus.commandAddress;
+  static const int terahertzPowerAddress = TerahertzModbus.powerAddress;
+  static const int terahertzFrequencyAddress = TerahertzModbus.frequencyAddress;
+  static const int terahertzWaveAddress = TerahertzModbus.waveAddress;
+  static const int terahertzApplyAddress = TerahertzModbus.applyAddress;
+  static const int terahertzFaultResetAddress =
+      TerahertzModbus.faultResetAddress;
+  static const int fragranceEnableAddress = FragranceModbus.enableAddress;
+  static const int fragranceModeAddress = FragranceModbus.moduleModeAddress;
+  static const int fragranceTypeAddress = FragranceModbus.fragranceModeAddress;
+  static const int fragranceApplyAddress = FragranceModbus.applyAddress;
+  static const int fragranceCommandAddress = FragranceModbus.commandAddress;
+  static const int fragranceFaultResetAddress =
+      FragranceModbus.faultResetAddress;
+  static const int hifemEnableAddress = HifemModbus.enableAddress;
+  static const int hifemModeAddress = HifemModbus.moduleModeAddress;
+  static const int hifemForeheadRfAddress = HifemModbus.foreheadRfAddress;
+  static const int hifemForeheadHifesAddress =
+      HifemModbus.foreheadMagneticAddress;
+  static const int hifemLeftCheekRfAddress = HifemModbus.leftFaceRfAddress;
+  static const int hifemLeftCheekHifesAddress =
+      HifemModbus.leftFaceMagneticAddress;
+  static const int hifemRightCheekRfAddress = HifemModbus.rightFaceRfAddress;
+  static const int hifemRightCheekHifesAddress =
+      HifemModbus.rightFaceMagneticAddress;
+  static const int hifemApplyAddress = HifemModbus.applyAddress;
+  static const int hifemCommandAddress = HifemModbus.commandAddress;
+  static const int hifemFaultResetAddress = HifemModbus.faultResetAddress;
 
   final String portName; // Android 上通常是 /dev/ttyS0。
   final int baudRate; // 115200。
@@ -247,18 +263,33 @@ class ModbusRtuService {
     bool stopTerahertz = false,
     bool stopHifem = false,
     bool stopFragrance = false,
-  }) {
-    return sendCommandQueue(
-      buildStopTherapyCommands(
-        stopRed: stopRed,
-        stopVat: stopVat,
-        stopPemf: stopPemf,
-        stopHydrogen: stopHydrogen,
-        stopChakra: stopChakra,
-        stopTerahertz: stopTerahertz,
-        stopHifem: stopHifem,
-        stopFragrance: stopFragrance,
-      ),
+  }) async {
+    if (!stopChakra && !stopFragrance && !stopHifem) {
+      await sendCommandQueue(
+        buildStopTherapyCommands(
+          stopRed: stopRed,
+          stopVat: stopVat,
+          stopPemf: stopPemf,
+          stopHydrogen: stopHydrogen,
+          stopChakra: stopChakra,
+          stopTerahertz: stopTerahertz,
+          stopHifem: stopHifem,
+          stopFragrance: stopFragrance,
+          includeSystemStop: true,
+        ),
+      );
+      return;
+    }
+
+    await _stopTherapyWithBatchClear(
+      stopRed: stopRed,
+      stopVat: stopVat,
+      stopPemf: stopPemf,
+      stopHydrogen: stopHydrogen,
+      stopChakra: stopChakra,
+      stopTerahertz: stopTerahertz,
+      stopHifem: stopHifem,
+      stopFragrance: stopFragrance,
     );
   }
 
@@ -304,7 +335,19 @@ class ModbusRtuService {
     final _HydrogenBatchParseResult hydrogenParsed = _extractHydrogenPayload(
       vatParsed.remainingCommands,
     );
-    await sendCommandQueue(hydrogenParsed.remainingCommands);
+    final _ChakraBatchParseResult chakraParsed = _extractChakraPayload(
+      hydrogenParsed.remainingCommands,
+    );
+    final _TerahertzBatchParseResult terahertzParsed = _extractTerahertzPayload(
+      chakraParsed.remainingCommands,
+    );
+    final _FragranceBatchParseResult fragranceParsed = _extractFragrancePayload(
+      terahertzParsed.remainingCommands,
+    );
+    final _HifemBatchParseResult hifemParsed = _extractHifemPayload(
+      fragranceParsed.remainingCommands,
+    );
+    await sendCommandQueue(hifemParsed.remainingCommands);
     if (redParsed.payload != null) {
       await _applyRedLightPayload(redParsed.payload!);
     }
@@ -316,6 +359,18 @@ class ModbusRtuService {
     }
     if (hydrogenParsed.payload != null) {
       await _applyHydrogenPayload(hydrogenParsed.payload!);
+    }
+    if (chakraParsed.payload != null) {
+      await _applyChakraPayload(chakraParsed.payload!);
+    }
+    if (terahertzParsed.payload != null) {
+      await _applyTerahertzPayload(terahertzParsed.payload!);
+    }
+    if (fragranceParsed.payload != null) {
+      await _applyFragrancePayload(fragranceParsed.payload!);
+    }
+    if (hifemParsed.payload != null) {
+      await _applyHifemPayload(hifemParsed.payload!);
     }
     debugPrint('System start command will be sent last: 0x0004 = 1');
     await sendCommandQueue([
@@ -412,6 +467,7 @@ class ModbusRtuService {
     bool stopTerahertz = false,
     bool stopHifem = false,
     bool stopFragrance = false,
+    bool includeSystemStop = true,
   }) {
     return [
       if (stopRed) ...buildStopRedLightCommands(),
@@ -445,25 +501,151 @@ class ModbusRtuService {
         const ModbusWriteCommand(address: terahertzPowerAddress, value: 0),
         const ModbusWriteCommand(address: terahertzEnableAddress, value: 0),
       ],
-      if (stopHifem) ...[
+      if (stopHifem)
         const ModbusWriteCommand(address: hifemCommandAddress, value: 2),
-        const ModbusWriteCommand(address: hifemForeheadRfAddress, value: 0),
-        const ModbusWriteCommand(address: hifemForeheadHifesAddress, value: 0),
-        const ModbusWriteCommand(address: hifemLeftCheekRfAddress, value: 0),
-        const ModbusWriteCommand(address: hifemLeftCheekHifesAddress, value: 0),
-        const ModbusWriteCommand(address: hifemRightCheekRfAddress, value: 0),
-        const ModbusWriteCommand(
-          address: hifemRightCheekHifesAddress,
-          value: 0,
-        ),
-        const ModbusWriteCommand(address: hifemEnableAddress, value: 0),
-      ],
       if (stopFragrance) ...[
         const ModbusWriteCommand(address: fragranceCommandAddress, value: 2),
         const ModbusWriteCommand(address: fragranceEnableAddress, value: 0),
       ],
-      const ModbusWriteCommand(address: systemCommandAddress, value: 2),
+      if (includeSystemStop)
+        const ModbusWriteCommand(address: systemCommandAddress, value: 2),
     ];
+  }
+
+  Future<void> _stopTherapyWithBatchClear({
+    required bool stopRed,
+    required bool stopVat,
+    required bool stopPemf,
+    required bool stopHydrogen,
+    required bool stopChakra,
+    required bool stopTerahertz,
+    required bool stopHifem,
+    required bool stopFragrance,
+  }) async {
+    final List<ModbusWriteCommand> otherModuleStops = buildStopTherapyCommands(
+      stopRed: stopRed,
+      stopVat: stopVat,
+      stopPemf: stopPemf,
+      stopHydrogen: stopHydrogen,
+      stopChakra: false,
+      stopTerahertz: stopTerahertz,
+      stopHifem: false,
+      stopFragrance: false,
+      includeSystemStop: false,
+    );
+    if (otherModuleStops.isNotEmpty) {
+      await sendCommandQueue(otherModuleStops);
+    }
+
+    if (stopChakra) {
+      await sendCommandQueue([
+        const ModbusWriteCommand(address: chakraCommandAddress, value: 2),
+      ]);
+      if (commandDelay > Duration.zero) {
+        await Future<void>.delayed(commandDelay);
+      }
+
+      final List<int> chakraClearValues = <int>[
+        0, // 0x0200 chakra enable
+        0, // 0x0201 chakra mode
+        0, // 0x0202 crown
+        0, // 0x0203 third eye
+        0, // 0x0204 throat
+        0, // 0x0205 heart
+        0, // 0x0206 solar plexus
+        0, // 0x0207 sacral
+        0, // 0x0208 root
+      ];
+      debugPrint('Chakra stop clear startAddress = 0x0200');
+      debugPrint('Chakra stop clear quantity = 9');
+      debugPrint('Chakra stop clear values = $chakraClearValues');
+      for (int i = 0; i < chakraClearValues.length; i++) {
+        final int address = ChakraModbus.startAddress + i;
+        debugPrint(
+          'Chakra stop clear map 0x${address.toRadixString(16).toUpperCase().padLeft(4, '0')} -> ${chakraClearValues[i]}',
+        );
+      }
+      await writeMultipleRegisters(
+        startAddress: ChakraModbus.startAddress,
+        values: chakraClearValues,
+        logTag: 'ChakraStopClear',
+      );
+      if (commandDelay > Duration.zero) {
+        await Future<void>.delayed(commandDelay);
+      }
+    }
+
+    if (stopFragrance) {
+      await sendCommandQueue([
+        const ModbusWriteCommand(address: fragranceCommandAddress, value: 2),
+      ]);
+      if (commandDelay > Duration.zero) {
+        await Future<void>.delayed(commandDelay);
+      }
+      final List<int> fragranceClearValues = <int>[
+        0, // 0x0280 enable
+        0, // 0x0281 module mode
+        0, // 0x0282 fragrance mode
+      ];
+      debugPrint('Fragrance stop clear startAddress = 0x0280');
+      debugPrint('Fragrance stop clear quantity = 3');
+      debugPrint('Fragrance stop clear values = $fragranceClearValues');
+      for (int i = 0; i < fragranceClearValues.length; i++) {
+        final int address = FragranceModbus.startAddress + i;
+        debugPrint(
+          'Fragrance stop clear map 0x${address.toRadixString(16).toUpperCase().padLeft(4, '0')} -> ${fragranceClearValues[i]}',
+        );
+      }
+      await writeMultipleRegisters(
+        startAddress: FragranceModbus.startAddress,
+        values: fragranceClearValues,
+        logTag: 'FragranceStopClear',
+      );
+      if (commandDelay > Duration.zero) {
+        await Future<void>.delayed(commandDelay);
+      }
+    }
+
+    if (stopHifem) {
+      await sendCommandQueue([
+        const ModbusWriteCommand(address: hifemCommandAddress, value: 2),
+      ]);
+      if (commandDelay > Duration.zero) {
+        await Future<void>.delayed(commandDelay);
+      }
+      final List<int> hifemClearValues = <int>[
+        0, // 0x02C0 enable
+        0, // 0x02C1 mode
+        0, // 0x02C2 forehead rf
+        0, // 0x02C3 forehead magnetic
+        0, // 0x02C4 left rf
+        0, // 0x02C5 left magnetic
+        0, // 0x02C6 right rf
+        0, // 0x02C7 right magnetic
+      ];
+      debugPrint('HIFEM stop clear startAddress = 0x02C0');
+      debugPrint('HIFEM stop clear quantity = 8');
+      debugPrint('HIFEM stop clear values = $hifemClearValues');
+      for (int i = 0; i < hifemClearValues.length; i++) {
+        final int address = HifemModbus.startAddress + i;
+        debugPrint(
+          'HIFEM stop clear map 0x${address.toRadixString(16).toUpperCase().padLeft(4, '0')} -> ${hifemClearValues[i]}',
+        );
+      }
+      await writeMultipleRegisters(
+        startAddress: HifemModbus.startAddress,
+        values: hifemClearValues,
+        logTag: 'HIFEMStopClear',
+      );
+      if (commandDelay > Duration.zero) {
+        await Future<void>.delayed(commandDelay);
+      }
+    }
+
+    debugPrint('System stop command will be sent last: 0x0004 = 2');
+    await sendCommandQueue([
+      const ModbusWriteCommand(address: systemCommandAddress, value: 2),
+    ]);
   }
 
   /// 构建模块暂停命令列表（不含系统命令）。
@@ -539,24 +721,31 @@ class ModbusRtuService {
     required Map<String, int> strengths,
     int mode = 0,
   }) {
-    final int safeMode = mode.clamp(0, 1).toInt();
-    final List<ModbusWriteCommand> commands = <ModbusWriteCommand>[
-      const ModbusWriteCommand(address: chakraEnableAddress, value: 1),
-      ModbusWriteCommand(address: chakraModeAddress, value: safeMode),
-    ];
-
-    for (final MapEntry<String, int> entry in strengths.entries) {
-      final int? address = chakraStrengthAddressMap[entry.key];
-      if (address == null) continue;
-      commands.add(
-        ModbusWriteCommand(address: address, value: _clampPercent(entry.value)),
-      );
-    }
-
-    commands.add(
-      const ModbusWriteCommand(address: chakraCommandAddress, value: 1),
+    final ChakraBatchPayload payload = ChakraModbus.buildPayload(
+      strengths: strengths,
+      mode: mode,
     );
-    return commands;
+    debugPrint('Chakra startAddress = 0x0200');
+    debugPrint('Chakra quantity = 9');
+    debugPrint('Chakra values = ${payload.values}');
+    debugPrint(
+      'Chakra strengths crown=${payload.crown}, thirdEye=${payload.thirdEye}, throat=${payload.throat}, heart=${payload.heart}, solarPlexus=${payload.solarPlexus}, sacral=${payload.sacral}, root=${payload.root}',
+    );
+    return <ModbusWriteCommand>[
+      for (int i = 0; i < payload.values.length; i++)
+        ModbusWriteCommand(
+          address: payload.startAddress + i,
+          value: payload.values[i],
+        ),
+      ModbusWriteCommand(
+        address: payload.applyAddress,
+        value: payload.applyValue,
+      ),
+      ModbusWriteCommand(
+        address: payload.commandAddress,
+        value: payload.commandValue,
+      ),
+    ];
   }
 
   /// 构建太赫兹模块参数与启动命令
@@ -566,21 +755,32 @@ class ModbusRtuService {
     required int mode,
     required int wave,
   }) {
-    final int safeFrequency = frequency.clamp(1, 100).toInt();
-    final int safePower = _clampPercent(power);
-    final int safeMode = mode.clamp(0, 2).toInt();
-    final int safeWave = wave.clamp(0, 2).toInt();
-
-    return [
-      const ModbusWriteCommand(address: terahertzEnableAddress, value: 1),
-      ModbusWriteCommand(address: terahertzModeAddress, value: safeMode),
-      ModbusWriteCommand(address: terahertzPowerAddress, value: safePower),
+    final TerahertzBatchPayload payload = TerahertzModbus.buildPayload(
+      frequency: frequency,
+      power: power,
+      mode: mode,
+      wave: wave,
+    );
+    debugPrint('Terahertz startAddress = 0x0240');
+    debugPrint('Terahertz quantity = 5');
+    debugPrint('Terahertz values = ${payload.values}');
+    debugPrint(
+      'Terahertz mode=${payload.mode}(0=continuous,1=pulse), power=${payload.power}, frequency=${payload.frequency}, wave=${payload.wave}',
+    );
+    return <ModbusWriteCommand>[
+      for (int i = 0; i < payload.values.length; i++)
+        ModbusWriteCommand(
+          address: payload.startAddress + i,
+          value: payload.values[i],
+        ),
       ModbusWriteCommand(
-        address: terahertzFrequencyAddress,
-        value: safeFrequency,
+        address: payload.applyAddress,
+        value: payload.applyValue,
       ),
-      ModbusWriteCommand(address: terahertzWaveAddress, value: safeWave),
-      const ModbusWriteCommand(address: terahertzCommandAddress, value: 1),
+      ModbusWriteCommand(
+        address: payload.commandAddress,
+        value: payload.commandValue,
+      ),
     ];
   }
 
@@ -593,44 +793,73 @@ class ModbusRtuService {
     required int rightCheekRf,
     required int rightCheekHifes,
   }) {
-    return [
-      const ModbusWriteCommand(address: hifemEnableAddress, value: 1),
+    final HifemBatchPayload payload = HifemModbus.buildPayload(
+      foreheadRf: foreheadRf,
+      foreheadMagnetic: foreheadHifes,
+      leftFaceRf: leftCheekRf,
+      leftFaceMagnetic: leftCheekHifes,
+      rightFaceRf: rightCheekRf,
+      rightFaceMagnetic: rightCheekHifes,
+      mode: 0,
+    );
+    debugPrint('HIFEM startAddress = 0x02C0');
+    debugPrint('HIFEM quantity = 8');
+    debugPrint('HIFEM values = ${payload.values}');
+    debugPrint(
+      'HIFEM foreheadRf=${payload.foreheadRf} / foreheadMagnetic=${payload.foreheadMagnetic}',
+    );
+    debugPrint(
+      'HIFEM leftFaceRf=${payload.leftFaceRf} / leftFaceMagnetic=${payload.leftFaceMagnetic}',
+    );
+    debugPrint(
+      'HIFEM rightFaceRf=${payload.rightFaceRf} / rightFaceMagnetic=${payload.rightFaceMagnetic}',
+    );
+    return <ModbusWriteCommand>[
+      for (int i = 0; i < payload.values.length; i++)
+        ModbusWriteCommand(
+          address: payload.startAddress + i,
+          value: payload.values[i],
+        ),
       ModbusWriteCommand(
-        address: hifemForeheadRfAddress,
-        value: _clampPercent(foreheadRf),
+        address: payload.applyAddress,
+        value: payload.applyValue,
       ),
       ModbusWriteCommand(
-        address: hifemForeheadHifesAddress,
-        value: _clampPercent(foreheadHifes),
+        address: payload.commandAddress,
+        value: payload.commandValue,
       ),
-      ModbusWriteCommand(
-        address: hifemLeftCheekRfAddress,
-        value: _clampPercent(leftCheekRf),
-      ),
-      ModbusWriteCommand(
-        address: hifemLeftCheekHifesAddress,
-        value: _clampPercent(leftCheekHifes),
-      ),
-      ModbusWriteCommand(
-        address: hifemRightCheekRfAddress,
-        value: _clampPercent(rightCheekRf),
-      ),
-      ModbusWriteCommand(
-        address: hifemRightCheekHifesAddress,
-        value: _clampPercent(rightCheekHifes),
-      ),
-      const ModbusWriteCommand(address: hifemCommandAddress, value: 1),
     ];
   }
 
   /// 构建香氛模块参数与启动命令。
-  List<ModbusWriteCommand> buildFragranceCommands({required int type}) {
-    final int safeType = type.clamp(0, 4).toInt();
+  List<ModbusWriteCommand> buildFragranceCommands({
+    required int type,
+    bool enabled = true,
+  }) {
+    final FragranceBatchPayload payload = FragranceModbus.buildPayload(
+      enabled: enabled,
+      fragranceMode: type,
+    );
+    debugPrint('Fragrance startAddress = 0x0280');
+    debugPrint('Fragrance quantity = 3');
+    debugPrint('Fragrance values = ${payload.values}');
+    debugPrint('Fragrance module mode(0x0281) default = ${payload.values[1]}');
+    debugPrint('Fragrance mode(0x0282) = ${payload.fragranceMode}');
 
-    return [
-      const ModbusWriteCommand(address: fragranceEnableAddress, value: 1),
-      ModbusWriteCommand(address: fragranceTypeAddress, value: safeType),
-      const ModbusWriteCommand(address: fragranceCommandAddress, value: 1),
+    return <ModbusWriteCommand>[
+      for (int i = 0; i < payload.values.length; i++)
+        ModbusWriteCommand(
+          address: payload.startAddress + i,
+          value: payload.values[i],
+        ),
+      ModbusWriteCommand(
+        address: payload.applyAddress,
+        value: payload.applyValue,
+      ),
+      ModbusWriteCommand(
+        address: payload.commandAddress,
+        value: payload.commandValue,
+      ),
     ];
   }
 
@@ -991,6 +1220,180 @@ class ModbusRtuService {
     ]);
   }
 
+  Future<void> _applyChakraPayload(ChakraBatchPayload payload) async {
+    if (payload.values.length != ChakraModbus.quantity) {
+      throw StateError(
+        'Chakra values length invalid: ${payload.values.length}, expected ${ChakraModbus.quantity}',
+      );
+    }
+    debugPrint('Chakra startAddress = 0x0200');
+    debugPrint('Chakra quantity = 9');
+    debugPrint('Chakra values = ${payload.values}');
+    debugPrint('Chakra full values:');
+    for (int i = 0; i < payload.values.length; i++) {
+      final int address = payload.startAddress + i;
+      debugPrint(
+        '0x${address.toRadixString(16).toUpperCase().padLeft(4, '0')} = ${payload.values[i]}',
+      );
+    }
+    debugPrint(
+      'Chakra strengths crown=${payload.crown}, thirdEye=${payload.thirdEye}, throat=${payload.throat}, heart=${payload.heart}, solarPlexus=${payload.solarPlexus}, sacral=${payload.sacral}, root=${payload.root}',
+    );
+    await writeMultipleRegisters(
+      startAddress: payload.startAddress,
+      values: payload.values,
+      logTag: 'Chakra',
+    );
+    if (commandDelay > Duration.zero) await Future<void>.delayed(commandDelay);
+    debugPrint(
+      'Chakra apply address=0x${payload.applyAddress.toRadixString(16).toUpperCase()} value=${payload.applyValue}',
+    );
+    await sendCommandQueue([
+      ModbusWriteCommand(
+        address: payload.applyAddress,
+        value: payload.applyValue,
+      ),
+    ]);
+    if (commandDelay > Duration.zero) await Future<void>.delayed(commandDelay);
+    debugPrint(
+      'Chakra command address=0x${payload.commandAddress.toRadixString(16).toUpperCase()} value=${payload.commandValue}',
+    );
+    await sendCommandQueue([
+      ModbusWriteCommand(
+        address: payload.commandAddress,
+        value: payload.commandValue,
+      ),
+    ]);
+  }
+
+  Future<void> _applyTerahertzPayload(TerahertzBatchPayload payload) async {
+    if (payload.values.length != TerahertzModbus.quantity) {
+      throw StateError(
+        'Terahertz values length invalid: ${payload.values.length}, expected ${TerahertzModbus.quantity}',
+      );
+    }
+    debugPrint('Terahertz startAddress = 0x0240');
+    debugPrint('Terahertz quantity = 5');
+    debugPrint('Terahertz values = ${payload.values}');
+    debugPrint(
+      'Terahertz mode=${payload.mode}(0=continuous,1=pulse), power=${payload.power}, frequency=${payload.frequency}, wave=${payload.wave}',
+    );
+    await writeMultipleRegisters(
+      startAddress: payload.startAddress,
+      values: payload.values,
+      logTag: 'Terahertz',
+    );
+    if (commandDelay > Duration.zero) await Future<void>.delayed(commandDelay);
+    debugPrint(
+      'Terahertz apply address=0x${payload.applyAddress.toRadixString(16).toUpperCase()} value=${payload.applyValue}',
+    );
+    await sendCommandQueue([
+      ModbusWriteCommand(
+        address: payload.applyAddress,
+        value: payload.applyValue,
+      ),
+    ]);
+    if (commandDelay > Duration.zero) await Future<void>.delayed(commandDelay);
+    debugPrint(
+      'Terahertz command address=0x${payload.commandAddress.toRadixString(16).toUpperCase()} value=${payload.commandValue}',
+    );
+    await sendCommandQueue([
+      ModbusWriteCommand(
+        address: payload.commandAddress,
+        value: payload.commandValue,
+      ),
+    ]);
+  }
+
+  Future<void> _applyFragrancePayload(FragranceBatchPayload payload) async {
+    if (payload.values.length != FragranceModbus.quantity) {
+      throw StateError(
+        'Fragrance values length invalid: ${payload.values.length}, expected ${FragranceModbus.quantity}',
+      );
+    }
+    debugPrint('Fragrance startAddress = 0x0280');
+    debugPrint('Fragrance quantity = 3');
+    debugPrint('Fragrance values = ${payload.values}');
+    debugPrint('Fragrance module mode(0x0281) default = ${payload.values[1]}');
+    debugPrint('Fragrance mode(0x0282) = ${payload.fragranceMode}');
+    await writeMultipleRegisters(
+      startAddress: payload.startAddress,
+      values: payload.values,
+      logTag: 'Fragrance',
+    );
+    if (commandDelay > Duration.zero) await Future<void>.delayed(commandDelay);
+    debugPrint(
+      'Fragrance apply address=0x${payload.applyAddress.toRadixString(16).toUpperCase()} value=${payload.applyValue}',
+    );
+    await sendCommandQueue([
+      ModbusWriteCommand(
+        address: payload.applyAddress,
+        value: payload.applyValue,
+      ),
+    ]);
+    if (commandDelay > Duration.zero) await Future<void>.delayed(commandDelay);
+    debugPrint(
+      'Fragrance command address=0x${payload.commandAddress.toRadixString(16).toUpperCase()} value=${payload.commandValue}',
+    );
+    await sendCommandQueue([
+      ModbusWriteCommand(
+        address: payload.commandAddress,
+        value: payload.commandValue,
+      ),
+    ]);
+  }
+
+  Future<void> _applyHifemPayload(HifemBatchPayload payload) async {
+    if (payload.values.length != HifemModbus.quantity) {
+      throw StateError(
+        'HIFEM values length invalid: ${payload.values.length}, expected ${HifemModbus.quantity}',
+      );
+    }
+    debugPrint('HIFEM startAddress = 0x02C0');
+    debugPrint('HIFEM quantity = 8');
+    debugPrint('HIFEM values = ${payload.values}');
+    for (int i = 0; i < payload.values.length; i++) {
+      final int address = payload.startAddress + i;
+      debugPrint(
+        '0x${address.toRadixString(16).toUpperCase().padLeft(4, '0')} = ${payload.values[i]}',
+      );
+    }
+    debugPrint(
+      'HIFEM foreheadRf=${payload.foreheadRf}, foreheadMagnetic=${payload.foreheadMagnetic}',
+    );
+    debugPrint(
+      'HIFEM leftFaceRf=${payload.leftFaceRf}, leftFaceMagnetic=${payload.leftFaceMagnetic}',
+    );
+    debugPrint(
+      'HIFEM rightFaceRf=${payload.rightFaceRf}, rightFaceMagnetic=${payload.rightFaceMagnetic}',
+    );
+    await writeMultipleRegisters(
+      startAddress: payload.startAddress,
+      values: payload.values,
+      logTag: 'HIFEM',
+    );
+    if (commandDelay > Duration.zero) await Future<void>.delayed(commandDelay);
+    debugPrint(
+      'HIFEM apply address=0x${payload.applyAddress.toRadixString(16).toUpperCase()} value=${payload.applyValue}',
+    );
+    await sendCommandQueue([
+      ModbusWriteCommand(
+        address: payload.applyAddress,
+        value: payload.applyValue,
+      ),
+    ]);
+    if (commandDelay > Duration.zero) await Future<void>.delayed(commandDelay);
+    debugPrint(
+      'HIFEM command address=0x${payload.commandAddress.toRadixString(16).toUpperCase()} value=${payload.commandValue}',
+    );
+    await sendCommandQueue([
+      ModbusWriteCommand(
+        address: payload.commandAddress,
+        value: payload.commandValue,
+      ),
+    ]);
+  }
+
   _RedLightBatchParseResult _extractRedLightPayload(
     List<ModbusWriteCommand> commands,
   ) {
@@ -1178,6 +1581,246 @@ class ModbusRtuService {
     return _HydrogenBatchParseResult(
       remainingCommands: remaining,
       payload: payload,
+    );
+  }
+
+  _ChakraBatchParseResult _extractChakraPayload(
+    List<ModbusWriteCommand> commands,
+  ) {
+    final Map<int, int> chakraMap = <int, int>{};
+    final List<ModbusWriteCommand> remaining = <ModbusWriteCommand>[];
+    final Set<int> chakraAddresses = <int>{
+      for (
+        int address = ChakraModbus.startAddress;
+        address <= ChakraModbus.endAddress;
+        address++
+      )
+        address,
+      ChakraModbus.applyAddress,
+      ChakraModbus.commandAddress,
+    };
+    for (final ModbusWriteCommand command in commands) {
+      if (chakraAddresses.contains(command.address)) {
+        chakraMap[command.address] = command.value;
+      } else {
+        remaining.add(command);
+      }
+    }
+    if (chakraMap.isEmpty) {
+      return _ChakraBatchParseResult(remainingCommands: commands);
+    }
+    final Map<String, int> strengths = <String, int>{
+      'crown': chakraMap[chakraStrengthAddressMap['crown']!] ?? 0,
+      'third_eye': chakraMap[chakraStrengthAddressMap['third_eye']!] ?? 0,
+      'throat': chakraMap[chakraStrengthAddressMap['throat']!] ?? 0,
+      'heart': chakraMap[chakraStrengthAddressMap['heart']!] ?? 0,
+      'solar_plexus': chakraMap[chakraStrengthAddressMap['solar_plexus']!] ?? 0,
+      'sacral': chakraMap[chakraStrengthAddressMap['sacral']!] ?? 0,
+      'root': chakraMap[chakraStrengthAddressMap['root']!] ?? 0,
+    };
+    final ChakraBatchPayload payload = ChakraModbus.buildPayload(
+      strengths: strengths,
+      mode: chakraMap[chakraModeAddress] ?? 0,
+    );
+    final ChakraBatchPayload normalizedPayload = ChakraBatchPayload(
+      startAddress: payload.startAddress,
+      values: <int>[
+        for (
+          int address = ChakraModbus.startAddress;
+          address <= ChakraModbus.endAddress;
+          address++
+        )
+          chakraMap[address] ??
+              payload.values[address - ChakraModbus.startAddress],
+      ],
+      applyAddress: payload.applyAddress,
+      commandAddress: payload.commandAddress,
+      applyValue: chakraMap[ChakraModbus.applyAddress] ?? 1,
+      commandValue: chakraMap[ChakraModbus.commandAddress] ?? 1,
+      crown: payload.crown,
+      thirdEye: payload.thirdEye,
+      throat: payload.throat,
+      heart: payload.heart,
+      solarPlexus: payload.solarPlexus,
+      sacral: payload.sacral,
+      root: payload.root,
+    );
+    return _ChakraBatchParseResult(
+      remainingCommands: remaining,
+      payload: normalizedPayload,
+    );
+  }
+
+  _TerahertzBatchParseResult _extractTerahertzPayload(
+    List<ModbusWriteCommand> commands,
+  ) {
+    final Map<int, int> terahertzMap = <int, int>{};
+    final List<ModbusWriteCommand> remaining = <ModbusWriteCommand>[];
+    final Set<int> terahertzAddresses = <int>{
+      for (
+        int address = TerahertzModbus.startAddress;
+        address <= TerahertzModbus.endAddress;
+        address++
+      )
+        address,
+      TerahertzModbus.applyAddress,
+      TerahertzModbus.commandAddress,
+    };
+    for (final ModbusWriteCommand command in commands) {
+      if (terahertzAddresses.contains(command.address)) {
+        terahertzMap[command.address] = command.value;
+      } else {
+        remaining.add(command);
+      }
+    }
+    if (terahertzMap.isEmpty) {
+      return _TerahertzBatchParseResult(remainingCommands: commands);
+    }
+    final TerahertzBatchPayload payload = TerahertzModbus.buildPayload(
+      frequency: terahertzMap[terahertzFrequencyAddress] ?? 1,
+      power: terahertzMap[terahertzPowerAddress] ?? 0,
+      mode: terahertzMap[terahertzModeAddress] ?? 0,
+      wave: terahertzMap[terahertzWaveAddress] ?? 0,
+    );
+    final TerahertzBatchPayload normalizedPayload = TerahertzBatchPayload(
+      startAddress: payload.startAddress,
+      values: <int>[
+        for (
+          int address = TerahertzModbus.startAddress;
+          address <= TerahertzModbus.endAddress;
+          address++
+        )
+          terahertzMap[address] ??
+              payload.values[address - TerahertzModbus.startAddress],
+      ],
+      applyAddress: payload.applyAddress,
+      commandAddress: payload.commandAddress,
+      applyValue: terahertzMap[TerahertzModbus.applyAddress] ?? 1,
+      commandValue: terahertzMap[TerahertzModbus.commandAddress] ?? 1,
+      mode: payload.mode,
+      power: payload.power,
+      frequency: payload.frequency,
+      wave: payload.wave,
+    );
+    return _TerahertzBatchParseResult(
+      remainingCommands: remaining,
+      payload: normalizedPayload,
+    );
+  }
+
+  _FragranceBatchParseResult _extractFragrancePayload(
+    List<ModbusWriteCommand> commands,
+  ) {
+    final Map<int, int> fragranceMap = <int, int>{};
+    final List<ModbusWriteCommand> remaining = <ModbusWriteCommand>[];
+    final Set<int> fragranceAddresses = <int>{
+      for (
+        int address = FragranceModbus.startAddress;
+        address <= FragranceModbus.endAddress;
+        address++
+      )
+        address,
+      FragranceModbus.applyAddress,
+      FragranceModbus.commandAddress,
+    };
+    for (final ModbusWriteCommand command in commands) {
+      if (fragranceAddresses.contains(command.address)) {
+        fragranceMap[command.address] = command.value;
+      } else {
+        remaining.add(command);
+      }
+    }
+    if (fragranceMap.isEmpty) {
+      return _FragranceBatchParseResult(remainingCommands: commands);
+    }
+    final FragranceBatchPayload payload = FragranceModbus.buildPayload(
+      enabled: (fragranceMap[fragranceEnableAddress] ?? 0) == 1,
+      fragranceMode: fragranceMap[fragranceTypeAddress] ?? 0,
+    );
+    final FragranceBatchPayload normalizedPayload = FragranceBatchPayload(
+      startAddress: payload.startAddress,
+      values: <int>[
+        for (
+          int address = FragranceModbus.startAddress;
+          address <= FragranceModbus.endAddress;
+          address++
+        )
+          fragranceMap[address] ??
+              payload.values[address - FragranceModbus.startAddress],
+      ],
+      applyAddress: payload.applyAddress,
+      commandAddress: payload.commandAddress,
+      applyValue: fragranceMap[FragranceModbus.applyAddress] ?? 1,
+      commandValue: fragranceMap[FragranceModbus.commandAddress] ?? 1,
+      enabled: payload.enabled,
+      fragranceMode: payload.fragranceMode,
+    );
+    return _FragranceBatchParseResult(
+      remainingCommands: remaining,
+      payload: normalizedPayload,
+    );
+  }
+
+  _HifemBatchParseResult _extractHifemPayload(
+    List<ModbusWriteCommand> commands,
+  ) {
+    final Map<int, int> hifemMap = <int, int>{};
+    final List<ModbusWriteCommand> remaining = <ModbusWriteCommand>[];
+    final Set<int> hifemAddresses = <int>{
+      for (
+        int address = HifemModbus.startAddress;
+        address <= HifemModbus.endAddress;
+        address++
+      )
+        address,
+      HifemModbus.applyAddress,
+      HifemModbus.commandAddress,
+    };
+    for (final ModbusWriteCommand command in commands) {
+      if (hifemAddresses.contains(command.address)) {
+        hifemMap[command.address] = command.value;
+      } else {
+        remaining.add(command);
+      }
+    }
+    if (hifemMap.isEmpty) {
+      return _HifemBatchParseResult(remainingCommands: commands);
+    }
+    final HifemBatchPayload payload = HifemModbus.buildPayload(
+      foreheadRf: hifemMap[hifemForeheadRfAddress] ?? 0,
+      foreheadMagnetic: hifemMap[hifemForeheadHifesAddress] ?? 0,
+      leftFaceRf: hifemMap[hifemLeftCheekRfAddress] ?? 0,
+      leftFaceMagnetic: hifemMap[hifemLeftCheekHifesAddress] ?? 0,
+      rightFaceRf: hifemMap[hifemRightCheekRfAddress] ?? 0,
+      rightFaceMagnetic: hifemMap[hifemRightCheekHifesAddress] ?? 0,
+      mode: hifemMap[hifemModeAddress] ?? 0,
+    );
+    final HifemBatchPayload normalizedPayload = HifemBatchPayload(
+      startAddress: payload.startAddress,
+      values: <int>[
+        for (
+          int address = HifemModbus.startAddress;
+          address <= HifemModbus.endAddress;
+          address++
+        )
+          hifemMap[address] ??
+              payload.values[address - HifemModbus.startAddress],
+      ],
+      applyAddress: payload.applyAddress,
+      commandAddress: payload.commandAddress,
+      applyValue: hifemMap[HifemModbus.applyAddress] ?? 1,
+      commandValue: hifemMap[HifemModbus.commandAddress] ?? 1,
+      mode: payload.mode,
+      foreheadRf: payload.foreheadRf,
+      foreheadMagnetic: payload.foreheadMagnetic,
+      leftFaceRf: payload.leftFaceRf,
+      leftFaceMagnetic: payload.leftFaceMagnetic,
+      rightFaceRf: payload.rightFaceRf,
+      rightFaceMagnetic: payload.rightFaceMagnetic,
+    );
+    return _HifemBatchParseResult(
+      remainingCommands: remaining,
+      payload: normalizedPayload,
     );
   }
 
@@ -1606,8 +2249,6 @@ class ModbusRtuService {
     return crc & 0xFFFF;
   }
 
-  int _clampPercent(int value) => value.clamp(0, 100).toInt();
-
   void _validateWriteSingleRegisterResponse({
     required Uint8List response,
     required int address,
@@ -1777,4 +2418,41 @@ class _HydrogenBatchParseResult {
 
   final List<ModbusWriteCommand> remainingCommands;
   final HydrogenBatchPayload? payload;
+}
+
+class _ChakraBatchParseResult {
+  const _ChakraBatchParseResult({
+    required this.remainingCommands,
+    this.payload,
+  });
+
+  final List<ModbusWriteCommand> remainingCommands;
+  final ChakraBatchPayload? payload;
+}
+
+class _TerahertzBatchParseResult {
+  const _TerahertzBatchParseResult({
+    required this.remainingCommands,
+    this.payload,
+  });
+
+  final List<ModbusWriteCommand> remainingCommands;
+  final TerahertzBatchPayload? payload;
+}
+
+class _FragranceBatchParseResult {
+  const _FragranceBatchParseResult({
+    required this.remainingCommands,
+    this.payload,
+  });
+
+  final List<ModbusWriteCommand> remainingCommands;
+  final FragranceBatchPayload? payload;
+}
+
+class _HifemBatchParseResult {
+  const _HifemBatchParseResult({required this.remainingCommands, this.payload});
+
+  final List<ModbusWriteCommand> remainingCommands;
+  final HifemBatchPayload? payload;
 }

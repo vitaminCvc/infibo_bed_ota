@@ -443,11 +443,8 @@ class Assets {
   // 香氛设置页：整页选中状态设计图。
   static const String fragrancePageSelected =
       "assets/expand_settings/fragrance/page_selected.jpg";
-
   // 香氛设置页：香氛设备主视觉图片。
-  static const String fragranceDiffuser =
-      "assets/expand_settings/fragrance/diffuser.png";
-
+  static const String fragranceDiffuser = "assets/lottie/aroma.json";
   // 香氛设置页：底部香型选择面板背景。
   static const String fragranceChoicePanel =
       "assets/expand_settings/fragrance/choice_panel.png";

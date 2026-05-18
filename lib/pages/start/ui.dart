@@ -1286,6 +1286,34 @@ class _StartPageState extends State<StartPage> {
         ModbusRtuService.redLightTotalCommandAddress,
       };
     }
+    if (module == 'chakra') {
+      return const <int>{
+        ModbusRtuService.chakraEnableAddress,
+        ModbusRtuService.chakraApplyAddress,
+        ModbusRtuService.chakraCommandAddress,
+      };
+    }
+    if (module == 'terahertz') {
+      return const <int>{
+        ModbusRtuService.terahertzEnableAddress,
+        ModbusRtuService.terahertzApplyAddress,
+        ModbusRtuService.terahertzCommandAddress,
+      };
+    }
+    if (module == 'fragrance') {
+      return const <int>{
+        ModbusRtuService.fragranceEnableAddress,
+        ModbusRtuService.fragranceApplyAddress,
+        ModbusRtuService.fragranceCommandAddress,
+      };
+    }
+    if (module == 'hifem') {
+      return const <int>{
+        ModbusRtuService.hifemEnableAddress,
+        ModbusRtuService.hifemApplyAddress,
+        ModbusRtuService.hifemCommandAddress,
+      };
+    }
     final int? commandAddress = _moduleStartCommandAddress(module);
     return <int>{?commandAddress, ..._moduleEnableAddresses(module)};
   }
@@ -1397,10 +1425,102 @@ class _StartPageState extends State<StartPage> {
           );
         }
       }
+      if (module == 'chakra') {
+        final Set<int> allAddresses = <int>{
+          ...previousValues.keys,
+          ...currentValues.keys,
+        };
+        final List<int> sortedAddresses = allAddresses.toList()..sort();
+        debugPrint('Chakra node diff:');
+        for (final int address in sortedAddresses) {
+          final int? before = previousValues[address];
+          final int? after = currentValues[address];
+          final bool changed = before != after;
+          debugPrint(
+            'old 0x${address.toRadixString(16).padLeft(4, '0').toUpperCase()} = ${before ?? 'null'}, '
+            'new 0x${address.toRadixString(16).padLeft(4, '0').toUpperCase()} = ${after ?? 'null'} '
+            '(${changed ? 'changed' : 'unchanged'})',
+          );
+        }
+      }
+      if (module == 'terahertz') {
+        final Set<int> allAddresses = <int>{
+          ...previousValues.keys,
+          ...currentValues.keys,
+        };
+        final List<int> sortedAddresses = allAddresses.toList()..sort();
+        debugPrint('Terahertz node diff:');
+        for (final int address in sortedAddresses) {
+          final int? before = previousValues[address];
+          final int? after = currentValues[address];
+          final bool changed = before != after;
+          debugPrint(
+            'old 0x${address.toRadixString(16).padLeft(4, '0').toUpperCase()} = ${before ?? 'null'}, '
+            'new 0x${address.toRadixString(16).padLeft(4, '0').toUpperCase()} = ${after ?? 'null'} '
+            '(${changed ? 'changed' : 'unchanged'})',
+          );
+        }
+      }
+      if (module == 'fragrance') {
+        final Set<int> allAddresses = <int>{
+          ...previousValues.keys,
+          ...currentValues.keys,
+        };
+        final List<int> sortedAddresses = allAddresses.toList()..sort();
+        debugPrint('Fragrance node diff:');
+        for (final int address in sortedAddresses) {
+          final int? before = previousValues[address];
+          final int? after = currentValues[address];
+          final bool changed = before != after;
+          debugPrint(
+            'old 0x${address.toRadixString(16).padLeft(4, '0').toUpperCase()} = ${before ?? 'null'}, '
+            'new 0x${address.toRadixString(16).padLeft(4, '0').toUpperCase()} = ${after ?? 'null'} '
+            '(${changed ? 'changed' : 'unchanged'})',
+          );
+        }
+      }
+      if (module == 'hifem') {
+        final Set<int> allAddresses = <int>{
+          ...previousValues.keys,
+          ...currentValues.keys,
+        };
+        final List<int> sortedAddresses = allAddresses.toList()..sort();
+        debugPrint('HIFEM node diff:');
+        for (final int address in sortedAddresses) {
+          final int? before = previousValues[address];
+          final int? after = currentValues[address];
+          final bool changed = before != after;
+          debugPrint(
+            'old 0x${address.toRadixString(16).padLeft(4, '0').toUpperCase()} = ${before ?? 'null'}, '
+            'new 0x${address.toRadixString(16).padLeft(4, '0').toUpperCase()} = ${after ?? 'null'} '
+            '(${changed ? 'changed' : 'unchanged'})',
+          );
+        }
+      }
 
       for (final ModbusWriteCommand command in currentCommands) {
         if (previousValues[command.address] == command.value) {
           if (module == 'red') {
+            debugPrint(
+              'skip 0x${command.address.toRadixString(16).padLeft(4, '0').toUpperCase()} = ${command.value} (unchanged)',
+            );
+          }
+          if (module == 'chakra') {
+            debugPrint(
+              'skip 0x${command.address.toRadixString(16).padLeft(4, '0').toUpperCase()} = ${command.value} (unchanged)',
+            );
+          }
+          if (module == 'terahertz') {
+            debugPrint(
+              'skip 0x${command.address.toRadixString(16).padLeft(4, '0').toUpperCase()} = ${command.value} (unchanged)',
+            );
+          }
+          if (module == 'fragrance') {
+            debugPrint(
+              'skip 0x${command.address.toRadixString(16).padLeft(4, '0').toUpperCase()} = ${command.value} (unchanged)',
+            );
+          }
+          if (module == 'hifem') {
             debugPrint(
               'skip 0x${command.address.toRadixString(16).padLeft(4, '0').toUpperCase()} = ${command.value} (unchanged)',
             );
@@ -1415,12 +1535,52 @@ class _StartPageState extends State<StartPage> {
             '(old=${before ?? 'null'}, new=${command.value})',
           );
         }
+        if (module == 'chakra') {
+          final int? before = previousValues[command.address];
+          debugPrint(
+            'send 0x${command.address.toRadixString(16).padLeft(4, '0').toUpperCase()} = ${command.value} '
+            '(old=${before ?? 'null'}, new=${command.value})',
+          );
+        }
+        if (module == 'terahertz') {
+          final int? before = previousValues[command.address];
+          debugPrint(
+            'send 0x${command.address.toRadixString(16).padLeft(4, '0').toUpperCase()} = ${command.value} '
+            '(old=${before ?? 'null'}, new=${command.value})',
+          );
+        }
+        if (module == 'fragrance') {
+          final int? before = previousValues[command.address];
+          debugPrint(
+            'send 0x${command.address.toRadixString(16).padLeft(4, '0').toUpperCase()} = ${command.value} '
+            '(old=${before ?? 'null'}, new=${command.value})',
+          );
+        }
+        if (module == 'hifem') {
+          final int? before = previousValues[command.address];
+          debugPrint(
+            'send 0x${command.address.toRadixString(16).padLeft(4, '0').toUpperCase()} = ${command.value} '
+            '(old=${before ?? 'null'}, new=${command.value})',
+          );
+        }
 
         commands.add(command);
       }
 
       if (module == 'red') {
         debugPrint('RedLight node diff end');
+      }
+      if (module == 'chakra') {
+        debugPrint('Chakra node diff end');
+      }
+      if (module == 'terahertz') {
+        debugPrint('Terahertz node diff end');
+      }
+      if (module == 'fragrance') {
+        debugPrint('Fragrance node diff end');
+      }
+      if (module == 'hifem') {
+        debugPrint('HIFEM node diff end');
       }
     }
 

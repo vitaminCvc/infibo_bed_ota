@@ -1766,8 +1766,30 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
       pairs.add('selected=${_hifemRegionId(selectedRegion)}');
     }
 
+    final HifemRegionSetting foreheadLeft =
+        setting.regionSettings[HifemRegion.foreheadLeft] ??
+        const HifemRegionSetting();
+    final HifemRegionSetting foreheadRight =
+        setting.regionSettings[HifemRegion.foreheadRight] ??
+        const HifemRegionSetting();
+    final int foreheadRf = foreheadLeft.rfPercent > foreheadRight.rfPercent
+        ? foreheadLeft.rfPercent
+        : foreheadRight.rfPercent;
+    final int foreheadHifes =
+        foreheadLeft.hifesPercent > foreheadRight.hifesPercent
+        ? foreheadLeft.hifesPercent
+        : foreheadRight.hifesPercent;
+    if (foreheadRf > 0 || foreheadHifes > 0) {
+      pairs.add('forehead.rf=$foreheadRf');
+      pairs.add('forehead.hifes=$foreheadHifes');
+    }
+
     for (final MapEntry<HifemRegion, HifemRegionSetting> entry
         in setting.regionSettings.entries) {
+      if (entry.key == HifemRegion.foreheadLeft ||
+          entry.key == HifemRegion.foreheadRight) {
+        continue;
+      }
       if (!entry.value.hasOutput) continue;
       final String id = _hifemRegionId(entry.key);
       pairs.add('$id.rf=${entry.value.rfPercent}');
@@ -2115,9 +2137,9 @@ _PemfWave? _pemfWaveFromId(String id) {
 String _hifemRegionId(HifemRegion region) {
   switch (region) {
     case HifemRegion.foreheadLeft:
-      return 'forehead_left';
+      return 'forehead';
     case HifemRegion.foreheadRight:
-      return 'forehead_right';
+      return 'forehead';
     case HifemRegion.cheekLeft:
       return 'cheek_left';
     case HifemRegion.cheekRight:
@@ -2127,10 +2149,12 @@ String _hifemRegionId(HifemRegion region) {
 
 HifemRegion? _hifemRegionFromId(String id) {
   switch (id) {
+    case 'forehead':
+      return HifemRegion.foreheadLeft;
     case 'forehead_left':
       return HifemRegion.foreheadLeft;
     case 'forehead_right':
-      return HifemRegion.foreheadRight;
+      return HifemRegion.foreheadLeft;
     case 'cheek_left':
       return HifemRegion.cheekLeft;
     case 'cheek_right':

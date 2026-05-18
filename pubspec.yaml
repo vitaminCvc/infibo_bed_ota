@@ -40,6 +40,7 @@ dependencies:
   path: ^1.9.1
   flutter_slidable: ^4.0.3
   flutter_libserialport: ^0.6.0
+  lottie: ^3.3.3
 
 dev_dependencies:
   flutter_test:
@@ -95,6 +96,7 @@ flutter:
     - assets/expand_settings/terahertz/
     - assets/expand_settings/terahertz/progress/
     - assets/joystick/
+    - assets/lottie/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

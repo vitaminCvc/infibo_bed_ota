@@ -51,18 +51,20 @@ class _HifemExpandPageState extends State<HifemExpandPage> {
     _controller = HifemSettingController.instance;
     final HifemExpandResult? initialSetting = widget.initialSetting;
     if (initialSetting != null) {
-      _selectedRegion = initialSetting.selectedRegion;
+      _selectedRegion = _normalizeSelectedRegion(initialSetting.selectedRegion);
       _regionSettings = Map<HifemRegion, HifemRegionSetting>.from(
         initialSetting.regionSettings,
       );
+      _normalizeForeheadSettings();
       return;
     }
 
     final HifemSettingSnapshot snapshot = _controller.snapshot();
-    _selectedRegion = snapshot.selectedRegion;
+    _selectedRegion = _normalizeSelectedRegion(snapshot.selectedRegion);
     _regionSettings = Map<HifemRegion, HifemRegionSetting>.from(
       snapshot.regionSettings,
     );
+    _normalizeForeheadSettings();
   }
 
   @override
@@ -163,8 +165,8 @@ class _HifemExpandPageState extends State<HifemExpandPage> {
               top: data.top,
               child: _HifemRegionPatch(
                 data: data,
-                selected: _selectedRegion == data.region,
-                configured: _settingFor(data.region).hasOutput,
+                selected: _isRegionSelected(data.region),
+                configured: _isRegionConfigured(data.region),
                 onTap: () => _selectRegion(data.region),
               ),
             ),
@@ -208,9 +210,54 @@ class _HifemExpandPageState extends State<HifemExpandPage> {
     return _regionSettings[region] ?? const HifemRegionSetting();
   }
 
+  HifemRegion? _normalizeSelectedRegion(HifemRegion? region) {
+    if (region == HifemRegion.foreheadRight) return HifemRegion.foreheadLeft;
+    return region;
+  }
+
+  bool _isForeheadRegion(HifemRegion region) {
+    return region == HifemRegion.foreheadLeft ||
+        region == HifemRegion.foreheadRight;
+  }
+
+  bool _isRegionSelected(HifemRegion region) {
+    if (_isForeheadRegion(region)) {
+      return _selectedRegion == HifemRegion.foreheadLeft;
+    }
+    return _selectedRegion == region;
+  }
+
+  bool _isRegionConfigured(HifemRegion region) {
+    if (_isForeheadRegion(region)) {
+      return _settingFor(HifemRegion.foreheadLeft).hasOutput ||
+          _settingFor(HifemRegion.foreheadRight).hasOutput;
+    }
+    return _settingFor(region).hasOutput;
+  }
+
+  void _normalizeForeheadSettings() {
+    final HifemRegionSetting left = _settingFor(HifemRegion.foreheadLeft);
+    final HifemRegionSetting right = _settingFor(HifemRegion.foreheadRight);
+    final int mergedRf = left.rfPercent > right.rfPercent
+        ? left.rfPercent
+        : right.rfPercent;
+    final int mergedHifes = left.hifesPercent > right.hifesPercent
+        ? left.hifesPercent
+        : right.hifesPercent;
+    final HifemRegionSetting merged = HifemRegionSetting(
+      rfPercent: mergedRf,
+      hifesPercent: mergedHifes,
+    );
+    _regionSettings[HifemRegion.foreheadLeft] = merged;
+    _regionSettings[HifemRegion.foreheadRight] = merged;
+  }
+
   void _selectRegion(HifemRegion region) {
-    if (_selectedRegion == region) return;
-    setState(() => _selectedRegion = region);
+    final HifemRegion target = _isForeheadRegion(region)
+        ? HifemRegion.foreheadLeft
+        : region;
+    if (_selectedRegion == target) return;
+    setState(() => _selectedRegion = target);
   }
 
   void _updateCurrent({int? rfPercent, int? hifesPercent}) {
@@ -219,9 +266,15 @@ class _HifemExpandPageState extends State<HifemExpandPage> {
 
     // 拖动进度条时只更新“当前正在编辑的区域”，不会影响其他三个区域。
     setState(() {
-      _regionSettings[region] = _settingFor(
+      final HifemRegionSetting updated = _settingFor(
         region,
       ).copyWith(rfPercent: rfPercent, hifesPercent: hifesPercent);
+      if (_isForeheadRegion(region)) {
+        _regionSettings[HifemRegion.foreheadLeft] = updated;
+        _regionSettings[HifemRegion.foreheadRight] = updated;
+      } else {
+        _regionSettings[region] = updated;
+      }
     });
   }
 
