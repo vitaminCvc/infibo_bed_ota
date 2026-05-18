@@ -6,7 +6,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:infibo_app/components/index.dart';
+import 'package:get/get.dart';
+import 'package:infibo_app/components/userindex.dart';
 import 'package:infibo_app/constants/assets.dart';
 import 'package:infibo_app/pages/choseusers/logic.dart';
 
@@ -64,7 +65,7 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
   // 构建页面
   Widget build(BuildContext context) {
     //构建页表头
-    return AppHeaderPage(
+    return AppUsersHeaderPage(
       // 点击添加用户按钮时调用
       onAddTap: _toggleAddPopup,
       children: [
@@ -174,8 +175,8 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
 
   /// 构建页面标题。
   Widget _buildTitle() {
-    return const Text(
-      '选择理疗用户',
+    return Text(
+      'choose_therapy_user'.tr,
       style: TextStyle(
         color: Color.fromARGB(255, 255, 255, 255),
         fontSize: 26,
@@ -219,12 +220,12 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
                       fontSize: 16,
                       fontFamily: 'Microsoft YaHei',
                     ),
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       // 搜索输入框样式
                       isDense: true,
                       border: InputBorder.none,
-                      hintText: '输入用户姓名或手机号',
-                      hintStyle: TextStyle(
+                      hintText: 'search_user_hint'.tr,
+                      hintStyle: const TextStyle(
                         color: Color(0xFF8B8E98),
                         fontSize: 16,
                         fontFamily: 'Microsoft YaHei',
@@ -272,8 +273,8 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
                       height: 16,
                     ),
                     const SizedBox(height: 8),
-                    const Text(
-                      '删除',
+                    Text(
+                      'delete'.tr,
                       style: TextStyle(color: Colors.white, fontSize: 13),
                     ),
                   ],
@@ -310,20 +311,23 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              _buildPopupInput(controller: _nameController, hintText: '姓名'),
+              _buildPopupInput(
+                controller: _nameController,
+                hintText: 'name'.tr,
+              ),
               const SizedBox(height: 10),
               _buildGenderSelector(),
               const SizedBox(height: 10),
               _buildPopupInput(
                 controller: _ageController,
-                hintText: '年龄',
+                hintText: 'age'.tr,
                 keyboardType: TextInputType.number,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               ),
               const SizedBox(height: 10),
               _buildPopupInput(
                 controller: _phoneController,
-                hintText: '手机号',
+                hintText: 'phone'.tr,
                 keyboardType: TextInputType.phone,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               ),
@@ -346,7 +350,7 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  child: const Text('保存'),
+                  child: Text('save'.tr),
                 ),
               ),
             ],
@@ -368,8 +372,8 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
       ),
       child: Row(
         children: [
-          const Text(
-            '性别',
+          Text(
+            'gender'.tr,
             style: TextStyle(
               color: Color(0xFF8B8E98),
               fontSize: 14,
@@ -411,7 +415,7 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
         ),
         child: Center(
           child: Text(
-            value,
+            value == '男' ? 'male'.tr : 'female'.tr,
             style: const TextStyle(
               color: Colors.white,
               fontSize: 14,
@@ -578,9 +582,9 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
           ),
         ),
         const SizedBox(width: 12),
-        _buildInfoBadge(item.gender),
+        _buildInfoBadge(_localizedGender(item.gender)),
         const SizedBox(width: 8),
-        _buildInfoBadge(item.age),
+        _buildInfoBadge(_localizedAge(item.age)),
         const SizedBox(width: 16),
         Text(
           _maskPhone(item.phone),
@@ -593,6 +597,21 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
         ),
       ],
     );
+  }
+
+  String _localizedGender(String genderRaw) {
+    final String text = genderRaw.trim().toLowerCase();
+    if (text == '男' || text == 'male') return 'male'.tr;
+    if (text == '女' || text == 'female') return 'female'.tr;
+    return genderRaw;
+  }
+
+  String _localizedAge(String ageRaw) {
+    final String localeCode = Get.locale?.languageCode ?? 'zh';
+    if (localeCode == 'zh') return ageRaw;
+    final String digits = ageRaw.replaceAll(RegExp(r'[^0-9]'), '');
+    if (digits.isEmpty) return ageRaw;
+    return '${digits}y';
   }
 
   /// 手机号脱敏显示。
@@ -635,7 +654,7 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
       child: ElevatedButton.icon(
         onPressed: () => _logic.selectUser(item),
         icon: const Icon(Icons.check_circle_outline, size: 16),
-        label: const Text('选择'),
+        label: Text('select'.tr),
         style: ElevatedButton.styleFrom(
           padding: EdgeInsets.zero,
           elevation: 0,

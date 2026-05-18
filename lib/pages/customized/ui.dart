@@ -4,6 +4,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:get/get.dart';
 import 'package:infibo_app/components/index.dart';
 import 'package:infibo_app/constants/assets.dart';
 import 'package:infibo_app/pages/customized/logic.dart';
@@ -92,7 +93,7 @@ class _CustomizedPageState extends State<CustomizedPage> {
       await _logic.init();
     } catch (error) {
       if (!mounted) return;
-      _showMessage('自定义方案加载失败：$error');
+      _showMessage('${'custom_plan_load_failed'.tr}$error');
     }
     if (!mounted) return;
     setState(() => _isReady = true);
@@ -112,11 +113,11 @@ class _CustomizedPageState extends State<CustomizedPage> {
 
   /// 构建自定义方案页标题。
   Widget _buildPageTitle() {
-    return const Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '自定义方案',
+          'custom_plan_title'.tr,
           style: TextStyle(
             color: Colors.white,
             fontSize: 24,
@@ -158,12 +159,12 @@ class _CustomizedPageState extends State<CustomizedPage> {
                       fontSize: 16,
                       fontFamily: 'Microsoft YaHei',
                     ),
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       //搜索输入框样式
                       isDense: true,
                       border: InputBorder.none,
-                      hintText: '输入方案名称',
-                      hintStyle: TextStyle(
+                      hintText: 'plan_search_hint'.tr,
+                      hintStyle: const TextStyle(
                         color: Color(0xFF8B8E98),
                         fontSize: 16,
                         fontFamily: 'Microsoft YaHei',
@@ -211,8 +212,8 @@ class _CustomizedPageState extends State<CustomizedPage> {
                         height: 16,
                       ),
                       const SizedBox(height: 8),
-                      const Text(
-                        '删除',
+                      Text(
+                        'delete'.tr,
                         style: TextStyle(color: Colors.white, fontSize: 13),
                       ),
                     ],
@@ -252,9 +253,9 @@ class _CustomizedPageState extends State<CustomizedPage> {
       child: ElevatedButton.icon(
         onPressed: _openAddPage,
         icon: Image.asset(Assets.customizedSchemeIcon, width: 20, height: 20),
-        label: const Padding(
+        label: Padding(
           padding: EdgeInsets.only(bottom: 3),
-          child: Text('添加方案'),
+          child: Text('add_plan'.tr),
         ),
         style: ElevatedButton.styleFrom(
           elevation: 0,
@@ -341,7 +342,7 @@ class _CustomizedPageState extends State<CustomizedPage> {
     final String? name = await showDialog<String>(
       context: context,
       builder: (context) =>
-          _PlanNameDialog(title: '重命名方案', controller: controller),
+          _PlanNameDialog(title: 'rename_plan'.tr, controller: controller),
     );
     // 弹窗关闭后 TextField 还需要一帧完成卸载，下一帧再释放控制器。
     WidgetsBinding.instance.addPostFrameCallback((_) => controller.dispose());
@@ -499,7 +500,7 @@ class _RenameButton extends StatelessWidget {
       child: ElevatedButton.icon(
         onPressed: onTap,
         icon: const Icon(Icons.drive_file_rename_outline, size: 15),
-        label: const Text('重命名'),
+        label: Text('rename_plan'.tr),
         style: ElevatedButton.styleFrom(
           padding: EdgeInsets.zero,
           elevation: 0,
@@ -534,7 +535,7 @@ class _SelectButton extends StatelessWidget {
       child: ElevatedButton.icon(
         onPressed: onTap,
         icon: const Icon(Icons.check_circle_outline, size: 17),
-        label: const Text('选择'),
+        label: Text('select'.tr),
         style: ElevatedButton.styleFrom(
           padding: EdgeInsets.zero,
           elevation: 0,
@@ -571,9 +572,9 @@ class _PlanNameDialog extends StatelessWidget {
         autofocus: true,
         cursorColor: Colors.white,
         style: const TextStyle(color: Colors.white),
-        decoration: const InputDecoration(
-          hintText: '输入方案名称',
-          hintStyle: TextStyle(color: Color(0xFF737782)),
+        decoration: InputDecoration(
+          hintText: 'plan_search_hint'.tr,
+          hintStyle: const TextStyle(color: Color(0xFF737782)),
           enabledBorder: UnderlineInputBorder(
             borderSide: BorderSide(color: Color(0xFF4A4D57)),
           ),
@@ -585,7 +586,7 @@ class _PlanNameDialog extends StatelessWidget {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('取消'),
+          child: Text('cancel'.tr),
         ),
         TextButton(
           onPressed: () {
@@ -593,12 +594,12 @@ class _PlanNameDialog extends StatelessWidget {
             if (name.isEmpty) {
               ScaffoldMessenger.of(
                 context,
-              ).showSnackBar(const SnackBar(content: Text('方案名称不能为空')));
+              ).showSnackBar(SnackBar(content: Text('plan_name_empty'.tr)));
               return;
             }
             Navigator.of(context).pop(name);
           },
-          child: const Text('确定'),
+          child: Text('confirm'.tr),
         ),
       ],
     );

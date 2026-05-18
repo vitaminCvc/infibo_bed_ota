@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:infibo_app/components/index.dart';
 import 'package:infibo_app/constants/assets.dart';
+import 'package:infibo_app/pages/customized/customizedPage/hifem/logic.dart';
 import 'package:infibo_app/pages/customized/customizedPage/hifem/ui.dart'
     as hifem_page;
 import 'package:infibo_app/pages/customized/customizedPage/mailun/ui.dart'
@@ -20,6 +21,7 @@ import 'package:infibo_app/pages/customized/customizedPage/xiangfen/ui.dart'
 import 'package:infibo_app/pages/customized/customizedPage/logic.dart';
 import 'package:infibo_app/pages/customized/logic.dart';
 import 'package:infibo_app/pages/customized/plan_features.dart';
+import 'package:infibo_app/pages/music/logic.dart';
 
 class CustomizedEditPage extends StatefulWidget {
   const CustomizedEditPage({super.key});
@@ -61,6 +63,10 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
   late final List<Set<String>> _nodeFeatureIds;
   late final List<Set<String>> _nodeExpandIds;
   late final List<Map<String, String>> _nodeChakraStrengths;
+  late final List<String> _nodeChakraModes;
+  late final List<terahertz_page.TerahertzExpandResult?> _nodeTerahertzSettings;
+  late final List<hifem_page.HifemExpandResult?> _nodeHifemSettings;
+  late final List<fragrance_page.FragranceExpandResult?> _nodeFragranceSettings;
   late final List<TextEditingController> _redLight660Controllers;
   late final List<TextEditingController> _redLight850Controllers;
   late final List<TextEditingController> _pemfFrequencyControllers;
@@ -69,6 +75,13 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
   late final List<FocusNode> _redLight850FocusNodes;
   late final List<FocusNode> _pemfFrequencyFocusNodes;
   late final List<FocusNode> _pemfIntensityFocusNodes;
+  late final List<TextEditingController> _vatFrequencyControllers;
+  late final List<TextEditingController> _vatIntensityControllers;
+  late final List<FocusNode> _vatFrequencyFocusNodes;
+  late final List<FocusNode> _vatIntensityFocusNodes;
+  late final List<_VatMusicSetting> _nodeVatMusicSettings;
+  late final List<TextEditingController> _hydrogenConcentrationControllers;
+  late final List<FocusNode> _hydrogenConcentrationFocusNodes;
   late final List<_RedLightMode> _nodeRedLightModes;
   late final List<_PemfWave?> _nodePemfWaves;
   late final Set<int> _savedNodeIndexes;
@@ -77,10 +90,10 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
   bool _didPrecachePemfWaveDialog = false;
 
   // 治疗模块列表。
-  final List<_ModuleItem> _modules = const [
+  late final List<_ModuleItem> _modules = [
     _ModuleItem(
       id: 'redlight',
-      title: '红光',
+      title: 'red_ther'.tr,
       iconOff: Assets.startRedLightIconOff,
       iconOn: Assets.startRedLightIconOn,
       addIcon: Assets.redLightAddIcon,
@@ -110,7 +123,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     ),
     _ModuleItem(
       id: 'hydrogen',
-      title: '分子氢',
+      title: 'module_hydrogen'.tr,
       iconOff: Assets.startHydrogenIconOff,
       iconOn: Assets.startHydrogenIconOn,
       addIcon: Assets.hydrogenAddIcon,
@@ -120,7 +133,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     ),
     _ModuleItem(
       id: 'expand',
-      title: '拓展功能',
+      title: 'module_expand'.tr,
       iconOff: Assets.expandIconOff,
       iconOn: Assets.expandIcon,
       addIcon: Assets.expandAddIcon,
@@ -138,6 +151,10 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     _nodeFeatureIds = List.generate(12, (_) => <String>{});
     _nodeExpandIds = List.generate(12, (_) => <String>{});
     _nodeChakraStrengths = List.generate(12, (_) => <String, String>{});
+    _nodeChakraModes = List.generate(12, (_) => 'rotation');
+    _nodeTerahertzSettings = List.generate(12, (_) => null);
+    _nodeHifemSettings = List.generate(12, (_) => null);
+    _nodeFragranceSettings = List.generate(12, (_) => null);
     _redLight660Controllers = List.generate(12, (_) => TextEditingController());
     _redLight850Controllers = List.generate(12, (_) => TextEditingController());
     _pemfFrequencyControllers = List.generate(
@@ -152,6 +169,22 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     _redLight850FocusNodes = List.generate(12, (_) => FocusNode());
     _pemfFrequencyFocusNodes = List.generate(12, (_) => FocusNode());
     _pemfIntensityFocusNodes = List.generate(12, (_) => FocusNode());
+    _vatFrequencyControllers = List.generate(
+      12,
+      (_) => TextEditingController(),
+    );
+    _vatIntensityControllers = List.generate(
+      12,
+      (_) => TextEditingController(),
+    );
+    _vatFrequencyFocusNodes = List.generate(12, (_) => FocusNode());
+    _vatIntensityFocusNodes = List.generate(12, (_) => FocusNode());
+    _nodeVatMusicSettings = List.generate(12, (_) => const _VatMusicSetting());
+    _hydrogenConcentrationControllers = List.generate(
+      12,
+      (_) => TextEditingController(),
+    );
+    _hydrogenConcentrationFocusNodes = List.generate(12, (_) => FocusNode());
     _nodeRedLightModes = List.generate(12, (_) => _RedLightMode.continuous);
     _nodePemfWaves = List.generate(12, (_) => null);
     _savedNodeIndexes = <int>{};
@@ -183,6 +216,25 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
       node.dispose();
     }
     for (final FocusNode node in _pemfIntensityFocusNodes) {
+      node.dispose();
+    }
+    for (final TextEditingController controller in _vatFrequencyControllers) {
+      controller.dispose();
+    }
+    for (final TextEditingController controller in _vatIntensityControllers) {
+      controller.dispose();
+    }
+    for (final FocusNode node in _vatFrequencyFocusNodes) {
+      node.dispose();
+    }
+    for (final FocusNode node in _vatIntensityFocusNodes) {
+      node.dispose();
+    }
+    for (final TextEditingController controller
+        in _hydrogenConcentrationControllers) {
+      controller.dispose();
+    }
+    for (final FocusNode node in _hydrogenConcentrationFocusNodes) {
       node.dispose();
     }
     super.dispose();
@@ -389,9 +441,9 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  '添加治疗模块',
-                  style: TextStyle(color: Colors.white, fontSize: 22),
+                Text(
+                  'add_therapy_module'.tr,
+                  style: const TextStyle(color: Colors.white, fontSize: 22),
                 ),
                 const SizedBox(height: 18),
                 for (final _ModuleItem item in _modules) ...[
@@ -428,10 +480,10 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
           children: [
             Row(
               children: [
-                const Expanded(
+                Expanded(
                   child: Text(
-                    '拓展功能',
-                    style: TextStyle(color: Colors.white, fontSize: 22),
+                    'expand_feature'.tr,
+                    style: const TextStyle(color: Colors.white, fontSize: 22),
                   ),
                 ),
                 Image.asset(Assets.expandIcon, width: 43, height: 43),
@@ -440,12 +492,12 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
             const SizedBox(height: 15),
             _buildExpandLine(
               id: 'chakra',
-              text: '脉轮',
+              text: 'chakra'.tr,
               icon: Icons.bubble_chart_outlined,
             ),
             _buildExpandLine(
               id: 'terahertz',
-              text: '太赫兹',
+              text: 'terahertz'.tr,
               icon: Icons.sensors_outlined,
             ),
             _buildExpandLine(
@@ -455,7 +507,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
             ),
             _buildExpandLine(
               id: 'fragrance',
-              text: '香氛',
+              text: 'fragrance'.tr,
               icon: Icons.waves_outlined,
             ),
           ],
@@ -536,9 +588,12 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _PanelTitle(title: '红光', icon: _moduleById('redlight').iconOn),
+            _PanelTitle(
+              title: 'red_light'.tr,
+              icon: _moduleById('redlight').iconOn,
+            ),
             const SizedBox(height: 18),
-            _buildTwoColumnLabels('波长', '强度'),
+            _buildTwoColumnLabels('wavelength'.tr, 'intensity'.tr),
             const SizedBox(height: 6),
             _buildWavelengthRow(
               '660',
@@ -546,7 +601,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
               focusNode: _redLight660FocusNodes[index],
             ),
             const SizedBox(height: 16),
-            _buildTwoColumnLabels('波长', '强度'),
+            _buildTwoColumnLabels('wavelength'.tr, 'intensity'.tr),
             const SizedBox(height: 6),
             _buildWavelengthRow(
               '850',
@@ -556,11 +611,15 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
             const Spacer(),
             Row(
               children: [
-                const Text('模式选择', style: _smallLabelStyle),
+                Text('mode_select'.tr, style: _smallLabelStyle),
                 const SizedBox(width: 25),
-                _buildModeOption(index, _RedLightMode.continuous, '连续'),
+                _buildModeOption(
+                  index,
+                  _RedLightMode.continuous,
+                  'continuous'.tr,
+                ),
                 const SizedBox(width: 12),
-                _buildModeOption(index, _RedLightMode.pulse, '脉冲'),
+                _buildModeOption(index, _RedLightMode.pulse, 'pulse'.tr),
               ],
             ),
           ],
@@ -614,7 +673,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
           children: [
             _PanelTitle(title: 'PEMF', icon: _moduleById('pemf').iconOn),
             const SizedBox(height: 20),
-            _buildTwoColumnLabels('频率', '强度'),
+            _buildTwoColumnLabels('frequency'.tr, 'intensity'.tr),
             const SizedBox(height: 7),
             Row(
               children: [
@@ -644,7 +703,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
               ],
             ),
             const SizedBox(height: 16),
-            const Text('波形', style: _smallLabelStyle),
+            Text('waveform'.tr, style: _smallLabelStyle),
             const SizedBox(height: 7),
             _PemfWaveSelector(
               wave: _nodePemfWaves[index],
@@ -657,6 +716,9 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
   }
 
   Widget _buildVatPanel() {
+    final int? index = _activeNodeIndex;
+    if (index == null) return const SizedBox.shrink();
+
     return _NotchedPanel(
       width: 270,
       height: 160,
@@ -672,15 +734,35 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _PanelTitle(title: 'VAT', icon: _moduleById('vat').iconOn),
+            _buildVatTitleRow(index),
             const SizedBox(height: 17),
-            _buildTwoColumnLabels('频率', '强度'),
+            _buildTwoColumnLabels('frequency'.tr, 'intensity'.tr),
             const SizedBox(height: 7),
             Row(
-              children: const [
-                _InputBox(width: 88),
-                SizedBox(width: 30),
-                _InputBox(width: 88),
+              children: [
+                _InputBox(
+                  width: 88,
+                  controller: _vatFrequencyControllers[index],
+                  focusNode: _vatFrequencyFocusNodes[index],
+                  keyboardType: TextInputType.number,
+                  maxValue: 100,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(3),
+                  ],
+                ),
+                const SizedBox(width: 30),
+                _InputBox(
+                  width: 88,
+                  controller: _vatIntensityControllers[index],
+                  focusNode: _vatIntensityFocusNodes[index],
+                  keyboardType: TextInputType.number,
+                  maxValue: 100,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(3),
+                  ],
+                ),
               ],
             ),
           ],
@@ -689,7 +771,70 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     );
   }
 
+  Widget _buildVatTitleRow(int index) {
+    return Row(
+      children: [
+        const Expanded(
+          child: Text(
+            'VAT',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 22,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+        GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () => _openVatMusicPage(index),
+          child: SizedBox(
+            width: 67,
+            height: 43,
+            child: Center(
+              child: Image.asset(
+                _moduleById('vat').iconOn,
+                width: 43,
+                height: 43,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _openVatMusicPage(int index) async {
+    final _VatMusicSetting current = _nodeVatMusicSettings[index];
+    final Object? result = await Get.toNamed(
+      '/music',
+      arguments: {
+        'fromPage': 'customized',
+        'currentSelectedSongId': current.songId,
+        'currentVatFrequency': _vatFrequencyControllers[index].text,
+        'currentVatStrength': _vatIntensityControllers[index].text,
+        'activeNodeIndex': index,
+      },
+    );
+
+    if (!mounted) return;
+    if (result is! VatMusicSelection) return;
+
+    setState(() {
+      _vatFrequencyControllers[index].text = result.frequency;
+      _vatIntensityControllers[index].text = result.intensity;
+      _nodeVatMusicSettings[index] = _VatMusicSetting(
+        songId: result.songId,
+        songName: result.songName,
+        seriesName: result.seriesName,
+      );
+      _savedNodeIndexes.removeWhere((item) => item >= index);
+    });
+  }
+
   Widget _buildHydrogenPanel() {
+    final int? index = _activeNodeIndex;
+    if (index == null) return const SizedBox.shrink();
+
     return _NotchedPanel(
       width: 270,
       height: 160,
@@ -705,15 +850,26 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _PanelTitle(title: '分子氢', icon: _moduleById('hydrogen').iconOn),
+            _PanelTitle(
+              title: 'module_hydrogen'.tr,
+              icon: _moduleById('hydrogen').iconOn,
+            ),
             const SizedBox(height: 17),
-            _buildTwoColumnLabels('氢气浓度', '流量'),
+            Text('hydrogen_concentration'.tr, style: _smallLabelStyle),
             const SizedBox(height: 7),
             Row(
-              children: const [
-                _InputBox(width: 88),
-                SizedBox(width: 30),
-                _InputBox(width: 88),
+              children: [
+                _InputBox(
+                  width: 206,
+                  controller: _hydrogenConcentrationControllers[index],
+                  focusNode: _hydrogenConcentrationFocusNodes[index],
+                  keyboardType: TextInputType.number,
+                  maxValue: 100,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(3),
+                  ],
+                ),
               ],
             ),
           ],
@@ -788,7 +944,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
           ),
           textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
         ),
-        child: const Text('保存参数'),
+        child: Text('save_params'.tr),
       ),
     );
   }
@@ -825,7 +981,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  '保存方案',
+                  'save_plan'.tr,
                   style: TextStyle(
                     color: canSave ? Colors.white : const Color(0xFFC4C7D0),
                     fontSize: 20,
@@ -862,7 +1018,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     }
 
     if (index > 0 && !_savedNodeIndexes.contains(index - 1)) {
-      _showMessage('请先完成上一个 5 分钟节点');
+      _showMessage('complete_previous_node'.tr);
       return;
     }
 
@@ -902,6 +1058,43 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
         _nodeChakraStrengths[index]
           ..clear()
           ..addAll(result.strengths);
+        _nodeChakraModes[index] = result.mode;
+        _savedNodeIndexes.removeWhere((item) => item >= index);
+      });
+      return;
+    }
+
+    if (id == 'terahertz') {
+      if (result is! terahertz_page.TerahertzExpandResult) return;
+
+      setState(() {
+        _nodeFeatureIds[index].add('expand');
+        _nodeExpandIds[index].add(id);
+        _nodeTerahertzSettings[index] = result;
+        _savedNodeIndexes.removeWhere((item) => item >= index);
+      });
+      return;
+    }
+
+    if (id == 'hifem') {
+      if (result is! hifem_page.HifemExpandResult) return;
+
+      setState(() {
+        _nodeFeatureIds[index].add('expand');
+        _nodeExpandIds[index].add(id);
+        _nodeHifemSettings[index] = result;
+        _savedNodeIndexes.removeWhere((item) => item >= index);
+      });
+      return;
+    }
+
+    if (id == 'fragrance') {
+      if (result is! fragrance_page.FragranceExpandResult) return;
+
+      setState(() {
+        _nodeFeatureIds[index].add('expand');
+        _nodeExpandIds[index].add(id);
+        _nodeFragranceSettings[index] = result;
         _savedNodeIndexes.removeWhere((item) => item >= index);
       });
       return;
@@ -921,16 +1114,24 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
       case 'chakra':
         return chakra_page.ChakraExpandPage(
           initialStrengths: _nodeChakraStrengths[index],
+          initialMode: _nodeChakraModes[index],
         );
       case 'terahertz':
-        return const terahertz_page.TerahertzExpandPage();
+        return terahertz_page.TerahertzExpandPage(
+          initialSetting: _nodeTerahertzSettings[index],
+        );
       case 'hifem':
-        return const hifem_page.HifemExpandPage();
+        return hifem_page.HifemExpandPage(
+          initialSetting: _nodeHifemSettings[index],
+        );
       case 'fragrance':
-        return const fragrance_page.FragranceExpandPage();
+        return fragrance_page.FragranceExpandPage(
+          initialSetting: _nodeFragranceSettings[index],
+        );
       default:
         return chakra_page.ChakraExpandPage(
           initialStrengths: _nodeChakraStrengths[index],
+          initialMode: _nodeChakraModes[index],
         );
     }
   }
@@ -1034,12 +1235,21 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
       _normalizeRangedNumber(_pemfFrequencyControllers[index], 75);
       _normalizeRangedNumber(_pemfIntensityControllers[index], 100);
     }
+    if (_nodeFeatureIds[index].contains('vat')) {
+      _normalizeRangedNumber(_vatFrequencyControllers[index], 100);
+      _normalizeRangedNumber(_vatIntensityControllers[index], 100);
+    }
+    if (_nodeFeatureIds[index].contains('hydrogen')) {
+      _normalizeRangedNumber(_hydrogenConcentrationControllers[index], 100);
+    }
 
     setState(() {
       _savedNodeIndexes.add(index);
       _activeNodeIndex = null;
     });
-    _showMessage('第 ${(index + 1) * 5} 分钟节点参数已保存');
+    _showMessage(
+      '${'node_saved_prefix'.tr}${(index + 1) * 5}${'node_saved_suffix'.tr}',
+    );
   }
 
   Future<void> _showSaveDialog() async {
@@ -1182,8 +1392,80 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
       _nodeChakraStrengths[index]
         ..clear()
         ..addAll(strengths);
+      _nodeChakraModes[index] = _parseChakraMode(parts[2]);
       _nodeFeatureIds[index].add('expand');
       _nodeExpandIds[index].add('chakra');
+      _savedNodeIndexes.add(index);
+      hasPhaseData = true;
+    }
+
+    for (final String text in featureIds) {
+      if (!text.startsWith('terahertz:')) continue;
+
+      final List<String> parts = text.split(':');
+      if (parts.length < 3) continue;
+
+      final int? index = int.tryParse(parts[1]);
+      if (index == null ||
+          index < 0 ||
+          index >= _nodeTerahertzSettings.length) {
+        continue;
+      }
+
+      final terahertz_page.TerahertzExpandResult? setting =
+          _parseTerahertzSetting(parts[2]);
+      if (setting == null) continue;
+
+      _nodeTerahertzSettings[index] = setting;
+      _nodeFeatureIds[index].add('expand');
+      _nodeExpandIds[index].add('terahertz');
+      _savedNodeIndexes.add(index);
+      hasPhaseData = true;
+    }
+
+    for (final String text in featureIds) {
+      if (!text.startsWith('hifem:')) continue;
+
+      final List<String> parts = text.split(':');
+      if (parts.length < 3) continue;
+
+      final int? index = int.tryParse(parts[1]);
+      if (index == null || index < 0 || index >= _nodeHifemSettings.length) {
+        continue;
+      }
+
+      final hifem_page.HifemExpandResult? setting = _parseHifemSetting(
+        parts[2],
+      );
+      if (setting == null) continue;
+
+      _nodeHifemSettings[index] = setting;
+      _nodeFeatureIds[index].add('expand');
+      _nodeExpandIds[index].add('hifem');
+      _savedNodeIndexes.add(index);
+      hasPhaseData = true;
+    }
+
+    for (final String text in featureIds) {
+      if (!text.startsWith('fragrance:')) continue;
+
+      final List<String> parts = text.split(':');
+      if (parts.length < 3) continue;
+
+      final int? index = int.tryParse(parts[1]);
+      if (index == null ||
+          index < 0 ||
+          index >= _nodeFragranceSettings.length) {
+        continue;
+      }
+
+      final fragrance_page.FragranceExpandResult? setting =
+          _parseFragranceSetting(parts[2]);
+      if (setting == null) continue;
+
+      _nodeFragranceSettings[index] = setting;
+      _nodeFeatureIds[index].add('expand');
+      _nodeExpandIds[index].add('fragrance');
       _savedNodeIndexes.add(index);
       hasPhaseData = true;
     }
@@ -1228,6 +1510,45 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
       hasPhaseData = true;
     }
 
+    for (final String text in featureIds) {
+      if (!text.startsWith('vat:')) continue;
+
+      final List<String> parts = text.split(':');
+      if (parts.length < 3) continue;
+
+      final int? index = int.tryParse(parts[1]);
+      if (index == null || index < 0 || index >= _nodeFeatureIds.length) {
+        continue;
+      }
+
+      final _VatSetting vatSetting = _parseVatSetting(parts[2]);
+      _vatFrequencyControllers[index].text = vatSetting.frequencyText;
+      _vatIntensityControllers[index].text = vatSetting.intensityText;
+      _nodeVatMusicSettings[index] = vatSetting.music;
+      _nodeFeatureIds[index].add('vat');
+      _savedNodeIndexes.add(index);
+      hasPhaseData = true;
+    }
+
+    for (final String text in featureIds) {
+      if (!text.startsWith('hydrogen:')) continue;
+
+      final List<String> parts = text.split(':');
+      if (parts.length < 3) continue;
+
+      final int? index = int.tryParse(parts[1]);
+      if (index == null || index < 0 || index >= _nodeFeatureIds.length) {
+        continue;
+      }
+
+      final _HydrogenSetting hSetting = _parseHydrogenSetting(parts[2]);
+      _hydrogenConcentrationControllers[index].text =
+          hSetting.concentrationText;
+      _nodeFeatureIds[index].add('hydrogen');
+      _savedNodeIndexes.add(index);
+      hasPhaseData = true;
+    }
+
     if (!hasPhaseData && _editingPlan != null) {
       final Set<String> ids = knownFeatureIds(featureIds).toSet();
       if (ids.isNotEmpty) {
@@ -1258,8 +1579,25 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
         phaseTexts.add('expand:$index:${_nodeExpandIds[index].join('|')}');
       }
       if (_nodeChakraStrengths[index].isNotEmpty) {
+        phaseTexts.add('chakra:$index:${_formatChakraSetting(index)}');
+      }
+      final terahertz_page.TerahertzExpandResult? terahertzSetting =
+          _nodeTerahertzSettings[index];
+      if (terahertzSetting != null) {
         phaseTexts.add(
-          'chakra:$index:${_formatChakraStrengths(_nodeChakraStrengths[index])}',
+          'terahertz:$index:${_formatTerahertzSetting(terahertzSetting)}',
+        );
+      }
+      final hifem_page.HifemExpandResult? hifemSetting =
+          _nodeHifemSettings[index];
+      if (hifemSetting != null) {
+        phaseTexts.add('hifem:$index:${_formatHifemSetting(hifemSetting)}');
+      }
+      final fragrance_page.FragranceExpandResult? fragranceSetting =
+          _nodeFragranceSettings[index];
+      if (fragranceSetting != null) {
+        phaseTexts.add(
+          'fragrance:$index:${_formatFragranceSetting(fragranceSetting)}',
         );
       }
       if (_nodeFeatureIds[index].contains('redlight')) {
@@ -1267,6 +1605,12 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
       }
       if (_nodeFeatureIds[index].contains('pemf')) {
         phaseTexts.add('pemf:$index:${_formatPemfSetting(index)}');
+      }
+      if (_nodeFeatureIds[index].contains('vat')) {
+        phaseTexts.add('vat:$index:${_formatVatSetting(index)}');
+      }
+      if (_nodeFeatureIds[index].contains('hydrogen')) {
+        phaseTexts.add('hydrogen:$index:${_formatHydrogenSetting(index)}');
       }
     }
 
@@ -1293,6 +1637,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
 
       final String id = pair.substring(0, separator);
       final String value = pair.substring(separator + 1);
+      if (id.trim() == 'mode') continue;
       if (id.trim().isEmpty || value.trim().isEmpty) continue;
 
       result[id] = value;
@@ -1301,11 +1646,154 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     return result;
   }
 
+  String _parseChakraMode(String text) {
+    for (final String pair in text.split('|')) {
+      final int separator = pair.indexOf('=');
+      if (separator <= 0 || separator == pair.length - 1) continue;
+
+      final String key = pair.substring(0, separator).trim();
+      final String value = pair.substring(separator + 1).trim();
+      if (key == 'mode' && value == 'independent') return 'independent';
+    }
+
+    return 'rotation';
+  }
+
+  String _formatChakraSetting(int index) {
+    final String strengths = _formatChakraStrengths(
+      _nodeChakraStrengths[index],
+    );
+    return 'mode=${_nodeChakraModes[index]}|$strengths';
+  }
+
   String _formatChakraStrengths(Map<String, String> strengths) {
     return strengths.entries
         .where((entry) => entry.value.trim().isNotEmpty)
         .map((entry) => '${entry.key}=${entry.value.trim()}')
         .join('|');
+  }
+
+  terahertz_page.TerahertzExpandResult? _parseTerahertzSetting(String text) {
+    int frequency = 0;
+    int power = 0;
+    String? mode;
+    String? wave;
+
+    for (final String pair in text.split('|')) {
+      final int separator = pair.indexOf('=');
+      if (separator <= 0 || separator == pair.length - 1) continue;
+
+      final String key = pair.substring(0, separator).trim();
+      final String value = pair.substring(separator + 1).trim();
+      switch (key) {
+        case 'frequency':
+          frequency = _rangedValue(value, 100);
+          break;
+        case 'power':
+          power = _rangedValue(value, 100);
+          break;
+        case 'mode':
+          mode = value;
+          break;
+        case 'wave':
+          wave = value;
+          break;
+      }
+    }
+
+    if (mode == null || wave == null) return null;
+    return terahertz_page.TerahertzExpandResult(
+      frequency: frequency,
+      power: power,
+      mode: mode,
+      wave: wave,
+    );
+  }
+
+  String _formatTerahertzSetting(terahertz_page.TerahertzExpandResult setting) {
+    return 'frequency=${setting.frequency}|power=${setting.power}|mode=${setting.mode}|wave=${setting.wave}';
+  }
+
+  hifem_page.HifemExpandResult? _parseHifemSetting(String text) {
+    HifemRegion? selectedRegion;
+    final Map<HifemRegion, HifemRegionSetting> regionSettings =
+        <HifemRegion, HifemRegionSetting>{};
+
+    for (final String pair in text.split('|')) {
+      final int separator = pair.indexOf('=');
+      if (separator <= 0 || separator == pair.length - 1) continue;
+
+      final String key = pair.substring(0, separator).trim();
+      final String value = pair.substring(separator + 1).trim();
+      if (key == 'selected') {
+        selectedRegion = _hifemRegionFromId(value);
+        continue;
+      }
+
+      final List<String> keyParts = key.split('.');
+      if (keyParts.length != 2) continue;
+
+      final HifemRegion? region = _hifemRegionFromId(keyParts[0]);
+      if (region == null) continue;
+
+      final HifemRegionSetting current =
+          regionSettings[region] ?? const HifemRegionSetting();
+      switch (keyParts[1]) {
+        case 'rf':
+          regionSettings[region] = current.copyWith(
+            rfPercent: _rangedValue(value, 100),
+          );
+          break;
+        case 'hifes':
+          regionSettings[region] = current.copyWith(
+            hifesPercent: _rangedValue(value, 100),
+          );
+          break;
+      }
+    }
+
+    if (selectedRegion == null && regionSettings.isEmpty) return null;
+    return hifem_page.HifemExpandResult(
+      selectedRegion: selectedRegion,
+      regionSettings: regionSettings,
+    );
+  }
+
+  String _formatHifemSetting(hifem_page.HifemExpandResult setting) {
+    final List<String> pairs = <String>[];
+    final HifemRegion? selectedRegion = setting.selectedRegion;
+    if (selectedRegion != null) {
+      pairs.add('selected=${_hifemRegionId(selectedRegion)}');
+    }
+
+    for (final MapEntry<HifemRegion, HifemRegionSetting> entry
+        in setting.regionSettings.entries) {
+      if (!entry.value.hasOutput) continue;
+      final String id = _hifemRegionId(entry.key);
+      pairs.add('$id.rf=${entry.value.rfPercent}');
+      pairs.add('$id.hifes=${entry.value.hifesPercent}');
+    }
+
+    return pairs.join('|');
+  }
+
+  fragrance_page.FragranceExpandResult? _parseFragranceSetting(String text) {
+    for (final String pair in text.split('|')) {
+      final int separator = pair.indexOf('=');
+      if (separator <= 0 || separator == pair.length - 1) continue;
+
+      final String key = pair.substring(0, separator).trim();
+      final String value = pair.substring(separator + 1).trim();
+      if (key == 'type' && value.isNotEmpty) {
+        return fragrance_page.FragranceExpandResult(fragranceId: value);
+      }
+    }
+
+    return null;
+  }
+
+  String _formatFragranceSetting(fragrance_page.FragranceExpandResult setting) {
+    return 'type=${setting.fragranceId}';
   }
 
   void _normalizeRedLightPercent(TextEditingController controller) {
@@ -1404,6 +1892,114 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     }
 
     return _PemfSetting(frequency: frequency, intensity: intensity, wave: wave);
+  }
+
+  String _formatVatSetting(int index) {
+    final int frequency = _rangedValue(
+      _vatFrequencyControllers[index].text,
+      100,
+    );
+    final int intensity = _rangedValue(
+      _vatIntensityControllers[index].text,
+      100,
+    );
+    final _VatMusicSetting music = _nodeVatMusicSettings[index];
+    final String songId = music.songId.isNotEmpty
+        ? music.songId
+        : defaultSongId;
+    final String songName = music.songName.isNotEmpty
+        ? Uri.encodeComponent(music.songName)
+        : '';
+    final String seriesName = music.seriesName.isNotEmpty
+        ? Uri.encodeComponent(music.seriesName)
+        : '';
+
+    return 'frequency=$frequency|intensity=$intensity|songId=$songId|songName=$songName|seriesName=$seriesName';
+  }
+
+  _VatSetting _parseVatSetting(String text) {
+    int frequency = 0;
+    int intensity = 0;
+    _VatMusicSetting music = const _VatMusicSetting();
+
+    for (final String pair in text.split('|')) {
+      final int separator = pair.indexOf('=');
+      if (separator <= 0 || separator == pair.length - 1) continue;
+
+      final String key = pair.substring(0, separator).trim();
+      final String value = pair.substring(separator + 1).trim();
+      switch (key) {
+        case 'frequency':
+          frequency = _rangedValue(value, 100);
+          break;
+        case 'intensity':
+          intensity = _rangedValue(value, 100);
+          break;
+        case 'songId':
+          music = _VatMusicSetting(
+            songId: value,
+            songName: music.songName,
+            seriesName: music.seriesName,
+          );
+          break;
+        case 'songName':
+          music = _VatMusicSetting(
+            songId: music.songId,
+            songName: Uri.decodeComponent(value),
+            seriesName: music.seriesName,
+          );
+          break;
+        case 'seriesName':
+          music = _VatMusicSetting(
+            songId: music.songId,
+            songName: music.songName,
+            seriesName: Uri.decodeComponent(value),
+          );
+          break;
+        // 向后兼容：旧格式使用 'music' 键
+        case 'music':
+          final Song? song = findSongById(value);
+          music = _VatMusicSetting(
+            songId: value,
+            songName: song?.name ?? '',
+            seriesName: song?.seriesName ?? '',
+          );
+          break;
+      }
+    }
+
+    return _VatSetting(
+      frequency: frequency,
+      intensity: intensity,
+      music: music,
+    );
+  }
+
+  String _formatHydrogenSetting(int index) {
+    final int concentration = _rangedValue(
+      _hydrogenConcentrationControllers[index].text,
+      100,
+    );
+    return 'concentration=$concentration';
+  }
+
+  _HydrogenSetting _parseHydrogenSetting(String text) {
+    int concentration = 0;
+
+    for (final String pair in text.split('|')) {
+      final int separator = pair.indexOf('=');
+      if (separator <= 0 || separator == pair.length - 1) continue;
+
+      final String key = pair.substring(0, separator).trim();
+      final String value = pair.substring(separator + 1).trim();
+      switch (key) {
+        case 'concentration':
+          concentration = _rangedValue(value, 100);
+          break;
+      }
+    }
+
+    return _HydrogenSetting(concentration: concentration);
   }
 
   _ModuleItem _moduleById(String id) {
@@ -1516,14 +2112,42 @@ _PemfWave? _pemfWaveFromId(String id) {
   return null;
 }
 
+String _hifemRegionId(HifemRegion region) {
+  switch (region) {
+    case HifemRegion.foreheadLeft:
+      return 'forehead_left';
+    case HifemRegion.foreheadRight:
+      return 'forehead_right';
+    case HifemRegion.cheekLeft:
+      return 'cheek_left';
+    case HifemRegion.cheekRight:
+      return 'cheek_right';
+  }
+}
+
+HifemRegion? _hifemRegionFromId(String id) {
+  switch (id) {
+    case 'forehead_left':
+      return HifemRegion.foreheadLeft;
+    case 'forehead_right':
+      return HifemRegion.foreheadRight;
+    case 'cheek_left':
+      return HifemRegion.cheekLeft;
+    case 'cheek_right':
+      return HifemRegion.cheekRight;
+    default:
+      return null;
+  }
+}
+
 class _PageTitle extends StatelessWidget {
   const _PageTitle();
 
   @override
   Widget build(BuildContext context) {
-    return const Text(
-      '自定义方案',
-      style: TextStyle(
+    return Text(
+      'custom_plan_title'.tr,
+      style: const TextStyle(
         color: Colors.white,
         fontSize: 24,
         fontWeight: FontWeight.w500,
@@ -1855,6 +2479,41 @@ class _PemfWavePopupState extends State<_PemfWavePopup> {
   }
 }
 
+class _VatMusicSetting {
+  const _VatMusicSetting({
+    this.songId = '',
+    this.songName = '',
+    this.seriesName = '',
+  });
+
+  final String songId;
+  final String songName;
+  final String seriesName;
+}
+
+class _VatSetting {
+  const _VatSetting({
+    required this.frequency,
+    required this.intensity,
+    required this.music,
+  });
+
+  final int frequency;
+  final int intensity;
+  final _VatMusicSetting music;
+
+  String get frequencyText => frequency.toString();
+  String get intensityText => intensity.toString();
+}
+
+class _HydrogenSetting {
+  const _HydrogenSetting({required this.concentration});
+
+  final int concentration;
+
+  String get concentrationText => concentration.toString();
+}
+
 class _RadioDot extends StatelessWidget {
   const _RadioDot({required this.active, required this.color});
 
@@ -2066,19 +2725,22 @@ class _PlanNameDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: const Color(0xFF202127),
-      title: const Text('方案命名', style: TextStyle(color: Colors.white)),
+      title: Text(
+        'plan_naming'.tr,
+        style: const TextStyle(color: Colors.white),
+      ),
       content: TextField(
         controller: controller,
         autofocus: true,
         cursorColor: Colors.white,
         style: const TextStyle(color: Colors.white),
-        decoration: const InputDecoration(
-          hintText: '输入方案名称',
-          hintStyle: TextStyle(color: Color(0xFF737782)),
-          enabledBorder: UnderlineInputBorder(
+        decoration: InputDecoration(
+          hintText: 'plan_search_hint'.tr,
+          hintStyle: const TextStyle(color: Color(0xFF737782)),
+          enabledBorder: const UnderlineInputBorder(
             borderSide: BorderSide(color: Color(0xFF4A4D57)),
           ),
-          focusedBorder: UnderlineInputBorder(
+          focusedBorder: const UnderlineInputBorder(
             borderSide: BorderSide(color: Color(0xFF1F74E8)),
           ),
         ),
@@ -2086,7 +2748,7 @@ class _PlanNameDialog extends StatelessWidget {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('取消'),
+          child: Text('cancel'.tr),
         ),
         TextButton(
           onPressed: () {
@@ -2094,12 +2756,12 @@ class _PlanNameDialog extends StatelessWidget {
             if (name.isEmpty) {
               ScaffoldMessenger.of(
                 context,
-              ).showSnackBar(const SnackBar(content: Text('方案名称不能为空')));
+              ).showSnackBar(SnackBar(content: Text('plan_name_empty'.tr)));
               return;
             }
             Navigator.of(context).pop(name);
           },
-          child: const Text('保存'),
+          child: Text('save'.tr),
         ),
       ],
     );

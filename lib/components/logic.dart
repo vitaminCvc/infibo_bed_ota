@@ -13,4 +13,10 @@ class AppComponentLogic {
     if (Get.currentRoute == mainRoute) return;
     Get.offAllNamed(mainRoute);
   }
+
+  //进入设置页面
+  static const String settingRoute = '/setting';
+  static void openSettingPage() {
+    Get.toNamed(settingRoute);
+  }
 }

@@ -4,13 +4,30 @@
 // 页面打开时从 TerahertzSettingController 恢复上次确认过的值；
 // 点击确认后保存当前值并返回自定义方案页。
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:infibo_app/components/index.dart';
 import 'package:infibo_app/constants/assets.dart';
 import 'package:infibo_app/pages/customized/customizedPage/setting_page_helpers.dart';
 import 'package:infibo_app/pages/customized/customizedPage/taihezi/logic.dart';
 
+class TerahertzExpandResult {
+  const TerahertzExpandResult({
+    required this.frequency,
+    required this.power,
+    required this.mode,
+    required this.wave,
+  });
+
+  final int frequency;
+  final int power;
+  final String mode;
+  final String wave;
+}
+
 class TerahertzExpandPage extends StatefulWidget {
-  const TerahertzExpandPage({super.key});
+  const TerahertzExpandPage({super.key, this.initialSetting});
+
+  final TerahertzExpandResult? initialSetting;
 
   @override
   State<TerahertzExpandPage> createState() => _TerahertzExpandPageState();
@@ -32,6 +49,15 @@ class _TerahertzExpandPageState extends State<TerahertzExpandPage> {
   void initState() {
     super.initState();
     _controller = TerahertzSettingController.instance;
+    final TerahertzExpandResult? initialSetting = widget.initialSetting;
+    if (initialSetting != null) {
+      _frequency = initialSetting.frequency.toDouble();
+      _power = initialSetting.power.toDouble();
+      _mode = initialSetting.mode;
+      _wave = initialSetting.wave;
+      return;
+    }
+
     final TerahertzSettingSnapshot snapshot = _controller.snapshot();
     _frequency = snapshot.frequency;
     _power = snapshot.power;
@@ -75,12 +101,12 @@ class _TerahertzExpandPageState extends State<TerahertzExpandPage> {
                             onTap: () => popExpandPage(context),
                           ),
                         ),
-                        const Positioned(
+                        Positioned(
                           left: 0,
                           right: 0,
                           top: 16,
                           child: Text(
-                            '太赫兹设置',
+                            'terahertz_setting'.tr,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: Colors.white,
@@ -137,7 +163,7 @@ class _TerahertzExpandPageState extends State<TerahertzExpandPage> {
     return Column(
       children: [
         _DraggableProgressRow(
-          label: '频率',
+          label: 'frequency'.tr,
           value: _frequency,
           max: 100,
           activeBar: Assets.terahertzFrequencyBar,
@@ -147,7 +173,7 @@ class _TerahertzExpandPageState extends State<TerahertzExpandPage> {
         ),
         const SizedBox(height: 55),
         _DraggableProgressRow(
-          label: '功率',
+          label: 'power'.tr,
           value: _power,
           max: 100,
           activeBar: Assets.terahertzPowerBar,
@@ -161,39 +187,39 @@ class _TerahertzExpandPageState extends State<TerahertzExpandPage> {
 
   Widget _buildRadios() {
     return SizedBox(
-      width: 609,
+      width: 640,
       child: Row(
         children: [
-          const Text('模式', style: _labelStyle),
+          Text('mode'.tr, style: _labelStyle),
           const SizedBox(width: 26),
           _OptionDot(
-            label: '连续',
+            label: 'continuous'.tr,
             selected: _mode == 'continuous',
             onTap: () => _selectMode('continuous'),
           ),
           const SizedBox(width: 22),
           _OptionDot(
-            label: '脉冲',
+            label: 'pulse'.tr,
             selected: _mode == 'pulse',
             onTap: () => _selectMode('pulse'),
           ),
           const SizedBox(width: 78),
-          const Text('波形', style: _labelStyle),
+          Text('waveform'.tr, style: _labelStyle),
           const SizedBox(width: 26),
           _OptionDot(
-            label: '正弦波',
+            label: 'sine_wave'.tr,
             selected: _wave == 'sine',
             onTap: () => _selectWave('sine'),
           ),
           const SizedBox(width: 22),
           _OptionDot(
-            label: '方波',
+            label: 'square_wave'.tr,
             selected: _wave == 'square',
             onTap: () => _selectWave('square'),
           ),
           const SizedBox(width: 22),
           _OptionDot(
-            label: '三角波',
+            label: 'triangle_wave'.tr,
             selected: _wave == 'triangle',
             onTap: () => _selectWave('triangle'),
           ),
@@ -213,14 +239,23 @@ class _TerahertzExpandPageState extends State<TerahertzExpandPage> {
   void _selectWave(String value) => setState(() => _wave = value);
 
   void _confirm(BuildContext pageContext) {
+    if (!_canConfirm) return;
+
+    final TerahertzExpandResult result = TerahertzExpandResult(
+      frequency: _frequency.round().clamp(0, 100),
+      power: _power.round().clamp(0, 100),
+      mode: _mode!,
+      wave: _wave!,
+    );
+
     // 只有确认时才保存到 controller；直接返回不会覆盖上次确认过的设置。
     _controller.save(
-      frequency: _frequency,
-      power: _power,
-      mode: _mode,
-      wave: _wave,
+      frequency: result.frequency.toDouble(),
+      power: result.power.toDouble(),
+      mode: result.mode,
+      wave: result.wave,
     );
-    popExpandPage(pageContext, true);
+    popExpandPage(pageContext, result);
   }
 }
 

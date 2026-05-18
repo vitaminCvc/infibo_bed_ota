@@ -4,13 +4,22 @@
 // 点击确认后把当前选中的香型 id 保存到 FragranceSettingController，
 // 返回自定义方案页后再次进入仍会保持上次选择。
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:infibo_app/components/index.dart';
 import 'package:infibo_app/constants/assets.dart';
 import 'package:infibo_app/pages/customized/customizedPage/setting_page_helpers.dart';
 import 'package:infibo_app/pages/customized/customizedPage/xiangfen/logic.dart';
 
+class FragranceExpandResult {
+  const FragranceExpandResult({required this.fragranceId});
+
+  final String fragranceId;
+}
+
 class FragranceExpandPage extends StatefulWidget {
-  const FragranceExpandPage({super.key});
+  const FragranceExpandPage({super.key, this.initialSetting});
+
+  final FragranceExpandResult? initialSetting;
 
   @override
   State<FragranceExpandPage> createState() => _FragranceExpandPageState();
@@ -27,7 +36,8 @@ class _FragranceExpandPageState extends State<FragranceExpandPage> {
   void initState() {
     super.initState();
     _controller = FragranceSettingController.instance;
-    _selectedId = _controller.selectedFragranceId;
+    _selectedId =
+        widget.initialSetting?.fragranceId ?? _controller.selectedFragranceId;
   }
 
   @override
@@ -66,12 +76,12 @@ class _FragranceExpandPageState extends State<FragranceExpandPage> {
                             onTap: () => popExpandPage(context),
                           ),
                         ),
-                        const Positioned(
+                        Positioned(
                           left: 0,
                           right: 0,
                           top: 5,
                           child: Text(
-                            '香氛设置',
+                            'fragrance_setting'.tr,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: Colors.white,
@@ -179,9 +189,13 @@ class _FragranceExpandPageState extends State<FragranceExpandPage> {
   }
 
   void _confirm(BuildContext pageContext) {
+    final FragranceExpandResult result = FragranceExpandResult(
+      fragranceId: _selectedId,
+    );
+
     // 只有确认时才写入 controller；返回按钮只是退出页面，不改变上次保存值。
-    _controller.saveSelectedFragrance(_selectedId);
-    popExpandPage(pageContext, true);
+    _controller.saveSelectedFragrance(result.fragranceId);
+    popExpandPage(pageContext, result);
   }
 }
 
@@ -219,12 +233,8 @@ class _FragranceChoice extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             Text(
-              data.title,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-                fontWeight: FontWeight.w600,
-              ),
+              data.title.tr,
+              style: const TextStyle(color: Colors.white, fontSize: 24),
             ),
           ],
         ),
@@ -249,32 +259,32 @@ class _FragranceChoiceData {
 
 const List<_FragranceChoiceData> _choices = [
   _FragranceChoiceData(
-    id: 'soft',
-    title: '轻柔',
+    id: 'gentle',
+    title: 'gentle',
     icon: Assets.fragranceSoftDefault,
     selectedIcon: Assets.fragranceSoftSelected,
   ),
   _FragranceChoiceData(
-    id: 'strong',
-    title: '浓烈',
+    id: 'intense',
+    title: 'intense',
     icon: Assets.fragranceStrongDefault,
     selectedIcon: Assets.fragranceStrongSelected,
   ),
   _FragranceChoiceData(
     id: 'sleep',
-    title: '睡眠',
+    title: 'sleep',
     icon: Assets.fragranceSleepDefault,
     selectedIcon: Assets.fragranceSleepSelected,
   ),
   _FragranceChoiceData(
     id: 'flow',
-    title: '心流',
+    title: 'flow_state',
     icon: Assets.fragranceFlowDefault,
     selectedIcon: Assets.fragranceFlowSelected,
   ),
   _FragranceChoiceData(
     id: 'meditation',
-    title: '冥想',
+    title: 'meditation',
     icon: Assets.fragranceMeditationDefault,
     selectedIcon: Assets.fragranceMeditationSelected,
   ),

@@ -13,6 +13,13 @@ class StartLogic {
   bool isPaused = false;
   List<List<String>>? customizedPhases;
   List<RedLightPhaseSetting?>? customizedRedLightSettings;
+  List<PemfPhaseSetting?>? customizedPemfSettings;
+  List<HydrogenPhaseSetting?>? customizedHydrogenSettings;
+  List<VatPhaseSetting?>? customizedVatSettings;
+  List<ChakraPhaseSetting?>? customizedChakraSettings;
+  List<TerahertzPhaseSetting?>? customizedTerahertzSettings;
+  List<HifemPhaseSetting?>? customizedHifemSettings;
+  List<FragrancePhaseSetting?>? customizedFragranceSettings;
 
   int get phaseCount => totalSeconds ~/ phaseSeconds;
   bool get isCustomizedPlan => customizedPhases != null;
@@ -53,6 +60,62 @@ class StartLogic {
 
   RedLightPhaseSetting? get activeRedLightSetting {
     final List<RedLightPhaseSetting?>? settings = customizedRedLightSettings;
+    if (settings == null || settings.isEmpty) return null;
+
+    final int index = activePhaseIndex.clamp(0, settings.length - 1);
+    return settings[index];
+  }
+
+  PemfPhaseSetting? get activePemfSetting {
+    final List<PemfPhaseSetting?>? settings = customizedPemfSettings;
+    if (settings == null || settings.isEmpty) return null;
+
+    final int index = activePhaseIndex.clamp(0, settings.length - 1);
+    return settings[index];
+  }
+
+  HydrogenPhaseSetting? get activeHydrogenSetting {
+    final List<HydrogenPhaseSetting?>? settings = customizedHydrogenSettings;
+    if (settings == null || settings.isEmpty) return null;
+
+    final int index = activePhaseIndex.clamp(0, settings.length - 1);
+    return settings[index];
+  }
+
+  VatPhaseSetting? get activeVatSetting {
+    final List<VatPhaseSetting?>? settings = customizedVatSettings;
+    if (settings == null || settings.isEmpty) return null;
+
+    final int index = activePhaseIndex.clamp(0, settings.length - 1);
+    return settings[index];
+  }
+
+  ChakraPhaseSetting? get activeChakraSetting {
+    final List<ChakraPhaseSetting?>? settings = customizedChakraSettings;
+    if (settings == null || settings.isEmpty) return null;
+
+    final int index = activePhaseIndex.clamp(0, settings.length - 1);
+    return settings[index];
+  }
+
+  TerahertzPhaseSetting? get activeTerahertzSetting {
+    final List<TerahertzPhaseSetting?>? settings = customizedTerahertzSettings;
+    if (settings == null || settings.isEmpty) return null;
+
+    final int index = activePhaseIndex.clamp(0, settings.length - 1);
+    return settings[index];
+  }
+
+  HifemPhaseSetting? get activeHifemSetting {
+    final List<HifemPhaseSetting?>? settings = customizedHifemSettings;
+    if (settings == null || settings.isEmpty) return null;
+
+    final int index = activePhaseIndex.clamp(0, settings.length - 1);
+    return settings[index];
+  }
+
+  FragrancePhaseSetting? get activeFragranceSetting {
+    final List<FragrancePhaseSetting?>? settings = customizedFragranceSettings;
     if (settings == null || settings.isEmpty) return null;
 
     final int index = activePhaseIndex.clamp(0, settings.length - 1);
@@ -129,6 +192,28 @@ class StartLogic {
       12,
       (_) => null,
     );
+    final List<PemfPhaseSetting?> pemfSettings = List.generate(12, (_) => null);
+    final List<HydrogenPhaseSetting?> hydrogenSettings = List.generate(
+      12,
+      (_) => null,
+    );
+    final List<VatPhaseSetting?> vatSettings = List.generate(12, (_) => null);
+    final List<ChakraPhaseSetting?> chakraSettings = List.generate(
+      12,
+      (_) => null,
+    );
+    final List<TerahertzPhaseSetting?> terahertzSettings = List.generate(
+      12,
+      (_) => null,
+    );
+    final List<HifemPhaseSetting?> hifemSettings = List.generate(
+      12,
+      (_) => null,
+    );
+    final List<FragrancePhaseSetting?> fragranceSettings = List.generate(
+      12,
+      (_) => null,
+    );
     int maxIndex = -1;
 
     for (final String text in plan.featureIds) {
@@ -148,6 +233,27 @@ class StartLogic {
       } else if (text.startsWith('redlight:')) {
         redLightSettings[index] = RedLightPhaseSetting.parse(parts[2]);
         if (index > maxIndex) maxIndex = index;
+      } else if (text.startsWith('pemf:')) {
+        pemfSettings[index] = PemfPhaseSetting.parse(parts[2]);
+        if (index > maxIndex) maxIndex = index;
+      } else if (text.startsWith('hydrogen:')) {
+        hydrogenSettings[index] = HydrogenPhaseSetting.parse(parts[2]);
+        if (index > maxIndex) maxIndex = index;
+      } else if (text.startsWith('vat:')) {
+        vatSettings[index] = VatPhaseSetting.parse(parts[2]);
+        if (index > maxIndex) maxIndex = index;
+      } else if (text.startsWith('chakra:')) {
+        chakraSettings[index] = ChakraPhaseSetting.parse(parts[2]);
+        if (index > maxIndex) maxIndex = index;
+      } else if (text.startsWith('terahertz:')) {
+        terahertzSettings[index] = TerahertzPhaseSetting.parse(parts[2]);
+        if (index > maxIndex) maxIndex = index;
+      } else if (text.startsWith('hifem:')) {
+        hifemSettings[index] = HifemPhaseSetting.parse(parts[2]);
+        if (index > maxIndex) maxIndex = index;
+      } else if (text.startsWith('fragrance:')) {
+        fragranceSettings[index] = FragrancePhaseSetting.parse(parts[2]);
+        if (index > maxIndex) maxIndex = index;
       }
     }
 
@@ -155,6 +261,13 @@ class StartLogic {
 
     customizedPhases = phases.take(maxIndex + 1).toList();
     customizedRedLightSettings = redLightSettings.take(maxIndex + 1).toList();
+    customizedPemfSettings = pemfSettings.take(maxIndex + 1).toList();
+    customizedHydrogenSettings = hydrogenSettings.take(maxIndex + 1).toList();
+    customizedVatSettings = vatSettings.take(maxIndex + 1).toList();
+    customizedChakraSettings = chakraSettings.take(maxIndex + 1).toList();
+    customizedTerahertzSettings = terahertzSettings.take(maxIndex + 1).toList();
+    customizedHifemSettings = hifemSettings.take(maxIndex + 1).toList();
+    customizedFragranceSettings = fragranceSettings.take(maxIndex + 1).toList();
     totalSeconds = (maxIndex + 1) * phaseSeconds;
     elapsedSeconds = 0;
     isRunning = false;
@@ -256,6 +369,422 @@ class RedLightPhaseSetting {
     final int? value = int.tryParse(text);
     if (value == null) return 0;
     return value.clamp(0, 100).toInt();
+  }
+}
+
+class PemfPhaseSetting {
+  const PemfPhaseSetting({
+    required this.frequency,
+    required this.intensity,
+    required this.waveform,
+  });
+
+  final int frequency;
+  final int intensity;
+  final String waveform;
+
+  int get waveformNumber {
+    switch (waveform) {
+      case 'sine':
+        return 1;
+      case 'halfSine':
+        return 2;
+      case 'trapezoid':
+        return 3;
+      case 'standardSine':
+        return 4;
+      case 'saw':
+        return 5;
+      case 'triangle':
+        return 6;
+      case 'pulse':
+        return 7;
+      case 'fastRise':
+        return 8;
+      case 'dualFrequency':
+        return 9;
+      case 'cubic':
+        return 10;
+      default:
+        return 1;
+    }
+  }
+
+  factory PemfPhaseSetting.parse(String text) {
+    int frequency = 0;
+    int intensity = 0;
+    String waveform = '';
+
+    for (final String pair in text.split('|')) {
+      final int separator = pair.indexOf('=');
+      if (separator <= 0 || separator == pair.length - 1) continue;
+
+      final String key = pair.substring(0, separator).trim();
+      final String value = pair.substring(separator + 1).trim();
+
+      switch (key) {
+        case 'frequency':
+          frequency = _clampInt(value, 75);
+          break;
+        case 'intensity':
+          intensity = _clampInt(value, 100);
+          break;
+        case 'wave':
+          waveform = value;
+          break;
+      }
+    }
+
+    return PemfPhaseSetting(
+      frequency: frequency,
+      intensity: intensity,
+      waveform: waveform,
+    );
+  }
+
+  static int _clampInt(String text, int max) {
+    final int? value = int.tryParse(text);
+    if (value == null) return 0;
+    return value.clamp(0, max).toInt();
+  }
+}
+
+class HydrogenPhaseSetting {
+  const HydrogenPhaseSetting({
+    required this.concentration,
+    required this.flowRate,
+  });
+
+  final int concentration;
+  final int flowRate;
+
+  factory HydrogenPhaseSetting.parse(String text) {
+    int concentration = 0;
+    int flowRate = 0;
+
+    for (final String pair in text.split('|')) {
+      final int separator = pair.indexOf('=');
+      if (separator <= 0 || separator == pair.length - 1) continue;
+
+      final String key = pair.substring(0, separator).trim();
+      final String value = pair.substring(separator + 1).trim();
+      final int? parsed = int.tryParse(value);
+      if (parsed == null) continue;
+
+      switch (key) {
+        case 'concentration':
+          concentration = parsed.clamp(0, 100);
+          break;
+        case 'flow':
+          flowRate = parsed.clamp(0, 100);
+          break;
+      }
+    }
+
+    return HydrogenPhaseSetting(
+      concentration: concentration,
+      flowRate: flowRate,
+    );
+  }
+}
+
+class VatPhaseSetting {
+  const VatPhaseSetting({
+    required this.frequency,
+    required this.intensity,
+    this.songId,
+    this.songName,
+    this.seriesName,
+  });
+
+  final int frequency;
+  final int intensity;
+  final String? songId;
+  final String? songName;
+  final String? seriesName;
+
+  factory VatPhaseSetting.parse(String text) {
+    int frequency = 0;
+    int intensity = 0;
+    String? songId;
+    String? songName;
+    String? seriesName;
+
+    for (final String pair in text.split('|')) {
+      final int separator = pair.indexOf('=');
+      if (separator <= 0 || separator == pair.length - 1) continue;
+
+      final String key = pair.substring(0, separator).trim();
+      final String value = pair.substring(separator + 1).trim();
+
+      switch (key) {
+        case 'frequency':
+          final int? parsed = int.tryParse(value);
+          if (parsed != null) frequency = parsed.clamp(0, 100);
+          break;
+        case 'intensity':
+          final int? parsed = int.tryParse(value);
+          if (parsed != null) intensity = parsed.clamp(0, 100);
+          break;
+        case 'songId':
+          songId = value;
+          break;
+        case 'songName':
+          songName = Uri.decodeComponent(value);
+          break;
+        case 'seriesName':
+          seriesName = Uri.decodeComponent(value);
+          break;
+      }
+    }
+
+    return VatPhaseSetting(
+      frequency: frequency,
+      intensity: intensity,
+      songId: songId,
+      songName: songName,
+      seriesName: seriesName,
+    );
+  }
+}
+
+class ChakraPhaseSetting {
+  const ChakraPhaseSetting({required this.strengths, required this.mode});
+
+  final Map<String, int> strengths;
+  final String mode;
+
+  bool get hasStrengths => strengths.isNotEmpty;
+  int get modbusMode => mode == 'independent' ? 1 : 0;
+
+  factory ChakraPhaseSetting.parse(String text) {
+    final Map<String, int> strengths = <String, int>{};
+    String mode = 'rotation';
+
+    for (final String pair in text.split('|')) {
+      final int separator = pair.indexOf('=');
+      if (separator <= 0 || separator == pair.length - 1) continue;
+
+      final String key = pair.substring(0, separator).trim();
+      final String value = pair.substring(separator + 1).trim();
+      if (key == 'mode') {
+        mode = value == 'independent' ? 'independent' : 'rotation';
+        continue;
+      }
+      final int? parsed = int.tryParse(value);
+      if (parsed == null) continue;
+      strengths[key] = parsed.clamp(0, 100);
+    }
+
+    return ChakraPhaseSetting(strengths: strengths, mode: mode);
+  }
+}
+
+class TerahertzPhaseSetting {
+  const TerahertzPhaseSetting({
+    required this.frequency,
+    required this.power,
+    required this.mode,
+    required this.wave,
+  });
+
+  final int frequency;
+  final int power;
+  final String mode;
+  final String wave;
+
+  int get modbusMode {
+    switch (mode) {
+      case 'pulse':
+        return 1;
+      case 'custom':
+        return 2;
+      case 'continuous':
+      default:
+        return 0;
+    }
+  }
+
+  int get modbusWave {
+    switch (wave) {
+      case 'square':
+        return 1;
+      case 'triangle':
+        return 2;
+      case 'sine':
+      default:
+        return 0;
+    }
+  }
+
+  factory TerahertzPhaseSetting.parse(String text) {
+    int frequency = 0;
+    int power = 0;
+    String mode = 'continuous';
+    String wave = 'sine';
+
+    for (final String pair in text.split('|')) {
+      final int separator = pair.indexOf('=');
+      if (separator <= 0 || separator == pair.length - 1) continue;
+
+      final String key = pair.substring(0, separator).trim();
+      final String value = pair.substring(separator + 1).trim();
+      switch (key) {
+        case 'frequency':
+          frequency = _clampInt(value, 100);
+          break;
+        case 'power':
+          power = _clampInt(value, 100);
+          break;
+        case 'mode':
+          mode = value;
+          break;
+        case 'wave':
+          wave = value;
+          break;
+      }
+    }
+
+    return TerahertzPhaseSetting(
+      frequency: frequency,
+      power: power,
+      mode: mode,
+      wave: wave,
+    );
+  }
+
+  static int _clampInt(String text, int max) {
+    final int? value = int.tryParse(text);
+    if (value == null) return 0;
+    return value.clamp(0, max).toInt();
+  }
+}
+
+class HifemPhaseSetting {
+  const HifemPhaseSetting({
+    required this.foreheadRf,
+    required this.foreheadHifes,
+    required this.leftCheekRf,
+    required this.leftCheekHifes,
+    required this.rightCheekRf,
+    required this.rightCheekHifes,
+  });
+
+  final int foreheadRf;
+  final int foreheadHifes;
+  final int leftCheekRf;
+  final int leftCheekHifes;
+  final int rightCheekRf;
+  final int rightCheekHifes;
+
+  bool get hasOutput =>
+      foreheadRf > 0 ||
+      foreheadHifes > 0 ||
+      leftCheekRf > 0 ||
+      leftCheekHifes > 0 ||
+      rightCheekRf > 0 ||
+      rightCheekHifes > 0;
+
+  factory HifemPhaseSetting.parse(String text) {
+    int foreheadLeftRf = 0;
+    int foreheadLeftHifes = 0;
+    int foreheadRightRf = 0;
+    int foreheadRightHifes = 0;
+    int cheekLeftRf = 0;
+    int cheekLeftHifes = 0;
+    int cheekRightRf = 0;
+    int cheekRightHifes = 0;
+
+    for (final String pair in text.split('|')) {
+      final int separator = pair.indexOf('=');
+      if (separator <= 0 || separator == pair.length - 1) continue;
+
+      final String key = pair.substring(0, separator).trim();
+      final String value = pair.substring(separator + 1).trim();
+      switch (key) {
+        case 'forehead_left.rf':
+          foreheadLeftRf = _clampInt(value, 100);
+          break;
+        case 'forehead_left.hifes':
+          foreheadLeftHifes = _clampInt(value, 100);
+          break;
+        case 'forehead_right.rf':
+          foreheadRightRf = _clampInt(value, 100);
+          break;
+        case 'forehead_right.hifes':
+          foreheadRightHifes = _clampInt(value, 100);
+          break;
+        case 'cheek_left.rf':
+          cheekLeftRf = _clampInt(value, 100);
+          break;
+        case 'cheek_left.hifes':
+          cheekLeftHifes = _clampInt(value, 100);
+          break;
+        case 'cheek_right.rf':
+          cheekRightRf = _clampInt(value, 100);
+          break;
+        case 'cheek_right.hifes':
+          cheekRightHifes = _clampInt(value, 100);
+          break;
+      }
+    }
+
+    // 协议只有一个前额通道，而界面有左右前额区域。
+    return HifemPhaseSetting(
+      foreheadRf: foreheadLeftRf > foreheadRightRf
+          ? foreheadLeftRf
+          : foreheadRightRf,
+      foreheadHifes: foreheadLeftHifes > foreheadRightHifes
+          ? foreheadLeftHifes
+          : foreheadRightHifes,
+      leftCheekRf: cheekLeftRf,
+      leftCheekHifes: cheekLeftHifes,
+      rightCheekRf: cheekRightRf,
+      rightCheekHifes: cheekRightHifes,
+    );
+  }
+
+  static int _clampInt(String text, int max) {
+    final int? value = int.tryParse(text);
+    if (value == null) return 0;
+    return value.clamp(0, max).toInt();
+  }
+}
+
+class FragrancePhaseSetting {
+  const FragrancePhaseSetting({required this.fragranceId});
+
+  final String fragranceId;
+
+  int get modbusType {
+    switch (fragranceId) {
+      case 'strong':
+        return 1;
+      case 'sleep':
+        return 2;
+      case 'flow':
+        return 3;
+      case 'meditation':
+        return 4;
+      case 'soft':
+      default:
+        return 0;
+    }
+  }
+
+  factory FragrancePhaseSetting.parse(String text) {
+    String fragranceId = 'soft';
+
+    for (final String pair in text.split('|')) {
+      final int separator = pair.indexOf('=');
+      if (separator <= 0 || separator == pair.length - 1) continue;
+
+      final String key = pair.substring(0, separator).trim();
+      final String value = pair.substring(separator + 1).trim();
+      if (key == 'type' && value.isNotEmpty) fragranceId = value;
+    }
+
+    return FragrancePhaseSetting(fragranceId: fragranceId);
   }
 }
 

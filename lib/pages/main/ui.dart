@@ -2,9 +2,12 @@
 //
 // 展示预设理疗模式、顶部 Header 和氛围灯开关，并提供进入自定义方案页的入口。
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:infibo_app/api/modbus_rtu_service.dart';
 import 'package:infibo_app/components/index.dart';
 import 'package:infibo_app/constants/assets.dart';
 import 'package:infibo_app/constants/color.dart';
+import 'package:infibo_app/pages/joystick/ui.dart';
 import 'package:infibo_app/pages/main/logic.dart';
 
 // 主页面UI
@@ -19,6 +22,10 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   // 主页面底部氛围灯默认按钮
   bool _isLightOn = false;
+  bool _isLightCommanding = false;
+  bool _pendingLightState = false;
+  bool _hasPendingLight = false;
+  final ModbusRtuService _modbusService = const ModbusRtuService();
   // 主页面逻辑控制器
   final MainLogic _logic = MainLogic();
 
@@ -27,7 +34,7 @@ class _MainPageState extends State<MainPage> {
   static const List<_ModeCardData> _leftModeCards = [
     // 深度放松
     _ModeCardData(
-      title: '深度放松',
+      titleKey: 'deep_relax',
       color: Color(0xFF26D1EF),
       asset: Assets.deepRelaxLogo,
       left: 153,
@@ -38,7 +45,7 @@ class _MainPageState extends State<MainPage> {
     ),
     // 能量提升
     _ModeCardData(
-      title: '能量提升',
+      titleKey: 'energy_boost',
       color: Color(0xFFFB933E),
       asset: Assets.energyBoostLogo,
       left: 103,
@@ -49,7 +56,7 @@ class _MainPageState extends State<MainPage> {
     ),
     // 疼痛缓解
     _ModeCardData(
-      title: '疼痛缓解',
+      titleKey: 'pain_relief',
       color: Color(0xFFF9645C),
       asset: Assets.painReliefLogo,
       left: 53,
@@ -60,7 +67,7 @@ class _MainPageState extends State<MainPage> {
     ),
     // 睡眠改善
     _ModeCardData(
-      title: '睡眠改善',
+      titleKey: 'sleep_enhancement',
       color: Color(0xFFA68DF5),
       asset: Assets.sleepEnhancementLogo,
       left: 103,
@@ -71,7 +78,7 @@ class _MainPageState extends State<MainPage> {
     ),
     // 运动恢复
     _ModeCardData(
-      title: '运动恢复',
+      titleKey: 'sports_recovery',
       color: Color(0xFF56D785),
       asset: Assets.sportsRehabilitationLogo,
       left: 153,
@@ -86,7 +93,7 @@ class _MainPageState extends State<MainPage> {
   static const List<_ModeCardData> _rightModeCards = [
     // 压力释放
     _ModeCardData(
-      title: '压力释放',
+      titleKey: 'stress_release',
       color: Color(0xFF45CD9F),
       asset: Assets.stressReliefLogo,
       left: 437,
@@ -97,7 +104,7 @@ class _MainPageState extends State<MainPage> {
     ),
     // 免疫增强
     _ModeCardData(
-      title: '免疫增强',
+      titleKey: 'immune_boost',
       color: Color(0xFF3DBAFA),
       asset: Assets.immuneBoostLogo,
       left: 500,
@@ -108,7 +115,7 @@ class _MainPageState extends State<MainPage> {
     ),
     // 抗衰老
     _ModeCardData(
-      title: '抗衰老',
+      titleKey: 'anti_aging',
       color: Color(0xFFF9645C),
       asset: Assets.antiAgingLogo,
       left: 525,
@@ -119,7 +126,7 @@ class _MainPageState extends State<MainPage> {
     ),
     // 全面养护
     _ModeCardData(
-      title: '全面养护',
+      titleKey: 'full_care',
       color: Color(0xFFE87CF3),
       asset: Assets.fullCareLogo,
       left: 500,
@@ -130,7 +137,7 @@ class _MainPageState extends State<MainPage> {
     ),
     // 情绪疗愈
     _ModeCardData(
-      title: '情绪疗愈',
+      titleKey: 'mental_healing',
       color: Color(0xFFFDBC2A),
       asset: Assets.mentalHealingLogo,
       left: 437,
@@ -190,6 +197,7 @@ class _MainPageState extends State<MainPage> {
         ..._leftModeCards.map((card) => _buildModeCard(card)),
         ..._rightModeCards.map((card) => _buildModeCard(card)),
         _buildBottomActions(),
+        const Positioned(left: 590, top: 1010, child: JoystickControl()),
       ],
     );
   }
@@ -214,8 +222,8 @@ class _MainPageState extends State<MainPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
-                '预设理疗模式',
+              Text(
+                'preset_mode'.tr,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 23,
@@ -227,8 +235,8 @@ class _MainPageState extends State<MainPage> {
             ],
           ),
           const SizedBox(height: 10),
-          const Text(
-            '10种专业配方方案',
+          Text(
+            'preset_mode_subtitle'.tr,
             style: TextStyle(color: Color(0xFFB9BBC4), fontSize: 16),
           ),
         ],
@@ -245,14 +253,14 @@ class _MainPageState extends State<MainPage> {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: const Color(0xFF295E4D)),
       ),
-      child: const Row(
+      child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.circle, color: Color(0xFF25E88A), size: 9),
-          SizedBox(width: 5),
+          const Icon(Icons.circle, color: Color(0xFF25E88A), size: 9),
+          const SizedBox(width: 5),
           Text(
-            '设备就绪',
-            style: TextStyle(color: Color(0xFF35E093), fontSize: 12),
+            'device_ready'.tr,
+            style: const TextStyle(color: Color(0xFF35E093), fontSize: 12),
           ),
         ],
       ),
@@ -286,7 +294,7 @@ class _MainPageState extends State<MainPage> {
               color: const Color(0xFF1876F2),
               child: InkWell(
                 onTap: _logic.openCustomizedPage,
-                child: const SizedBox(
+                child: SizedBox(
                   width: 192,
                   height: 56,
                   child: Row(
@@ -299,7 +307,7 @@ class _MainPageState extends State<MainPage> {
                       ),
                       SizedBox(width: 8),
                       Text(
-                        '自定义方案',
+                        'custom_plan'.tr,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 19,
@@ -319,9 +327,7 @@ class _MainPageState extends State<MainPage> {
           child:
               //检测用户手势操作
               GestureDetector(
-                onTap: () {
-                  setState(() => _isLightOn = !_isLightOn);
-                },
+                onTap: _toggleLight,
                 child: Image.asset(
                   _isLightOn ? Assets.lightOpenLogo : Assets.lightCloseLogo,
                   width: 56,
@@ -331,6 +337,42 @@ class _MainPageState extends State<MainPage> {
         ),
       ],
     );
+  }
+
+  // ── 氛围灯开关 ──────────────────────────────────────────────────
+
+  void _toggleLight() {
+    final bool newState = !_isLightOn;
+    setState(() => _isLightOn = newState);
+
+    if (_isLightCommanding) {
+      _pendingLightState = newState;
+      _hasPendingLight = true;
+      return;
+    }
+    _sendLightCommand(newState);
+  }
+
+  Future<void> _sendLightCommand(bool state) async {
+    _isLightCommanding = true;
+    try {
+      await _modbusService.sendCommandQueue([
+        ModbusWriteCommand(address: 0x0012, value: state ? 1 : 0),
+      ]);
+      debugPrint(
+        'Ambient light ${state ? "ON" : "OFF"} TX 0x0012=${state ? 1 : 0}',
+      );
+    } catch (e) {
+      debugPrint('Ambient light command failed: $e');
+    } finally {
+      if (mounted) {
+        _isLightCommanding = false;
+        if (_hasPendingLight) {
+          _hasPendingLight = false;
+          _sendLightCommand(_pendingLightState);
+        }
+      }
+    }
   }
 }
 
@@ -362,7 +404,7 @@ class _ModeCardState extends State<_ModeCard> {
       onTapDown: (_) => setState(() => _pressed = true),
       onTapCancel: () => setState(() => _pressed = false),
       onTapUp: (_) => setState(() => _pressed = false),
-      onTap: () => widget.onTap(item.title),
+      onTap: () => widget.onTap(item.titleKey.tr),
       child: AnimatedScale(
         scale: _pressed ? 0.96 : 1,
         duration: const Duration(milliseconds: 110),
@@ -383,7 +425,7 @@ class _ModeCardState extends State<_ModeCard> {
                   top: item.titleTop,
                   right: 12,
                   child: Text(
-                    item.title,
+                    item.titleKey.tr,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: item.color,
@@ -437,7 +479,7 @@ class ModeDetailPage extends StatelessWidget {
 // 模式卡片数据
 class _ModeCardData {
   const _ModeCardData({
-    required this.title,
+    required this.titleKey,
     required this.color,
     required this.asset,
     required this.left,
@@ -448,7 +490,7 @@ class _ModeCardData {
   });
 
   // 中文标题
-  final String title;
+  final String titleKey;
 
   // 中文标题颜色
   final Color color;

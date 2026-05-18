@@ -666,4 +666,29 @@ class Assets {
   // HIFEM 设置页：时间进度条圆点。
   static const String hifemTimeThumb =
       "assets/expand_settings/hifem/progress/time_thumb.png";
+
+  // 启动治疗页：PEMF 波形图片资源。
+  static const String startPemfWaveSine = "assets/waveforms/sine_wave.png";
+  static const String startPemfWaveStandardSine =
+      "assets/waveforms/standard_sine.png";
+  static const String startPemfWaveHalfSine = "assets/waveforms/half_sine.png";
+  static const String startPemfWavePulse = "assets/waveforms/pulse.png";
+  static const String startPemfWaveSquare = "assets/waveforms/square.png";
+  static const String startPemfWaveFastRise = "assets/waveforms/fast_rise.png";
+  static const String startPemfWaveSawtooth = "assets/waveforms/sawtooth.png";
+  static const String startPemfWaveTriangle = "assets/waveforms/triangle.png";
+  static const String startPemfWaveTrapezoid = "assets/waveforms/trapezoid.png";
+  static const String startPemfWaveDualFrequency =
+      "assets/waveforms/dual_frequency.png";
+
+  // 摇杆组件：默认底图。
+  static const String joystickDefault = "assets/joystick/yaogan.png";
+  // 摇杆组件：左上角保持亮。
+  static const String joystickLeftTop = "assets/joystick/upup.png";
+  // 摇杆组件：左下角保持亮。
+  static const String joystickLeftBottom = "assets/joystick/downdown.png";
+  // 摇杆组件：右上角闪烁。
+  static const String joystickRightTop = "assets/joystick/up.png";
+  // 摇杆组件：右下角闪烁。
+  static const String joystickRightBottom = "assets/joystick/down.png";
 }

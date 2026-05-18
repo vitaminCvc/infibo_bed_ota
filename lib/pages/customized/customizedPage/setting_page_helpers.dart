@@ -32,8 +32,8 @@ class ExpandBackButton extends StatelessWidget {
           children: [
             Image.asset(Assets.chakraReturnIcon, width: 20, height: 20),
             const SizedBox(width: 10),
-            const Text(
-              '返回',
+            Text(
+              'back'.tr,
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 19,
@@ -78,7 +78,7 @@ class AssetConfirmButton extends StatelessWidget {
             fit: BoxFit.fill,
           ),
           Text(
-            '确认',
+            'confirm'.tr,
             style: TextStyle(
               color: enabled ? Colors.white : const Color(0xFF9EA2AB),
               fontSize: 20,
@@ -153,8 +153,7 @@ void popExpandPage(BuildContext context, [Object? result]) {
     '[ExpandPage] pop requested, route=${Get.currentRoute}, result=${result.runtimeType}',
   );
 
-  // Prefer the Navigator owned by the current page context. Android's system
-  // back uses this same route stack, so this keeps the custom button identical.
+  // 优先使用当前页面上下文持有的 Navigator。Android 系统返回键使用同一路由栈，确保自定义按钮行为一致。
   final NavigatorState? rootNavigator = Navigator.maybeOf(
     context,
     rootNavigator: true,
