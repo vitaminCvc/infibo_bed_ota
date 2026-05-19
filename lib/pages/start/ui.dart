@@ -26,12 +26,10 @@ class _StartPageState extends State<StartPage> {
   static const double _designHeight = 1160;
   static const double _minPageScale = 0.72;
 
-  // 倒计时素材尺寸，countdownPoint 允许超出外圈，所以 Stack 会关闭裁剪
+  // 倒计时素材尺寸
   static const double _timerSize = 250; //倒计时圆的尺寸
   static const double _timerRingSize = 255; //中间的圆环尺寸
-  static const double _timerDotSize = 29; //控制小圆点尺寸，位置也会自动按中心点对齐
-  static const double _timerDotRadius = 121; //控制小圆点离圆心多远数字越大，点越往外；数字越小，点越往里
-
+  static const double _timerProgressSize = 300; // 进度光圈尺寸
   // 页面逻辑控制器：倒计时、运行、暂停状态、当前工作设备都放在 logic.dart 中
   final StartLogic _logic = StartLogic();
 
@@ -198,9 +196,9 @@ class _StartPageState extends State<StartPage> {
         ),
 
         // 底部倒计时与暂停/启动按钮
-        Positioned(left: 278, top: 840, child: _buildTimer()),
-        Positioned(left: 126, top: 970, child: _buildPauseButton()),
-        Positioned(left: 508, top: 970, child: _buildPlayButton()),
+        Positioned(left: 278, top: 850, child: _buildTimer()),
+        Positioned(left: 126, top: 995, child: _buildPauseButton()),
+        Positioned(left: 508, top: 995, child: _buildPlayButton()),
         Positioned(
           left: 590,
           top: 830,
@@ -831,40 +829,42 @@ class _StartPageState extends State<StartPage> {
     final String minuteText = timeParts.isNotEmpty ? timeParts.first : '00';
     final String secondText = timeParts.length > 1 ? timeParts[1] : '00';
     final double elapsedProgress = _logic.progress;
-    final Offset dotOffset = _countdownDotOffset(elapsedProgress);
+    final double remainingProgress = (1 - elapsedProgress).clamp(0, 1);
 
     return SizedBox(
-      width: _timerSize,
-      height: _timerSize,
+      width: _timerSize + 6,
+      height: _timerSize + 6,
       child: Stack(
         clipBehavior: Clip.none,
         alignment: Alignment.center,
         children: [
           Image.asset(
             Assets.startTimerRing,
-            width: _timerRingSize,
-            height: _timerRingSize,
+            width: _timerRingSize + 1,
+            height: _timerRingSize + 1,
           ),
-          ClipPath(
-            clipper: _CountdownProgressClipper(
-              elapsedProgress: elapsedProgress,
-            ),
-            child: Image.asset(
-              Assets.startTimerProgress,
-              width: _timerSize,
-              height: _timerSize,
-              fit: BoxFit.contain,
+          OverflowBox(
+            minWidth: _timerProgressSize,
+            maxWidth: _timerProgressSize,
+            minHeight: _timerProgressSize,
+            maxHeight: _timerProgressSize,
+            child: ClipPath(
+              clipper: _CountdownProgressClipper(
+                remainingProgress: remainingProgress,
+              ),
+              child: Image.asset(
+                Assets.startTimerProgress,
+                width: _timerProgressSize,
+                height: _timerProgressSize,
+                fit: BoxFit.contain,
+              ),
             ),
           ),
-          Positioned(
-            left: dotOffset.dx,
-            top: dotOffset.dy,
-            child: Image.asset(
-              Assets.startTimerDot,
-              width: _timerDotSize,
-              height: _timerDotSize,
-              fit: BoxFit.contain,
-            ),
+          Image.asset(
+            Assets.startTimerCenter,
+            width: 160,
+            height: 160,
+            fit: BoxFit.contain,
           ),
           Transform.translate(
             offset: const Offset(0, -8),
@@ -903,20 +903,6 @@ class _StartPageState extends State<StartPage> {
           ),
         ],
       ),
-    );
-  }
-
-  // 计算倒计时进度条上的点的偏移量
-  Offset _countdownDotOffset(double progress) {
-    const double size = _timerSize;
-    const double dotSize = _timerDotSize;
-    const double radius = _timerDotRadius;
-    const Offset center = Offset(size / 2, size / 2);
-    final double angle = -math.pi / 2 + math.pi * 2 * progress;
-
-    return Offset(
-      center.dx + math.cos(angle) * radius - dotSize / 2,
-      center.dy + math.sin(angle) * radius - dotSize / 2,
     );
   }
 
@@ -2152,22 +2138,24 @@ class _StartPageState extends State<StartPage> {
 }
 
 class _CountdownProgressClipper extends CustomClipper<Path> {
-  const _CountdownProgressClipper({required this.elapsedProgress});
+  const _CountdownProgressClipper({required this.remainingProgress});
 
-  final double elapsedProgress;
+  final double remainingProgress;
 
   @override
   Path getClip(Size size) {
-    final double elapsed = elapsedProgress.clamp(0, 1).toDouble();
-    if (elapsed >= 1) return Path();
+    final double remaining = remainingProgress.clamp(0, 1).toDouble();
+    if (remaining <= 0) return Path();
+    if (remaining >= 1) return Path()..addRect(Offset.zero & size);
 
     final Offset center = Offset(size.width / 2, size.height / 2);
     final double radius = math.sqrt(
       size.width * size.width + size.height * size.height,
     );
-    final double startAngle = -math.pi / 2 + math.pi * 2 * elapsed;
-    final double sweep = math.pi * 2 * (1 - elapsed);
-    final int steps = math.max(2, (90 * (1 - elapsed)).ceil());
+    final double cutProgress = 1 - remaining;
+    final double startAngle = -math.pi / 2 + math.pi * 2 * cutProgress;
+    final double sweep = math.pi * 2 * remaining;
+    final int steps = math.max(2, (90 * remaining).ceil());
     final Path path = Path()..moveTo(center.dx, center.dy);
 
     for (int i = 0; i <= steps; i++) {
@@ -2183,7 +2171,7 @@ class _CountdownProgressClipper extends CustomClipper<Path> {
 
   @override
   bool shouldReclip(covariant _CountdownProgressClipper oldClipper) {
-    return oldClipper.elapsedProgress != elapsedProgress;
+    return oldClipper.remainingProgress != remainingProgress;
   }
 }
 

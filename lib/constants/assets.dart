@@ -110,11 +110,16 @@ class Assets {
   static const String startExpandPanel = "assets/Start/Function/expandpage.png";
 
   // 启动治疗页：倒计时圆环背景。
-  static const String startTimerRing = "assets/Start/Countdown/countdown.png";
+  static const String startTimerRing =
+      "assets/Start/Countdown/countdownRing.png";
 
   // 启动治疗页：倒计时进度条。
   static const String startTimerProgress =
-      "assets/Start/Countdown/ProgressBar.png";
+      "assets/Start/Countdown/ProgressGlow.png";
+
+  // 启动治疗页：倒计时中间黑色圆盘背景。
+  static const String startTimerCenter =
+      "assets/Start/Countdown/countdownCenter.png";
 
   // 启动治疗页：倒计时进度点。
   static const String startTimerDot =
