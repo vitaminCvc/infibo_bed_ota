@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -41,6 +42,11 @@ class _JoystickControlState extends State<JoystickControl> {
 
   bool _isCommanding = false;
   bool _pendingStop = false;
+  static const Duration _holdDebounceDuration = Duration(seconds: 1);
+  Timer? _rightTopDebounceTimer;
+  Timer? _rightBottomDebounceTimer;
+  bool _rightTopCommandSent = false;
+  bool _rightBottomCommandSent = false;
 
   ModbusRtuService get _service =>
       widget.modbusService ?? const ModbusRtuService();
@@ -53,6 +59,8 @@ class _JoystickControlState extends State<JoystickControl> {
 
   @override
   void dispose() {
+    _rightTopDebounceTimer?.cancel();
+    _rightBottomDebounceTimer?.cancel();
     _actionNotifier.dispose();
     super.dispose();
   }
@@ -228,32 +236,62 @@ class _JoystickControlState extends State<JoystickControl> {
 
   void _onRightTopDown() {
     if (_action != JoystickAction.idle) return;
-    debugPrint('Joystick rightTop down TX 0x0010=1');
+    debugPrint('Joystick rightTop down, wait 1s debounce');
     _actionNotifier.value = JoystickAction.holdingRightTop;
-    _sendCommand(0x0010, 1);
+    _rightTopCommandSent = false;
+    _rightTopDebounceTimer?.cancel();
+    _rightTopDebounceTimer = Timer(_holdDebounceDuration, () {
+      if (!mounted) return;
+      if (_action != JoystickAction.holdingRightTop) return;
+      _rightTopCommandSent = true;
+      debugPrint('Joystick rightTop debounce passed TX 0x0010=1');
+      _sendCommand(0x0010, 1);
+    });
   }
 
   void _onRightTopUp() {
     if (_action != JoystickAction.holdingRightTop) return;
-    debugPrint('Joystick rightTop up/cancel TX 0x0010=0');
+    _rightTopDebounceTimer?.cancel();
+    final bool sent = _rightTopCommandSent;
+    _rightTopCommandSent = false;
     _actionNotifier.value = JoystickAction.idle;
-    _sendCommand(0x0010, 0);
+    if (sent) {
+      debugPrint('Joystick rightTop up/cancel TX 0x0010=0');
+      _sendCommand(0x0010, 0);
+    } else {
+      debugPrint('Joystick rightTop released before 1s, skip TX');
+    }
   }
 
   // ── 右下（按住类型）──────────────────────────────────────────
 
   void _onRightBottomDown() {
     if (_action != JoystickAction.idle) return;
-    debugPrint('Joystick rightBottom down TX 0x0010=2');
+    debugPrint('Joystick rightBottom down, wait 1s debounce');
     _actionNotifier.value = JoystickAction.holdingRightBottom;
-    _sendCommand(0x0010, 2);
+    _rightBottomCommandSent = false;
+    _rightBottomDebounceTimer?.cancel();
+    _rightBottomDebounceTimer = Timer(_holdDebounceDuration, () {
+      if (!mounted) return;
+      if (_action != JoystickAction.holdingRightBottom) return;
+      _rightBottomCommandSent = true;
+      debugPrint('Joystick rightBottom debounce passed TX 0x0010=2');
+      _sendCommand(0x0010, 2);
+    });
   }
 
   void _onRightBottomUp() {
     if (_action != JoystickAction.holdingRightBottom) return;
-    debugPrint('Joystick rightBottom up/cancel TX 0x0010=0');
+    _rightBottomDebounceTimer?.cancel();
+    final bool sent = _rightBottomCommandSent;
+    _rightBottomCommandSent = false;
     _actionNotifier.value = JoystickAction.idle;
-    _sendCommand(0x0010, 0);
+    if (sent) {
+      debugPrint('Joystick rightBottom up/cancel TX 0x0010=0');
+      _sendCommand(0x0010, 0);
+    } else {
+      debugPrint('Joystick rightBottom released before 1s, skip TX');
+    }
   }
 
   // ── Modbus 命令分发 ──────────────────────────────────────────

@@ -11,12 +11,12 @@ class SettingWidget extends StatefulWidget {
 }
 
 class _SettingWidgetState extends State<SettingWidget> {
-  // 默认高亮“历史记录”，和设计稿一致。
+  // 榛樿楂樹寒鈥滃巻鍙茶褰曗€濓紝鍜岃璁＄涓€鑷淬€?
   int _selectedMenuIndex = 0;
 
   int _selectedLanguageIndex = 0;
 
-  // 左侧菜单数据源：统一在这里维护标题和图标，避免在 UI 里写死重复内容。
+  // 宸︿晶鑿滃崟鏁版嵁婧愶細缁熶竴鍦ㄨ繖閲岀淮鎶ゆ爣棰樺拰鍥炬爣锛岄伩鍏嶅湪 UI 閲屽啓姝婚噸澶嶅唴瀹广€?
   static const List<_SettingMenuItemData> _menuItems = [
     _SettingMenuItemData(titleKey: 'language_setting', icon: Icons.public),
     _SettingMenuItemData(titleKey: 'date_time', icon: Icons.schedule),
@@ -49,9 +49,19 @@ class _SettingWidgetState extends State<SettingWidget> {
       enabled: true,
     ),
     _LanguageOptionData(flag: '🇫🇷', name: 'Français'),
-    _LanguageOptionData(flag: '🇪🇸', name: 'Español'),
+    _LanguageOptionData(
+      flag: '🇪🇸',
+      name: 'Español',
+      locale: Locale('es', 'ES'),
+      enabled: true,
+    ),
     _LanguageOptionData(flag: '🇵🇱', name: 'język polski'),
-    _LanguageOptionData(flag: '🇰🇷', name: '한국어'),
+    _LanguageOptionData(
+      flag: '🇰🇷',
+      name: '한국어',
+      locale: Locale('ko', 'KR'),
+      enabled: true,
+    ),
     _LanguageOptionData(flag: '🇷🇺', name: 'Русский'),
   ];
 
@@ -81,7 +91,7 @@ class _SettingWidgetState extends State<SettingWidget> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // 左侧菜单宽度按设计稿控制为固定值。
+                // 宸︿晶鑿滃崟瀹藉害鎸夎璁＄鎺у埗涓哄浐瀹氬€笺€?
                 SizedBox(width: 188, child: _buildLeftMenuPanel()),
                 const SizedBox(width: 18),
                 Expanded(child: _buildRightPanelHeader()),
@@ -95,7 +105,7 @@ class _SettingWidgetState extends State<SettingWidget> {
 
   Widget _buildLeftMenuPanel() {
     return Container(
-      // 高度固定，确保左栏在不同屏幕下保持稳定比例，不被内容撑变形。
+      // 楂樺害鍥哄畾锛岀‘淇濆乏鏍忓湪涓嶅悓灞忓箷涓嬩繚鎸佺ǔ瀹氭瘮渚嬶紝涓嶈鍐呭鎾戝彉褰€?
       height: 704,
       decoration: BoxDecoration(
         gradient: const LinearGradient(
@@ -152,7 +162,7 @@ class _SettingWidgetState extends State<SettingWidget> {
     );
   }
 
-  // 构建菜单项
+  // 鏋勫缓鑿滃崟椤?
   Widget _buildMenuItem({
     required _SettingMenuItemData item,
     required bool selected,
@@ -161,10 +171,10 @@ class _SettingWidgetState extends State<SettingWidget> {
     return InkWell(
       onTap: onTap,
       child: Container(
-        // 每个菜单项固定高度，和截图中的行高一致，避免文字抖动。
+        // 姣忎釜鑿滃崟椤瑰浐瀹氶珮搴︼紝鍜屾埅鍥句腑鐨勮楂樹竴鑷达紝閬垮厤鏂囧瓧鎶栧姩銆?
         height: 70,
         decoration: BoxDecoration(
-          // 选中项使用底色 + 左侧蓝条，突出当前菜单位置。
+          // 閫変腑椤逛娇鐢ㄥ簳鑹?+ 宸︿晶钃濇潯锛岀獊鍑哄綋鍓嶈彍鍗曚綅缃€?
           color: selected ? const Color(0xFF3A3E49) : Colors.transparent,
           border: selected
               ? const Border(
@@ -195,9 +205,9 @@ class _SettingWidgetState extends State<SettingWidget> {
     );
   }
 
-  // 构建右侧面板标题
+  // 鏋勫缓鍙充晶闈㈡澘鏍囬
   Widget _buildRightPanelHeader() {
-    // 右侧标题跟随左侧当前选中项，语言设置页显示专属内容。
+    // 鍙充晶鏍囬璺熼殢宸︿晶褰撳墠閫変腑椤癸紝璇█璁剧疆椤垫樉绀轰笓灞炲唴瀹广€?
     final String pageTitle = _menuItems[_selectedMenuIndex].titleKey.tr;
     return Container(
       height: 704,
@@ -225,7 +235,7 @@ class _SettingWidgetState extends State<SettingWidget> {
     );
   }
 
-  // 构建语言切换面板
+  // 鏋勫缓璇█鍒囨崲闈㈡澘
   Widget _buildLanguagePanel() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -280,9 +290,9 @@ class _SettingWidgetState extends State<SettingWidget> {
     );
   }
 
-  //顶部标题“语言切换”
-  //中间语言列表
-  //底部“保存更改”按钮
+  //椤堕儴鏍囬鈥滆瑷€鍒囨崲鈥?
+  //涓棿璇█鍒楄〃
+  //搴曢儴鈥滀繚瀛樻洿鏀光€濇寜閽?
   Widget _buildLanguageItem({
     required _LanguageOptionData option,
     required bool selected,

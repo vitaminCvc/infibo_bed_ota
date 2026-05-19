@@ -9,6 +9,7 @@ import 'package:infibo_app/constants/assets.dart';
 import 'package:infibo_app/pages/joystick/ui.dart';
 import 'package:infibo_app/pages/music/logic.dart';
 import 'package:infibo_app/pages/start/logic.dart';
+import 'package:lottie/lottie.dart';
 
 // 启动理疗页面
 class StartPage extends StatefulWidget {
@@ -246,7 +247,7 @@ class _StartPageState extends State<StartPage> {
         height: height,
         child: Stack(
           children: [
-            Positioned.fill(child: Image.asset(panelAsset, fit: BoxFit.fill)),
+            Positioned.fill(child: _buildPanelAsset(panelAsset)),
             ..._buildFunctionPanelEffects(id, isActive, activeDevices),
             if (id == 'red') _buildRedLightPanelInfo(isActive),
             if (id == 'pemf') _buildPemfPanelInfo(isActive),
@@ -268,6 +269,22 @@ class _StartPageState extends State<StartPage> {
     );
   }
 
+  //用来加载功能框背景。现在背景如果是 PNG 就走 Image.asset，如果以后你真给某个完整面板换成 JSON，它也能自动走 Lottie.asset
+  Widget _buildPanelAsset(String asset) {
+    if (asset.toLowerCase().endsWith('.json')) {
+      return Lottie.asset(asset, fit: BoxFit.fill);
+    }
+    return Image.asset(asset, fit: BoxFit.fill);
+  }
+
+  // 用来加载功能框内的效果图。它们有的可能是静态 PNG，有的可能是 Lottie 动画，甚至同一个功能框里两种都有，所以需要区分处理。
+  Widget _buildEffectAsset(String asset, {BoxFit fit = BoxFit.contain}) {
+    if (asset.toLowerCase().endsWith('.json')) {
+      return SizedBox(child: Lottie.asset(asset, fit: fit));
+    }
+    return Image.asset(asset, fit: fit);
+  }
+
   Widget _buildRedLightPanelInfo(bool isActive) {
     final RedLightPhaseSetting? setting = _logic.activeRedLightSetting;
 
@@ -285,8 +302,9 @@ class _StartPageState extends State<StartPage> {
     final String modeAsset = setting?.mode == RedLightWorkMode.pulse
         ? Assets.redLightPulseWave
         : Assets.startExpandContinuous;
-
+    //背景板文字位置
     return Positioned(
+      //调节红光功能框内文字整体位置
       left: 18,
       top: 22,
       child: IgnorePointer(
@@ -415,6 +433,7 @@ class _StartPageState extends State<StartPage> {
     final String waveformAsset = _getWaveformAsset(setting?.waveform ?? '');
 
     return Positioned(
+      //调节 PEMF 功能框内文字整体位置
       left: 18,
       top: 22,
       child: IgnorePointer(
@@ -491,6 +510,7 @@ class _StartPageState extends State<StartPage> {
     final String intensityText = setting?.intensity.toString() ?? '';
 
     return Positioned(
+      //调节 VAT 功能框内文字整体位置
       left: 40,
       top: 22,
       child: IgnorePointer(
@@ -561,6 +581,7 @@ class _StartPageState extends State<StartPage> {
         : '$_hydrogenFlowValue';
 
     return Positioned(
+      //调节分子氢功能框内文字整体位置
       left: 40,
       top: 22,
       child: IgnorePointer(
@@ -650,6 +671,8 @@ class _StartPageState extends State<StartPage> {
     }
   }
 
+  //***********************************************************************************/
+  // 上面是构建功能框的主方法，下面这个方法根据功能框 id 和是否激活来决定要叠加哪些效果图，比如红光的光效、PEMF 的波形图、VAT 的音符图，以及扩展功能的状态列表等。
   // 构建功能框效果图
   List<Widget> _buildFunctionPanelEffects(
     String id,
@@ -660,27 +683,17 @@ class _StartPageState extends State<StartPage> {
       case 'red':
         return [
           Positioned(
-            left: 54,
-            top: 255,
-            child: Image.asset(
-              Assets.startRedLightWave,
-              width: 180,
-              height: 130,
-              fit: BoxFit.contain,
-            ),
+            left: 23,
+            top: 253,
+            child: _buildEffectAsset(Assets.startRedLight, fit: BoxFit.contain),
           ),
         ];
       case 'pemf':
         return [
           Positioned(
-            left: -18,
-            top: 140,
-            child: Image.asset(
-              Assets.startPemfWave,
-              width: 300,
-              height: 200,
-              fit: BoxFit.contain,
-            ),
+            left: 45,
+            top: 195,
+            child: _buildEffectAsset(Assets.startPemf, fit: BoxFit.contain),
           ),
         ];
       case 'vat':
@@ -688,25 +701,15 @@ class _StartPageState extends State<StartPage> {
           Positioned(
             left: 57,
             top: 151,
-            child: Image.asset(
-              Assets.startVatWave,
-              width: 179,
-              height: 56,
-              fit: BoxFit.contain,
-            ),
+            child: _buildEffectAsset(Assets.startVat, fit: BoxFit.contain),
           ),
         ];
       case 'hydrogen':
         return [
           Positioned(
-            left: 78,
-            top: 145,
-            child: Image.asset(
-              Assets.startHydrogenMolecule,
-              width: 120,
-              height: 80,
-              fit: BoxFit.contain,
-            ),
+            left: 38,
+            top: 140,
+            child: _buildEffectAsset(Assets.startHydrogen, fit: BoxFit.contain),
           ),
         ];
       case 'expand':
@@ -792,7 +795,7 @@ class _StartPageState extends State<StartPage> {
               style: TextStyle(
                 color: textColor,
                 fontSize: 17,
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w400,
                 height: 1,
               ),
             ),
