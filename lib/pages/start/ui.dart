@@ -22,6 +22,15 @@ class StartPage extends StatefulWidget {
 class _StartPageState extends State<StartPage> {
   // 这里使用 AndroidSerialPortService，默认路径为 /dev/ttyS0
   final ModbusRtuService modbusService = const ModbusRtuService();
+  static const Duration _phaseSwitchCommandDelay = Duration(milliseconds: 5);
+  late final ModbusRtuService _phaseSwitchModbusService = ModbusRtuService(
+    portName: modbusService.portName,
+    baudRate: modbusService.baudRate,
+    slaveId: modbusService.slaveId,
+    timeout: const Duration(milliseconds: 200),
+    commandDelay: _phaseSwitchCommandDelay,
+    maxRetries: 0,
+  );
   // 启动页按 800x1160 的设计稿坐标摆放，再根据屏幕宽度整体缩放
   static const double _designWidth = 800;
   static const double _designHeight = 1160;
@@ -1846,6 +1855,7 @@ class _StartPageState extends State<StartPage> {
     debugPrint('current modules = $currentDevices');
 
     _isSwitchingPhase = true;
+    _stopHydrogenFlowPolling(clearValue: false);
 
     final List<ModbusWriteCommand> commands = <ModbusWriteCommand>[];
     // 三类模块集合：
@@ -2045,9 +2055,16 @@ class _StartPageState extends State<StartPage> {
     debugPrint('skip system restart because already running');
 
     if (commands.isNotEmpty) {
-      modbusService
-          .sendCommandQueue(commands)
+      final Stopwatch phaseSwitchStopwatch = Stopwatch()..start();
+      debugPrint('phase switch TX command count: ${commands.length}');
+      _phaseSwitchModbusService
+          .sendCommandQueueNoResponse(commands)
           .then((_) {
+            phaseSwitchStopwatch.stop();
+            debugPrint(
+              'phase switch TX complete: ${commands.length} commands, '
+              '${phaseSwitchStopwatch.elapsedMilliseconds}ms',
+            );
             if (mounted) {
               setState(() {
                 _lastPhaseIndex = currentIndex;
@@ -2066,8 +2083,16 @@ class _StartPageState extends State<StartPage> {
             _syncHydrogenFlowPolling();
           })
           .catchError((Object e) {
+            phaseSwitchStopwatch.stop();
             debugPrint('Phase switch command failed: $e');
-            if (mounted) setState(() => _isSwitchingPhase = false);
+            debugPrint(
+              'phase switch TX failed after '
+              '${phaseSwitchStopwatch.elapsedMilliseconds}ms',
+            );
+            if (mounted) {
+              setState(() => _isSwitchingPhase = false);
+              _syncHydrogenFlowPolling();
+            }
           });
     } else {
       _lastPhaseIndex = currentIndex;
@@ -2117,6 +2142,7 @@ class _StartPageState extends State<StartPage> {
   Future<void> _readHydrogenFlowOnce() async {
     if (_isReadingHydrogenFlow) return;
     if (!_logic.isRunning) return;
+    if (_isSwitchingPhase) return;
     final _StartArguments args = _StartArguments.from(Get.arguments);
     final List<String> activeDevices = _logic.activeDevices(args.modeTitle);
     if (!activeDevices.contains('hydrogen')) return;

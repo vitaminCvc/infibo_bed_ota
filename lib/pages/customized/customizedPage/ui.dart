@@ -310,13 +310,13 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
         if (activeFeatures.contains('redlight'))
           Positioned(left: 485, top: 75, child: _buildRedLightPanel()),
         if (activeFeatures.contains('pemf'))
-          Positioned(left: 485, top: 330, child: _buildPemfPanel()),
+          Positioned(left: 485, top: 381, child: _buildPemfPanel()),
         if (activeFeatures.contains('vat'))
-          Positioned(left: 485, top: 590, child: _buildVatPanel()),
+          Positioned(left: 485, top: 637, child: _buildVatPanel()),
         if (activeFeatures.contains('hydrogen'))
-          Positioned(left: 485, top: 755, child: _buildHydrogenPanel()),
+          Positioned(left: 485, top: 815, child: _buildHydrogenPanel()),
         if (showSaveParamsButton)
-          Positioned(left: 660, top: 936, child: _buildSaveParamsButton()),
+          Positioned(left: 660, top: 993, child: _buildSaveParamsButton()),
         Positioned(left: 175, bottom: 22, child: _buildSavePlanButton()),
         if (_pemfWavePickerNodeIndex != null) ..._buildPemfWavePickerOverlay(),
       ],
@@ -574,8 +574,9 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     if (index == null) return const SizedBox.shrink();
 
     return _NotchedPanel(
+      //红光模块面板大小
       width: 270,
-      height: 255,
+      height: 288,
       notchSide: _NotchSide.left,
       gradient: const LinearGradient(
         begin: Alignment.topLeft,
@@ -583,49 +584,135 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
         colors: [Color(0xAA5A4936), Color(0x9940342E)],
       ),
       borderColor: const Color(0xFF7E6651),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 25, 20, 18),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _PanelTitle(
-              title: 'red_light'.tr,
-              icon: _moduleById('redlight').iconOn,
-            ),
-            const SizedBox(height: 18),
-            _buildTwoColumnLabels('wavelength'.tr, 'intensity'.tr),
-            const SizedBox(height: 6),
-            _buildWavelengthRow(
-              '660',
-              controller: _redLight660Controllers[index],
-              focusNode: _redLight660FocusNodes[index],
-            ),
-            const SizedBox(height: 16),
-            _buildTwoColumnLabels('wavelength'.tr, 'intensity'.tr),
-            const SizedBox(height: 6),
-            _buildWavelengthRow(
-              '850',
-              controller: _redLight850Controllers[index],
-              focusNode: _redLight850FocusNodes[index],
-            ),
-            const Spacer(),
-            Row(
+      child: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 25, 20, 18),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('mode_select'.tr, style: _smallLabelStyle),
-                const SizedBox(width: 25),
-                _buildModeOption(
-                  index,
-                  _RedLightMode.continuous,
-                  'continuous'.tr,
+                _PanelTitle(
+                  title: 'red_light'.tr,
+                  icon: _moduleById('redlight').iconOn,
                 ),
-                const SizedBox(width: 12),
-                _buildModeOption(index, _RedLightMode.pulse, 'pulse'.tr),
+                const SizedBox(height: 18),
+                _buildTwoColumnLabels('wavelength'.tr, 'intensity'.tr),
+                const SizedBox(height: 6),
+                _buildWavelengthRow(
+                  '660',
+                  controller: _redLight660Controllers[index],
+                  focusNode: _redLight660FocusNodes[index],
+                ),
+                const SizedBox(height: 16),
+                _buildTwoColumnLabels('wavelength'.tr, 'intensity'.tr),
+                const SizedBox(height: 6),
+                _buildWavelengthRow(
+                  '850',
+                  controller: _redLight850Controllers[index],
+                  focusNode: _redLight850FocusNodes[index],
+                ),
+                const SizedBox(height: 24),
+                Row(
+                  children: [
+                    SizedBox(
+                      width: 84,
+                      height: 44,
+                      child: Align(
+                        alignment: const Alignment(-1, 0.45),
+                        child: Text('mode_select'.tr, style: _smallLabelStyle),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    _buildModeOption(
+                      index,
+                      _RedLightMode.continuous,
+                      'continuous'.tr,
+                    ),
+                    const SizedBox(width: 6),
+                    _buildModeOption(index, _RedLightMode.pulse, 'pulse'.tr),
+                  ],
+                ),
               ],
             ),
-          ],
-        ),
+          ),
+          _buildRedLightModeHitArea(
+            left: 110,
+            top: 219,
+            width: 68,
+            height: 54,
+            onTap: () => _setRedLightMode(index, _RedLightMode.continuous),
+          ),
+          _buildRedLightModeHitArea(
+            left: 179,
+            top: 219,
+            width: 68,
+            height: 54,
+            onTap: () => _setRedLightMode(index, _RedLightMode.pulse),
+          ),
+          _buildPanelInputHitArea(
+            left: 132,
+            top: 82,
+            width: 104,
+            height: 58,
+            focusNode: _redLight660FocusNodes[index],
+          ),
+          _buildPanelInputHitArea(
+            left: 132,
+            top: 147,
+            width: 104,
+            height: 58,
+            focusNode: _redLight850FocusNodes[index],
+          ),
+        ],
       ),
     );
+  }
+
+  Widget _buildRedLightModeHitArea({
+    required double left,
+    required double top,
+    required double width,
+    required double height,
+    required VoidCallback onTap,
+  }) {
+    return Positioned(
+      left: left,
+      top: top,
+      width: width,
+      height: height,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: onTap,
+        child: const SizedBox.expand(),
+      ),
+    );
+  }
+
+  Widget _buildPanelInputHitArea({
+    required double left,
+    required double top,
+    required double width,
+    required double height,
+    required FocusNode focusNode,
+  }) {
+    return Positioned(
+      left: left,
+      top: top,
+      width: width,
+      height: height,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => FocusScope.of(context).requestFocus(focusNode),
+        child: const SizedBox.expand(),
+      ),
+    );
+  }
+
+  void _setRedLightMode(int index, _RedLightMode mode) {
+    setState(() {
+      _nodeRedLightModes[index] = mode;
+      _savedNodeIndexes.removeWhere((item) => item >= index);
+    });
   }
 
   Widget _buildModeOption(int index, _RedLightMode mode, String text) {
@@ -633,20 +720,20 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTap: () {
-        setState(() {
-          _nodeRedLightModes[index] = mode;
-          _savedNodeIndexes.removeWhere((item) => item >= index);
-        });
-      },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
-        child: Row(
-          children: [
-            Text(text, style: _smallLabelStyle),
-            const SizedBox(width: 5),
-            _RadioDot(active: active, color: const Color(0xFFF08A23)),
-          ],
+      onTap: () => _setRedLightMode(index, mode),
+      child: SizedBox(
+        width: 60,
+        height: 44,
+        child: Align(
+          alignment: const Alignment(0, 0.45),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(text, style: _smallLabelStyle),
+              const SizedBox(width: 5),
+              _RadioDot(active: active, color: const Color(0xFFF08A23)),
+            ],
+          ),
         ),
       ),
     );
@@ -666,51 +753,96 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
         colors: [Color(0x993B5E66), Color(0x77304952)],
       ),
       borderColor: const Color(0xFF63808A),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 26, 20, 18),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _PanelTitle(title: 'PEMF', icon: _moduleById('pemf').iconOn),
-            const SizedBox(height: 20),
-            _buildTwoColumnLabels('frequency'.tr, 'intensity'.tr),
-            const SizedBox(height: 7),
-            Row(
+      child: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 26, 20, 18),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _InputBox(
-                  width: 88,
-                  controller: _pemfFrequencyControllers[index],
-                  focusNode: _pemfFrequencyFocusNodes[index],
-                  keyboardType: TextInputType.number,
-                  maxValue: 75,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(2),
+                _PanelTitle(title: 'PEMF', icon: _moduleById('pemf').iconOn),
+                const SizedBox(height: 20),
+                _buildTwoColumnLabels('frequency'.tr, 'intensity'.tr),
+                const SizedBox(height: 7),
+                Row(
+                  children: [
+                    _InputBox(
+                      width: 88,
+                      controller: _pemfFrequencyControllers[index],
+                      focusNode: _pemfFrequencyFocusNodes[index],
+                      keyboardType: TextInputType.number,
+                      maxValue: 75,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(2),
+                      ],
+                    ),
+                    const SizedBox(width: 30),
+                    _InputBox(
+                      width: 88,
+                      controller: _pemfIntensityControllers[index],
+                      focusNode: _pemfIntensityFocusNodes[index],
+                      keyboardType: TextInputType.number,
+                      maxValue: 100,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(3),
+                      ],
+                    ),
                   ],
                 ),
-                const SizedBox(width: 30),
-                _InputBox(
-                  width: 88,
-                  controller: _pemfIntensityControllers[index],
-                  focusNode: _pemfIntensityFocusNodes[index],
-                  keyboardType: TextInputType.number,
-                  maxValue: 100,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(3),
-                  ],
+                const SizedBox(height: 16),
+                Text('waveform'.tr, style: _smallLabelStyle),
+                const SizedBox(height: 7),
+                _PemfWaveSelector(
+                  wave: _nodePemfWaves[index],
+                  onTap: () => _openPemfWavePicker(index),
                 ),
               ],
             ),
-            const SizedBox(height: 16),
-            Text('waveform'.tr, style: _smallLabelStyle),
-            const SizedBox(height: 7),
-            _PemfWaveSelector(
-              wave: _nodePemfWaves[index],
-              onTap: () => _openPemfWavePicker(index),
-            ),
-          ],
-        ),
+          ),
+          _buildPanelInputHitArea(
+            left: 16,
+            top: 86,
+            width: 104,
+            height: 58,
+            focusNode: _pemfFrequencyFocusNodes[index],
+          ),
+          _buildPanelInputHitArea(
+            left: 134,
+            top: 86,
+            width: 104,
+            height: 58,
+            focusNode: _pemfIntensityFocusNodes[index],
+          ),
+          _buildPanelTapHitArea(
+            left: 16,
+            top: 152,
+            width: 220,
+            height: 66,
+            onTap: () => _openPemfWavePicker(index),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPanelTapHitArea({
+    required double left,
+    required double top,
+    required double width,
+    required double height,
+    required VoidCallback onTap,
+  }) {
+    return Positioned(
+      left: left,
+      top: top,
+      width: width,
+      height: height,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: onTap,
+        child: const SizedBox.expand(),
       ),
     );
   }
@@ -729,44 +861,62 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
         colors: [Color(0x88543A69), Color(0x6638264B)],
       ),
       borderColor: const Color(0xFF80649A),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 24, 20, 18),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildVatTitleRow(index),
-            const SizedBox(height: 17),
-            _buildTwoColumnLabels('frequency'.tr, 'intensity'.tr),
-            const SizedBox(height: 7),
-            Row(
+      child: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 24, 20, 18),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _InputBox(
-                  width: 88,
-                  controller: _vatFrequencyControllers[index],
-                  focusNode: _vatFrequencyFocusNodes[index],
-                  keyboardType: TextInputType.number,
-                  maxValue: 100,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(3),
-                  ],
-                ),
-                const SizedBox(width: 30),
-                _InputBox(
-                  width: 88,
-                  controller: _vatIntensityControllers[index],
-                  focusNode: _vatIntensityFocusNodes[index],
-                  keyboardType: TextInputType.number,
-                  maxValue: 100,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(3),
+                _buildVatTitleRow(index),
+                const SizedBox(height: 17),
+                _buildTwoColumnLabels('frequency'.tr, 'intensity'.tr),
+                const SizedBox(height: 7),
+                Row(
+                  children: [
+                    _InputBox(
+                      width: 88,
+                      controller: _vatFrequencyControllers[index],
+                      focusNode: _vatFrequencyFocusNodes[index],
+                      keyboardType: TextInputType.number,
+                      maxValue: 100,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(3),
+                      ],
+                    ),
+                    const SizedBox(width: 30),
+                    _InputBox(
+                      width: 88,
+                      controller: _vatIntensityControllers[index],
+                      focusNode: _vatIntensityFocusNodes[index],
+                      keyboardType: TextInputType.number,
+                      maxValue: 100,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(3),
+                      ],
+                    ),
                   ],
                 ),
               ],
             ),
-          ],
-        ),
+          ),
+          _buildPanelInputHitArea(
+            left: 16,
+            top: 80,
+            width: 104,
+            height: 58,
+            focusNode: _vatFrequencyFocusNodes[index],
+          ),
+          _buildPanelInputHitArea(
+            left: 134,
+            top: 80,
+            width: 104,
+            height: 58,
+            focusNode: _vatIntensityFocusNodes[index],
+          ),
+        ],
       ),
     );
   }
@@ -825,7 +975,6 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
       _nodeVatMusicSettings[index] = _VatMusicSetting(
         songId: result.songId,
         songName: result.songName,
-        seriesName: result.seriesName,
       );
       _savedNodeIndexes.removeWhere((item) => item >= index);
     });
@@ -845,35 +994,46 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
         colors: [Color(0x77405B80), Color(0x55334459)],
       ),
       borderColor: const Color(0xFF59739E),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 24, 20, 18),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _PanelTitle(
-              title: 'module_hydrogen'.tr,
-              icon: _moduleById('hydrogen').iconOn,
-            ),
-            const SizedBox(height: 17),
-            Text('hydrogen_concentration'.tr, style: _smallLabelStyle),
-            const SizedBox(height: 7),
-            Row(
+      child: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 24, 20, 18),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _InputBox(
-                  width: 206,
-                  controller: _hydrogenConcentrationControllers[index],
-                  focusNode: _hydrogenConcentrationFocusNodes[index],
-                  keyboardType: TextInputType.number,
-                  maxValue: 100,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(3),
+                _PanelTitle(
+                  title: 'module_hydrogen'.tr,
+                  icon: _moduleById('hydrogen').iconOn,
+                ),
+                const SizedBox(height: 17),
+                Text('hydrogen_concentration'.tr, style: _smallLabelStyle),
+                const SizedBox(height: 7),
+                Row(
+                  children: [
+                    _InputBox(
+                      width: 206,
+                      controller: _hydrogenConcentrationControllers[index],
+                      focusNode: _hydrogenConcentrationFocusNodes[index],
+                      keyboardType: TextInputType.number,
+                      maxValue: 100,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(3),
+                      ],
+                    ),
                   ],
                 ),
               ],
             ),
-          ],
-        ),
+          ),
+          _buildPanelInputHitArea(
+            left: 16,
+            top: 80,
+            width: 220,
+            height: 58,
+            focusNode: _hydrogenConcentrationFocusNodes[index],
+          ),
+        ],
       ),
     );
   }
@@ -914,15 +1074,18 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
           ),
         ),
         const SizedBox(width: 30),
-        _InputBox(
-          width: 88,
-          controller: controller,
+        _InputHitArea(
           focusNode: focusNode,
-          keyboardType: TextInputType.number,
-          inputFormatters: [
-            FilteringTextInputFormatter.digitsOnly,
-            LengthLimitingTextInputFormatter(3),
-          ],
+          child: _InputBox(
+            width: 88,
+            controller: controller,
+            focusNode: focusNode,
+            keyboardType: TextInputType.number,
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+              LengthLimitingTextInputFormatter(3),
+            ],
+          ),
         ),
       ],
     );
@@ -1981,11 +2144,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
         // 向后兼容：旧格式使用 'music' 键
         case 'music':
           final Song? song = findSongById(value);
-          music = _VatMusicSetting(
-            songId: value,
-            songName: song?.name ?? '',
-            seriesName: song?.seriesName ?? '',
-          );
+          music = _VatMusicSetting(songId: value, songName: song?.name ?? '');
           break;
       }
     }
@@ -2333,45 +2492,103 @@ class _InputBox extends StatelessWidget {
       ),
       alignment: Alignment.centerRight,
       padding: const EdgeInsets.only(right: 6),
-      child: _buildChild(context),
+      child: _buildChild(),
     );
   }
 
-  Widget? _buildChild(BuildContext context) {
+  Widget? _buildChild() {
     final TextEditingController? textController = controller;
     if (textController != null) {
-      return GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: () => FocusScope.of(context).requestFocus(focusNode),
-        child: TextField(
-          controller: textController,
-          focusNode: focusNode,
-          keyboardType: keyboardType,
-          inputFormatters: inputFormatters,
-          textAlign: TextAlign.center,
-          textAlignVertical: TextAlignVertical.center,
-          style: const TextStyle(color: Colors.white, fontSize: 14, height: 1),
-          cursorColor: Colors.white,
-          decoration: const InputDecoration(
-            isCollapsed: true,
-            border: InputBorder.none,
-            contentPadding: EdgeInsets.zero,
-          ),
-          onChanged: (value) {
-            final int? number = int.tryParse(value);
-            if (number == null || number <= maxValue) return;
-
-            textController
-              ..text = maxValue.toString()
-              ..selection = TextSelection.collapsed(
-                offset: textController.text.length,
-              );
-          },
+      return TextField(
+        controller: textController,
+        focusNode: focusNode,
+        keyboardType: keyboardType,
+        inputFormatters: inputFormatters,
+        textAlign: TextAlign.center,
+        textAlignVertical: TextAlignVertical.center,
+        style: const TextStyle(color: Colors.white, fontSize: 14, height: 1),
+        cursorColor: Colors.white,
+        decoration: const InputDecoration(
+          isCollapsed: true,
+          border: InputBorder.none,
+          contentPadding: EdgeInsets.zero,
         ),
+        onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
+        onChanged: (value) {
+          final int? number = int.tryParse(value);
+          if (number == null || number <= maxValue) return;
+
+          textController
+            ..text = maxValue.toString()
+            ..selection = TextSelection.collapsed(
+              offset: textController.text.length,
+            );
+        },
       );
     }
 
     return null;
+  }
+}
+
+class _InputHitArea extends StatelessWidget {
+  const _InputHitArea({
+    required this.child,
+    required this.focusNode,
+    this.left = _defaultLeft,
+    this.top = _defaultTop,
+    this.width = _defaultWidth,
+    this.height = _defaultHeight,
+  });
+
+  // 这里控制“看不见但能点中”的区域，后续只改这几个数即可微调。
+  static const double _defaultLeft = -4;
+  static const double _defaultTop = -33;
+  static const double _defaultWidth = 98;
+  static const double _defaultHeight = 62;
+
+  final Widget child;
+  final FocusNode focusNode;
+  final double left;
+  final double top;
+  final double width;
+  final double height;
+
+  @override
+  Widget build(BuildContext context) {
+    final double visualWidth = _InputBoxMetrics.visualWidth(child);
+
+    return SizedBox(
+      width: visualWidth,
+      height: _InputBoxMetrics.visualHeight,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          child,
+          Positioned(
+            left: left,
+            top: top,
+            width: width,
+            height: height,
+            child: GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onTap: () => FocusScope.of(context).requestFocus(focusNode),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _InputBoxMetrics {
+  const _InputBoxMetrics._();
+
+  static const double visualHeight = 29;
+
+  static double visualWidth(Widget child) {
+    if (child is _InputBox) return child.width;
+    return 88;
   }
 }
 

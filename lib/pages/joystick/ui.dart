@@ -1,7 +1,5 @@
 import 'dart:async';
-import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:infibo_app/api/modbus_rtu_service.dart';
 import 'package:infibo_app/constants/assets.dart';
 
@@ -54,7 +52,16 @@ class _JoystickControlState extends State<JoystickControl> {
   @override
   void initState() {
     super.initState();
-    _logJoystickImageSizes();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    precacheImage(const AssetImage(Assets.joystickDefault), context);
+    precacheImage(const AssetImage(Assets.joystickLeftTop), context);
+    precacheImage(const AssetImage(Assets.joystickLeftBottom), context);
+    precacheImage(const AssetImage(Assets.joystickRightTop), context);
+    precacheImage(const AssetImage(Assets.joystickRightBottom), context);
   }
 
   @override
@@ -63,29 +70,6 @@ class _JoystickControlState extends State<JoystickControl> {
     _rightBottomDebounceTimer?.cancel();
     _actionNotifier.dispose();
     super.dispose();
-  }
-
-  Future<void> _logJoystickImageSizes() async {
-    try {
-      final List<String> assets = [
-        Assets.joystickDefault,
-        Assets.joystickLeftTop,
-        Assets.joystickLeftBottom,
-        Assets.joystickRightTop,
-        Assets.joystickRightBottom,
-      ];
-      for (final String asset in assets) {
-        final ByteData data = await rootBundle.load(asset);
-        final ui.Image image = await decodeImageFromList(
-          data.buffer.asUint8List(),
-        );
-        debugPrint(
-          'Joystick asset $asset size: ${image.width}x${image.height}',
-        );
-      }
-    } catch (e) {
-      debugPrint('Joystick asset size log failed: $e');
-    }
   }
 
   @override

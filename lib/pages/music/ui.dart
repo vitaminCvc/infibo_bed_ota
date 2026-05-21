@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:infibo_app/constants/color.dart';
+import 'package:infibo_app/components/index.dart';
+import 'package:infibo_app/constants/assets.dart';
+import 'package:infibo_app/pages/customized/customizedPage/setting_page_helpers.dart';
 import 'package:infibo_app/pages/music/logic.dart';
+import 'package:lottie/lottie.dart';
 
 class MusicSelectPage extends StatefulWidget {
   const MusicSelectPage({super.key});
@@ -63,10 +66,10 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
             .clamp(_minPageScale, 1.0)
             .toDouble();
 
-    return Scaffold(
-      backgroundColor: AppTheme.primaryColor,
-      body: SafeArea(
-        child: Center(
+    return AppHeaderPage(
+      children: [
+        Positioned.fill(
+          top: 100,
           child: SizedBox(
             width: _designWidth * scale,
             height: _designHeight * scale,
@@ -81,18 +84,22 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
             ),
           ),
         ),
-      ),
+      ],
     );
   }
 
   Widget _buildCanvas() {
     return Stack(
       children: [
-        Positioned(left: 36, top: 30, child: _buildBackButton()),
         Positioned(left: 250, top: 100, child: _buildVinylVisual()),
         Positioned(
+          left: 55,
+          top: 28,
+          child: ExpandBackButton(onTap: () => Get.back()),
+        ),
+        Positioned(
           left: 60,
-          top: 420,
+          top: 400,
           right: 60,
           bottom: 200,
           child: _buildSongList(),
@@ -107,106 +114,23 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
     );
   }
 
-  Widget _buildBackButton() {
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: () => Get.back(),
-      child: Container(
-        width: 56,
-        height: 56,
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: const Icon(
-          Icons.arrow_back_rounded,
-          color: Colors.white,
-          size: 28,
-        ),
-      ),
-    );
-  }
-
   Widget _buildVinylVisual() {
-    return SizedBox(
-      width: 300,
-      height: 280,
-      child: Column(
-        children: [
-          Container(
-            width: 200,
-            height: 200,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: const RadialGradient(
-                center: Alignment.center,
-                radius: 0.95,
-                colors: [
-                  Color(0xFF3A3050),
-                  Color(0xFF1E1A2C),
-                  Color(0xFF11101A),
-                ],
-                stops: [0.0, 0.55, 1.0],
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(0xFF8C45D5).withValues(alpha: 0.35),
-                  blurRadius: 40,
-                  spreadRadius: 8,
-                ),
-              ],
-            ),
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Container(
-                  width: 70,
-                  height: 70,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: const Color(0xFF8C45D5).withValues(alpha: 0.25),
-                  ),
-                ),
-                Container(
-                  width: 22,
-                  height: 22,
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Color(0xFF1A1628),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 18),
-          SizedBox(
-            width: 300,
-            child: Text(
-              _currentSong.name,
-              textAlign: TextAlign.center,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-        ],
-      ),
+    return Positioned(
+      left: 250,
+      top: 100,
+      child: Lottie.asset(Assets.vinylVisual),
     );
   }
 
   Widget _buildSongList() {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.03),
-        borderRadius: BorderRadius.circular(16),
+        color: Colors.black,
+        borderRadius: BorderRadius.circular(30),
         border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
       ),
       child: ListView.builder(
-        padding: const EdgeInsets.symmetric(vertical: 12),
+        padding: const EdgeInsets.symmetric(vertical: 50),
         itemCount: songSeriesList.length,
         itemBuilder: (context, i) => _buildSeriesGroup(songSeriesList[i]),
       ),
@@ -217,17 +141,7 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(20, 8, 20, 6),
-          child: Text(
-            series.name,
-            style: TextStyle(
-              color: const Color(0xFF8C45D5).withValues(alpha: 0.85),
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
+        Padding(padding: const EdgeInsets.fromLTRB(20, 8, 20, 6)),
         for (int i = 0; i < series.songs.length; i++)
           _buildSongRow(series.songs[i]),
         const SizedBox(height: 4),
@@ -243,7 +157,7 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
       behavior: HitTestBehavior.opaque,
       onTap: () => setState(() => _currentIndex = songIndex),
       child: Container(
-        height: 52,
+        height: 80,
         margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
         padding: const EdgeInsets.symmetric(horizontal: 14),
         decoration: BoxDecoration(
@@ -260,15 +174,38 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
         child: Row(
           children: [
             Expanded(
-              child: Text(
-                song.name,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: isSelected ? Colors.white : const Color(0xFFB9BCC6),
-                  fontSize: 14,
-                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-                ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    song.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: isSelected
+                          ? Colors.white
+                          : const Color(0xFFB9BCC6),
+                      fontSize: 17,
+                      fontWeight: isSelected
+                          ? FontWeight.w600
+                          : FontWeight.w400,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    song.author.toString(),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: isSelected
+                          ? Colors.white.withValues(alpha: 0.95)
+                          : const Color(0xFFB9BCC6).withValues(alpha: 0.75),
+                      fontSize: 13,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ],
               ),
             ),
             if (isSelected)
@@ -405,7 +342,6 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
       result: VatMusicSelection(
         songId: song.id,
         songName: song.name,
-        seriesName: song.seriesName,
         frequency: _frequencyController.text.trim(),
         intensity: _intensityController.text.trim(),
       ),

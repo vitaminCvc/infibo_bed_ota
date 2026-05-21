@@ -691,4 +691,7 @@ class Assets {
   static const String joystickRightTop = "assets/joystick/up.png";
   // 摇杆组件：右下角闪烁。
   static const String joystickRightBottom = "assets/joystick/down.png";
+  ///////////////////////音乐界面素材/////////////////////////////////////
+  // 音乐界面：唱片机视觉图。
+  static const String vinylVisual = "assets/lottie/music.json";
 }

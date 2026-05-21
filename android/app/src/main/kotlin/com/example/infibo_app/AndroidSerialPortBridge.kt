@@ -88,6 +88,23 @@ class AndroidSerialPortBridge(messenger: BinaryMessenger) : MethodChannel.Method
                     result.success(responses)
                 }
 
+                "writeModbusQueueNoResponse" -> {
+                    val path = call.argument<String>("path")
+                        ?.takeIf { it.isNotBlank() }
+                        ?: DEFAULT_SERIAL_PATH
+                    val baudRate = call.argument<Int>("baudRate") ?: DEFAULT_BAUD_RATE
+                    val delayMs = call.argument<Int>("delayMs") ?: DEFAULT_DELAY_MS
+                    val frames = extractFrames(call.argument<Any>("frames"))
+
+                    val writtenCount = writeModbusQueueNoResponse(
+                        path,
+                        baudRate,
+                        frames,
+                        delayMs,
+                    )
+                    result.success(writtenCount)
+                }
+
                 "closeSerialPort" -> {
                     closeSerialPort()
                     result.success(true)
@@ -222,6 +239,45 @@ class AndroidSerialPortBridge(messenger: BinaryMessenger) : MethodChannel.Method
         }
     }
 
+    private fun writeModbusQueueNoResponse(
+        path: String,
+        baudRate: Int,
+        frames: List<ByteArray>,
+        delayMs: Int,
+    ): Int {
+        synchronized(lock) {
+            try {
+                android.util.Log.i(
+                    "SerialPortManager",
+                    "fast queue open path=$path baudRate=$baudRate count=${frames.size}",
+                )
+                openSerialPort(path, baudRate, startReader = false)
+                val serialManager = manager ?: error("Serial port is not open.")
+                val queueStartMs = System.currentTimeMillis()
+
+                frames.forEachIndexed { index, frame ->
+                    android.util.Log.i(
+                        "SerialPortManager",
+                        "fast queue TX[${index + 1}]: ${frame.toHexString()}",
+                    )
+                    serialManager.sendPacket(frame)
+                    if (delayMs > 0 && index < frames.lastIndex) {
+                        Thread.sleep(delayMs.toLong())
+                    }
+                }
+                val totalMs = System.currentTimeMillis() - queueStartMs
+                android.util.Log.i(
+                    "SerialPortManager",
+                    "fast queue complete count=${frames.size} total=${totalMs}ms",
+                )
+                return frames.size
+            } finally {
+                android.util.Log.i("SerialPortManager", "fast queue finally closeSerialPort")
+                closeSerialPort()
+            }
+        }
+    }
+
     private fun writeModbusFrameWithRetry(
         serialManager: SerialPortManager,
         frame: ByteArray,
@@ -310,7 +366,7 @@ class AndroidSerialPortBridge(messenger: BinaryMessenger) : MethodChannel.Method
             val length = if (available > 0) {
                 input.read(buffer, 0, minOf(buffer.size, available))
             } else {
-                input.read(buffer)
+                0
             }
 
             if (length > 0) {

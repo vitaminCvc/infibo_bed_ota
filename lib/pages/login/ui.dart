@@ -47,6 +47,8 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //当键盘弹出来时，页面不自动调整大小，保持原样显示
+      resizeToAvoidBottomInset: false,
       backgroundColor: AppTheme.primaryColor,
       body: SafeArea(
         child: Center(

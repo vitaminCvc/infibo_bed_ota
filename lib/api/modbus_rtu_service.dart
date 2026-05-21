@@ -1064,6 +1064,119 @@ class ModbusRtuService {
     await _sendCommandQueueWindows(commands, frames);
   }
 
+  Future<void> sendCommandQueueNoResponse(
+    List<ModbusWriteCommand> commands,
+  ) async {
+    if (commands.isEmpty) return;
+
+    final List<_ModbusFrameBatch> batches = _buildNoResponseFrameBatches(
+      commands,
+    );
+    final List<Uint8List> frames = [
+      for (final _ModbusFrameBatch batch in batches) batch.frame,
+    ];
+    final Stopwatch queueStopwatch = Stopwatch()..start();
+
+    if (Platform.isAndroid) {
+      try {
+        for (int index = 0; index < batches.length; index++) {
+          debugPrint(
+            'Dart fast queue frame[${index + 1}/${batches.length}]: ${batches[index].description}',
+          );
+        }
+        final int writtenCount = await AndroidSerialPortService.instance
+            .writeModbusQueueNoResponse(
+              frames: frames,
+              path: portName,
+              baudRate: baudRate,
+              commandDelay: commandDelay,
+            );
+        queueStopwatch.stop();
+        debugPrint(
+          'Dart fast queue complete: $writtenCount/${frames.length} frames '
+          'from ${commands.length} commands total=${queueStopwatch.elapsedMilliseconds}ms',
+        );
+      } on PlatformException catch (error) {
+        throw ModbusRtuException(_normalizeNativeError(error.message));
+      }
+      return;
+    }
+
+    if (!Platform.isWindows) {
+      throw UnsupportedError(
+        'Modbus RTU serial test requires Android or Windows desktop.',
+      );
+    }
+
+    await _sendCommandQueueNoResponseWindows(batches);
+  }
+
+  List<_ModbusFrameBatch> _buildNoResponseFrameBatches(
+    List<ModbusWriteCommand> commands,
+  ) {
+    final List<_ModbusFrameBatch> batches = <_ModbusFrameBatch>[];
+    final List<ModbusWriteCommand> current = <ModbusWriteCommand>[];
+
+    void flushCurrent() {
+      if (current.isEmpty) return;
+
+      if (current.length == 1) {
+        final ModbusWriteCommand command = current.single;
+        batches.add(
+          _ModbusFrameBatch(
+            frame: _buildWriteSingleRegisterFrame(
+              slaveId: slaveId,
+              address: command.address,
+              value: command.value,
+            ),
+            description: '0x06 ${command.addressText}=${command.value}',
+          ),
+        );
+        current.clear();
+        return;
+      }
+
+      final int startAddress = current.first.address;
+      final List<int> values = [
+        for (final ModbusWriteCommand command in current) command.value,
+      ];
+      final int endAddress = current.last.address;
+      batches.add(
+        _ModbusFrameBatch(
+          frame: _buildWriteMultipleRegistersFrame(
+            slaveId: slaveId,
+            startAddress: startAddress,
+            values: values,
+          ),
+          description:
+              '0x10 0x${startAddress.toRadixString(16).toUpperCase().padLeft(4, '0')}'
+              '~0x${endAddress.toRadixString(16).toUpperCase().padLeft(4, '0')} '
+              'quantity=${values.length} values=$values',
+        ),
+      );
+      current.clear();
+    }
+
+    for (final ModbusWriteCommand command in commands) {
+      if (current.isEmpty) {
+        current.add(command);
+        continue;
+      }
+
+      final int expectedNextAddress = current.last.address + 1;
+      if (command.address == expectedNextAddress) {
+        current.add(command);
+        continue;
+      }
+
+      flushCurrent();
+      current.add(command);
+    }
+
+    flushCurrent();
+    return batches;
+  }
+
   Future<void> _applyRedLightPayload(RedLightBatchPayload payload) async {
     if (payload.values.length != RedLightModbus.quantity) {
       throw StateError(
@@ -2049,6 +2162,60 @@ class ModbusRtuService {
     }
   }
 
+  Future<void> _sendCommandQueueNoResponseWindows(
+    List<_ModbusFrameBatch> batches,
+  ) async {
+    final SerialPort port = SerialPort(portName);
+    SerialPortConfig? config;
+    final Stopwatch queueStopwatch = Stopwatch()..start();
+
+    try {
+      if (!port.openReadWrite()) {
+        throw Exception(
+          'Open serial port failed: $portName, ${SerialPort.lastError}',
+        );
+      }
+
+      config = SerialPortConfig()
+        ..baudRate = baudRate
+        ..bits = 8
+        ..parity = SerialPortParity.none
+        ..stopBits = 1
+        ..setFlowControl(SerialPortFlowControl.none);
+      port.config = config;
+      config = null;
+      port.flush();
+
+      for (int index = 0; index < batches.length; index++) {
+        final _ModbusFrameBatch batch = batches[index];
+        final Uint8List frame = batch.frame;
+        debugPrint(
+          'Modbus RTU fast TX[${index + 1}/${batches.length}] '
+          '${batch.description}: ${_formatBytes(frame)}',
+        );
+        final int written = port.write(frame, timeout: timeout.inMilliseconds);
+        if (written != frame.length) {
+          throw TimeoutException(
+            'Serial write timeout: $written/${frame.length} bytes',
+          );
+        }
+        if (commandDelay > Duration.zero && index < batches.length - 1) {
+          await Future<void>.delayed(commandDelay);
+        }
+      }
+      queueStopwatch.stop();
+      debugPrint(
+        'Modbus RTU fast queue complete: ${batches.length} frames total=${queueStopwatch.elapsedMilliseconds}ms',
+      );
+    } finally {
+      if (port.isOpen) {
+        port.close();
+      }
+      config?.dispose();
+      port.dispose();
+    }
+  }
+
   // Windows 桌面环境下的串口写帧实现，包含重试机制和响应验证。
   Future<void> _writeFrameWithRetryWindows({
     required SerialPort port,
@@ -2375,6 +2542,13 @@ class ModbusWriteCommand {
 
   String get addressText =>
       '0x${address.toRadixString(16).toUpperCase().padLeft(4, '0')}';
+}
+
+class _ModbusFrameBatch {
+  const _ModbusFrameBatch({required this.frame, required this.description});
+
+  final Uint8List frame;
+  final String description;
 }
 
 class ModbusRtuException implements Exception {
