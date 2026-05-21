@@ -29,6 +29,23 @@ class _MainPageState extends State<MainPage> {
   // 主页面逻辑控制器
   final MainLogic _logic = MainLogic();
 
+  @override
+  void initState() {
+    super.initState();
+    _syncAmbientLightStateFromDevice();
+  }
+
+  Future<void> _syncAmbientLightStateFromDevice() async {
+    try {
+      final int state = await _modbusService.readHoldingRegister(0x0012);
+      if (!mounted) return;
+      setState(() => _isLightOn = state == 1);
+      debugPrint('Ambient light sync RX 0x0012=$state');
+    } catch (e) {
+      debugPrint('Ambient light sync failed: $e');
+    }
+  }
+
   ///////////////////////////////////////////////模式卡片数据////////////////////////////////////////////////
   // 左侧模式卡片数据
   static const List<_ModeCardData> _leftModeCards = [
@@ -287,34 +304,40 @@ class _MainPageState extends State<MainPage> {
       children: [
         Positioned(
           left: 45,
-          top: 1100,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(28),
-            child: Material(
-              color: const Color(0xFF1876F2),
-              child: InkWell(
-                onTap: _logic.openCustomizedPage,
-                child: SizedBox(
-                  width: 192,
-                  height: 56,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.description_outlined,
-                        color: Colors.white,
-                        size: 22,
+          top: 1092,
+          child: SizedBox(
+            width: 192,
+            height: 72,
+            child: Center(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(28),
+                child: Material(
+                  color: const Color(0xFF1876F2),
+                  child: InkWell(
+                    onTap: _logic.openCustomizedPage,
+                    child: SizedBox(
+                      width: 192,
+                      height: 56,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.description_outlined,
+                            color: Colors.white,
+                            size: 22,
+                          ),
+                          SizedBox(width: 8),
+                          Text(
+                            'custom_plan'.tr,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 19,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
                       ),
-                      SizedBox(width: 8),
-                      Text(
-                        'custom_plan'.tr,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 19,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
               ),
@@ -327,11 +350,18 @@ class _MainPageState extends State<MainPage> {
           child:
               //检测用户手势操作
               GestureDetector(
+                behavior: HitTestBehavior.opaque,
                 onTap: _toggleLight,
-                child: Image.asset(
-                  _isLightOn ? Assets.lightOpenLogo : Assets.lightCloseLogo,
-                  width: 56,
-                  height: 56,
+                child: SizedBox(
+                  width: 64,
+                  height: 80,
+                  child: Center(
+                    child: Image.asset(
+                      _isLightOn ? Assets.lightOpenLogo : Assets.lightCloseLogo,
+                      width: 56,
+                      height: 56,
+                    ),
+                  ),
                 ),
               ),
         ),

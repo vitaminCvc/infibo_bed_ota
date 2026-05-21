@@ -186,7 +186,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     );
     _hydrogenConcentrationFocusNodes = List.generate(12, (_) => FocusNode());
     _nodeRedLightModes = List.generate(12, (_) => _RedLightMode.continuous);
-    _nodePemfWaves = List.generate(12, (_) => null);
+    _nodePemfWaves = List.generate(12, (_) => _defaultPemfWave);
     _savedNodeIndexes = <int>{};
     _restoreEditingPlan();
   }
@@ -1168,6 +1168,9 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
         if (id == 'expand') _nodeExpandIds[index].clear();
       } else {
         _nodeFeatureIds[index].add(id);
+        if (id == 'pemf' && _nodePemfWaves[index] == null) {
+          _nodePemfWaves[index] = _defaultPemfWave;
+        }
       }
       _savedNodeIndexes.removeWhere((item) => item >= index);
     });
@@ -1389,6 +1392,54 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
   void _saveCurrentNodeParams() {
     final int? index = _activeNodeIndex;
     if (index == null || _nodeFeatureIds[index].isEmpty) return;
+
+    if (_nodeFeatureIds[index].contains('redlight')) {
+      final int red660 = _percentValue(_redLight660Controllers[index].text);
+      final int red850 = _percentValue(_redLight850Controllers[index].text);
+      if (red660 == 0 && red850 == 0) {
+        _showMessage('红光660nm和850nm强度不能同时为0');
+        return;
+      }
+    }
+    if (_nodeFeatureIds[index].contains('pemf')) {
+      final int pemfFrequency = _rangedValue(
+        _pemfFrequencyControllers[index].text,
+        75,
+      );
+      final int pemfIntensity = _rangedValue(
+        _pemfIntensityControllers[index].text,
+        100,
+      );
+      if (pemfFrequency == 0 || pemfIntensity == 0) {
+        _showMessage('PEMF频率和强度都不能为0');
+        return;
+      }
+      _nodePemfWaves[index] ??= _defaultPemfWave;
+    }
+    if (_nodeFeatureIds[index].contains('vat')) {
+      final int vatFrequency = _rangedValue(
+        _vatFrequencyControllers[index].text,
+        100,
+      );
+      final int vatIntensity = _rangedValue(
+        _vatIntensityControllers[index].text,
+        100,
+      );
+      if (vatFrequency == 0 || vatIntensity == 0) {
+        _showMessage('VAT频率和强度都不能为0');
+        return;
+      }
+    }
+    if (_nodeFeatureIds[index].contains('hydrogen')) {
+      final int hydrogenConcentration = _rangedValue(
+        _hydrogenConcentrationControllers[index].text,
+        100,
+      );
+      if (hydrogenConcentration == 0) {
+        _showMessage('分子氢浓度不能为0');
+        return;
+      }
+    }
 
     if (_nodeFeatureIds[index].contains('redlight')) {
       _normalizeRedLightPercent(_redLight660Controllers[index]);
@@ -2047,7 +2098,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
       _pemfIntensityControllers[index].text,
       100,
     );
-    final String wave = _nodePemfWaves[index]?.id ?? '';
+    final String wave = (_nodePemfWaves[index] ?? _defaultPemfWave).id;
 
     return 'frequency=$frequency|intensity=$intensity|wave=$wave';
   }
@@ -2076,7 +2127,11 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
       }
     }
 
-    return _PemfSetting(frequency: frequency, intensity: intensity, wave: wave);
+    return _PemfSetting(
+      frequency: frequency,
+      intensity: intensity,
+      wave: wave ?? _defaultPemfWave,
+    );
   }
 
   String _formatVatSetting(int index) {
@@ -2186,6 +2241,8 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
   _ModuleItem _moduleById(String id) {
     return _modules.firstWhere((item) => item.id == id);
   }
+
+  _PemfWave get _defaultPemfWave => _pemfWaves.first;
 }
 
 const TextStyle _smallLabelStyle = TextStyle(

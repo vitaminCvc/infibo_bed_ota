@@ -139,7 +139,7 @@ class AppTopHeader extends StatelessWidget {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onLogoTap,
-      child: logo,
+      child: _withMinTapTarget(logo),
     );
   }
 
@@ -193,7 +193,14 @@ class AppTopHeader extends StatelessWidget {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
-      child: button,
+      child: _withMinTapTarget(button),
+    );
+  }
+
+  Widget _withMinTapTarget(Widget child) {
+    return ConstrainedBox(
+      constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+      child: Center(child: child),
     );
   }
 }

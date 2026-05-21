@@ -107,7 +107,7 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
         Positioned(
           left: 60,
           right: 60,
-          bottom: 100,
+          bottom: 66,
           child: _buildBottomControls(),
         ),
       ],
@@ -124,11 +124,7 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
 
   Widget _buildSongList() {
     return Container(
-      decoration: BoxDecoration(
-        color: Colors.black,
-        borderRadius: BorderRadius.circular(30),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
-      ),
+      decoration: BoxDecoration(color: Colors.black),
       child: ListView.builder(
         padding: const EdgeInsets.symmetric(vertical: 50),
         itemCount: songSeriesList.length,
@@ -162,14 +158,9 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
         padding: const EdgeInsets.symmetric(horizontal: 14),
         decoration: BoxDecoration(
           color: isSelected
-              ? const Color(0xFF8C45D5).withValues(alpha: 0.15)
+              ? const Color(0xFF323641).withValues(alpha: 0.35)
               : Colors.transparent,
-          borderRadius: BorderRadius.circular(10),
-          border: isSelected
-              ? Border.all(
-                  color: const Color(0xFF8C45D5).withValues(alpha: 0.35),
-                )
-              : null,
+          borderRadius: BorderRadius.circular(15),
         ),
         child: Row(
           children: [
@@ -183,13 +174,9 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      color: isSelected
-                          ? Colors.white
-                          : const Color(0xFFB9BCC6),
+                      color: isSelected ? Colors.blue : const Color(0xFFB9BCC6),
                       fontSize: 17,
-                      fontWeight: isSelected
-                          ? FontWeight.w600
-                          : FontWeight.w400,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                   const SizedBox(height: 6),
@@ -198,11 +185,9 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      color: isSelected
-                          ? Colors.white.withValues(alpha: 0.95)
-                          : const Color(0xFFB9BCC6).withValues(alpha: 0.75),
+                      color: isSelected ? Colors.blue : const Color(0xFFB9BCC6),
                       fontSize: 13,
-                      fontWeight: FontWeight.w400,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ],
@@ -214,13 +199,9 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
                 height: 22,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: const Color(0xFF8C45D5).withValues(alpha: 0.3),
+                  color: const Color(0xFF1464DF),
                 ),
-                child: const Icon(
-                  Icons.check,
-                  color: Color(0xFFB388E8),
-                  size: 14,
-                ),
+                child: const Icon(Icons.check, color: Colors.white, size: 14),
               ),
           ],
         ),
@@ -243,12 +224,12 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
         Expanded(child: _buildInputField('intensity'.tr, _intensityController)),
         const SizedBox(width: 20),
         SizedBox(
-          width: 130,
+          width: 200,
           height: 72,
           child: ElevatedButton(
             onPressed: _confirmSelection,
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF8C45D5),
+              backgroundColor: const Color(0xFF1464DF),
               foregroundColor: Colors.white,
               elevation: 0,
               shape: RoundedRectangleBorder(
@@ -268,12 +249,12 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
 
   Widget _buildConfirmButton() {
     return SizedBox(
-      width: 360,
+      width: 420,
       height: 56,
       child: ElevatedButton(
         onPressed: _confirmSelection,
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF8C45D5),
+          backgroundColor: const Color(0xFF1464DF),
           foregroundColor: Colors.white,
           elevation: 0,
           shape: RoundedRectangleBorder(

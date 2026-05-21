@@ -19,7 +19,7 @@ import 'package:infibo_app/api/vat_modbus.dart';
 import 'package:infibo_app/services/android_serial_port_service.dart';
 
 class ModbusRtuService {
-  static const Duration modbusCommandInterval = Duration(milliseconds: 100);
+  static const Duration modbusCommandInterval = Duration(milliseconds: 40);
 
   /// 系统控制命令寄存器地址。
   static const int systemCommandAddress = 0x0004;

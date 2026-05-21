@@ -29,49 +29,49 @@ const List<SongSeries> songSeriesList = [
       ),
       Song(
         id: 'healing_hands',
-        name: '02 Healing Hands',
-        author: 'Liquid Mind',
+        name: '02   Healing Hands',
+        author: '          Liquid Mind',
       ),
-    ],
-  ),
-  SongSeries(
-    songs: [
-      Song(id: 'spiegel', name: ' Spiegel im Spiegel', author: 'Arvo Pärt'),
+      Song(
+        id: 'spiegel',
+        name: '03   Spiegel im Spiegel',
+        author: '          Arvo Pärt',
+      ),
       Song(
         id: 'cello_suite',
-        name: ' Bach: Cello Suite No. 1 in G Major (Prélude)',
-        author: 'Johann Sebastian Bach',
+        name: '04   Bach: Cello Suite No. 1 in G Major (Prélude)',
+        author: '          Johann Sebastian Bach',
       ),
-      Song(id: 'dream_spiral', name: 'Dream Spiral', author: 'Hilary Stagg'),
-    ],
-  ),
-  SongSeries(
-    songs: [
+      Song(
+        id: 'dream_spiral',
+        name: '05   Dream Spiral',
+        author: '          Hilary Stagg',
+      ),
       Song(
         id: 'handpan',
-        name: '528Hz Handpan Meditation',
-        author: 'Warren Shanti',
+        name: '06   528Hz Handpan Meditation',
+        author: '          Warren Shanti',
       ),
       Song(
         id: 'singing_bowls',
-        name: 'Tibetan Singing Bowls Breathe',
-        author: 'Tibetan Singing Bowls',
+        name: '07   Tibetan Singing Bowls Breathe',
+        author: '          Tibetan Singing Bowls',
       ),
       Song(
         id: 'cell_regeneration',
-        name: 'Cell Regeneration Sound Therapy (528Hz)',
-        author: 'Yevhenii Khonin',
+        name: '08   Cell Regeneration Sound Therapy (528Hz)',
+        author: '          Yevhenii Khonin',
       ),
-    ],
-  ),
-  SongSeries(
-    songs: [
       Song(
         id: 'stay',
-        name: 'Stay (Interstellar Soundtrack)',
-        author: 'Hans Zimmer',
+        name: '09   Stay (Interstellar Soundtrack)',
+        author: '          Hans Zimmer',
       ),
-      Song(id: 'blade_runner', name: 'Blade Runner Blues', author: 'Vangelis'),
+      Song(
+        id: 'blade_runner',
+        name: '10   Blade Runner Blues',
+        author: '          Vangelis',
+      ),
     ],
   ),
 ];

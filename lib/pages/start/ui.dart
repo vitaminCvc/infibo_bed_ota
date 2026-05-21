@@ -22,12 +22,12 @@ class StartPage extends StatefulWidget {
 class _StartPageState extends State<StartPage> {
   // 这里使用 AndroidSerialPortService，默认路径为 /dev/ttyS0
   final ModbusRtuService modbusService = const ModbusRtuService();
-  static const Duration _phaseSwitchCommandDelay = Duration(milliseconds: 5);
+  static const Duration _phaseSwitchCommandDelay = Duration(milliseconds: 40);
   late final ModbusRtuService _phaseSwitchModbusService = ModbusRtuService(
     portName: modbusService.portName,
     baudRate: modbusService.baudRate,
     slaveId: modbusService.slaveId,
-    timeout: const Duration(milliseconds: 200),
+    timeout: modbusService.timeout,
     commandDelay: _phaseSwitchCommandDelay,
     maxRetries: 0,
   );
@@ -55,6 +55,8 @@ class _StartPageState extends State<StartPage> {
       <String, Map<int, int>>{};
   bool _isSwitchingPhase = false;
   bool _isCompletingSession = false;
+  bool _isPreloadingPhaseParams = false;
+  bool _hasPreloadedPhaseParams = false;
   Timer? _hydrogenFlowTimer;
   bool _isReadingHydrogenFlow = false;
   int? _hydrogenFlowValue;
@@ -66,6 +68,9 @@ class _StartPageState extends State<StartPage> {
     _logic.configure(Get.arguments);
     _lastPhaseIndex = _logic.activePhaseIndex;
     _startTimer();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _preloadPhaseParamsIfNeeded();
+    });
   }
 
   @override
@@ -985,8 +990,21 @@ class _StartPageState extends State<StartPage> {
 
     setState(() => _isCommanding = true);
     try {
+      await _runStartButtonDeviceActions();
+      await _waitForLiftReachBottom();
       final List<ModbusWriteCommand> commands = _buildPhaseCommands();
-      await modbusService.startWithCommands(commands);
+      if (_hasPreloadedPhaseParams) {
+        final List<ModbusWriteCommand> startCommands = <ModbusWriteCommand>[
+          ..._onlyApplyAndCommand(commands),
+          const ModbusWriteCommand(
+            address: ModbusRtuService.systemCommandAddress,
+            value: 1,
+          ),
+        ];
+        await modbusService.sendCommandQueue(startCommands);
+      } else {
+        await modbusService.startWithCommands(commands);
+      }
       if (!mounted) return;
       setState(() {
         _logic.play();
@@ -1007,6 +1025,123 @@ class _StartPageState extends State<StartPage> {
     } finally {
       if (mounted) setState(() => _isCommanding = false);
     }
+  }
+
+  Future<void> _waitForLiftReachBottom() async {
+    const Duration pollInterval = Duration(milliseconds: 500);
+    while (mounted) {
+      final int liftStatus = await modbusService.readHoldingRegister(0x0011);
+      debugPrint('start button wait lift status RX 0x0011=$liftStatus');
+      if (liftStatus == 0) {
+        debugPrint('start button lift reached bottom, continue start flow');
+        return;
+      }
+      await Future<void>.delayed(pollInterval);
+    }
+  }
+
+  Future<void> _runStartButtonDeviceActions() async {
+    await modbusService.sendCommandQueue([
+      const ModbusWriteCommand(address: 0x0010, value: 4),
+    ]);
+    JoystickCommandBus.instance.lockLeftBottom();
+
+    try {
+      final int ambientLightState = await modbusService.readHoldingRegister(
+        0x0012,
+      );
+      if (ambientLightState == 1) {
+        await modbusService.sendCommandQueue([
+          const ModbusWriteCommand(address: 0x0012, value: 0),
+        ]);
+        debugPrint('start button auto-off ambient light TX 0x0012=0');
+      }
+    } catch (e) {
+      debugPrint('start button read/close ambient light skipped: $e');
+    }
+  }
+
+  Future<void> _preloadPhaseParamsIfNeeded() async {
+    if (!_logic.isCustomizedPlan) return;
+    if (_logic.isRunning) return;
+    if (_isCommanding || _isSwitchingPhase) return;
+    if (_isPreloadingPhaseParams || _hasPreloadedPhaseParams) return;
+
+    _isPreloadingPhaseParams = true;
+    try {
+      final List<ModbusWriteCommand> preloadCommands = _withoutApplyAndCommand(
+        _buildPhaseCommands(),
+      );
+      if (preloadCommands.isNotEmpty) {
+        debugPrint(
+          'preload phase params without apply/command by 0x10: ${preloadCommands.length} commands',
+        );
+        await _sendPreloadCommandsByFunction10(preloadCommands);
+      }
+      _hasPreloadedPhaseParams = true;
+      debugPrint('preload phase params complete');
+    } catch (e) {
+      _hasPreloadedPhaseParams = false;
+      debugPrint('preload phase params failed: $e');
+      if (mounted) {
+        _showError('${'error_send_params_failed'.tr}$e');
+      }
+    } finally {
+      _isPreloadingPhaseParams = false;
+    }
+  }
+
+  Future<void> _sendPreloadCommandsByFunction10(
+    List<ModbusWriteCommand> commands,
+  ) async {
+    final List<_PreloadCommandBatch> batches = _buildPreloadCommandBatches(
+      commands,
+    );
+    for (final _PreloadCommandBatch batch in batches) {
+      await modbusService.writeMultipleRegisters(
+        startAddress: batch.startAddress,
+        values: batch.values,
+        logTag: 'StartPreload',
+      );
+    }
+  }
+
+  List<_PreloadCommandBatch> _buildPreloadCommandBatches(
+    List<ModbusWriteCommand> commands,
+  ) {
+    final List<_PreloadCommandBatch> batches = <_PreloadCommandBatch>[];
+    final List<ModbusWriteCommand> current = <ModbusWriteCommand>[];
+
+    void flushCurrent() {
+      if (current.isEmpty) return;
+      batches.add(
+        _PreloadCommandBatch(
+          startAddress: current.first.address,
+          values: [
+            for (final ModbusWriteCommand command in current) command.value,
+          ],
+        ),
+      );
+      current.clear();
+    }
+
+    for (final ModbusWriteCommand command in commands) {
+      if (current.isEmpty) {
+        current.add(command);
+        continue;
+      }
+
+      if (command.address == current.last.address + 1) {
+        current.add(command);
+        continue;
+      }
+
+      flushCurrent();
+      current.add(command);
+    }
+
+    flushCurrent();
+    return batches;
   }
 
   Future<void> _handlePausePressed() async {
@@ -1085,6 +1220,7 @@ class _StartPageState extends State<StartPage> {
         stopHifem: _runningModules.contains('hifem'),
         stopFragrance: _runningModules.contains('fragrance'),
       );
+      await _runStopButtonDeviceActions();
       if (!mounted) return;
       setState(() {
         _logic.stop();
@@ -1100,6 +1236,26 @@ class _StartPageState extends State<StartPage> {
       _showError('${'error_stop_failed'.tr}$e');
     } finally {
       if (mounted) setState(() => _isCommanding = false);
+    }
+  }
+
+  Future<void> _runStopButtonDeviceActions() async {
+    try {
+      await modbusService.sendCommandQueue([
+        const ModbusWriteCommand(address: 0x0010, value: 3),
+      ]);
+      JoystickCommandBus.instance.lockLeftTop();
+    } catch (e) {
+      debugPrint('stop button one-key-up failed: $e');
+    }
+
+    try {
+      await modbusService.sendCommandQueue([
+        const ModbusWriteCommand(address: 0x0012, value: 1),
+      ]);
+      debugPrint('stop button auto-on ambient light TX 0x0012=1');
+    } catch (e) {
+      debugPrint('stop button auto-on ambient light failed: $e');
     }
   }
 
@@ -1367,6 +1523,46 @@ class _StartPageState extends State<StartPage> {
     }
   }
 
+  bool _isApplyOrCommandAddress(int address) {
+    switch (address) {
+      case ModbusRtuService.redLightApplyAddress:
+      case ModbusRtuService.redLightTotalCommandAddress:
+      case ModbusRtuService.pemfApplyAddress:
+      case ModbusRtuService.pemfTotalCommandAddress:
+      case ModbusRtuService.vatApplyAddress:
+      case ModbusRtuService.vatCommandAddress:
+      case ModbusRtuService.hydrogenApplyAddress:
+      case ModbusRtuService.hydrogenCommandAddress:
+      case ModbusRtuService.chakraApplyAddress:
+      case ModbusRtuService.chakraCommandAddress:
+      case ModbusRtuService.terahertzApplyAddress:
+      case ModbusRtuService.terahertzCommandAddress:
+      case ModbusRtuService.hifemApplyAddress:
+      case ModbusRtuService.hifemCommandAddress:
+      case ModbusRtuService.fragranceApplyAddress:
+      case ModbusRtuService.fragranceCommandAddress:
+        return true;
+      default:
+        return false;
+    }
+  }
+
+  List<ModbusWriteCommand> _withoutApplyAndCommand(
+    List<ModbusWriteCommand> commands,
+  ) {
+    return commands
+        .where((command) => !_isApplyOrCommandAddress(command.address))
+        .toList();
+  }
+
+  List<ModbusWriteCommand> _onlyApplyAndCommand(
+    List<ModbusWriteCommand> commands,
+  ) {
+    return commands
+        .where((command) => _isApplyOrCommandAddress(command.address))
+        .toList();
+  }
+
   Map<String, String> _currentModuleSignatures(Set<String> modules) {
     return <String, String>{
       for (final String module in modules)
@@ -1389,197 +1585,27 @@ class _StartPageState extends State<StartPage> {
   }
 
   List<ModbusWriteCommand> _buildChangedModuleParamCommands(
-    Set<String> modules,
-  ) {
+    Set<String> modules, {
+    required Map<String, Map<int, int>> currentParamValues,
+  }) {
     final List<ModbusWriteCommand> commands = <ModbusWriteCommand>[];
 
     for (final String module in modules) {
       final Map<int, int> previousValues =
           _runningModuleParamValues[module] ?? const <int, int>{};
-      final List<ModbusWriteCommand> currentCommands = _buildPhaseCommands(
-        moduleFilter: <String>{module},
-        includeStartCommands: false,
-      );
-      final Map<int, int> currentValues = <int, int>{
-        for (final ModbusWriteCommand command in currentCommands)
-          command.address: command.value,
-      };
+      final Map<int, int> currentValues =
+          currentParamValues[module] ?? const <int, int>{};
+      final List<int> sortedAddresses = currentValues.keys.toList()..sort();
 
-      if (module == 'red') {
-        final Set<int> allAddresses = <int>{
-          ...previousValues.keys,
-          ...currentValues.keys,
-        };
-        final List<int> sortedAddresses = allAddresses.toList()..sort();
-        debugPrint('RedLight node diff:');
-        for (final int address in sortedAddresses) {
-          final int? before = previousValues[address];
-          final int? after = currentValues[address];
-          final bool changed = before != after;
-          debugPrint(
-            'old 0x${address.toRadixString(16).padLeft(4, '0').toUpperCase()} = ${before ?? 'null'}, '
-            'new 0x${address.toRadixString(16).padLeft(4, '0').toUpperCase()} = ${after ?? 'null'} '
-            '(${changed ? 'changed' : 'unchanged'})',
-          );
-        }
-      }
-      if (module == 'chakra') {
-        final Set<int> allAddresses = <int>{
-          ...previousValues.keys,
-          ...currentValues.keys,
-        };
-        final List<int> sortedAddresses = allAddresses.toList()..sort();
-        debugPrint('Chakra node diff:');
-        for (final int address in sortedAddresses) {
-          final int? before = previousValues[address];
-          final int? after = currentValues[address];
-          final bool changed = before != after;
-          debugPrint(
-            'old 0x${address.toRadixString(16).padLeft(4, '0').toUpperCase()} = ${before ?? 'null'}, '
-            'new 0x${address.toRadixString(16).padLeft(4, '0').toUpperCase()} = ${after ?? 'null'} '
-            '(${changed ? 'changed' : 'unchanged'})',
-          );
-        }
-      }
-      if (module == 'terahertz') {
-        final Set<int> allAddresses = <int>{
-          ...previousValues.keys,
-          ...currentValues.keys,
-        };
-        final List<int> sortedAddresses = allAddresses.toList()..sort();
-        debugPrint('Terahertz node diff:');
-        for (final int address in sortedAddresses) {
-          final int? before = previousValues[address];
-          final int? after = currentValues[address];
-          final bool changed = before != after;
-          debugPrint(
-            'old 0x${address.toRadixString(16).padLeft(4, '0').toUpperCase()} = ${before ?? 'null'}, '
-            'new 0x${address.toRadixString(16).padLeft(4, '0').toUpperCase()} = ${after ?? 'null'} '
-            '(${changed ? 'changed' : 'unchanged'})',
-          );
-        }
-      }
-      if (module == 'fragrance') {
-        final Set<int> allAddresses = <int>{
-          ...previousValues.keys,
-          ...currentValues.keys,
-        };
-        final List<int> sortedAddresses = allAddresses.toList()..sort();
-        debugPrint('Fragrance node diff:');
-        for (final int address in sortedAddresses) {
-          final int? before = previousValues[address];
-          final int? after = currentValues[address];
-          final bool changed = before != after;
-          debugPrint(
-            'old 0x${address.toRadixString(16).padLeft(4, '0').toUpperCase()} = ${before ?? 'null'}, '
-            'new 0x${address.toRadixString(16).padLeft(4, '0').toUpperCase()} = ${after ?? 'null'} '
-            '(${changed ? 'changed' : 'unchanged'})',
-          );
-        }
-      }
-      if (module == 'hifem') {
-        final Set<int> allAddresses = <int>{
-          ...previousValues.keys,
-          ...currentValues.keys,
-        };
-        final List<int> sortedAddresses = allAddresses.toList()..sort();
-        debugPrint('HIFEM node diff:');
-        for (final int address in sortedAddresses) {
-          final int? before = previousValues[address];
-          final int? after = currentValues[address];
-          final bool changed = before != after;
-          debugPrint(
-            'old 0x${address.toRadixString(16).padLeft(4, '0').toUpperCase()} = ${before ?? 'null'}, '
-            'new 0x${address.toRadixString(16).padLeft(4, '0').toUpperCase()} = ${after ?? 'null'} '
-            '(${changed ? 'changed' : 'unchanged'})',
-          );
-        }
-      }
+      int changedCount = 0;
+      for (final int address in sortedAddresses) {
+        final int value = currentValues[address]!;
+        if (previousValues[address] == value) continue;
 
-      for (final ModbusWriteCommand command in currentCommands) {
-        if (previousValues[command.address] == command.value) {
-          if (module == 'red') {
-            debugPrint(
-              'skip 0x${command.address.toRadixString(16).padLeft(4, '0').toUpperCase()} = ${command.value} (unchanged)',
-            );
-          }
-          if (module == 'chakra') {
-            debugPrint(
-              'skip 0x${command.address.toRadixString(16).padLeft(4, '0').toUpperCase()} = ${command.value} (unchanged)',
-            );
-          }
-          if (module == 'terahertz') {
-            debugPrint(
-              'skip 0x${command.address.toRadixString(16).padLeft(4, '0').toUpperCase()} = ${command.value} (unchanged)',
-            );
-          }
-          if (module == 'fragrance') {
-            debugPrint(
-              'skip 0x${command.address.toRadixString(16).padLeft(4, '0').toUpperCase()} = ${command.value} (unchanged)',
-            );
-          }
-          if (module == 'hifem') {
-            debugPrint(
-              'skip 0x${command.address.toRadixString(16).padLeft(4, '0').toUpperCase()} = ${command.value} (unchanged)',
-            );
-          }
-          continue;
-        }
-
-        if (module == 'red') {
-          final int? before = previousValues[command.address];
-          debugPrint(
-            'send 0x${command.address.toRadixString(16).padLeft(4, '0').toUpperCase()} = ${command.value} '
-            '(old=${before ?? 'null'}, new=${command.value})',
-          );
-        }
-        if (module == 'chakra') {
-          final int? before = previousValues[command.address];
-          debugPrint(
-            'send 0x${command.address.toRadixString(16).padLeft(4, '0').toUpperCase()} = ${command.value} '
-            '(old=${before ?? 'null'}, new=${command.value})',
-          );
-        }
-        if (module == 'terahertz') {
-          final int? before = previousValues[command.address];
-          debugPrint(
-            'send 0x${command.address.toRadixString(16).padLeft(4, '0').toUpperCase()} = ${command.value} '
-            '(old=${before ?? 'null'}, new=${command.value})',
-          );
-        }
-        if (module == 'fragrance') {
-          final int? before = previousValues[command.address];
-          debugPrint(
-            'send 0x${command.address.toRadixString(16).padLeft(4, '0').toUpperCase()} = ${command.value} '
-            '(old=${before ?? 'null'}, new=${command.value})',
-          );
-        }
-        if (module == 'hifem') {
-          final int? before = previousValues[command.address];
-          debugPrint(
-            'send 0x${command.address.toRadixString(16).padLeft(4, '0').toUpperCase()} = ${command.value} '
-            '(old=${before ?? 'null'}, new=${command.value})',
-          );
-        }
-
-        commands.add(command);
+        commands.add(ModbusWriteCommand(address: address, value: value));
+        changedCount++;
       }
-
-      if (module == 'red') {
-        debugPrint('RedLight node diff end');
-      }
-      if (module == 'chakra') {
-        debugPrint('Chakra node diff end');
-      }
-      if (module == 'terahertz') {
-        debugPrint('Terahertz node diff end');
-      }
-      if (module == 'fragrance') {
-        debugPrint('Fragrance node diff end');
-      }
-      if (module == 'hifem') {
-        debugPrint('HIFEM node diff end');
-      }
+      debugPrint('phase switch diff $module: changed=$changedCount');
     }
 
     return commands;
@@ -1692,7 +1718,12 @@ class _StartPageState extends State<StartPage> {
     if (!mounted) return;
     if (result is! VatMusicSelection) return;
 
-    setState(() => _vatMusicSelection = result);
+    setState(() {
+      _vatMusicSelection = result;
+      if (!_logic.isRunning) {
+        _hasPreloadedPhaseParams = false;
+      }
+    });
 
     final bool isVatRunning =
         _logic.isRunning && _runningModules.contains('vat');
@@ -1704,6 +1735,8 @@ class _StartPageState extends State<StartPage> {
       } catch (e) {
         debugPrint('VAT runtime music change failed: $e');
       }
+    } else {
+      _preloadPhaseParamsIfNeeded();
     }
   }
 
@@ -2050,7 +2083,12 @@ class _StartPageState extends State<StartPage> {
     // 启动：发完整启动序列（使能/参数/启动）。
     commands.addAll(_buildPhaseCommands(moduleFilter: modulesToStart));
     // 保持+更新：只发变化参数，不发启动/使能。
-    commands.addAll(_buildChangedModuleParamCommands(modulesToUpdate));
+    commands.addAll(
+      _buildChangedModuleParamCommands(
+        modulesToUpdate,
+        currentParamValues: currentParamValues,
+      ),
+    );
 
     debugPrint('skip system restart because already running');
 
@@ -2058,7 +2096,7 @@ class _StartPageState extends State<StartPage> {
       final Stopwatch phaseSwitchStopwatch = Stopwatch()..start();
       debugPrint('phase switch TX command count: ${commands.length}');
       _phaseSwitchModbusService
-          .sendCommandQueueNoResponse(commands)
+          .sendCommandQueue(commands)
           .then((_) {
             phaseSwitchStopwatch.stop();
             debugPrint(
@@ -2254,4 +2292,14 @@ class _ExpandStatusItem {
   final String label;
   final String iconOn;
   final String iconOff;
+}
+
+class _PreloadCommandBatch {
+  const _PreloadCommandBatch({
+    required this.startAddress,
+    required this.values,
+  });
+
+  final int startAddress;
+  final List<int> values;
 }

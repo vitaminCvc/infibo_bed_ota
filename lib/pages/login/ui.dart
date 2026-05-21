@@ -32,14 +32,39 @@ class _LoginPageState extends State<LoginPage> {
   final FocusNode _phoneFocusNode = FocusNode();
   final FocusNode _passwordFocusNode = FocusNode();
   final LoginLogic _logic = LoginLogic();
+  final ValueNotifier<bool> _canLoginNotifier = ValueNotifier<bool>(false);
+  bool _didPrecache = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _phoneController.addListener(_updateCanLoginState);
+    _passwordController.addListener(_updateCanLoginState);
+    _updateCanLoginState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_didPrecache) return;
+    _didPrecache = true;
+
+    precacheImage(const AssetImage(Assets.logo), context);
+    precacheImage(const AssetImage(Assets.glassLogo), context);
+    precacheImage(const AssetImage(Assets.phoneLogo), context);
+    precacheImage(const AssetImage(Assets.passwordLogo), context);
+  }
 
   @override
   //在组件被销毁时,清理资源
   void dispose() {
+    _phoneController.removeListener(_updateCanLoginState);
+    _passwordController.removeListener(_updateCanLoginState);
     _phoneController.dispose();
     _passwordController.dispose();
     _phoneFocusNode.dispose();
     _passwordFocusNode.dispose();
+    _canLoginNotifier.dispose();
     super.dispose();
   }
 
@@ -125,9 +150,6 @@ class _LoginPageState extends State<LoginPage> {
             controller: _phoneController,
             focusNode: _phoneFocusNode,
             keyboardType: TextInputType.phone,
-            onChanged: (value) {
-              setState(() {});
-            },
             //输入框内容样式
             style: const TextStyle(color: Colors.white, fontSize: 18),
             textAlignVertical: TextAlignVertical.center,
@@ -183,9 +205,6 @@ class _LoginPageState extends State<LoginPage> {
             controller: _passwordController,
             focusNode: _passwordFocusNode,
             keyboardType: TextInputType.text,
-            onChanged: (value) {
-              setState(() {});
-            },
             //输入框内容样式
             style: const TextStyle(color: Colors.white, fontSize: 18),
             textAlignVertical: TextAlignVertical.center,
@@ -217,9 +236,9 @@ class _LoginPageState extends State<LoginPage> {
           //点击忘记密码按钮，跳转到忘记密码页面
           onPressed: () {},
           style: TextButton.styleFrom(
-            padding: EdgeInsets.zero,
-            minimumSize: Size.zero,
-            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+            minimumSize: const Size(48, 48),
+            tapTargetSize: MaterialTapTargetSize.padded,
           ),
           child: Text(
             'forgot_password'.tr,
@@ -232,49 +251,59 @@ class _LoginPageState extends State<LoginPage> {
 
   ///构建登录按钮
   Widget _buildLoginButton() {
-    return Stack(
-      children: [
-        //毛玻璃
-        Opacity(
-          //毛玻璃透明度
-          opacity: 0,
-          //毛玻璃图片
-          child: Image.asset(Assets.glassLogo),
-        ),
-        Positioned.fill(
-          //登录按钮
-          child: ElevatedButton(
-            //点击事件
-            //点击登录按钮，跳转到登录页面
-            //如果手机号或密码为空，提示用户输入手机号或密码
-            onPressed: _canLogin() ? _logic.login : null,
-            style: ElevatedButton.styleFrom(
-              //登录按钮背景颜色
-              backgroundColor: const Color(0xFF1464DF),
-              //登录按钮禁用背景颜色
-              disabledBackgroundColor: const Color.fromARGB(255, 2, 43, 106),
-              //登录按钮文本颜色
-              foregroundColor: Colors.white,
-              //登录按钮禁用文本颜色
-              disabledForegroundColor: Colors.grey,
-              //登录按钮形状
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(31),
+    return ValueListenableBuilder<bool>(
+      valueListenable: _canLoginNotifier,
+      builder: (BuildContext context, bool canLogin, _) {
+        return Stack(
+          children: [
+            //毛玻璃
+            Opacity(
+              //毛玻璃透明度
+              opacity: 0,
+              //毛玻璃图片
+              child: Image.asset(Assets.glassLogo),
+            ),
+            Positioned.fill(
+              //登录按钮
+              child: ElevatedButton(
+                //点击事件
+                //点击登录按钮，跳转到登录页面
+                //如果手机号或密码为空，提示用户输入手机号或密码
+                onPressed: canLogin ? _logic.login : null,
+                style: ElevatedButton.styleFrom(
+                  //登录按钮背景颜色
+                  backgroundColor: const Color(0xFF1464DF),
+                  //登录按钮禁用背景颜色
+                  disabledBackgroundColor: const Color.fromARGB(
+                    255,
+                    2,
+                    43,
+                    106,
+                  ),
+                  //登录按钮文本颜色
+                  foregroundColor: Colors.white,
+                  //登录按钮禁用文本颜色
+                  disabledForegroundColor: Colors.grey,
+                  //登录按钮形状
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(31),
+                  ),
+                  //登录按钮阴影
+                  elevation: 0,
+                  //登录按钮内边距
+                  padding: EdgeInsets.zero,
+                  minimumSize: const Size(48, 48),
+                  tapTargetSize: MaterialTapTargetSize.padded,
+                ),
+                child: Text(
+                  'login'.tr,
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
+                ),
               ),
-              //登录按钮阴影
-              elevation: 0,
-              //登录按钮内边距
-              padding: EdgeInsets.zero,
-              minimumSize: Size.zero,
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
-            child: Text(
-              'login'.tr,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
-            ),
-          ),
-        ),
-      ],
+          ],
+        );
+      },
     );
   }
 
@@ -282,6 +311,10 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildRegisterButton() {
     return TextButton(
       onPressed: () {},
+      style: TextButton.styleFrom(
+        minimumSize: const Size(96, 48),
+        tapTargetSize: MaterialTapTargetSize.padded,
+      ),
       child: Text(
         'register'.tr,
         style: TextStyle(
@@ -300,7 +333,10 @@ class _LoginPageState extends State<LoginPage> {
       children: [
         GestureDetector(
           behavior: HitTestBehavior.opaque,
-          onTap: () => setState(() => _agreed = !_agreed),
+          onTap: () {
+            setState(() => _agreed = !_agreed);
+            _updateCanLoginState();
+          },
           child: SizedBox(
             width: 48,
             height: 48,
@@ -314,6 +350,7 @@ class _LoginPageState extends State<LoginPage> {
                     setState(() {
                       _agreed = value ?? false;
                     });
+                    _updateCanLoginState();
                   },
                   shape: const CircleBorder(),
                   side: const BorderSide(color: Color(0xFF7F8491)),
@@ -359,6 +396,12 @@ class _LoginPageState extends State<LoginPage> {
     return _agreed &&
         _phoneController.text.trim().isNotEmpty &&
         _passwordController.text.trim().isNotEmpty;
+  }
+
+  void _updateCanLoginState() {
+    final bool nextValue = _canLogin();
+    if (_canLoginNotifier.value == nextValue) return;
+    _canLoginNotifier.value = nextValue;
   }
 }
 
