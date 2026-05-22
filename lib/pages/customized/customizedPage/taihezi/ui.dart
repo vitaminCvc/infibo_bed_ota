@@ -9,6 +9,7 @@ import 'package:infibo_app/components/index.dart';
 import 'package:infibo_app/constants/assets.dart';
 import 'package:infibo_app/pages/customized/customizedPage/setting_page_helpers.dart';
 import 'package:infibo_app/pages/customized/customizedPage/taihezi/logic.dart';
+import 'package:lottie/lottie.dart';
 
 class TerahertzExpandResult {
   const TerahertzExpandResult({
@@ -118,7 +119,7 @@ class _TerahertzExpandPageState extends State<TerahertzExpandPage> {
                         Positioned(
                           left: 284,
                           top: 215,
-                          child: Image.asset(
+                          child: Lottie.asset(
                             Assets.terahertzBody,
                             width: 233,
                             height: 238,

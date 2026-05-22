@@ -45,10 +45,14 @@ class ChoseUsersLogic {
 
   // 加载已保存用户。
   Future<void> loadUsers() async {
-    final List<Map<String, Object?>> rows = await _db.query(
-      _tableName,
-      orderBy: 'id ASC',
-    );
+    List<Map<String, Object?>> rows;
+    try {
+      rows = await _db.query(_tableName, orderBy: 'id ASC');
+    } on DatabaseException catch (error) {
+      if (!error.isNoSuchTableError(_tableName)) rethrow;
+      await _createUsersTable(_db);
+      rows = await _db.query(_tableName, orderBy: 'id ASC');
+    }
 
     users
       ..clear()

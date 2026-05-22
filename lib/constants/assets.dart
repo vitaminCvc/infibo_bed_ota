@@ -91,7 +91,7 @@ class Assets {
 
   // 启动治疗页：人体主视觉图片。
   static const String startBodyLogo = "assets/Start/startBody.png";
-
+  /////////////////////////////////////功能框背景/////////////////////////////////////
   // 启动治疗页：红光功能参数面板背景。
   static const String startRedLightPanel =
       "assets/Start/Function/redLightpage.png";
@@ -108,13 +108,30 @@ class Assets {
 
   // 启动治疗页：拓展功能参数面板背景。
   static const String startExpandPanel = "assets/Start/Function/expandpage.png";
+  //////////////////////////////////面板底部动图素材///////////////////////////////
+  // 启动治疗页：红光。
+  static const String startRedLight = "assets/lottie/redlight.json";
+
+  // 启动治疗页：PEMF。
+  static const String startPemf = "assets/lottie/pemf.json";
+
+  // 启动治疗页：VAT。
+  static const String startVat = "assets/lottie/vat.json";
+
+  // 启动治疗页：分子氢。
+  static const String startHydrogen = "assets/lottie/hydrogen.json";
 
   // 启动治疗页：倒计时圆环背景。
-  static const String startTimerRing = "assets/Start/Countdown/countdown.png";
+  static const String startTimerRing =
+      "assets/Start/Countdown/countdownRing.png";
 
   // 启动治疗页：倒计时进度条。
   static const String startTimerProgress =
-      "assets/Start/Countdown/ProgressBar.png";
+      "assets/Start/Countdown/ProgressGlow.png";
+
+  // 启动治疗页：倒计时中间黑色圆盘背景。
+  static const String startTimerCenter =
+      "assets/Start/Countdown/countdownCenter.png";
 
   // 启动治疗页：倒计时进度点。
   static const String startTimerDot =
@@ -133,19 +150,6 @@ class Assets {
   // 启动治疗页：暂停按钮按下状态。
   static const String startPauseActiveButton =
       "assets/Start/Switch/stopClick.png";
-
-  // 启动治疗页：红光效果示意图。
-  static const String startRedLightWave = "assets/Start/Expand/redlight.png";
-
-  // 启动治疗页：PEMF 波形效果示意图。
-  static const String startPemfWave = "assets/Start/Expand/PEMF.png";
-
-  // 启动治疗页：VAT 波形效果示意图。
-  static const String startVatWave = "assets/Start/Expand/VAT.png";
-
-  // 启动治疗页：分子氢效果示意图。
-  static const String startHydrogenMolecule =
-      "assets/Start/Expand/hydrogen.png";
 
   // 启动治疗页：拓展功能连续模式图标。
   static const String startExpandContinuous =
@@ -510,8 +514,7 @@ class Assets {
       "assets/expand_settings/terahertz/page_selected.jpg";
 
   // 太赫兹设置页：太赫兹圆环主视觉图片。
-  static const String terahertzBody =
-      "assets/expand_settings/terahertz/body.png";
+  static const String terahertzBody = "assets/lottie/taihez.json";
 
   // 太赫兹设置页：确认按钮不可点击状态背景。
   static const String terahertzConfirmDisabled =
@@ -688,4 +691,7 @@ class Assets {
   static const String joystickRightTop = "assets/joystick/up.png";
   // 摇杆组件：右下角闪烁。
   static const String joystickRightBottom = "assets/joystick/down.png";
+  ///////////////////////音乐界面素材/////////////////////////////////////
+  // 音乐界面：唱片机视觉图。
+  static const String vinylVisual = "assets/lottie/music.json";
 }

@@ -111,6 +111,23 @@ class AndroidSerialPortService {
     ];
   }
 
+  Future<int> writeModbusQueueNoResponse({
+    required List<Uint8List> frames,
+    String path = defaultPath,
+    int baudRate = defaultBaudRate,
+    required Duration commandDelay,
+  }) async {
+    _ensureAndroid();
+    final int? count = await _channel
+        .invokeMethod<int>('writeModbusQueueNoResponse', {
+          'path': path,
+          'baudRate': baudRate,
+          'delayMs': commandDelay.inMilliseconds,
+          'frames': frames,
+        });
+    return count ?? 0;
+  }
+
   Future<void> closeSerialPort() async {
     _ensureAndroid();
     await _channel.invokeMethod<bool>('closeSerialPort');

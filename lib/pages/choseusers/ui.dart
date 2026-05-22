@@ -400,28 +400,36 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
           _selectedGender = value;
         });
       },
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 120),
-        width: 44,
-        height: 26,
-        decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF1876F2) : const Color(0xFF3A3D49),
-          borderRadius: BorderRadius.circular(13),
-          border: Border.all(
-            color: isSelected
-                ? const Color(0xFF1876F2)
-                : const Color(0xFF4A4D59),
-          ),
-        ),
+      child: SizedBox(
+        width: 48,
+        height: 48,
         child: Center(
-          child: Text(
-            value == '男' ? 'male'.tr : 'female'.tr,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 14,
-              fontFamily: 'Microsoft YaHei',
-              fontWeight: FontWeight.w600,
-              height: 1,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 120),
+            width: 44,
+            height: 26,
+            decoration: BoxDecoration(
+              color: isSelected
+                  ? const Color(0xFF1876F2)
+                  : const Color(0xFF3A3D49),
+              borderRadius: BorderRadius.circular(13),
+              border: Border.all(
+                color: isSelected
+                    ? const Color(0xFF1876F2)
+                    : const Color(0xFF4A4D59),
+              ),
+            ),
+            child: Center(
+              child: Text(
+                value == '男' ? 'male'.tr : 'female'.tr,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontFamily: 'Microsoft YaHei',
+                  fontWeight: FontWeight.w600,
+                  height: 1,
+                ),
+              ),
             ),
           ),
         ),

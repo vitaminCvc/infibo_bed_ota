@@ -88,6 +88,23 @@ class AndroidSerialPortBridge(messenger: BinaryMessenger) : MethodChannel.Method
                     result.success(responses)
                 }
 
+                "writeModbusQueueNoResponse" -> {
+                    val path = call.argument<String>("path")
+                        ?.takeIf { it.isNotBlank() }
+                        ?: DEFAULT_SERIAL_PATH
+                    val baudRate = call.argument<Int>("baudRate") ?: DEFAULT_BAUD_RATE
+                    val delayMs = call.argument<Int>("delayMs") ?: DEFAULT_DELAY_MS
+                    val frames = extractFrames(call.argument<Any>("frames"))
+
+                    val writtenCount = writeModbusQueueNoResponse(
+                        path,
+                        baudRate,
+                        frames,
+                        delayMs,
+                    )
+                    result.success(writtenCount)
+                }
+
                 "closeSerialPort" -> {
                     closeSerialPort()
                     result.success(true)
@@ -222,6 +239,45 @@ class AndroidSerialPortBridge(messenger: BinaryMessenger) : MethodChannel.Method
         }
     }
 
+    private fun writeModbusQueueNoResponse(
+        path: String,
+        baudRate: Int,
+        frames: List<ByteArray>,
+        delayMs: Int,
+    ): Int {
+        synchronized(lock) {
+            try {
+                android.util.Log.i(
+                    "SerialPortManager",
+                    "fast queue open path=$path baudRate=$baudRate count=${frames.size}",
+                )
+                openSerialPort(path, baudRate, startReader = false)
+                val serialManager = manager ?: error("Serial port is not open.")
+                val queueStartMs = System.currentTimeMillis()
+
+                frames.forEachIndexed { index, frame ->
+                    android.util.Log.i(
+                        "SerialPortManager",
+                        "fast queue TX[${index + 1}]: ${frame.toHexString()}",
+                    )
+                    serialManager.sendPacket(frame)
+                    if (delayMs > 0 && index < frames.lastIndex) {
+                        Thread.sleep(delayMs.toLong())
+                    }
+                }
+                val totalMs = System.currentTimeMillis() - queueStartMs
+                android.util.Log.i(
+                    "SerialPortManager",
+                    "fast queue complete count=${frames.size} total=${totalMs}ms",
+                )
+                return frames.size
+            } finally {
+                android.util.Log.i("SerialPortManager", "fast queue finally closeSerialPort")
+                closeSerialPort()
+            }
+        }
+    }
+
     private fun writeModbusFrameWithRetry(
         serialManager: SerialPortManager,
         frame: ByteArray,
@@ -299,7 +355,14 @@ class AndroidSerialPortBridge(messenger: BinaryMessenger) : MethodChannel.Method
         serialManager: SerialPortManager,
         timeoutMs: Int,
     ): ByteArray {
-        val input = serialManager.mInputStream ?: error("Serial input stream is not open.")
+        val input = serialManager.mInputStream
+        if (input == null) {
+            android.util.Log.w(
+                "SerialPortManager",
+                "mInputStream is null, fallback to readPacket for RX",
+            )
+            return readModbusResponseByPacket(serialManager, timeoutMs)
+        }
         val output = ByteArrayOutputStream()
         val buffer = ByteArray(256)
         val deadline = System.currentTimeMillis() + timeoutMs.coerceAtLeast(100)
@@ -310,7 +373,7 @@ class AndroidSerialPortBridge(messenger: BinaryMessenger) : MethodChannel.Method
             val length = if (available > 0) {
                 input.read(buffer, 0, minOf(buffer.size, available))
             } else {
-                input.read(buffer)
+                0
             }
 
             if (length > 0) {
@@ -332,6 +395,54 @@ class AndroidSerialPortBridge(messenger: BinaryMessenger) : MethodChannel.Method
         }
 
         android.util.Log.e("SerialPortManager", "Native RX timeout after ${timeoutMs}ms")
+        error("Serial read timeout after ${timeoutMs}ms.")
+    }
+
+    private fun readModbusResponseByPacket(
+        serialManager: SerialPortManager,
+        timeoutMs: Int,
+    ): ByteArray {
+        val output = ByteArrayOutputStream()
+        val buffer = ByteArray(256)
+        val deadline = System.currentTimeMillis() + timeoutMs.coerceAtLeast(100)
+        android.util.Log.i(
+            "SerialPortManager",
+            "Native wait RX by readPacket timeoutMs=$timeoutMs",
+        )
+
+        while (System.currentTimeMillis() < deadline) {
+            var readLength = 0
+            var readBytes: ByteArray? = null
+
+            serialManager.readPacket(buffer) { recvBytes, length ->
+                if (length > 0 && recvBytes != null) {
+                    readLength = length
+                    readBytes = recvBytes.copyOf(length)
+                }
+            }
+
+            if (readLength > 0 && readBytes != null) {
+                output.write(readBytes)
+                val bytes = output.toByteArray()
+                android.util.Log.i("SerialPortManager", "Native RX(packet): ${bytes.toHexString()}")
+                val expectedLength = expectedModbusResponseLength(bytes)
+                if (expectedLength != null && bytes.size >= expectedLength) {
+                    val response = bytes.copyOf(expectedLength)
+                    android.util.Log.i(
+                        "SerialPortManager",
+                        "Native RX complete(packet): ${response.toHexString()}",
+                    )
+                    return response
+                }
+            } else {
+                Thread.sleep(5)
+            }
+        }
+
+        android.util.Log.e(
+            "SerialPortManager",
+            "Native RX(packet) timeout after ${timeoutMs}ms",
+        )
         error("Serial read timeout after ${timeoutMs}ms.")
     }
 
