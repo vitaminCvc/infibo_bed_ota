@@ -1,4 +1,4 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'dart:math' as math;
 import 'package:infibo_app/api/modbus_rtu_service.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +19,10 @@ class StartPage extends StatefulWidget {
   State<StartPage> createState() => _StartPageState();
 }
 
-class _StartPageState extends State<StartPage> {
+class _StartPageState extends State<StartPage>
+        //加入一个动画节拍器
+        with
+        SingleTickerProviderStateMixin {
   // 这里使用 AndroidSerialPortService，默认路径为 /dev/ttyS0
   final ModbusRtuService modbusService = const ModbusRtuService();
   static const Duration _phaseSwitchCommandDelay = Duration(milliseconds: 40);
@@ -43,8 +46,16 @@ class _StartPageState extends State<StartPage> {
   // 页面逻辑控制器：倒计时、运行、暂停状态、当前工作设备都放在 logic.dart 中
   final StartLogic _logic = StartLogic();
 
+  //用来表示“已经发送一键下降，但还没有收到 0x011 = 0
+  bool _isWaitingLiftBottom = false;
+  // 控制呼吸动画循环
+  late final AnimationController _waitingLiftBreathController;
+  // 控制呼吸动画从暗到亮、从亮到暗
+  late final Animation<double> _waitingLiftBreathOpacity;
+
   // 每秒推进一次倒计时
   Timer? _timer;
+  // 是否正在下发命令
   bool _isCommanding = false;
   int _lastPhaseIndex = 0;
   final Set<String> _runningModules = <String>{};
@@ -68,15 +79,33 @@ class _StartPageState extends State<StartPage> {
     _logic.configure(Get.arguments);
     _lastPhaseIndex = _logic.activePhaseIndex;
     _startTimer();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _preloadPhaseParamsIfNeeded();
-    });
+    // 初始化呼吸动画
+    _waitingLiftBreathController = AnimationController(
+      vsync: this,
+      // 动画循环(一次由亮到暗的时间)
+      duration: const Duration(milliseconds: 1000),
+    );
+    // 闪烁效果：透明度不会平滑变化，而是在暗和亮之间切换
+    _waitingLiftBreathOpacity = TweenSequence<double>([
+      TweenSequenceItem(
+        tween: ConstantTween<double>(0.15), // 暗
+        weight: 1,
+      ),
+      TweenSequenceItem(
+        tween: ConstantTween<double>(0.75), // 亮
+        weight: 1,
+      ),
+    ]).animate(_waitingLiftBreathController);
+
+    // 循环闪烁
+    _waitingLiftBreathController.repeat();
   }
 
   @override
   void dispose() {
     _timer?.cancel();
     _hydrogenFlowTimer?.cancel();
+    _waitingLiftBreathController.dispose();
     super.dispose();
   }
 
@@ -91,6 +120,7 @@ class _StartPageState extends State<StartPage> {
             .clamp(_minPageScale, 1.0)
             .toDouble();
     return AppHeaderPage(
+      enableLogoBack: false,
       children: [
         Positioned.fill(
           top: 75,
@@ -286,15 +316,27 @@ class _StartPageState extends State<StartPage> {
   //用来加载功能框背景。现在背景如果是 PNG 就走 Image.asset，如果以后你真给某个完整面板换成 JSON，它也能自动走 Lottie.asset
   Widget _buildPanelAsset(String asset) {
     if (asset.toLowerCase().endsWith('.json')) {
-      return Lottie.asset(asset, fit: BoxFit.fill);
+      return Lottie.asset(
+        asset,
+        fit: BoxFit.fill,
+        animate: false,
+        repeat: false,
+      );
     }
     return Image.asset(asset, fit: BoxFit.fill);
   }
 
   // 用来加载功能框内的效果图。它们有的可能是静态 PNG，有的可能是 Lottie 动画，甚至同一个功能框里两种都有，所以需要区分处理。
-  Widget _buildEffectAsset(String asset, {BoxFit fit = BoxFit.contain}) {
+  Widget _buildEffectAsset(
+    String asset, {
+    BoxFit fit = BoxFit.contain,
+    bool animate = false,
+  }) {
+    //增加一个参数，控制是否播放动画
     if (asset.toLowerCase().endsWith('.json')) {
-      return SizedBox(child: Lottie.asset(asset, fit: fit));
+      return SizedBox(
+        child: Lottie.asset(asset, fit: fit, animate: animate, repeat: animate),
+      );
     }
     return Image.asset(asset, fit: fit);
   }
@@ -693,13 +735,19 @@ class _StartPageState extends State<StartPage> {
     bool isActive,
     List<String> activeDevices,
   ) {
+    final bool shouldAnimate =
+        _logic.isRunning && isActive; //只有在理疗进行中才播放动画效果，暂停时显示静态图
     switch (id) {
       case 'red':
         return [
           Positioned(
             left: 23,
             top: 253,
-            child: _buildEffectAsset(Assets.startRedLight, fit: BoxFit.contain),
+            child: _buildEffectAsset(
+              Assets.startRedLight,
+              fit: BoxFit.contain,
+              animate: shouldAnimate,
+            ),
           ),
         ];
       case 'pemf':
@@ -707,7 +755,11 @@ class _StartPageState extends State<StartPage> {
           Positioned(
             left: 45,
             top: 195,
-            child: _buildEffectAsset(Assets.startPemf, fit: BoxFit.contain),
+            child: _buildEffectAsset(
+              Assets.startPemf,
+              fit: BoxFit.contain,
+              animate: shouldAnimate,
+            ),
           ),
         ];
       case 'vat':
@@ -715,7 +767,11 @@ class _StartPageState extends State<StartPage> {
           Positioned(
             left: 57,
             top: 151,
-            child: _buildEffectAsset(Assets.startVat, fit: BoxFit.contain),
+            child: _buildEffectAsset(
+              Assets.startVat,
+              fit: BoxFit.contain,
+              animate: shouldAnimate,
+            ),
           ),
         ];
       case 'hydrogen':
@@ -723,7 +779,11 @@ class _StartPageState extends State<StartPage> {
           Positioned(
             left: 38,
             top: 140,
-            child: _buildEffectAsset(Assets.startHydrogen, fit: BoxFit.contain),
+            child: _buildEffectAsset(
+              Assets.startHydrogen,
+              fit: BoxFit.contain,
+              animate: shouldAnimate,
+            ),
           ),
         ];
       case 'expand':
@@ -768,7 +828,7 @@ class _StartPageState extends State<StartPage> {
         iconOff: Assets.startFragranceIconOff,
       ),
     ];
-
+    //等待运行
     return SizedBox(
       width: 220,
       child: Column(
@@ -939,8 +999,8 @@ class _StartPageState extends State<StartPage> {
               isActive
                   ? Assets.startPauseActiveButton
                   : Assets.startPauseButton,
-              width: isActive ? 167 : 120,
-              height: isActive ? 156 : 65,
+              width: 167,
+              height: 156,
             ),
           ),
         ),
@@ -948,12 +1008,17 @@ class _StartPageState extends State<StartPage> {
     );
   }
 
+  // 构建启动按钮
   Widget _buildPlayButton() {
     final bool isStopMode = _logic.isRunning;
     final bool isResumeMode = _logic.canResume;
     final bool isStartMode = _logic.canStart;
     final bool isActive =
         !_isCommanding && (isStopMode || isResumeMode || isStartMode);
+
+    if (_isWaitingLiftBottom) {
+      return _buildWaitingLiftBottomButton();
+    }
 
     return SizedBox(
       width: 167,
@@ -972,12 +1037,12 @@ class _StartPageState extends State<StartPage> {
           child: Center(
             child: Image.asset(
               isStopMode
-                  ? Assets.pausePlayButton
+                  ? Assets.waitingStopGlowButton
                   : isActive
                   ? Assets.startPlayActiveButton
-                  : Assets.pausePlayButton,
-              width: isActive ? 167 : 120,
-              height: isActive ? 156 : 65,
+                  : Assets.waitingStopGlowButton,
+              width: 167,
+              height: 156,
             ),
           ),
         ),
@@ -985,13 +1050,54 @@ class _StartPageState extends State<StartPage> {
     );
   }
 
+  Widget _buildWaitingLiftBottomButton() {
+    return SizedBox(
+      width: 167,
+      height: 156,
+      child: Center(
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            FadeTransition(
+              opacity: _waitingLiftBreathOpacity,
+              child: Image.asset(
+                Assets.waitingStopGlowButton,
+                width: 167,
+                height: 156,
+                fit: BoxFit.contain,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // 启动治疗
   Future<void> _handleStartPressed() async {
     if (_isCommanding || !_logic.canStart) return;
 
-    setState(() => _isCommanding = true);
+    setState(() {
+      // 发送命令后，等待升降杆到达底部
+      _isCommanding = true;
+      // 已经发送一键下降，没有收到 0x0011=0；等待升降杆到达底部
+      _isWaitingLiftBottom = true;
+    });
+    _waitingLiftBreathController.repeat(reverse: true);
+
     try {
+      // 等待下发参数
       await _runStartButtonDeviceActions();
+      // 等待升降杆到达底部
       await _waitForLiftReachBottom();
+
+      if (mounted) {
+        setState(() => _isWaitingLiftBottom = false);
+      }
+      _waitingLiftBreathController.stop();
+      _waitingLiftBreathController.reset();
+
+      await _turnoffAmbientLight();
       final List<ModbusWriteCommand> commands = _buildPhaseCommands();
       if (_hasPreloadedPhaseParams) {
         final List<ModbusWriteCommand> startCommands = <ModbusWriteCommand>[
@@ -1023,10 +1129,18 @@ class _StartPageState extends State<StartPage> {
       if (!mounted) return;
       _showError('${'error_send_params_failed'.tr}$e');
     } finally {
-      if (mounted) setState(() => _isCommanding = false);
+      _waitingLiftBreathController.stop();
+      _waitingLiftBreathController.reset();
+      if (mounted) {
+        setState(() {
+          _isCommanding = false;
+          _isWaitingLiftBottom = false;
+        });
+      }
     }
   }
 
+  // 等待升降杆到达底部
   Future<void> _waitForLiftReachBottom() async {
     const Duration pollInterval = Duration(milliseconds: 500);
     while (mounted) {
@@ -1040,16 +1154,14 @@ class _StartPageState extends State<StartPage> {
     }
   }
 
-  Future<void> _runStartButtonDeviceActions() async {
-    await modbusService.sendCommandQueue([
-      const ModbusWriteCommand(address: 0x0010, value: 4),
-    ]);
-    JoystickCommandBus.instance.lockLeftBottom();
-
+  // 关闭氛围灯
+  Future<void> _turnoffAmbientLight() async {
     try {
+      // 读取氛围灯状态
       final int ambientLightState = await modbusService.readHoldingRegister(
         0x0012,
       );
+      // 如果氛围灯是开启状态，才关闭
       if (ambientLightState == 1) {
         await modbusService.sendCommandQueue([
           const ModbusWriteCommand(address: 0x0012, value: 0),
@@ -1061,6 +1173,29 @@ class _StartPageState extends State<StartPage> {
     }
   }
 
+  Future<void> _runStartButtonDeviceActions() async {
+    // 下发参数
+    await modbusService.sendCommandQueue([
+      const ModbusWriteCommand(address: 0x0010, value: 4),
+    ]);
+    JoystickCommandBus.instance.lockLeftBottom();
+    // 关闭氛围灯
+    // try {
+    //   final int ambientLightState = await modbusService.readHoldingRegister(
+    //     0x0012,
+    //   );
+    //   if (ambientLightState == 1) {
+    //     await modbusService.sendCommandQueue([
+    //       const ModbusWriteCommand(address: 0x0012, value: 0),
+    //     ]);
+    //     debugPrint('start button auto-off ambient light TX 0x0012=0');
+    //   }
+    // } catch (e) {
+    //   debugPrint('start button read/close ambient light skipped: $e');
+    // }
+  }
+
+  // 预加载参数
   Future<void> _preloadPhaseParamsIfNeeded() async {
     if (!_logic.isCustomizedPlan) return;
     if (_logic.isRunning) return;
@@ -1091,6 +1226,7 @@ class _StartPageState extends State<StartPage> {
     }
   }
 
+  // 发送预加载命令
   Future<void> _sendPreloadCommandsByFunction10(
     List<ModbusWriteCommand> commands,
   ) async {
@@ -1106,6 +1242,7 @@ class _StartPageState extends State<StartPage> {
     }
   }
 
+  // 构建预加载命令批次
   List<_PreloadCommandBatch> _buildPreloadCommandBatches(
     List<ModbusWriteCommand> commands,
   ) {
@@ -1144,6 +1281,7 @@ class _StartPageState extends State<StartPage> {
     return batches;
   }
 
+  // 暂停治疗
   Future<void> _handlePausePressed() async {
     if (_isCommanding || !_logic.canPause) return;
 

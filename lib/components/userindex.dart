@@ -108,7 +108,7 @@ class AppTopHeader extends StatelessWidget {
         const SizedBox(width: 12),
         _buildImageButton(
           asset: Assets.settingLogo,
-          width: 90,
+          width: 100,
           height: 48,
           onTap: AppComponentLogic.openSettingPage,
           child: Positioned(

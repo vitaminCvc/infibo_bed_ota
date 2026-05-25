@@ -430,7 +430,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
   Widget _buildAddModulePanel() {
     return SizedBox(
       width: 270,
-      height: 525,
+      height: 530,
       child: Stack(
         children: [
           Positioned.fill(
@@ -615,21 +615,35 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
                 Row(
                   children: [
                     SizedBox(
-                      width: 84,
+                      width: 68,
                       height: 44,
                       child: Align(
                         alignment: const Alignment(-1, 0.45),
                         child: Text('mode_select'.tr, style: _smallLabelStyle),
                       ),
                     ),
-                    const SizedBox(width: 16),
-                    _buildModeOption(
-                      index,
-                      _RedLightMode.continuous,
-                      'continuous'.tr,
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: _buildModeOption(
+                              index,
+                              _RedLightMode.continuous,
+                              'continuous'.tr,
+                            ),
+                          ),
+                          const SizedBox(width: 6),
+                          Expanded(
+                            child: _buildModeOption(
+                              index,
+                              _RedLightMode.pulse,
+                              'pulse'.tr,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    const SizedBox(width: 6),
-                    _buildModeOption(index, _RedLightMode.pulse, 'pulse'.tr),
                   ],
                 ),
               ],
@@ -722,14 +736,21 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
       behavior: HitTestBehavior.opaque,
       onTap: () => _setRedLightMode(index, mode),
       child: SizedBox(
-        width: 60,
         height: 44,
         child: Align(
           alignment: const Alignment(0, 0.45),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(text, style: _smallLabelStyle),
+              Flexible(
+                child: Text(
+                  text,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  softWrap: false,
+                  style: _smallLabelStyle,
+                ),
+              ),
               const SizedBox(width: 5),
               _RadioDot(active: active, color: const Color(0xFFF08A23)),
             ],

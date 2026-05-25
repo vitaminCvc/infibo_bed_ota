@@ -137,8 +137,8 @@ class Assets {
   static const String startTimerDot =
       "assets/Start/Countdown/countdownPoint.png";
 
-  // 启动治疗页：停止按钮默认状态。
-  static const String pausePlayButton = "assets/Start/Switch/pause.png";
+  // 启动治疗页：停止按钮亮起状态。
+  static const String waitingStopGlowButton = "assets/Start/Switch/pauseon.png";
 
   // 启动治疗页：开始按钮按下状态。
   static const String startPlayActiveButton =

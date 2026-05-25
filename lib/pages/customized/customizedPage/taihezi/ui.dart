@@ -408,6 +408,6 @@ const TextStyle _valueStyle = TextStyle(
 
 const TextStyle _optionStyle = TextStyle(
   color: Color(0xFFC4C7D0),
-  fontSize: 16,
+  fontSize: 15,
   fontWeight: FontWeight.w400,
 );
