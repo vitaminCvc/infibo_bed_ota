@@ -11,6 +11,7 @@ import 'package:infibo_app/constants/assets.dart';
 import 'package:infibo_app/constants/color.dart';
 import 'package:infibo_app/pages/joystick/ui.dart';
 import 'package:infibo_app/pages/main/logic.dart';
+import 'package:infibo_app/routes/route_observer.dart';
 
 // 主页面UI
 class MainPage extends StatefulWidget {
@@ -21,7 +22,7 @@ class MainPage extends StatefulWidget {
 }
 
 // 主页面状态管理
-class _MainPageState extends State<MainPage> {
+class _MainPageState extends State<MainPage> with RouteAware {
   // 主页面底部氛围灯默认按钮
   bool _isLightOn = false;
   bool _isLightCommanding = false;
@@ -29,6 +30,8 @@ class _MainPageState extends State<MainPage> {
   bool _hasPendingLight = false;
   bool _deviceFault = false; //true:设备故障(红色),false:设备正常(绿色)
   Timer? _deviceStatusTimer; //设备状态轮询定时器
+  bool _isDeviceStatusPolling = false;
+  bool _isRouteSubscribed = false;
   final ModbusRtuService _modbusService = const ModbusRtuService();
   // 主页面逻辑控制器
   final MainLogic _logic = MainLogic();
@@ -37,19 +40,55 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     super.initState();
     _syncAmbientLightStateFromDevice();
+  }
 
-    _readDeviceStatus0006(); //先读一次0x0006寄存器状态
-    _deviceStatusTimer = Timer.periodic(
-      const Duration(seconds: 5), //5s读一次0x0006寄存器状态
-      (_) => _readDeviceStatus0006(),
-    );
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final ModalRoute<dynamic>? route = ModalRoute.of(context);
+    if (!_isRouteSubscribed && route is PageRoute) {
+      appRouteObserver.subscribe(this, route);
+      _isRouteSubscribed = true;
+    }
   }
 
   //加dispose释放定时器
   @override
   void dispose() {
-    _deviceStatusTimer?.cancel();
+    if (_isRouteSubscribed) {
+      appRouteObserver.unsubscribe(this);
+      _isRouteSubscribed = false;
+    }
+    _stopDeviceStatusPolling();
     super.dispose();
+  }
+
+  @override
+  void didPush() => _startDeviceStatusPolling();
+
+  @override
+  void didPopNext() => _startDeviceStatusPolling();
+
+  @override
+  void didPushNext() => _stopDeviceStatusPolling();
+
+  @override
+  void didPop() => _stopDeviceStatusPolling();
+
+  void _startDeviceStatusPolling() {
+    if (_isDeviceStatusPolling) return;
+    _isDeviceStatusPolling = true;
+    _readDeviceStatus0006();
+    _deviceStatusTimer = Timer.periodic(
+      const Duration(seconds: 5),
+      (_) => _readDeviceStatus0006(),
+    );
+  }
+
+  void _stopDeviceStatusPolling() {
+    _deviceStatusTimer?.cancel();
+    _deviceStatusTimer = null;
+    _isDeviceStatusPolling = false;
   }
 
   //进入页面，从下位机读取0x0012寄存器状态，同步界面环境灯光开关状态

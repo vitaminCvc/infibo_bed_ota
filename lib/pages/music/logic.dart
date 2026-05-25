@@ -1,4 +1,6 @@
 // VAT 音乐选择页面数据模型与逻辑。
+import 'package:infibo_app/constants/assets.dart';
+
 class Song {
   const Song({
     required this.id,
@@ -26,21 +28,25 @@ const List<SongSeries> songSeriesList = [
         id: 'dream1',
         name: '01   Dream 1 (Before the wind blows it all away)',
         author: '          Max Richter',
+        assetPath: Assets.music1,
       ),
       Song(
         id: 'healing_hands',
         name: '02   Healing Hands',
         author: '          Liquid Mind',
+        assetPath: Assets.music2,
       ),
       Song(
         id: 'spiegel',
         name: '03   Spiegel im Spiegel',
         author: '          Arvo Pärt',
+        assetPath: Assets.music3,
       ),
       Song(
         id: 'cello_suite',
         name: '04   Bach: Cello Suite No. 1 in G Major (Prélude)',
         author: '          Johann Sebastian Bach',
+        assetPath: Assets.music4,
       ),
       Song(
         id: 'dream_spiral',

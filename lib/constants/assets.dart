@@ -694,4 +694,12 @@ class Assets {
   ///////////////////////音乐界面素材/////////////////////////////////////
   // 音乐界面：唱片机视觉图。
   static const String vinylVisual = "assets/lottie/music.json";
+  //音乐界面：测试音乐1
+  static const String music1 = "assets/music/test1.mp3";
+  //音乐界面：测试音乐2
+  static const String music2 = "assets/music/test2.mp3";
+  //音乐界面：测试音乐3
+  static const String music3 = "assets/music/test3.mp3";
+  //音乐界面：测试音乐4
+  static const String music4 = "assets/music/test4.mp3";
 }
