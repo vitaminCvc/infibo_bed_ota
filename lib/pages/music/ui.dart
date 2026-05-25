@@ -101,7 +101,7 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
           left: 60,
           top: 400,
           right: 60,
-          bottom: 200,
+          bottom: 190,
           child: _buildSongList(),
         ),
         Positioned(
@@ -110,13 +110,78 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
           bottom: 66,
           child: _buildBottomControls(),
         ),
+        Positioned(left: 150, top: 400, child: _slider()),
       ],
+    );
+  }
+
+  double _sliderValue = 50;
+
+  Widget _slider() {
+    return Container(
+      width: 500,
+      height: 70,
+      padding: const EdgeInsets.symmetric(horizontal: 18),
+      child: Row(
+        children: [
+          const Text(
+            '能量',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 17,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+
+          const SizedBox(width: 18),
+
+          Expanded(
+            child: SliderTheme(
+              data: SliderTheme.of(context).copyWith(
+                trackHeight: 4,
+                activeTrackColor: const Color(0xFF2E84FF),
+                inactiveTrackColor: Colors.white.withValues(alpha: 0.12),
+                thumbColor: const Color(0xFFBFDFFF),
+                overlayColor: const Color(0xFF2E84FF).withValues(alpha: 0.18),
+                thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 8),
+                overlayShape: const RoundSliderOverlayShape(overlayRadius: 18),
+              ),
+              child: Slider(
+                value: _sliderValue.clamp(0, 100).toDouble(),
+                min: 0,
+                max: 100,
+                divisions: 100,
+                onChanged: (value) {
+                  setState(() {
+                    _sliderValue = value;
+                  });
+                },
+              ),
+            ),
+          ),
+
+          const SizedBox(width: 18),
+
+          SizedBox(
+            width: 45,
+            child: Text(
+              '${_sliderValue.round()}%',
+              textAlign: TextAlign.right,
+              style: const TextStyle(
+                color: Color(0xFF4DA3FF),
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildVinylVisual() {
     return Positioned(
-      left: 250,
+      left: 228,
       top: 100,
       child: Lottie.asset(Assets.vinylVisual),
     );
@@ -126,7 +191,7 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
     return Container(
       decoration: BoxDecoration(color: Colors.black),
       child: ListView.builder(
-        padding: const EdgeInsets.symmetric(vertical: 50),
+        padding: const EdgeInsets.symmetric(vertical: 120),
         itemCount: songSeriesList.length,
         itemBuilder: (context, i) => _buildSeriesGroup(songSeriesList[i]),
       ),
@@ -153,7 +218,7 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
       behavior: HitTestBehavior.opaque,
       onTap: () => setState(() => _currentIndex = songIndex),
       child: Container(
-        height: 80,
+        height: 87,
         margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
         padding: const EdgeInsets.symmetric(horizontal: 14),
         decoration: BoxDecoration(

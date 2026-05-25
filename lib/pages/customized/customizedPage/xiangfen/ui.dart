@@ -239,7 +239,7 @@ class _FragranceChoice extends StatelessWidget {
             const SizedBox(height: 10),
             Text(
               data.title.tr,
-              style: const TextStyle(color: Colors.white, fontSize: 24),
+              style: const TextStyle(color: Colors.white, fontSize: 17),
             ),
           ],
         ),

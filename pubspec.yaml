@@ -41,6 +41,7 @@ dependencies:
   flutter_slidable: ^4.0.3
   flutter_libserialport: ^0.6.0
   lottie: ^3.3.3
+  just_audio: ^0.9.40
 
 dev_dependencies:
   flutter_test:

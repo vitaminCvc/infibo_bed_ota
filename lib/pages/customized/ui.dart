@@ -495,7 +495,7 @@ class _RenameButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 88,
+      width: 100,
       height: 32,
       child: ElevatedButton.icon(
         onPressed: onTap,

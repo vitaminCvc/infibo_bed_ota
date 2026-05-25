@@ -1,6 +1,8 @@
 // 主页面。
 //
 // 展示预设理疗模式、顶部 Header 和氛围灯开关，并提供进入自定义方案页的入口。
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:infibo_app/api/modbus_rtu_service.dart';
@@ -25,6 +27,8 @@ class _MainPageState extends State<MainPage> {
   bool _isLightCommanding = false;
   bool _pendingLightState = false;
   bool _hasPendingLight = false;
+  bool _deviceFault = false; //true:设备故障(红色),false:设备正常(绿色)
+  Timer? _deviceStatusTimer; //设备状态轮询定时器
   final ModbusRtuService _modbusService = const ModbusRtuService();
   // 主页面逻辑控制器
   final MainLogic _logic = MainLogic();
@@ -33,8 +37,22 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     super.initState();
     _syncAmbientLightStateFromDevice();
+
+    _readDeviceStatus0006(); //先读一次0x0006寄存器状态
+    _deviceStatusTimer = Timer.periodic(
+      const Duration(seconds: 5), //5s读一次0x0006寄存器状态
+      (_) => _readDeviceStatus0006(),
+    );
   }
 
+  //加dispose释放定时器
+  @override
+  void dispose() {
+    _deviceStatusTimer?.cancel();
+    super.dispose();
+  }
+
+  //进入页面，从下位机读取0x0012寄存器状态，同步界面环境灯光开关状态
   Future<void> _syncAmbientLightStateFromDevice() async {
     try {
       final int state = await _modbusService.readHoldingRegister(0x0012);
@@ -43,6 +61,28 @@ class _MainPageState extends State<MainPage> {
       debugPrint('Ambient light sync RX 0x0012=$state');
     } catch (e) {
       debugPrint('Ambient light sync failed: $e');
+    }
+  }
+
+  // 5s读取一次0x0006寄存器状态，同步界面设备状态
+  Future<void> _readDeviceStatus0006() async {
+    try {
+      final int state = await _modbusService.readHoldingRegister(
+        0x0006,
+      ); //读取0x0006寄存器状态，判断设备是否故障
+      final bool fault = state == 3 || state == 5; //判断是否为设备故障状态
+      // 0x0006寄存器状态为0时，设备正常(绿色)
+      // 0x0006寄存器状态为1时，设备正常(绿色)
+      // 0x0006寄存器状态为2时，设备正常(绿色)
+      // 0x0006寄存器状态为3时，设备故障(红色)
+
+      if (!mounted) return;
+      //读取到设备故障状态后，如果新状态和旧状态不一样，就更新界面；如果读取失败，就打印错误日志。
+      if (_deviceFault != fault) {
+        setState(() => _deviceFault = fault);
+      }
+    } catch (e) {
+      debugPrint('Device status sync failed: $e');
     }
   }
 
@@ -261,28 +301,55 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  /// 构建设备状态标签
+  /// 构建设备状态标签(改为动态颜色+文案)
   Widget _buildDeviceStatus() {
+    final Color statusColor = _deviceFault
+        ? Colors.red
+        : Colors.green; //根据状态判断颜色
+    final String statusText = _deviceFault
+        ? 'device_fault'.tr
+        : 'device_ready'.tr; //根据状态判断文案
+    //构建设备状态标签底部框
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
-        color: const Color(0xFF1D3A31),
+        color: const Color(0xFF37383c),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFF295E4D)),
+        border: Border.all(color: const Color(0xFF37383c)),
       ),
+      // 构建设备状态标签内容
       child: Row(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: MainAxisSize.min, //主轴方向上，组件只占自己内容需要的大小，不要撑满父组件
         children: [
-          const Icon(Icons.circle, color: Color(0xFF25E88A), size: 9),
+          Icon(Icons.circle, color: statusColor, size: 9),
           const SizedBox(width: 5),
-          Text(
-            'device_ready'.tr,
-            style: const TextStyle(color: Color(0xFF35E093), fontSize: 12),
-          ),
+          Text(statusText, style: TextStyle(color: statusColor, fontSize: 12)),
         ],
       ),
     );
   }
+
+  // Widget _buildDeviceStatus() {
+  //   return Container(
+  //     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+  //     decoration: BoxDecoration(
+  //       color: const Color(0xFF37383c),
+  //       borderRadius: BorderRadius.circular(16),
+  //       border: Border.all(color: const Color(0xFF37383c)),
+  //     ),
+  //     child: Row(
+  //       mainAxisSize: MainAxisSize.min,
+  //       children: [
+  //         const Icon(Icons.circle, color: Color(0xFF35E093), size: 9),
+  //         const SizedBox(width: 5),
+  //         Text(
+  //           'device_ready'.tr,
+  //           style: const TextStyle(color: Color(0xFF35E093), fontSize: 12),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   /// 构建中间人体图片
   Widget _buildBodyStage() {
@@ -345,8 +412,8 @@ class _MainPageState extends State<MainPage> {
           ),
         ),
         Positioned(
-          left: 260,
-          top: 1100,
+          left: 265,
+          top: 1092,
           child:
               //检测用户手势操作
               GestureDetector(

@@ -147,11 +147,11 @@ class AppTopHeader extends StatelessWidget {
         const SizedBox(width: 8),
         _buildImageButton(
           asset: Assets.settingLogo,
-          width: 90,
+          width: 100,
           height: 48,
           onTap: AppComponentLogic.openSettingPage,
           child: Positioned(
-            left: 38,
+            left: 41,
             top: 13,
             child: Text(
               'settings'.tr,
@@ -178,7 +178,10 @@ class AppTopHeader extends StatelessWidget {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onLogoTap,
-      child: _withMinTapTarget(logo),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minWidth: 200, minHeight: 70),
+        child: Align(alignment: Alignment.centerLeft, child: logo),
+      ),
     );
   }
 
