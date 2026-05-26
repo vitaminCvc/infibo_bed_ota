@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -5,6 +6,7 @@ import 'package:infibo_app/components/index.dart';
 import 'package:infibo_app/constants/assets.dart';
 import 'package:infibo_app/pages/customized/customizedPage/setting_page_helpers.dart';
 import 'package:infibo_app/pages/music/logic.dart';
+import 'package:infibo_app/pages/music/player.dart';
 import 'package:lottie/lottie.dart';
 
 class MusicSelectPage extends StatefulWidget {
@@ -23,11 +25,16 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
   late final TextEditingController _frequencyController;
   late final TextEditingController _intensityController;
   late final bool _musicOnlyMode;
+  late final VatMusicPlaybackSnapshot _entryPlaybackSnapshot;
+  bool _confirmed = false;
+  double _sliderValue = 50;
 
   @override
   void initState() {
     super.initState();
     final Object? args = Get.arguments;
+    _entryPlaybackSnapshot = VatMusicPlayer.instance.captureSnapshot();
+    unawaited(VatMusicPlayer.instance.pause());
     _musicOnlyMode = true;
     final String initialSongId =
         (args is Map ? args['currentSelectedSongId'] as String? : null) ??
@@ -41,6 +48,10 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
     _intensityController = TextEditingController(
       text: _argumentText(args, 'currentVatStrength'),
     );
+    _sliderValue =
+        int.tryParse(_argumentText(args, 'currentVatStrength'))?.toDouble() ??
+        VatMusicPlayer.instance.volume.toDouble();
+    _intensityController.text = _sliderValue.round().toString();
   }
 
   String _argumentText(Object? args, String key) {
@@ -52,6 +63,14 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
 
   @override
   void dispose() {
+    if (!_confirmed) {
+      unawaited(
+        VatMusicPlayer.instance.restore(
+          _entryPlaybackSnapshot,
+          shouldPlay: _entryPlaybackSnapshot.wasPlaying,
+        ),
+      );
+    }
     _frequencyController.dispose();
     _intensityController.dispose();
     super.dispose();
@@ -66,25 +85,32 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
             .clamp(_minPageScale, 1.0)
             .toDouble();
 
-    return AppHeaderPage(
-      children: [
-        Positioned.fill(
-          top: 100,
-          child: SizedBox(
-            width: _designWidth * scale,
-            height: _designHeight * scale,
-            child: FittedBox(
-              fit: BoxFit.contain,
-              alignment: Alignment.topCenter,
-              child: SizedBox(
-                width: _designWidth,
-                height: _designHeight,
-                child: _buildCanvas(),
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        _cancelSelection();
+      },
+      child: AppHeaderPage(
+        children: [
+          Positioned.fill(
+            top: 100,
+            child: SizedBox(
+              width: _designWidth * scale,
+              height: _designHeight * scale,
+              child: FittedBox(
+                fit: BoxFit.contain,
+                alignment: Alignment.topCenter,
+                child: SizedBox(
+                  width: _designWidth,
+                  height: _designHeight,
+                  child: _buildCanvas(),
+                ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -95,7 +121,7 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
         Positioned(
           left: 55,
           top: 28,
-          child: ExpandBackButton(onTap: () => Get.back()),
+          child: ExpandBackButton(onTap: _cancelSelection),
         ),
         Positioned(
           left: 60,
@@ -114,8 +140,6 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
       ],
     );
   }
-
-  double _sliderValue = 50;
 
   Widget _slider() {
     return Container(
@@ -154,7 +178,9 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
                 onChanged: (value) {
                   setState(() {
                     _sliderValue = value;
+                    _intensityController.text = value.round().toString();
                   });
+                  unawaited(VatMusicPlayer.instance.setVolume(value.round()));
                 },
               ),
             ),
@@ -216,7 +242,7 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTap: () => setState(() => _currentIndex = songIndex),
+      onTap: () => _previewSong(songIndex),
       child: Container(
         height: 87,
         margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
@@ -384,13 +410,32 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
 
   void _confirmSelection() {
     final Song song = _currentSong;
+    _confirmed = true;
+    unawaited(VatMusicPlayer.instance.pause());
     Get.back(
       result: VatMusicSelection(
         songId: song.id,
         songName: song.name,
         frequency: _frequencyController.text.trim(),
-        intensity: _intensityController.text.trim(),
+        intensity: _sliderValue.round().toString(),
       ),
     );
+  }
+
+  void _cancelSelection() {
+    Get.back();
+  }
+
+  Future<void> _previewSong(int songIndex) async {
+    setState(() => _currentIndex = songIndex);
+    final bool ok = await VatMusicPlayer.instance.previewSong(
+      allSongs[songIndex].id,
+      _sliderValue.round(),
+    );
+    if (!ok && mounted) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('当前音乐暂无音频资源')));
+    }
   }
 }

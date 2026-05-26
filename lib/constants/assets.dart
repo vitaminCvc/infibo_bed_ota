@@ -702,4 +702,16 @@ class Assets {
   static const String music3 = "assets/music/test3.mp3";
   //音乐界面：测试音乐4
   static const String music4 = "assets/music/test4.mp3";
+  //音乐界面：测试音乐5
+  static const String music5 = "assets/music/test5.mp3";
+  //音乐界面：测试音乐6
+  static const String music6 = "assets/music/test6.mp3";
+  //音乐界面：测试音乐7
+  static const String music7 = "assets/music/test7.mp3";
+  //音乐界面：测试音乐8
+  static const String music8 = "assets/music/test8.mp3";
+  //音乐界面：测试音乐9
+  static const String music9 = "assets/music/test9.mp3";
+  //音乐界面：测试音乐10
+  static const String music10 = "assets/music/test10.mp3";
 }

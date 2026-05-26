@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 import 'dart:math' as math;
 import 'package:infibo_app/api/modbus_rtu_service.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +8,7 @@ import 'package:infibo_app/components/logic.dart';
 import 'package:infibo_app/constants/assets.dart';
 import 'package:infibo_app/pages/joystick/ui.dart';
 import 'package:infibo_app/pages/music/logic.dart';
+import 'package:infibo_app/pages/music/player.dart';
 import 'package:infibo_app/pages/start/logic.dart';
 import 'package:lottie/lottie.dart';
 
@@ -105,6 +106,7 @@ class _StartPageState extends State<StartPage>
   void dispose() {
     _timer?.cancel();
     _hydrogenFlowTimer?.cancel();
+    unawaited(VatMusicPlayer.instance.pause());
     _waitingLiftBreathController.dispose();
     super.dispose();
   }
@@ -563,7 +565,7 @@ class _StartPageState extends State<StartPage>
     final VatPhaseSetting? setting = _logic.activeVatSetting;
 
     final String frequencyText = setting?.frequency.toString() ?? '';
-    final String intensityText = setting?.intensity.toString() ?? '';
+    final String intensityText = _currentVatIntensity(setting).toString();
 
     return Positioned(
       //调节 VAT 功能框内文字整体位置
@@ -1123,6 +1125,7 @@ class _StartPageState extends State<StartPage>
           ..addAll(_currentModuleParamValues(_runningModules));
       });
       _syncHydrogenFlowPolling();
+      unawaited(_syncVatMusicPlayback());
       debugPrint('start command sent successfully');
     } catch (e) {
       debugPrint('start command failed: $e');
@@ -1302,6 +1305,7 @@ class _StartPageState extends State<StartPage>
         _logic.pause();
         _stopHydrogenFlowPolling(clearValue: false);
       });
+      unawaited(VatMusicPlayer.instance.pause());
       debugPrint('pause command sent successfully');
     } catch (e) {
       debugPrint('pause command failed: $e');
@@ -1332,6 +1336,7 @@ class _StartPageState extends State<StartPage>
         _logic.play();
       });
       _syncHydrogenFlowPolling();
+      unawaited(_syncVatMusicPlayback());
       debugPrint('resume command sent successfully');
     } catch (e) {
       debugPrint('resume command failed: $e');
@@ -1367,6 +1372,7 @@ class _StartPageState extends State<StartPage>
         _runningModuleParamValues.clear();
         _stopHydrogenFlowPolling(clearValue: true);
       });
+      unawaited(VatMusicPlayer.instance.stop());
       await _showCompletionDialog(args);
     } catch (e) {
       debugPrint('stop command failed: $e');
@@ -1484,7 +1490,7 @@ class _StartPageState extends State<StartPage>
         final List<ModbusWriteCommand> vatCommands = modbusService
             .buildVatCommands(
               frequency: setting.frequency,
-              intensity: setting.intensity,
+              intensity: _currentVatIntensity(setting),
               musicIndex: musicIndex,
             );
         addModuleCommands('vat', vatCommands);
@@ -1766,7 +1772,7 @@ class _StartPageState extends State<StartPage>
       case 'vat':
         final VatPhaseSetting? setting = _logic.activeVatSetting;
         if (setting == null) return null;
-        return '${setting.frequency}|${setting.intensity}|${_resolveVatMusicIndex(setting)}';
+        return '${setting.frequency}|${_currentVatIntensity(setting)}|${_resolveVatMusicIndex(setting)}';
       case 'chakra':
         final ChakraPhaseSetting? setting = _logic.activeChakraSetting;
         if (setting == null) return null;
@@ -1805,6 +1811,38 @@ class _StartPageState extends State<StartPage>
       return idx >= 0 ? idx : 0;
     }
     return 0;
+  }
+
+  String _currentVatMusicSongId(VatPhaseSetting? setting) {
+    return _vatMusicSelection?.songId ?? setting?.songId ?? defaultSongId;
+  }
+
+  int _currentVatIntensity(VatPhaseSetting? setting) {
+    final int? runtimeIntensity = int.tryParse(
+      _vatMusicSelection?.intensity ?? '',
+    );
+    return runtimeIntensity ??
+        setting?.intensity ??
+        VatMusicPlayer.instance.volume;
+  }
+
+  Future<void> _syncVatMusicPlayback() async {
+    final bool shouldPlay =
+        _logic.isRunning && _modulesForPhase().contains('vat');
+    if (!shouldPlay) {
+      await VatMusicPlayer.instance.pause();
+      return;
+    }
+
+    final VatPhaseSetting? setting = _logic.activeVatSetting;
+    final String songId = _currentVatMusicSongId(setting);
+    final int intensity = _currentVatIntensity(setting);
+    await VatMusicPlayer.instance.applySelection(
+      songId,
+      volume: intensity,
+      playNow: true,
+      restart: VatMusicPlayer.instance.selectedSongId != songId,
+    );
   }
 
   /// 获取当前阶段启用的模块列表。
@@ -1849,6 +1887,8 @@ class _StartPageState extends State<StartPage>
       arguments: {
         'fromPage': 'start',
         'currentSelectedSongId': currentSongId,
+        'currentVatFrequency': setting?.frequency.toString() ?? '',
+        'currentVatStrength': _currentVatIntensity(setting).toString(),
         'phaseIndex': _logic.activePhaseIndex,
       },
     );
@@ -1865,13 +1905,36 @@ class _StartPageState extends State<StartPage>
 
     final bool isVatRunning =
         _logic.isRunning && _runningModules.contains('vat');
+    await VatMusicPlayer.instance.applySelection(
+      result.songId,
+      volume: int.tryParse(result.intensity) ?? VatMusicPlayer.instance.volume,
+      playNow: isVatRunning,
+      restart: true,
+    );
     if (isVatRunning) {
-      final int idx = allSongs.indexWhere((s) => s.id == result.songId);
-      final int musicIndex = idx >= 0 ? idx : 0;
+      final Map<String, Map<int, int>> currentParamValues =
+          _currentModuleParamValues(<String>{'vat'});
+      final List<ModbusWriteCommand> commands =
+          _buildChangedModuleParamCommands(<String>{
+            'vat',
+          }, currentParamValues: currentParamValues);
       try {
-        await modbusService.writeVatMusicIndex(musicIndex);
+        if (commands.isNotEmpty) {
+          await modbusService.sendCommandQueue(commands);
+        }
+        final Map<String, String> signatures = _currentModuleSignatures(
+          <String>{'vat'},
+        );
+        setState(() {
+          if (signatures['vat'] != null) {
+            _runningModuleSignatures['vat'] = signatures['vat']!;
+          }
+          if (currentParamValues['vat'] != null) {
+            _runningModuleParamValues['vat'] = currentParamValues['vat']!;
+          }
+        });
       } catch (e) {
-        debugPrint('VAT runtime music change failed: $e');
+        debugPrint('VAT runtime music or intensity change failed: $e');
       }
     } else {
       _preloadPhaseParamsIfNeeded();
@@ -2257,6 +2320,7 @@ class _StartPageState extends State<StartPage>
               });
             }
             _syncHydrogenFlowPolling();
+            unawaited(_syncVatMusicPlayback());
           })
           .catchError((Object e) {
             phaseSwitchStopwatch.stop();
@@ -2283,6 +2347,7 @@ class _StartPageState extends State<StartPage>
         ..addAll(currentParamValues);
       _isSwitchingPhase = false;
       _syncHydrogenFlowPolling();
+      unawaited(_syncVatMusicPlayback());
     }
   }
 
