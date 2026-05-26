@@ -4,6 +4,8 @@
 // 红光、PEMF、VAT、分子氢以及拓展功能（脉轮、太赫兹、HIFEM、香氛）。
 // 用户在这里选择每个节点启用哪些功能，点击“保存参数”固化当前节点，
 // 最后点击“保存方案”把节点配置保存到本地方案数据里。
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -38,18 +40,30 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
   static const double _minPageScale = 0.72;
   // 时间线高度。
   static const double _timelineHeight = 918;
-  // 时间线节点顶部距离。
+  // 时间线节点加号顶部距离。
   static const double _timelineNodeTop = 48;
   // 时间线节点间距。
-  static const double _timelineNodeGap = 75.2;
-  // 时间线节点灯宽度。
-  static const double _timelineNodeLightWidth = 30;
-  // 时间线节点灯高度。
-  static const double _timelineNodeLightHeight = 45;
-  static const Color _timelineLightTopColor = Color(0x33B8DCFF);
-  static const Color _timelineLightBottomColor = Color(0x6673A6FF);
-  static const Color _timelineLightBorderColor = Color(0x3379BAFF);
-  static const Color _timelineLightShadowColor = Color(0x8079BAFF);
+  static const double _timelineNodeGap = 75.15;
+
+  // 时间轴在 _buildCanvas 里的位置
+  static const double _timelineTopInCanvas = 86;
+
+  // timelight 图片大小
+
+  static const double _timeLightHeight = 98;
+
+  // timelight 在 _buildCanvas 里的 left 位置
+  // 数值越小越靠左，越靠近人体；数值越大越靠右，越靠近时间轴
+  static const double _timeLightLeft = 380;
+
+  // // 时间线节点灯宽度。
+  // static const double _timelineNodeLightWidth = 34;
+  // // 时间线节点灯高度。
+  // static const double _timelineNodeLightHeight = 45;
+  // static const Color _timelineLightTopColor = Color.fromARGB(51, 245, 49, 4);
+  // static const Color _timelineLightBottomColor = Color(0x6673A6FF);
+  // static const Color _timelineLightBorderColor = Color(0x3379BAFF);
+  // static const Color _timelineLightShadowColor = Color(0x8079BAFF);
 
   static const String _bodyAsset = Assets.customizedBody;
   static const String _timelineAsset = Assets.customizedTimeline;
@@ -301,6 +315,9 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
       children: [
         const Positioned(left: 52, top: 42, child: _PageTitle()),
         Positioned(left: 186, top: 66, child: _buildBody()),
+        //添加时间轴底部灯光
+        ..._buildTimelineLight(),
+
         Positioned(left: 366, top: 86, child: _buildTimeline()),
         ..._buildSavedNodeFeatureDots(),
         if (showModulePanel)
@@ -332,8 +349,34 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     );
   }
 
+  //创建底部灯光条
+  List<Widget> _buildTimelineLight() {
+    return [
+      //从 _lightedTimelineIndexes 这个列表里，一个一个取出时间节点的下标，每取出一个，就执行一次后面的代码。
+      for (final int index in _lightedTimelineIndexes)
+        Positioned(
+          left: _timeLightLeft,
+          //页面里时间轴的 top+ 时间轴里第一个节点的位置+ 当前是第几个节点 * 节点间距+ 微调偏移- 图片高度的一半
+          top:
+              (_timelineTopInCanvas +
+                      _timelineNodeTop +
+                      _timelineNodeGap * index +
+                      12 -
+                      _timeLightHeight / 2)
+                  .clamp(
+                    _timelineTopInCanvas,
+                    _timelineTopInCanvas + _timelineHeight - _timeLightHeight,
+                  )
+                  .toDouble(),
+          child: IgnorePointer(
+            child: Image.asset(Assets.timelight, fit: BoxFit.fill),
+          ),
+        ),
+    ];
+  }
+
   Widget _buildTimeline() {
-    final List<int> lightedIndexes = _lightedTimelineIndexes;
+    // final List<int> lightedIndexes = _lightedTimelineIndexes;
 
     return SizedBox(
       width: 68,
@@ -348,7 +391,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
             height: _timelineHeight,
             fit: BoxFit.fill,
           ),
-          for (final int index in lightedIndexes) _buildLightedTimeline(index),
+          // for (final int index in lightedIndexes) _buildLightedTimeline(index),
           for (int index = 0; index < 12; index++)
             Positioned(
               right: -18,
@@ -364,42 +407,42 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     );
   }
 
-  // 按当前节点裁剪蓝色时间轴，保留用户已经选择到哪一个 5 分钟节点的提示。
-  Widget _buildLightedTimeline(int index) {
-    final double top =
-        (index == 0
-                ? 37
-                : _timelineNodeTop +
-                      index * _timelineNodeGap -
-                      _timelineNodeLightHeight / 2 +
-                      12)
-            .clamp(0, _timelineHeight - _timelineNodeLightHeight)
-            .toDouble();
+  // // 按当前节点裁剪蓝色时间轴，保留用户已经选择到哪一个 5 分钟节点的提示。
+  // Widget _buildLightedTimeline(int index) {
+  //   final double top =
+  //       (index == 0
+  //               ? 37
+  //               : _timelineNodeTop +
+  //                     index * _timelineNodeGap -
+  //                     _timelineNodeLightHeight / 2 +
+  //                     12)
+  //           .clamp(0, _timelineHeight - _timelineNodeLightHeight)
+  //           .toDouble();
 
-    return Positioned(
-      top: top,
-      child: Container(
-        width: _timelineNodeLightWidth,
-        height: _timelineNodeLightHeight,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: _timelineLightBorderColor, width: 1),
-          gradient: const LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [_timelineLightTopColor, _timelineLightBottomColor],
-          ),
-          boxShadow: const [
-            BoxShadow(
-              color: _timelineLightShadowColor,
-              blurRadius: 20,
-              spreadRadius: 5,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  //   return Positioned(
+  //     top: top,
+  //     child: Container(
+  //       width: _timelineNodeLightWidth,
+  //       height: _timelineNodeLightHeight,
+  //       decoration: BoxDecoration(
+  //         borderRadius: BorderRadius.circular(12),
+  //         border: Border.all(color: _timelineLightBorderColor, width: 1),
+  //         gradient: const LinearGradient(
+  //           begin: Alignment.topCenter,
+  //           end: Alignment.bottomCenter,
+  //           colors: [_timelineLightTopColor, _timelineLightBottomColor],
+  //         ),
+  //         boxShadow: const [
+  //           BoxShadow(
+  //             color: _timelineLightShadowColor,
+  //             blurRadius: 20,
+  //             spreadRadius: 5,
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   // 构建已保存节点左侧的大功能图标。
   List<Widget> _buildSavedNodeFeatureDots() {
@@ -1112,6 +1155,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     );
   }
 
+  // 保存参数按钮
   Widget _buildSaveParamsButton() {
     return SizedBox(
       width: 95,
@@ -1133,6 +1177,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     );
   }
 
+  // 保存计划按钮
   Widget _buildSavePlanButton() {
     final bool canSave = _savedNodeIndexes.contains(0);
 
@@ -1179,6 +1224,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     );
   }
 
+  // 切换功能
   void _toggleFeature(String id) {
     final int? index = _activeNodeIndex;
     if (index == null) return;

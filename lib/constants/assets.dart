@@ -240,6 +240,9 @@ class Assets {
   // 自定义方案编辑页：中间人体主视觉图片。
   static const String customizedBody = "assets/customized/customizedBody.png";
 
+  //自定义方案编辑页：时间轴底部灯光图片
+  static const String timelight = "assets/customized/timelight.png";
+
   // 自定义方案编辑页：时间轴图片。
   static const String customizedTimeline = "assets/customized/timeline.png";
 
@@ -714,4 +717,6 @@ class Assets {
   static const String music9 = "assets/music/test9.mp3";
   //音乐界面：测试音乐10
   static const String music10 = "assets/music/test10.mp3";
+  //音乐界面：音量波形背景
+  static const String volumeWave = "assets/music/volume_wave_bg.png";
 }

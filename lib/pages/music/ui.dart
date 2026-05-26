@@ -28,6 +28,25 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
   late final VatMusicPlaybackSnapshot _entryPlaybackSnapshot;
   bool _confirmed = false;
   double _sliderValue = 50;
+  // 是否显示音量小气泡
+  bool _showVolumeBubble = false;
+
+  @override
+  // 显示音量小气泡
+  void _showBubble() {
+    if (_showVolumeBubble) return;
+    setState(() {
+      _showVolumeBubble = true;
+    });
+  }
+
+  // 隐藏音量小气泡
+  void _hideBubble() {
+    if (!_showVolumeBubble) return;
+    setState(() {
+      _showVolumeBubble = false;
+    });
+  }
 
   @override
   void initState() {
@@ -117,15 +136,20 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
   Widget _buildCanvas() {
     return Stack(
       children: [
+        //唱片json
         Positioned(left: 250, top: 100, child: _buildVinylVisual()),
+        //返回按钮
         Positioned(
           left: 55,
           top: 28,
           child: ExpandBackButton(onTap: _cancelSelection),
         ),
+        //黑色背景
+        _buildBlackBack(),
+        //歌曲列表
         Positioned(
           left: 60,
-          top: 400,
+          top: 520,
           right: 60,
           bottom: 190,
           child: _buildSongList(),
@@ -136,72 +160,142 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
           bottom: 66,
           child: _buildBottomControls(),
         ),
-        Positioned(left: 150, top: 400, child: _slider()),
+        Positioned(left: 150, top: 410, child: _slider()),
       ],
     );
   }
 
   Widget _slider() {
-    return Container(
-      width: 500,
+    return SizedBox(
+      width: 478,
       height: 70,
-      padding: const EdgeInsets.symmetric(horizontal: 18),
-      child: Row(
-        children: [
-          const Text(
-            '能量',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 17,
-              fontWeight: FontWeight.w600,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final double progress = (_sliderValue.clamp(0, 100)) / 100.0;
+          final double waveWidth = constraints.maxWidth;
+          final double activeWidth = waveWidth * progress;
+
+          return GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            //点击时显示音量
+            onTapDown: (details) {
+              _showBubble();
+              _updateVolumeByDx(details.localPosition.dx, waveWidth);
+            },
+            //松开时隐藏音量
+            onTapUp: (_) {
+              _hideBubble();
+            },
+            //取消点击时隐藏音量
+            onTapCancel: () {
+              _hideBubble();
+            },
+            //拖动时更新音量
+            onHorizontalDragUpdate: (details) {
+              _showBubble();
+              _updateVolumeByDx(details.localPosition.dx, waveWidth);
+            },
+            //拖动结束时，隐藏音量
+            onHorizontalDragEnd: (_) {
+              _hideBubble();
+            },
+            //拖动取消时，隐藏音量
+            onHorizontalDragCancel: () {
+              _hideBubble();
+            },
+
+            child: Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.bottomLeft,
+              children: [
+                // 1. 底层灰色波形，完整显示
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: Image.asset(
+                    Assets.volumeWave,
+                    width: waveWidth,
+                    fit: BoxFit.fill,
+                  ),
+                ),
+
+                // 2. 上层同一张图，染成橙红色，然后只显示左边进度部分
+                Positioned(
+                  left: 0,
+                  bottom: 0,
+                  child: ClipRect(
+                    child: Align(
+                      alignment: Alignment.bottomLeft,
+                      widthFactor: progress,
+                      child: ShaderMask(
+                        shaderCallback: (Rect bounds) {
+                          return const LinearGradient(
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                            colors: [
+                              Color(0xFFFFD15C), // 左边：黄橙
+                              Color(0xFFFF7A1A), // 中间：橙色
+                              Color(0xFFFF3B30), // 右边：红橙
+                            ],
+                          ).createShader(bounds);
+                        },
+                        blendMode: BlendMode.srcIn,
+                        child: Image.asset(
+                          Assets.volumeWave,
+                          width: waveWidth,
+                          fit: BoxFit.fill,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                if (_showVolumeBubble)
+                  // 3. 当前百分比小气泡
+                  Positioned(
+                    left: (activeWidth - 18).clamp(0, waveWidth - 36),
+                    bottom: 34,
+                    child: Container(
+                      width: 36,
+                      height: 20,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFF5A2A),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Text(
+                        '${_sliderValue.round()}%',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
             ),
-          ),
-
-          const SizedBox(width: 18),
-
-          Expanded(
-            child: SliderTheme(
-              data: SliderTheme.of(context).copyWith(
-                trackHeight: 4,
-                activeTrackColor: const Color(0xFF2E84FF),
-                inactiveTrackColor: Colors.white.withValues(alpha: 0.12),
-                thumbColor: const Color(0xFFBFDFFF),
-                overlayColor: const Color(0xFF2E84FF).withValues(alpha: 0.18),
-                thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 8),
-                overlayShape: const RoundSliderOverlayShape(overlayRadius: 18),
-              ),
-              child: Slider(
-                value: _sliderValue.clamp(0, 100).toDouble(),
-                min: 0,
-                max: 100,
-                divisions: 100,
-                onChanged: (value) {
-                  setState(() {
-                    _sliderValue = value;
-                    _intensityController.text = value.round().toString();
-                  });
-                  unawaited(VatMusicPlayer.instance.setVolume(value.round()));
-                },
-              ),
-            ),
-          ),
-
-          const SizedBox(width: 18),
-
-          SizedBox(
-            width: 45,
-            child: Text(
-              '${_sliderValue.round()}%',
-              textAlign: TextAlign.right,
-              style: const TextStyle(
-                color: Color(0xFF4DA3FF),
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-        ],
+          );
+        },
       ),
+    );
+  }
+
+  void _updateVolumeByDx(double dx, double width) {
+    final double value = (dx / width * 100).clamp(0, 100);
+
+    setState(() {
+      _sliderValue = value;
+      _intensityController.text = value.round().toString();
+    });
+
+    unawaited(VatMusicPlayer.instance.setVolume(value.round()));
+  }
+
+  Widget _buildBlackBack() {
+    return Positioned(
+      top: 400,
+      child: Container(width: _designWidth, height: 200, color: Colors.black),
     );
   }
 
@@ -217,7 +311,7 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
     return Container(
       decoration: BoxDecoration(color: Colors.black),
       child: ListView.builder(
-        padding: const EdgeInsets.symmetric(vertical: 120),
+        padding: const EdgeInsets.only(top: 0, bottom: 14),
         itemCount: songSeriesList.length,
         itemBuilder: (context, i) => _buildSeriesGroup(songSeriesList[i]),
       ),
