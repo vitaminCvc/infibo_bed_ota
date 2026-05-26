@@ -714,4 +714,6 @@ class Assets {
   static const String music9 = "assets/music/test9.mp3";
   //音乐界面：测试音乐10
   static const String music10 = "assets/music/test10.mp3";
+  //音乐界面：音量波形背景
+  static const String volumeWave = "assets/music/volume_wave_bg.png";
 }
