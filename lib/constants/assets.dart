@@ -240,6 +240,9 @@ class Assets {
   // 自定义方案编辑页：中间人体主视觉图片。
   static const String customizedBody = "assets/customized/customizedBody.png";
 
+  //自定义方案编辑页：时间轴底部灯光图片
+  static const String timelight = "assets/customized/timelight.png";
+
   // 自定义方案编辑页：时间轴图片。
   static const String customizedTimeline = "assets/customized/timeline.png";
 
