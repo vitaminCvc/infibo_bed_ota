@@ -1,3 +1,4 @@
+//香氛模块Modbus协议
 class FragranceBatchPayload {
   const FragranceBatchPayload({
     required this.startAddress,

@@ -42,6 +42,8 @@ dependencies:
   flutter_libserialport: ^0.6.0
   lottie: ^3.3.3
   just_audio: ^0.9.40
+  shared_preferences: ^2.5.5
+  dio: ^5.9.2
 
 dev_dependencies:
   flutter_test:
@@ -99,6 +101,7 @@ flutter:
     - assets/joystick/
     - assets/lottie/
     - assets/music/
+    - assets/Summary/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

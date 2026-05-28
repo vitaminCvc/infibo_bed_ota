@@ -3,6 +3,8 @@
 // 这里集中注册所有页面路由；正式入口不会展示调试页，但保留 /debug/serial-test 隐藏路由便于现场排查串口。
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:infibo_app/pages/login/register.dart';
+import 'package:infibo_app/pages/summary/summary.dart';
 import 'package:infibo_app/routes/route_observer.dart';
 import 'package:infibo_app/translation/app_translations.dart';
 import 'package:infibo_app/pages/choseusers/ui.dart';
@@ -18,6 +20,8 @@ import 'package:infibo_app/pages/start/ui.dart';
 
 const String _initialRoute = String.fromEnvironment(
   'INFIBO_INITIAL_ROUTE',
+  // defaultValue: '/summary',
+  //根级路由登录界面
   defaultValue: '/login',
 );
 
@@ -41,6 +45,8 @@ List<GetPage> getRoutes() {
   return [
     // 登录页
     GetPage(name: "/login", page: () => const LoginPage()),
+    // 注册页
+    GetPage(name: "/register", page: () => const RegisterPage()),
     // 主页面
     GetPage(name: "/main", page: () => const MainPage()),
     // 选择用户页面
@@ -62,5 +68,7 @@ List<GetPage> getRoutes() {
     GetPage(name: "/setting", page: () => const SettingWidget()),
     // 隐藏调试路由：不在正式页面提供入口。
     GetPage(name: "/debug/serial-test", page: () => const SerialTestPage()),
+    // 总结页
+    GetPage(name: "/summary", page: () => const SummaryPage()),
   ];
 }

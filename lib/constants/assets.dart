@@ -14,8 +14,20 @@ class Assets {
   // 登录页：手机号输入框左侧图标。
   static const String phoneLogo = "assets/Loginimages/phone.png";
 
+  // 登录页：验证码输入框左侧图标。
+  static const String codeLogo = "assets/Loginimages/code.png";
+
   // 登录页：密码输入框左侧图标。
   static const String passwordLogo = "assets/Loginimages/password.png";
+
+  // 登录页：管理员图标。
+  static const String adminLogo = "assets/Loginimages/adminLogo.png";
+
+  //登录页：操作员图标
+  static const String operatorLogo = "assets/Loginimages/operatorLogo.png";
+
+  // 登录页：个人图标。
+  static const String userLogo = "assets/Loginimages/userLogo.png";
 
   // 主页：中间人体主视觉图片。
   static const String mainBodyLogo = "assets/Mainimages/body.png";
@@ -719,4 +731,13 @@ class Assets {
   static const String music10 = "assets/music/test10.mp3";
   //音乐界面：音量波形背景
   static const String volumeWave = "assets/music/volume_wave_bg.png";
+  ///////////////////////////////总结页面/////////////////////////////////////
+  //总结页面：能量指数
+  static const String energy = "assets/Summary/energy.png";
+  //总结页面：细胞活化
+  static const String cell = "assets/Summary/cell.png";
+  //总结页面：放松指数
+  static const String relax = "assets/Summary/relax.png";
+  //总结页面: 免疫提升
+  static const String immune = "assets/Summary/immune.png";
 }
