@@ -8,9 +8,9 @@ import 'package:infibo_app/components/index.dart';
 import 'package:infibo_app/components/logic.dart';
 import 'package:infibo_app/constants/assets.dart';
 import 'package:infibo_app/constants/color.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // 公共页头时间控制器，全局只保留一份时钟。
-
 // 带公共页头的基础页面。
 class AppSettingHeaderPage extends StatelessWidget {
   const AppSettingHeaderPage({

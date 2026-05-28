@@ -147,6 +147,7 @@ class _LoginPageState extends State<LoginPage> {
         // 宽度撑开（不加会报错）
         Expanded(
           child: TextField(
+            cursorColor: Color(0xFF1464DF),
             controller: _phoneController,
             focusNode: _phoneFocusNode,
             keyboardType: TextInputType.phone,
@@ -192,6 +193,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  ///构建密码输入框
   Widget _inputPassword() {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -202,6 +204,7 @@ class _LoginPageState extends State<LoginPage> {
         // 宽度撑开（不加会报错）
         Expanded(
           child: TextField(
+            cursorColor: Color(0xFF1464DF),
             controller: _passwordController,
             focusNode: _passwordFocusNode,
             keyboardType: TextInputType.text,
@@ -254,54 +257,45 @@ class _LoginPageState extends State<LoginPage> {
     return ValueListenableBuilder<bool>(
       valueListenable: _canLoginNotifier,
       builder: (BuildContext context, bool canLogin, _) {
-        return Stack(
-          children: [
-            //毛玻璃
-            Opacity(
-              //毛玻璃透明度
-              opacity: 0,
-              //毛玻璃图片
-              child: Image.asset(Assets.glassLogo),
-            ),
-            Positioned.fill(
-              //登录按钮
-              child: ElevatedButton(
-                //点击事件
-                //点击登录按钮，跳转到登录页面
-                //如果手机号或密码为空，提示用户输入手机号或密码
-                onPressed: canLogin ? _logic.login : null,
-                style: ElevatedButton.styleFrom(
-                  //登录按钮背景颜色
-                  backgroundColor: const Color(0xFF1464DF),
-                  //登录按钮禁用背景颜色
-                  disabledBackgroundColor: const Color.fromARGB(
-                    255,
-                    2,
-                    43,
-                    106,
-                  ),
-                  //登录按钮文本颜色
-                  foregroundColor: Colors.white,
-                  //登录按钮禁用文本颜色
-                  disabledForegroundColor: Colors.grey,
-                  //登录按钮形状
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(31),
-                  ),
-                  //登录按钮阴影
-                  elevation: 0,
-                  //登录按钮内边距
-                  padding: EdgeInsets.zero,
-                  minimumSize: const Size(48, 48),
-                  tapTargetSize: MaterialTapTargetSize.padded,
-                ),
-                child: Text(
-                  'login'.tr,
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
-                ),
+        return SizedBox(
+          width: 480,
+          height: 64,
+          child: ElevatedButton(
+            // canLogin 为 true 时可以点击，执行 _logic.login
+            // canLogin 为 false 时按钮禁用
+            onPressed: canLogin ? _logic.login : null,
+            style: ElevatedButton.styleFrom(
+              // 登录按钮背景颜色
+              backgroundColor: const Color(0xFF1464DF),
+
+              // 登录按钮禁用背景颜色
+              disabledBackgroundColor: const Color.fromARGB(255, 2, 43, 106),
+
+              // 登录按钮文本颜色
+              foregroundColor: Colors.white,
+
+              // 登录按钮禁用文本颜色
+              disabledForegroundColor: Colors.grey,
+
+              // 登录按钮阴影
+              elevation: 0,
+
+              // 登录按钮形状
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(28),
+              ),
+
+              // 按钮内部边距
+              padding: EdgeInsets.zero,
+
+              // 文字样式
+              textStyle: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w900,
               ),
             ),
-          ],
+            child: Text('login'.tr),
+          ),
         );
       },
     );
@@ -310,7 +304,7 @@ class _LoginPageState extends State<LoginPage> {
   ///构建注册按钮
   Widget _buildRegisterButton() {
     return TextButton(
-      onPressed: () {},
+      onPressed: () => Get.toNamed('/register'),
       style: TextButton.styleFrom(
         minimumSize: const Size(96, 48),
         tapTargetSize: MaterialTapTargetSize.padded,

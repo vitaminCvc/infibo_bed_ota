@@ -4,7 +4,6 @@ import 'package:infibo_app/api/modbus_rtu_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:infibo_app/components/index.dart';
-import 'package:infibo_app/components/logic.dart';
 import 'package:infibo_app/constants/assets.dart';
 import 'package:infibo_app/pages/joystick/ui.dart';
 import 'package:infibo_app/pages/music/logic.dart';
@@ -77,6 +76,10 @@ class _StartPageState extends State<StartPage>
   @override
   void initState() {
     super.initState();
+    // 初始化时预加载阶段参数
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _preloadPhaseParamsIfNeeded();
+    });
     _logic.configure(Get.arguments);
     _lastPhaseIndex = _logic.activePhaseIndex;
     _startTimer();
@@ -1373,7 +1376,7 @@ class _StartPageState extends State<StartPage>
         _stopHydrogenFlowPolling(clearValue: true);
       });
       unawaited(VatMusicPlayer.instance.stop());
-      await _showCompletionDialog(args);
+      _openSummaryPage(args);
     } catch (e) {
       debugPrint('stop command failed: $e');
       if (!mounted) return;
@@ -1947,110 +1950,16 @@ class _StartPageState extends State<StartPage>
     ).showSnackBar(SnackBar(content: Text(message)));
   }
 
-  Future<void> _showCompletionDialog(_StartArguments args) async {
-    final int actualSeconds = _logic.elapsedSeconds
-        .clamp(0, _logic.totalSeconds)
-        .toInt();
+  void _openSummaryPage(_StartArguments args) {
     final Map<String, int> moduleSeconds = _logic.actualWorkSecondsByDevice(
       args.modeTitle,
     );
 
-    await showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return AlertDialog(
-          backgroundColor: const Color(0xFF1E2129),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-            side: const BorderSide(color: Color(0xFF535B6A)),
-          ),
-          title: Text(
-            'therapy_completed'.tr,
-            style: const TextStyle(color: Colors.white, fontSize: 22),
-          ),
-          content: SizedBox(
-            width: 360,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _completionRow('user'.tr, args.userName),
-                _completionRow(
-                  'session_duration'.tr,
-                  StartLogic.formatDurationText(actualSeconds),
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  'module_duration'.tr,
-                  style: const TextStyle(
-                    color: Color(0xFFB9BCC6),
-                    fontSize: 15,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                ..._moduleDurationRows(moduleSeconds),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text('confirm'.tr),
-            ),
-          ],
-        );
-      },
+    // 停止按钮或理疗自动结束后，不再弹总结框，直接进入总结页面。
+    Get.offNamed(
+      '/summary',
+      arguments: {'userName': args.userName, 'moduleSeconds': moduleSeconds},
     );
-
-    if (!mounted) return;
-    AppComponentLogic.backToMainPage();
-  }
-
-  Widget _completionRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Row(
-        children: [
-          SizedBox(
-            width: 92,
-            child: Text(
-              label,
-              style: const TextStyle(color: Color(0xFFB9BCC6), fontSize: 15),
-            ),
-          ),
-          Expanded(
-            child: Text(
-              value,
-              style: const TextStyle(color: Colors.white, fontSize: 16),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  List<Widget> _moduleDurationRows(Map<String, int> moduleSeconds) {
-    final List<MapEntry<String, int>> entries = moduleSeconds.entries
-        .where((entry) => entry.value > 0)
-        .toList();
-    if (entries.isEmpty) {
-      return [
-        Text(
-          'no_module_record'.tr,
-          style: const TextStyle(color: Color(0xFFB9BCC6), fontSize: 14),
-        ),
-      ];
-    }
-
-    return entries
-        .map(
-          (entry) => _completionRow(
-            StartLogic.deviceName(entry.key),
-            StartLogic.formatDurationText(entry.value),
-          ),
-        )
-        .toList();
   }
 
   void _startTimer() {
