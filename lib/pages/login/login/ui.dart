@@ -4,7 +4,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:infibo_app/constants/assets.dart';
-import 'package:infibo_app/pages/login/logic.dart';
+import 'package:infibo_app/pages/login/login/logic.dart';
 import 'package:infibo_app/constants/color.dart';
 
 //可选登录角色（管理员、操作员、用户）

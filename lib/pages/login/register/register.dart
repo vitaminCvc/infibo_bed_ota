@@ -1,15 +1,13 @@
 // 注册页。
 //
 // 用户在这里选择注册角色，输入手机号、验证码、密码并勾选协议。
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:infibo_app/api/dio/register/register_api.dart';
+import 'package:infibo_app/api/dio/register/register_models.dart';
 import 'package:infibo_app/constants/assets.dart';
-import 'package:infibo_app/pages/login/logic.dart';
 import 'package:infibo_app/constants/color.dart';
-import 'package:dio/dio.dart';
-
-// 可选注册角色：管理员、操作员、用户
-enum RegisterRole { admin, operator, user }
 
 // 注册页UI
 class RegisterPage extends StatefulWidget {
@@ -46,11 +44,19 @@ class _RegisterPageState extends State<RegisterPage> {
   // 密码输入框焦点
   final FocusNode _passwordFocusNode = FocusNode();
 
-  final LoginLogic _logic = LoginLogic();
-
   // 是否可以注册
   final ValueNotifier<bool> _canRegisterNotifier = ValueNotifier<bool>(false);
 
+  // 注册接口
+  final RegisterApi _registerApi = RegisterApi();
+
+  ///防止用户重复点击验证码。请求多次接口
+  // 是否正在发送验证码
+  bool _sendingCode = false;
+  // 是否正在注册
+  bool _registering = false;
+
+  // 是否已经预缓存了图片
   bool _didPrecache = false;
 
   @override
@@ -365,11 +371,12 @@ class _RegisterPageState extends State<RegisterPage> {
 
         GestureDetector(
           behavior: HitTestBehavior.opaque,
-          onTap: _getVerifyCode,
-          child: const Padding(
+          // 点击获取验证码按钮，发送验证码
+          onTap: _sendingCode ? null : _getVerifyCode,
+          child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 2, vertical: 8),
             child: Text(
-              '获取验证码',
+              _sendingCode ? '发送中...' : '获取验证码',
               style: TextStyle(
                 color: Color(0xFF1464DF),
                 fontSize: 16,
@@ -454,7 +461,7 @@ class _RegisterPageState extends State<RegisterPage> {
           height: 64,
           child: ElevatedButton(
             // 注册按钮点击事件
-            onPressed: canRegister ? _register : null,
+            onPressed: canRegister && !_registering ? _register : null,
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF1464DF),
               disabledBackgroundColor: const Color.fromARGB(255, 2, 43, 106),
@@ -469,7 +476,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 fontWeight: FontWeight.w900,
               ),
             ),
-            child: const Text('注册'),
+            child: Text(_registering ? '注册中...' : '注册'),
           ),
         );
       },
@@ -579,6 +586,10 @@ class _RegisterPageState extends State<RegisterPage> {
 
   /// 判断是否可以注册
   bool _canRegister() {
+    //1. 同意协议
+    //2. 手机号不为空
+    //3. 验证码不为空
+    //4. 密码不为空
     return _agreed &&
         _phoneController.text.trim().isNotEmpty &&
         _codeController.text.trim().isNotEmpty &&
@@ -595,26 +606,73 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   /// 获取验证码
-  void _getVerifyCode() {
-    // TODO: 后面这里接获取验证码接口
-    // 模拟获取验证码
+  Future<void> _getVerifyCode() async {
+    if (_sendingCode) return;
+
     final String phone = _phoneController.text.trim();
 
-    debugPrint('获取验证码：${_phoneController.text.trim()}');
+    if (phone.isEmpty) {
+      Get.snackbar('提示', '请先输入手机号');
+      return;
+    }
+
+    final bool phoneValid = RegExp(r'^1[3-9]\d{9}$').hasMatch(phone);
+
+    if (!phoneValid) {
+      Get.snackbar('提示', '请输入正确的手机号');
+      return;
+    }
+
+    setState(() {
+      _sendingCode = true;
+    });
+
+    final result = await _registerApi.sendCode(phone: phone);
+
+    if (!mounted) return;
+
+    setState(() {
+      _sendingCode = false;
+    });
+
+    if (result.isSuccess) {
+      Get.snackbar('提示', result.message.isEmpty ? '验证码已发送' : result.message);
+    } else {
+      Get.snackbar('提示', result.message.isEmpty ? '验证码发送失败' : result.message);
+    }
   }
 
   /// 注册
-  void _register() {
-    // TODO: 后面这里接注册接口
-    debugPrint('注册手机号：${_phoneController.text.trim()}');
-    debugPrint('验证码：${_codeController.text.trim()}');
-    debugPrint('密码：${_passwordController.text.trim()}');
-    debugPrint('注册角色：$_role');
+  Future<void> _register() async {
+    if (_registering) return;
 
-    // 临时逻辑：注册成功后可以回到登录页
-    // Get.back();
+    final String phone = _phoneController.text.trim();
+    final String code = _codeController.text.trim();
+    final String password = _passwordController.text.trim();
 
-    // 如果你暂时想直接复用登录逻辑，可以打开下面这一行
-    // _logic.login();
+    setState(() {
+      _registering = true;
+    });
+
+    final result = await _registerApi.register(
+      phone: phone,
+      code: code,
+      password: password,
+      role: _role,
+    );
+
+    if (!mounted) return;
+
+    setState(() {
+      _registering = false;
+    });
+
+    if (result.isSuccess) {
+      Get.snackbar('提示', result.message.isEmpty ? '注册成功' : result.message);
+
+      Get.back();
+    } else {
+      Get.snackbar('提示', result.message.isEmpty ? '注册失败' : result.message);
+    }
   }
 }
