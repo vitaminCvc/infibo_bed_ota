@@ -314,11 +314,20 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
       clipBehavior: Clip.none,
       children: [
         const Positioned(left: 52, top: 42, child: _PageTitle()),
-        Positioned(left: 186, top: 66, child: _buildBody()),
+        Positioned(
+          left: 186,
+          top: 66,
+          child: RepaintBoundary(child: _buildBody()),
+        ),
         //添加时间轴底部灯光
         ..._buildTimelineLight(),
 
-        Positioned(left: 366, top: 86, child: _buildTimeline()),
+        Positioned(
+          left: 366,
+          top: 86,
+          //给这一块 UI 套一个“独立绘制区域”。
+          child: RepaintBoundary(child: _buildTimeline()),
+        ),
         ..._buildSavedNodeFeatureDots(),
         if (showModulePanel)
           Positioned(left: 45, top: 102, child: _buildAddModulePanel()),
@@ -759,7 +768,14 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
       height: height,
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onTap: () => FocusScope.of(context).requestFocus(focusNode),
+        // onTap: () => FocusScope.of(context).requestFocus(focusNode),
+        //避免重复请求焦点，只在输入框当前没有焦点时，才让他获取焦点
+        onTap: () {
+          if (!focusNode.hasFocus) {
+            FocusScope.of(context).requestFocus(focusNode);
+          }
+        },
+        // onTap: () => FocusScope.of(context).requestFocus(focusNode),
         child: const SizedBox.expand(),
       ),
     );
@@ -2637,7 +2653,6 @@ class _InputBox extends StatelessWidget {
           border: InputBorder.none,
           contentPadding: EdgeInsets.zero,
         ),
-        onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
         onChanged: (value) {
           final int? number = int.tryParse(value);
           if (number == null || number <= maxValue) return;
@@ -2696,7 +2711,13 @@ class _InputHitArea extends StatelessWidget {
             height: height,
             child: GestureDetector(
               behavior: HitTestBehavior.translucent,
-              onTap: () => FocusScope.of(context).requestFocus(focusNode),
+              // onTap: () => FocusScope.of(context).requestFocus(focusNode),
+              //避免重复请求焦点，只在输入框当前没有焦点时，才让他获取焦点
+              onTap: () {
+                if (!focusNode.hasFocus) {
+                  FocusScope.of(context).requestFocus(focusNode);
+                }
+              },
             ),
           ),
         ],

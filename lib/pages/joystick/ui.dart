@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:infibo_app/api/modbus_rtu_service.dart';
+import 'package:infibo_app/api/modbus/modbus_rtu_service.dart';
 import 'package:infibo_app/constants/assets.dart';
 
 enum JoystickAction {

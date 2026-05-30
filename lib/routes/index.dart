@@ -3,7 +3,7 @@
 // 这里集中注册所有页面路由；正式入口不会展示调试页，但保留 /debug/serial-test 隐藏路由便于现场排查串口。
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:infibo_app/pages/login/register.dart';
+import 'package:infibo_app/pages/login/register/register.dart';
 import 'package:infibo_app/pages/summary/summary.dart';
 import 'package:infibo_app/routes/route_observer.dart';
 import 'package:infibo_app/translation/app_translations.dart';
@@ -12,7 +12,7 @@ import 'package:infibo_app/pages/customized/customizedPage/mailun/ui.dart';
 import 'package:infibo_app/pages/customized/customizedPage/ui.dart';
 import 'package:infibo_app/pages/customized/ui.dart';
 import 'package:infibo_app/pages/debug/serial_test_page.dart';
-import 'package:infibo_app/pages/login/ui.dart';
+import 'package:infibo_app/pages/login/login/ui.dart';
 import 'package:infibo_app/pages/main/ui.dart';
 import 'package:infibo_app/pages/music/ui.dart';
 import 'package:infibo_app/pages/settingpage/ui.dart';

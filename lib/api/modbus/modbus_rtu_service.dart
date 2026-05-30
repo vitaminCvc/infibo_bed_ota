@@ -8,14 +8,14 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_libserialport/flutter_libserialport.dart';
-import 'package:infibo_app/api/chakra_modbus.dart';
-import 'package:infibo_app/api/fragrance_modbus.dart';
-import 'package:infibo_app/api/hifem_modbus.dart';
-import 'package:infibo_app/api/hydrogen_modbus.dart';
-import 'package:infibo_app/api/pemf_modbus.dart';
-import 'package:infibo_app/api/red_light_modbus.dart';
-import 'package:infibo_app/api/terahertz_modbus.dart';
-import 'package:infibo_app/api/vat_modbus.dart';
+import 'package:infibo_app/api/modbus/chakra_modbus.dart';
+import 'package:infibo_app/api/modbus/fragrance_modbus.dart';
+import 'package:infibo_app/api/modbus/hifem_modbus.dart';
+import 'package:infibo_app/api/modbus/hydrogen_modbus.dart';
+import 'package:infibo_app/api/modbus/pemf_modbus.dart';
+import 'package:infibo_app/api/modbus/red_light_modbus.dart';
+import 'package:infibo_app/api/modbus/terahertz_modbus.dart';
+import 'package:infibo_app/api/modbus/vat_modbus.dart';
 import 'package:infibo_app/services/android_serial_port_service.dart';
 
 class ModbusRtuService {
