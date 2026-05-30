@@ -6,30 +6,30 @@ import 'package:infibo_app/api/dio/register/register_models.dart';
 
 class RegisterApi {
   /// 发送验证码
-  Future<ApiResponse<void>> sendCode({required String phone}) {
-    return ApiClient.instance.post<void>(
+  Future<ApiResponse<String>> sendCode({required String phone}) {
+    return ApiClient.instance.post<String>(
       '/sms/send-code',
       data: {'phone': phone},
+      fromJsonT: (Object? json) {
+        return json?.toString() ?? '';
+      },
     );
   }
 
   /// 注册
-  Future<ApiResponse<RegisterResult>> register({
+  Future<ApiResponse<void>> register({
     required String phone,
     required String code,
     required String password,
     required RegisterRole role,
   }) {
-    return ApiClient.instance.post<RegisterResult>(
+    return ApiClient.instance.post<void>(
       '/auth/register',
       data: {
         'phone': phone,
         'code': code,
         'password': password,
         'role': role.apiValue,
-      },
-      fromJsonT: (Object? json) {
-        return RegisterResult.fromJson(Map<String, dynamic>.from(json as Map));
       },
     );
   }

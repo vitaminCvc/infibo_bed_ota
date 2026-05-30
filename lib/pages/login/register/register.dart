@@ -4,6 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:infibo_app/api/dio/api/api_response.dart';
 import 'package:infibo_app/api/dio/register/register_api.dart';
 import 'package:infibo_app/api/dio/register/register_models.dart';
 import 'package:infibo_app/constants/assets.dart';
@@ -612,14 +613,14 @@ class _RegisterPageState extends State<RegisterPage> {
     final String phone = _phoneController.text.trim();
 
     if (phone.isEmpty) {
-      Get.snackbar('提示', '请先输入手机号');
+      Get.snackbar('提示', '请先输入手机号', backgroundColor: Colors.white);
       return;
     }
 
     final bool phoneValid = RegExp(r'^1[3-9]\d{9}$').hasMatch(phone);
 
     if (!phoneValid) {
-      Get.snackbar('提示', '请输入正确的手机号');
+      Get.snackbar('提示', '请输入正确的手机号', backgroundColor: Colors.white);
       return;
     }
 
@@ -627,7 +628,9 @@ class _RegisterPageState extends State<RegisterPage> {
       _sendingCode = true;
     });
 
-    final result = await _registerApi.sendCode(phone: phone);
+    final ApiResponse<String> result = await _registerApi.sendCode(
+      phone: phone,
+    );
 
     if (!mounted) return;
 
@@ -636,9 +639,19 @@ class _RegisterPageState extends State<RegisterPage> {
     });
 
     if (result.isSuccess) {
-      Get.snackbar('提示', result.message.isEmpty ? '验证码已发送' : result.message);
+      debugPrint('后端返回的手机号：${result.data}');
+
+      Get.snackbar(
+        '提示',
+        '验证码已发送，后端收到手机号：${result.data}',
+        backgroundColor: Colors.white,
+      );
     } else {
-      Get.snackbar('提示', result.message.isEmpty ? '验证码发送失败' : result.message);
+      Get.snackbar(
+        '提示',
+        result.message.isEmpty ? '验证码发送失败' : result.message,
+        backgroundColor: Colors.white,
+      );
     }
   }
 
@@ -654,7 +667,7 @@ class _RegisterPageState extends State<RegisterPage> {
       _registering = true;
     });
 
-    final result = await _registerApi.register(
+    final ApiResponse<void> result = await _registerApi.register(
       phone: phone,
       code: code,
       password: password,
@@ -668,11 +681,17 @@ class _RegisterPageState extends State<RegisterPage> {
     });
 
     if (result.isSuccess) {
-      Get.snackbar('提示', result.message.isEmpty ? '注册成功' : result.message);
-
-      Get.back();
+      Get.snackbar(
+        '提示',
+        result.message.isEmpty ? '注册成功' : result.message,
+        backgroundColor: Colors.white,
+      );
     } else {
-      Get.snackbar('提示', result.message.isEmpty ? '注册失败' : result.message);
+      Get.snackbar(
+        '提示',
+        result.message.isEmpty ? '注册  失败' : result.message,
+        backgroundColor: Colors.white,
+      );
     }
   }
 }

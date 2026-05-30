@@ -10,7 +10,7 @@ class ApiResponse<T> {
   final String message;
   final T? data;
 
-  bool get isSuccess => code == 0;
+  bool get isSuccess => code == 200;
 
   factory ApiResponse.fromJson(
     Map<String, dynamic> json, {

@@ -14,17 +14,3 @@ extension RegisterRoleValue on RegisterRole {
     }
   }
 }
-
-class RegisterResult {
-  const RegisterResult({required this.userId, this.token});
-
-  final String userId;
-  final String? token;
-
-  factory RegisterResult.fromJson(Map<String, dynamic> json) {
-    return RegisterResult(
-      userId: json['userId']?.toString() ?? '',
-      token: json['token']?.toString(),
-    );
-  }
-}

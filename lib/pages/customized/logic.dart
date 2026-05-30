@@ -2,6 +2,7 @@
 //
 // 负责保存方案名和 featureIds 字符串列表，并提供新增、编辑、删除、搜索、选择方案等方法。
 import 'package:get/get.dart';
+import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -11,11 +12,22 @@ class CustomizedLogic {
   static const String _tableName = 'customized_plans';
   static const String editRoute = '/customized/edit';
   static const String choseUsersRoute = '/choseusers';
+  static Database? _sharedDatabase;
+  static Future<Database>? _openingDatabase;
+  static bool _didEnsureSchema = false;
 
   final List<CustomizedPlanData> plans = [];
 
-  Database? _database;
   int? highlightedIndex;
+
+  static Future<void> preload() async {
+    try {
+      await CustomizedLogic().init();
+    } catch (error, stackTrace) {
+      debugPrint('Customized database preload failed: $error');
+      debugPrintStack(stackTrace: stackTrace);
+    }
+  }
 
   Future<void> init() async {
     await _openDatabaseIfNeeded();
@@ -24,21 +36,35 @@ class CustomizedLogic {
   }
 
   Future<void> _openDatabaseIfNeeded() async {
-    if (_database?.isOpen != true) {
-      final String databasePath = await getDatabasesPath();
-      _database = await openDatabase(
-        join(databasePath, _databaseName),
-        version: 1,
-        onCreate: (db, version) async {
-          await _createPlansTable(db);
-        },
-        onOpen: (db) async {
-          await _createPlansTable(db);
-        },
-      );
+    if (_sharedDatabase?.isOpen == true) {
+      if (!_didEnsureSchema) {
+        await _createPlansTable(_sharedDatabase!);
+        _didEnsureSchema = true;
+      }
+      return;
     }
 
-    await _createPlansTable(_db);
+    _openingDatabase ??= _openSharedDatabase();
+    _sharedDatabase = await _openingDatabase;
+    _openingDatabase = null;
+  }
+
+  Future<Database> _openSharedDatabase() async {
+    final String databasePath = await getDatabasesPath();
+    final Database database = await openDatabase(
+      join(databasePath, _databaseName),
+      version: 1,
+      onCreate: (db, version) async {
+        await _createPlansTable(db);
+      },
+      onOpen: (db) async {
+        if (!_didEnsureSchema) {
+          await _createPlansTable(db);
+        }
+      },
+    );
+    _didEnsureSchema = true;
+    return database;
   }
 
   Future<void> loadPlans() async {
@@ -50,7 +76,9 @@ class CustomizedLogic {
     } on DatabaseException catch (error) {
       if (!error.toString().contains('database_closed')) rethrow;
 
-      _database = null;
+      _sharedDatabase = null;
+      _openingDatabase = null;
+      _didEnsureSchema = false;
       await _openDatabaseIfNeeded();
       rows = await _db.query(_tableName, orderBy: 'id ASC');
     }
@@ -212,7 +240,7 @@ class CustomizedLogic {
     await loadPlans();
   }
 
-  Database get _db => _database!;
+  Database get _db => _sharedDatabase!;
 }
 
 class CustomizedPlanNameException implements Exception {
