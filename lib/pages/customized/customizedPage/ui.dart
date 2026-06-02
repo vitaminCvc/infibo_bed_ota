@@ -4,14 +4,11 @@
 // 红光、PEMF、VAT、分子氢以及拓展功能（脉轮、太赫兹、HIFEM、香氛）。
 // 用户在这里选择每个节点启用哪些功能，点击“保存参数”固化当前节点，
 // 最后点击“保存方案”把节点配置保存到本地方案数据里。
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:infibo_app/components/index.dart';
 import 'package:infibo_app/constants/assets.dart';
-import 'package:infibo_app/pages/customized/customizedPage/hifem/logic.dart';
 import 'package:infibo_app/pages/customized/customizedPage/hifem/ui.dart'
     as hifem_page;
 import 'package:infibo_app/pages/customized/customizedPage/mailun/ui.dart'
@@ -24,6 +21,7 @@ import 'package:infibo_app/pages/customized/customizedPage/logic.dart';
 import 'package:infibo_app/pages/customized/logic.dart';
 import 'package:infibo_app/pages/customized/plan_features.dart';
 import 'package:infibo_app/pages/music/logic.dart';
+import 'package:infibo_app/stores/hifem_setting_store.dart';
 
 class CustomizedEditPage extends StatefulWidget {
   const CustomizedEditPage({super.key});
@@ -90,10 +88,9 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
   late final List<FocusNode> _pemfFrequencyFocusNodes;
   late final List<FocusNode> _pemfIntensityFocusNodes;
   late final List<TextEditingController> _vatFrequencyControllers;
-  late final List<TextEditingController> _vatIntensityControllers;
+  late final TextEditingController _vatIntensityController;
   late final List<FocusNode> _vatFrequencyFocusNodes;
-  late final List<FocusNode> _vatIntensityFocusNodes;
-  late final List<_VatMusicSetting> _nodeVatMusicSettings;
+  _VatMusicSetting _vatMusicSetting = const _VatMusicSetting();
   late final List<TextEditingController> _hydrogenConcentrationControllers;
   late final List<FocusNode> _hydrogenConcentrationFocusNodes;
   late final List<_RedLightMode> _nodeRedLightModes;
@@ -187,13 +184,8 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
       12,
       (_) => TextEditingController(),
     );
-    _vatIntensityControllers = List.generate(
-      12,
-      (_) => TextEditingController(),
-    );
+    _vatIntensityController = TextEditingController();
     _vatFrequencyFocusNodes = List.generate(12, (_) => FocusNode());
-    _vatIntensityFocusNodes = List.generate(12, (_) => FocusNode());
-    _nodeVatMusicSettings = List.generate(12, (_) => const _VatMusicSetting());
     _hydrogenConcentrationControllers = List.generate(
       12,
       (_) => TextEditingController(),
@@ -235,13 +227,8 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     for (final TextEditingController controller in _vatFrequencyControllers) {
       controller.dispose();
     }
-    for (final TextEditingController controller in _vatIntensityControllers) {
-      controller.dispose();
-    }
+    _vatIntensityController.dispose();
     for (final FocusNode node in _vatFrequencyFocusNodes) {
-      node.dispose();
-    }
-    for (final FocusNode node in _vatIntensityFocusNodes) {
       node.dispose();
     }
     for (final TextEditingController controller
@@ -968,14 +955,8 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
                     const SizedBox(width: 30),
                     _InputBox(
                       width: 88,
-                      controller: _vatIntensityControllers[index],
-                      focusNode: _vatIntensityFocusNodes[index],
-                      keyboardType: TextInputType.number,
-                      maxValue: 100,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                        LengthLimitingTextInputFormatter(3),
-                      ],
+                      controller: _vatIntensityController,
+                      enabled: false,
                     ),
                   ],
                 ),
@@ -988,13 +969,6 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
             width: 104,
             height: 58,
             focusNode: _vatFrequencyFocusNodes[index],
-          ),
-          _buildPanelInputHitArea(
-            left: 134,
-            top: 80,
-            width: 104,
-            height: 58,
-            focusNode: _vatIntensityFocusNodes[index],
           ),
         ],
       ),
@@ -1034,14 +1008,13 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
   }
 
   Future<void> _openVatMusicPage(int index) async {
-    final _VatMusicSetting current = _nodeVatMusicSettings[index];
     final Object? result = await Get.toNamed(
       '/music',
       arguments: {
         'fromPage': 'customized',
-        'currentSelectedSongId': current.songId,
+        'currentSelectedSongId': _vatMusicSetting.songId,
         'currentVatFrequency': _vatFrequencyControllers[index].text,
-        'currentVatStrength': _vatIntensityControllers[index].text,
+        'currentVatStrength': _vatIntensityController.text,
         'activeNodeIndex': index,
       },
     );
@@ -1050,9 +1023,8 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     if (result is! VatMusicSelection) return;
 
     setState(() {
-      _vatFrequencyControllers[index].text = result.frequency;
-      _vatIntensityControllers[index].text = result.intensity;
-      _nodeVatMusicSettings[index] = _VatMusicSetting(
+      _vatIntensityController.text = result.intensity;
+      _vatMusicSetting = _VatMusicSetting(
         songId: result.songId,
         songName: result.songName,
       );
@@ -1504,10 +1476,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
         _vatFrequencyControllers[index].text,
         100,
       );
-      final int vatIntensity = _rangedValue(
-        _vatIntensityControllers[index].text,
-        100,
-      );
+      final int vatIntensity = _rangedValue(_vatIntensityController.text, 100);
       if (vatFrequency == 0 || vatIntensity == 0) {
         _showMessage('VAT频率和强度都不能为0');
         return;
@@ -1534,7 +1503,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     }
     if (_nodeFeatureIds[index].contains('vat')) {
       _normalizeRangedNumber(_vatFrequencyControllers[index], 100);
-      _normalizeRangedNumber(_vatIntensityControllers[index], 100);
+      _normalizeRangedNumber(_vatIntensityController, 100);
     }
     if (_nodeFeatureIds[index].contains('hydrogen')) {
       _normalizeRangedNumber(_hydrogenConcentrationControllers[index], 100);
@@ -1820,8 +1789,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
 
       final _VatSetting vatSetting = _parseVatSetting(parts[2]);
       _vatFrequencyControllers[index].text = vatSetting.frequencyText;
-      _vatIntensityControllers[index].text = vatSetting.intensityText;
-      _nodeVatMusicSettings[index] = vatSetting.music;
+      _restoreVatModuleSetting(vatSetting);
       _nodeFeatureIds[index].add('vat');
       _savedNodeIndexes.add(index);
       hasPhaseData = true;
@@ -2222,11 +2190,8 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
       _vatFrequencyControllers[index].text,
       100,
     );
-    final int intensity = _rangedValue(
-      _vatIntensityControllers[index].text,
-      100,
-    );
-    final _VatMusicSetting music = _nodeVatMusicSettings[index];
+    final int intensity = _rangedValue(_vatIntensityController.text, 100);
+    final _VatMusicSetting music = _vatMusicSetting;
     final String songId = music.songId.isNotEmpty
         ? music.songId
         : defaultSongId;
@@ -2238,6 +2203,15 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
         : '';
 
     return 'frequency=$frequency|intensity=$intensity|songId=$songId|songName=$songName|seriesName=$seriesName';
+  }
+
+  void _restoreVatModuleSetting(_VatSetting setting) {
+    if (_vatIntensityController.text.isEmpty && setting.intensity > 0) {
+      _vatIntensityController.text = setting.intensityText;
+    }
+    if (_vatMusicSetting.songId.isEmpty && setting.music.songId.isNotEmpty) {
+      _vatMusicSetting = setting.music;
+    }
   }
 
   _VatSetting _parseVatSetting(String text) {
@@ -2608,6 +2582,7 @@ class _InputBox extends StatelessWidget {
     this.keyboardType,
     this.inputFormatters,
     this.maxValue = 100,
+    this.enabled = true,
   });
 
   final double width;
@@ -2616,6 +2591,7 @@ class _InputBox extends StatelessWidget {
   final TextInputType? keyboardType;
   final List<TextInputFormatter>? inputFormatters;
   final int maxValue;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
@@ -2642,6 +2618,7 @@ class _InputBox extends StatelessWidget {
       return TextField(
         controller: textController,
         focusNode: focusNode,
+        enabled: enabled,
         keyboardType: keyboardType,
         inputFormatters: inputFormatters,
         textAlign: TextAlign.center,
@@ -2671,14 +2648,7 @@ class _InputBox extends StatelessWidget {
 }
 
 class _InputHitArea extends StatelessWidget {
-  const _InputHitArea({
-    required this.child,
-    required this.focusNode,
-    this.left = _defaultLeft,
-    this.top = _defaultTop,
-    this.width = _defaultWidth,
-    this.height = _defaultHeight,
-  });
+  const _InputHitArea({required this.child, required this.focusNode});
 
   // 这里控制“看不见但能点中”的区域，后续只改这几个数即可微调。
   static const double _defaultLeft = -4;
@@ -2688,10 +2658,6 @@ class _InputHitArea extends StatelessWidget {
 
   final Widget child;
   final FocusNode focusNode;
-  final double left;
-  final double top;
-  final double width;
-  final double height;
 
   @override
   Widget build(BuildContext context) {
@@ -2705,10 +2671,10 @@ class _InputHitArea extends StatelessWidget {
         children: [
           child,
           Positioned(
-            left: left,
-            top: top,
-            width: width,
-            height: height,
+            left: _defaultLeft,
+            top: _defaultTop,
+            width: _defaultWidth,
+            height: _defaultHeight,
             child: GestureDetector(
               behavior: HitTestBehavior.translucent,
               // onTap: () => FocusScope.of(context).requestFocus(focusNode),

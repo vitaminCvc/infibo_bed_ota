@@ -2,6 +2,7 @@
 //
 // 负责总时长、当前 5 分钟阶段、运行/暂停状态，以及解析自定义方案传入的节点配置。
 import 'package:infibo_app/pages/customized/logic.dart';
+import 'package:infibo_app/utils/duration_utils.dart';
 
 // 启动理疗页逻辑。
 class StartLogic {
@@ -16,6 +17,7 @@ class StartLogic {
   List<PemfPhaseSetting?>? customizedPemfSettings;
   List<HydrogenPhaseSetting?>? customizedHydrogenSettings;
   List<VatPhaseSetting?>? customizedVatSettings;
+  VatPhaseSetting? _customizedVatModuleSetting;
   List<ChakraPhaseSetting?>? customizedChakraSettings;
   List<TerahertzPhaseSetting?>? customizedTerahertzSettings;
   List<HifemPhaseSetting?>? customizedHifemSettings;
@@ -45,9 +47,7 @@ class StartLogic {
       0,
       totalSeconds,
     );
-    final int minutes = remaining ~/ 60;
-    final int seconds = remaining % 60;
-    return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+    return formatMinutesAndSeconds(remaining);
   }
 
   // 当前阶段工作的功能。
@@ -87,7 +87,10 @@ class StartLogic {
     if (settings == null || settings.isEmpty) return null;
 
     final int index = activePhaseIndex.clamp(0, settings.length - 1);
-    return settings[index];
+    final VatPhaseSetting? phaseSetting = settings[index];
+    final VatPhaseSetting? moduleSetting = _customizedVatModuleSetting;
+    if (phaseSetting == null || moduleSetting == null) return phaseSetting;
+    return phaseSetting.withModuleSetting(moduleSetting);
   }
 
   ChakraPhaseSetting? get activeChakraSetting {
@@ -158,10 +161,7 @@ class StartLogic {
   }
 
   static String formatDurationText(int seconds) {
-    final int safeSeconds = seconds < 0 ? 0 : seconds;
-    final int minutes = safeSeconds ~/ 60;
-    final int restSeconds = safeSeconds % 60;
-    return '$minutes分${restSeconds.toString().padLeft(2, '0')}秒';
+    return formatChineseDuration(seconds);
   }
 
   static String deviceName(String id) {
@@ -198,6 +198,7 @@ class StartLogic {
       (_) => null,
     );
     final List<VatPhaseSetting?> vatSettings = List.generate(12, (_) => null);
+    VatPhaseSetting? vatModuleSetting;
     final List<ChakraPhaseSetting?> chakraSettings = List.generate(
       12,
       (_) => null,
@@ -240,7 +241,11 @@ class StartLogic {
         hydrogenSettings[index] = HydrogenPhaseSetting.parse(parts[2]);
         if (index > maxIndex) maxIndex = index;
       } else if (text.startsWith('vat:')) {
-        vatSettings[index] = VatPhaseSetting.parse(parts[2]);
+        final VatPhaseSetting setting = VatPhaseSetting.parse(parts[2]);
+        vatSettings[index] = setting;
+        vatModuleSetting = vatModuleSetting == null
+            ? setting
+            : vatModuleSetting.withMissingModuleValuesFrom(setting);
         if (index > maxIndex) maxIndex = index;
       } else if (text.startsWith('chakra:')) {
         chakraSettings[index] = ChakraPhaseSetting.parse(parts[2]);
@@ -264,6 +269,7 @@ class StartLogic {
     customizedPemfSettings = pemfSettings.take(maxIndex + 1).toList();
     customizedHydrogenSettings = hydrogenSettings.take(maxIndex + 1).toList();
     customizedVatSettings = vatSettings.take(maxIndex + 1).toList();
+    _customizedVatModuleSetting = vatModuleSetting;
     customizedChakraSettings = chakraSettings.take(maxIndex + 1).toList();
     customizedTerahertzSettings = terahertzSettings.take(maxIndex + 1).toList();
     customizedHifemSettings = hifemSettings.take(maxIndex + 1).toList();
@@ -503,6 +509,26 @@ class VatPhaseSetting {
   final String? songName;
   final String? seriesName;
 
+  VatPhaseSetting withModuleSetting(VatPhaseSetting setting) {
+    return VatPhaseSetting(
+      frequency: frequency,
+      intensity: setting.intensity,
+      songId: setting.songId,
+      songName: setting.songName,
+      seriesName: setting.seriesName,
+    );
+  }
+
+  VatPhaseSetting withMissingModuleValuesFrom(VatPhaseSetting setting) {
+    return VatPhaseSetting(
+      frequency: frequency,
+      intensity: intensity > 0 ? intensity : setting.intensity,
+      songId: _nonEmpty(songId) ?? setting.songId,
+      songName: _nonEmpty(songName) ?? setting.songName,
+      seriesName: _nonEmpty(seriesName) ?? setting.seriesName,
+    );
+  }
+
   factory VatPhaseSetting.parse(String text) {
     int frequency = 0;
     int intensity = 0;
@@ -546,6 +572,10 @@ class VatPhaseSetting {
       seriesName: seriesName,
     );
   }
+}
+
+String? _nonEmpty(String? value) {
+  return value == null || value.isEmpty ? null : value;
 }
 
 class ChakraPhaseSetting {

@@ -1,3 +1,6 @@
+// 启动理疗页面。
+//
+// 展示当前阶段、倒计时和设备状态，并协调理疗开始、暂停、恢复和停止动作。
 import 'dart:async';
 import 'dart:math' as math;
 import 'package:infibo_app/api/modbus/modbus_rtu_service.dart';
@@ -907,7 +910,7 @@ class _StartPageState extends State<StartPage>
 
   // 构建倒计时
   Widget _buildTimer() {
-    final List<String> timeParts = _formatRemainingTime().split(':');
+    final List<String> timeParts = _logic.remainingTimeText.split(':');
     final String minuteText = timeParts.isNotEmpty ? timeParts.first : '00';
     final String secondText = timeParts.length > 1 ? timeParts[1] : '00';
     final double elapsedProgress = _logic.progress;
@@ -2309,10 +2312,6 @@ class _StartPageState extends State<StartPage>
         _isReadingHydrogenFlow = false;
       }
     }
-  }
-
-  String _formatRemainingTime() {
-    return _logic.remainingTimeText;
   }
 }
 

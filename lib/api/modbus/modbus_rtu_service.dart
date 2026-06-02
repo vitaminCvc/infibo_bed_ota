@@ -17,6 +17,7 @@ import 'package:infibo_app/api/modbus/red_light_modbus.dart';
 import 'package:infibo_app/api/modbus/terahertz_modbus.dart';
 import 'package:infibo_app/api/modbus/vat_modbus.dart';
 import 'package:infibo_app/services/android_serial_port_service.dart';
+import 'package:infibo_app/utils/byte_utils.dart';
 
 class ModbusRtuService {
   static const Duration modbusCommandInterval = Duration(milliseconds: 40);
@@ -2512,12 +2513,7 @@ class ModbusRtuService {
   }
 
   String _formatBytes(Uint8List bytes) {
-    if (bytes.isEmpty) return '<empty>';
-
-    return bytes
-        .map((int byte) => byte.toRadixString(16).padLeft(2, '0'))
-        .join(' ')
-        .toUpperCase();
+    return bytesToHex(bytes, emptyText: '<empty>');
   }
 
   String _normalizeNativeError(String? message) {

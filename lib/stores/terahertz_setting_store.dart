@@ -1,8 +1,8 @@
-// 太赫兹设置页的状态模型和控制器。
+// 太赫兹设置页共享状态。
 //
-// 保存频率、功率、模式、波形四个值。controller 常驻在 GetX 里，
-// 用来支持“确认返回后再次进入页面继续修改”。
+// 保存频率、功率、模式和波形，让页面返回后仍能恢复上次确认的设置。
 import 'package:get/get.dart';
+import 'package:infibo_app/utils/number_utils.dart';
 
 class TerahertzSettingSnapshot {
   const TerahertzSettingSnapshot({
@@ -46,8 +46,8 @@ class TerahertzSettingController extends GetxController {
     required String? mode,
     required String? wave,
   }) {
-    _frequency = frequency.clamp(0, 100).toDouble();
-    _power = power.clamp(0, 100).toDouble();
+    _frequency = clampPercentageDouble(frequency);
+    _power = clampPercentageDouble(power);
     _mode = mode;
     _wave = wave;
     update();

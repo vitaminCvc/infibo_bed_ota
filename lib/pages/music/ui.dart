@@ -1,3 +1,6 @@
+// VAT 音乐选择页面。
+//
+// 提供音乐预览、选择和音量调节，并把确认结果返回给上级页面。
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -31,7 +34,6 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
   // 是否显示音量小气泡
   bool _showVolumeBubble = false;
 
-  @override
   // 显示音量小气泡
   void _showBubble() {
     if (_showVolumeBubble) return;

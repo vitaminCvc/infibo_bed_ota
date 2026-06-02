@@ -2,6 +2,7 @@
 //
 // 负责本地用户数据库的增删改查、搜索高亮，以及进入启动理疗页时传递模式/方案参数。
 import 'package:get/get.dart';
+import 'package:infibo_app/utils/age_utils.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -70,7 +71,7 @@ class ChoseUsersLogic {
     final UserItemData user = UserItemData(
       name: name.trim(),
       gender: gender.trim(),
-      age: _formatAge(age),
+      age: normalizeAgeText(age),
       phone: phone.trim(),
     );
 
@@ -138,13 +139,6 @@ class ChoseUsersLogic {
         phone TEXT NOT NULL
       )
     ''');
-  }
-
-  // 格式化年龄显示。
-  String _formatAge(String age) {
-    final String text = age.trim();
-    if (text.isEmpty || text.endsWith('岁')) return text;
-    return '$text岁';
   }
 
   Database get _db => _database!;

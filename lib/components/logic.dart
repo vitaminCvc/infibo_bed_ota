@@ -2,6 +2,7 @@
 //
 // 目前主要提供从任意页面回到主页面的统一入口，避免各组件里重复写路由判断。
 import 'package:get/get.dart';
+import 'package:infibo_app/stores/user_store.dart';
 
 // 公共组件逻辑。
 class AppComponentLogic {
@@ -18,5 +19,13 @@ class AppComponentLogic {
   static const String settingRoute = '/setting';
   static void openSettingPage() {
     Get.toNamed(settingRoute);
+  }
+
+  //清除登录状态并返回登录页
+  static Future<void> logout() async {
+    //调用userstore的clearUser方法，清除用户信息和登录状态
+    UserStore.instance.clearUser();
+    // 返回登录页
+    Get.offAllNamed('/login');
   }
 }

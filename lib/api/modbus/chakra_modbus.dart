@@ -1,3 +1,8 @@
+// 脉轮模块 Modbus 数据构建器。
+//
+// 根据七个脉轮强度和模式生成批量写寄存器所需的数据。
+import 'package:infibo_app/utils/number_utils.dart';
+
 class ChakraBatchPayload {
   const ChakraBatchPayload({
     required this.startAddress,
@@ -56,13 +61,13 @@ class ChakraModbus {
     required Map<String, int> strengths,
     int mode = 0,
   }) {
-    final int crown = _clampPercent(strengths['crown'] ?? 0);
-    final int thirdEye = _clampPercent(strengths['third_eye'] ?? 0);
-    final int throat = _clampPercent(strengths['throat'] ?? 0);
-    final int heart = _clampPercent(strengths['heart'] ?? 0);
-    final int solarPlexus = _clampPercent(strengths['solar_plexus'] ?? 0);
-    final int sacral = _clampPercent(strengths['sacral'] ?? 0);
-    final int root = _clampPercent(strengths['root'] ?? 0);
+    final int crown = clampPercentage(strengths['crown'] ?? 0);
+    final int thirdEye = clampPercentage(strengths['third_eye'] ?? 0);
+    final int throat = clampPercentage(strengths['throat'] ?? 0);
+    final int heart = clampPercentage(strengths['heart'] ?? 0);
+    final int solarPlexus = clampPercentage(strengths['solar_plexus'] ?? 0);
+    final int sacral = clampPercentage(strengths['sacral'] ?? 0);
+    final int root = clampPercentage(strengths['root'] ?? 0);
     final int safeMode = mode.clamp(0, 1).toInt();
     final bool enabled =
         crown > 0 ||
@@ -107,6 +112,4 @@ class ChakraModbus {
       root: root,
     );
   }
-
-  static int _clampPercent(int value) => value.clamp(0, 100).toInt();
 }

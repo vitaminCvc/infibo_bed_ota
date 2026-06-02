@@ -26,10 +26,10 @@ const String _initialRoute = String.fromEnvironment(
 );
 
 // 获取根级路由
-Widget getRootWidget() {
+Widget getRootWidget({String? initialRoute}) {
   return GetMaterialApp(
     // 初始路由为登录页
-    initialRoute: _initialRoute,
+    initialRoute: initialRoute ?? _initialRoute,
     // 国际化配置
     defaultTransition: Transition.noTransition,
     transitionDuration: Duration.zero,

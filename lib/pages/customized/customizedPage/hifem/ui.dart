@@ -7,8 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:infibo_app/components/index.dart';
 import 'package:infibo_app/constants/assets.dart';
-import 'package:infibo_app/pages/customized/customizedPage/hifem/logic.dart';
 import 'package:infibo_app/pages/customized/customizedPage/setting_page_helpers.dart';
+import 'package:infibo_app/stores/hifem_setting_store.dart';
+import 'package:infibo_app/utils/number_utils.dart';
 
 class HifemExpandResult {
   const HifemExpandResult({
@@ -467,11 +468,7 @@ class _HifemProgressRow extends StatelessWidget {
     onChanged((progress * 100).round().clamp(0, 100));
   }
 
-  String _formatPercent(int percent) {
-    final int value = percent.clamp(0, 100);
-    if (value == 100) return '100%';
-    return '${value.toString().padLeft(2, '0')}%';
-  }
+  String _formatPercent(int percent) => formatPaddedPercentage(percent);
 }
 
 class _HifemConfirmButton extends StatelessWidget {

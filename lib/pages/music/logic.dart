@@ -25,63 +25,64 @@ const List<SongSeries> songSeriesList = [
   SongSeries(
     songs: [
       Song(
-        id: 'dream1',
-        name: '01   Dream 1 (Before the wind blows it all away)',
-        author: '          Max Richter',
+        id: 'Thy Grace',
+        name: '01   Thy Grace',
+        author: '          Snatam Kaur',
         assetPath: Assets.music1,
       ),
       Song(
-        id: 'healing_hands',
-        name: '02   Healing Hands',
-        author: '          Liquid Mind',
+        id: 'Aria 2',
+        name: '02   Aria 2',
+        author: '          Max Richter',
         assetPath: Assets.music2,
       ),
       Song(
-        id: 'spiegel',
-        name: '03   Spiegel im Spiegel',
-        author: '          Arvo Pärt',
+        id: 'Sol_L',
+        name: '03   Sol_L',
+        author: '          Solar Fields',
         assetPath: Assets.music3,
       ),
       Song(
-        id: 'cello_suite',
-        name: '04   Bach: Cello Suite No. 1 in G Major (Prélude)',
-        author: '          Johann Sebastian Bach',
+        id: 'Weightless',
+        name:
+            '04   Weightless-528Hz DNA Repair, Heal Damage In The Body and Spirit',
+        author: '          Marconi Union',
         assetPath: Assets.music4,
       ),
       Song(
-        id: 'dream_spiral',
-        name: '05   Dream Spiral',
-        author: '          Hilary Stagg',
+        id: 'Poa Alpina_L',
+        name: '05   Poa Alpina_L',
+        author: '          BIOSPHERE',
         assetPath: Assets.music5,
       ),
       Song(
-        id: 'handpan',
-        name: '06   528Hz Handpan Meditation',
-        author: '          Warren Shanti',
+        id: 'An Ending(Ascent)',
+        name: '06   An Ending(Ascent)',
+        author: '          Brian Eno',
         assetPath: Assets.music6,
       ),
       Song(
-        id: 'singing_bowls',
-        name: '07   Tibetan Singing Bowls Breathe',
-        author: '          Tibetan Singing Bowls',
+        id: 'Temple of Silence_L',
+        name: '07   Temple of Silence_L',
+        author: '          Deuter & Annette Cantor',
         assetPath: Assets.music7,
       ),
       Song(
-        id: 'cell_regeneration',
-        name: '08   Cell Regeneration Sound Therapy (528Hz)',
-        author: '          Yevhenii Khonin',
+        id: 'Dream Spiral_L',
+        name: '08   Dream Spiral_L',
+        author: '          Hilary Stagg',
         assetPath: Assets.music8,
       ),
       Song(
-        id: 'stay',
-        name: '09   Stay (Interstellar Soundtrack)',
-        author: '          Hans Zimmer',
+        id: 'Flight From The City (Edit)',
+        name: '09   Flight From The City (Edit)',
+        author: '          Jóhann Jóhannsson',
         assetPath: Assets.music9,
       ),
       Song(
-        id: 'blade_runner',
-        name: '10   Blade Runner Blues',
-        author: '          Vangelis',
+        id: 'Immortal Love',
+        name: '10   Immortal Love',
+        author: '          Aeoliah',
         assetPath: Assets.music10,
       ),
     ],
@@ -99,7 +100,7 @@ Song? findSongById(String id) {
   return null;
 }
 
-const String defaultSongId = 'dream1';
+const String defaultSongId = 'Thy Grace';
 
 class VatMusicSelection {
   const VatMusicSelection({

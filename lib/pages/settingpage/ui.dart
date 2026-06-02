@@ -1,9 +1,13 @@
-﻿import 'package:flutter/cupertino.dart';
+// App 设置页面。
+//
+// 提供语言切换、日期时间设置以及后续设备信息等设置入口。
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:infibo_app/components/index.dart';
 import 'package:infibo_app/components/settingindex.dart';
 import 'package:infibo_app/pages/customized/customizedPage/setting_page_helpers.dart';
+import 'package:infibo_app/stores/app_header_clock_store.dart';
+import 'package:infibo_app/utils/date_time_utils.dart';
 
 class SettingWidget extends StatefulWidget {
   const SettingWidget({super.key});
@@ -162,7 +166,7 @@ class _SettingWidgetState extends State<SettingWidget> {
     _selectedMonth = now.month;
     _selectedDay = now.day;
     _selectedAmPmIndex = now.hour >= 12 ? 1 : 0;
-    _selectedHour12 = _toHour12(now.hour);
+    _selectedHour12 = toHour12(now.hour);
     _selectedMinute = now.minute;
 
     _yearController = FixedExtentScrollController(
@@ -181,13 +185,6 @@ class _SettingWidgetState extends State<SettingWidget> {
     _minuteController = FixedExtentScrollController(
       initialItem: _selectedMinute,
     );
-  }
-
-  // 24小时制转换成12小时制
-  int _toHour12(int hour24) {
-    if (hour24 == 0) return 12;
-    if (hour24 > 12) return hour24 - 12;
-    return hour24;
   }
 
   @override
@@ -567,7 +564,7 @@ class _SettingWidgetState extends State<SettingWidget> {
                       unitWidth: 28,
                       controller: _dayController,
                       values: List.generate(
-                        _daysInMonth(_selectedYear, _selectedMonth),
+                        daysInMonth(_selectedYear, _selectedMonth),
                         (index) => index + 1,
                       ),
                       selectedValue: _selectedDay,
@@ -826,12 +823,8 @@ class _SettingWidgetState extends State<SettingWidget> {
   }
 
   // 新增日期计算和保存方法
-  int _daysInMonth(int year, int month) {
-    return DateTime(year, month + 1, 0).day;
-  }
-
   void _fixSelectedDay() {
-    final int maxDay = _daysInMonth(_selectedYear, _selectedMonth);
+    final int maxDay = daysInMonth(_selectedYear, _selectedMonth);
 
     if (_selectedDay > maxDay) {
       _selectedDay = maxDay;
@@ -842,20 +835,12 @@ class _SettingWidgetState extends State<SettingWidget> {
     }
   }
 
-  int _toHour24() {
-    if (_selectedAmPmIndex == 0) {
-      return _selectedHour12 == 12 ? 0 : _selectedHour12;
-    }
-
-    return _selectedHour12 == 12 ? 12 : _selectedHour12 + 12;
-  }
-
   Future<void> _confirmDateTimeChange() async {
     final DateTime selectedDateTime = DateTime(
       _selectedYear,
       _selectedMonth,
       _selectedDay,
-      _toHour24(),
+      toHour24(hour12: _selectedHour12, isPm: _selectedAmPmIndex == 1),
       _selectedMinute,
     );
 

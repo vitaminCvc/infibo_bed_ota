@@ -1,112 +1,13 @@
-import 'dart:async';
-
+// 公共页头组件。
+//
+// 提供常规页面使用的顶部 Header 和基础页面容器；共享时钟状态由 stores 统一维护。
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:infibo_app/components/logic.dart';
+import 'package:infibo_app/components/logout_menu.dart';
 import 'package:infibo_app/constants/assets.dart';
 import 'package:infibo_app/constants/color.dart';
-import 'package:ntp/ntp.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-class AppHeaderClockController extends GetxController {
-  static const String _manualTimeEnabledKey = 'manual_time_enabled';
-  static const String _manualTimeOffsetMillisKey = 'manual_time_offset_millis';
-
-  final Rx<DateTime> _now = DateTime.now().obs;
-
-  Duration _timeOffset = Duration.zero;
-  Timer? _clockTimer;
-  bool _isStarted = false;
-  bool _useManualTime = false;
-
-  static AppHeaderClockController get instance {
-    if (Get.isRegistered<AppHeaderClockController>()) {
-      return Get.find<AppHeaderClockController>();
-    }
-    return Get.put(AppHeaderClockController(), permanent: true);
-  }
-
-  DateTime get currentTime => _now.value;
-
-  String get timeText =>
-      '${_twoDigits(_now.value.hour)}:${_twoDigits(_now.value.minute)}';
-
-  String get dateText =>
-      '${_now.value.year}.${_twoDigits(_now.value.month)}.${_twoDigits(_now.value.day)}';
-
-  void startClock() {
-    if (_isStarted) return;
-    _isStarted = true;
-
-    unawaited(_initTime());
-
-    _clockTimer = Timer.periodic(const Duration(seconds: 1), (_) {
-      _now.value = DateTime.now().add(_timeOffset);
-    });
-  }
-
-  Future<void> _initTime() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    //如果手动设置时间，就按照用户设置的时间显示
-    _useManualTime = prefs.getBool(_manualTimeEnabledKey) ?? false;
-
-    if (_useManualTime) {
-      final int offsetMillis = prefs.getInt(_manualTimeOffsetMillisKey) ?? 0;
-      _timeOffset = Duration(milliseconds: offsetMillis);
-      _now.value = DateTime.now().add(_timeOffset);
-      return;
-    }
-    //若用户没有设置时间，使用网络时间同步
-    await _syncNetworkTime();
-  }
-
-  Future<void> setManualTime(DateTime value) async {
-    _useManualTime = true;
-    _timeOffset = value.difference(DateTime.now());
-    _now.value = value;
-
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(_manualTimeEnabledKey, true);
-    await prefs.setInt(_manualTimeOffsetMillisKey, _timeOffset.inMilliseconds);
-  }
-
-  Future<void> resetToNetworkTime() async {
-    _useManualTime = false;
-    _timeOffset = Duration.zero;
-
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(_manualTimeEnabledKey, false);
-    await prefs.remove(_manualTimeOffsetMillisKey);
-    //若用户没有设置时间，使用网络时间同步
-    await _syncNetworkTime();
-  }
-
-  Future<void> _syncNetworkTime() async {
-    if (_useManualTime) return;
-
-    try {
-      final DateTime networkTime = await NTP.now();
-
-      if (_useManualTime) return;
-
-      _timeOffset = networkTime.difference(DateTime.now());
-      _now.value = networkTime;
-    } catch (_) {
-      if (_useManualTime) return;
-
-      _timeOffset = Duration.zero;
-      _now.value = DateTime.now();
-    }
-  }
-
-  String _twoDigits(int value) => value.toString().padLeft(2, '0');
-
-  @override
-  void onClose() {
-    _clockTimer?.cancel();
-    super.onClose();
-  }
-}
+import 'package:infibo_app/stores/index.dart';
 
 class AppHeaderPage extends StatelessWidget {
   const AppHeaderPage({
@@ -179,24 +80,8 @@ class AppTopHeader extends StatelessWidget {
         const SizedBox(width: 80),
         Obx(() => _buildTimeBlock(clock.timeText, clock.dateText)),
         const Spacer(),
-        _buildImageButton(
-          asset: Assets.adminMainLogo,
-          width: 108,
-          height: 48,
-          onTap: onUserTap,
-          child: Positioned(
-            left: 48,
-            top: 13,
-            child: Text(
-              'administrator'.tr,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-        ),
+        //创建用户信息按钮
+        _buildUserButton(),
         const SizedBox(width: 8),
         _buildImageButton(
           asset: Assets.settingLogo,
@@ -220,6 +105,71 @@ class AppTopHeader extends StatelessWidget {
     );
   }
 
+  Widget _buildUserButton() {
+    return Obx(() {
+      final UserStore userStore = UserStore.instance;
+
+      return LogoutMenu(
+        onLogout: AppComponentLogic.logout,
+        child: _buildImageButton(
+          asset: Assets.adminMainLogo,
+          width: 108,
+          height: 48,
+          child: SizedBox(
+            width: 108,
+            height: 48,
+            child: Stack(
+              children: [
+                Positioned(
+                  left: 12,
+                  top: 8,
+                  child: _buildRoleAvatar(userStore.avatarText),
+                ),
+                Positioned(
+                  left: 50,
+                  top: 13,
+                  right: 8,
+                  child: Text(
+                    userStore.roleText,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    });
+  }
+
+  //创建角色头像组件
+  Widget _buildRoleAvatar(String text) {
+    return Container(
+      width: 35,
+      height: 35,
+      alignment: Alignment.center,
+      decoration: const BoxDecoration(
+        shape: BoxShape.circle,
+        color: Color.fromARGB(255, 41, 41, 41),
+      ),
+      child: Text(
+        text,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 12,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+    );
+  }
+
+  //创建用户信息按钮
   Widget _buildLogo() {
     final Widget logo = Image.asset(
       Assets.mainLogo,

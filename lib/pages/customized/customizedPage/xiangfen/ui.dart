@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 import 'package:infibo_app/components/index.dart';
 import 'package:infibo_app/constants/assets.dart';
 import 'package:infibo_app/pages/customized/customizedPage/setting_page_helpers.dart';
-import 'package:infibo_app/pages/customized/customizedPage/xiangfen/logic.dart';
+import 'package:infibo_app/stores/fragrance_setting_store.dart';
 import 'package:lottie/lottie.dart';
 
 class FragranceExpandResult {

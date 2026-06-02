@@ -1,6 +1,6 @@
 // 注册页。
 //
-// 用户在这里选择注册角色，输入手机号、验证码、密码并勾选协议。
+// 用户在这里选择注册角色，输入邮箱、验证码、密码并勾选协议。
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,6 +9,7 @@ import 'package:infibo_app/api/dio/register/register_api.dart';
 import 'package:infibo_app/api/dio/register/register_models.dart';
 import 'package:infibo_app/constants/assets.dart';
 import 'package:infibo_app/constants/color.dart';
+import 'package:infibo_app/utils/email_utils.dart';
 
 // 注册页UI
 class RegisterPage extends StatefulWidget {
@@ -27,8 +28,8 @@ class _RegisterPageState extends State<RegisterPage> {
   // 是否同意协议，默认值为 false（未同意）
   bool _agreed = false;
 
-  // 手机号输入框控制器
-  final TextEditingController _phoneController = TextEditingController();
+  // 邮箱输入框控制器：注册账号和接收验证码都使用这个邮箱。
+  final TextEditingController _emailController = TextEditingController();
 
   // 验证码输入框控制器
   final TextEditingController _codeController = TextEditingController();
@@ -36,8 +37,8 @@ class _RegisterPageState extends State<RegisterPage> {
   // 密码输入框控制器
   final TextEditingController _passwordController = TextEditingController();
 
-  // 手机号输入框焦点
-  final FocusNode _phoneFocusNode = FocusNode();
+  // 邮箱输入框焦点：点击整个玻璃背景时也能聚焦输入框。
+  final FocusNode _emailFocusNode = FocusNode();
 
   // 验证码输入框焦点
   final FocusNode _codeFocusNode = FocusNode();
@@ -64,7 +65,7 @@ class _RegisterPageState extends State<RegisterPage> {
   void initState() {
     super.initState();
 
-    _phoneController.addListener(_updateCanRegisterState);
+    _emailController.addListener(_updateCanRegisterState);
     _codeController.addListener(_updateCanRegisterState);
     _passwordController.addListener(_updateCanRegisterState);
 
@@ -80,7 +81,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
     precacheImage(const AssetImage(Assets.logo), context);
     precacheImage(const AssetImage(Assets.glassLogo), context);
-    precacheImage(const AssetImage(Assets.phoneLogo), context);
     precacheImage(const AssetImage(Assets.passwordLogo), context);
     precacheImage(const AssetImage(Assets.adminLogo), context);
     precacheImage(const AssetImage(Assets.operatorLogo), context);
@@ -89,15 +89,15 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   void dispose() {
-    _phoneController.removeListener(_updateCanRegisterState);
+    _emailController.removeListener(_updateCanRegisterState);
     _codeController.removeListener(_updateCanRegisterState);
     _passwordController.removeListener(_updateCanRegisterState);
 
-    _phoneController.dispose();
+    _emailController.dispose();
     _codeController.dispose();
     _passwordController.dispose();
 
-    _phoneFocusNode.dispose();
+    _emailFocusNode.dispose();
     _codeFocusNode.dispose();
     _passwordFocusNode.dispose();
 
@@ -130,8 +130,8 @@ class _RegisterPageState extends State<RegisterPage> {
                   _buildRoleSelector(),
                   const SizedBox(height: 38),
 
-                  // 构建手机号输入框容器
-                  _buildInputPhone(),
+                  // 构建邮箱输入框容器。
+                  _buildInputEmail(),
                   const SizedBox(height: 38),
 
                   // 构建验证码输入框容器
@@ -253,52 +253,54 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  //-----------------------------------------手机号------------------------------------//
+  //-----------------------------------------邮箱------------------------------------//
 
-  /// 构建手机号输入框容器
-  Widget _buildInputPhone() {
+  /// 构建邮箱输入框容器。
+  Widget _buildInputEmail() {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTap: () => FocusScope.of(context).requestFocus(_phoneFocusNode),
+      onTap: () => FocusScope.of(context).requestFocus(_emailFocusNode),
       child: Stack(
         children: [
           // 毛玻璃背景
           Image.asset(Assets.glassLogo),
 
-          // 手机号输入框
+          // 邮箱输入框。
           Positioned(
             left: 22,
             right: 22,
             top: 0,
             bottom: 0,
-            child: _inputPhone(),
+            child: _inputEmail(),
           ),
         ],
       ),
     );
   }
 
-  /// 构建手机号输入框
-  Widget _inputPhone() {
+  /// 构建邮箱输入框。
+  Widget _inputEmail() {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        // 电话图标
-        Image.asset(Assets.phoneLogo),
+        // 使用 Material 邮箱图标，与邮箱账号语义保持一致。
+        const Icon(Icons.email_outlined, color: Color(0xFF8B8E98), size: 22),
         const SizedBox(width: 12),
 
         // 宽度撑开
         Expanded(
           child: TextField(
-            controller: _phoneController,
-            focusNode: _phoneFocusNode,
-            keyboardType: TextInputType.phone,
+            controller: _emailController,
+            focusNode: _emailFocusNode,
+            keyboardType: TextInputType.emailAddress,
+            autocorrect: false,
+            enableSuggestions: false,
             cursorColor: const Color(0xFF1464DF),
             style: const TextStyle(color: Colors.white, fontSize: 18),
             textAlignVertical: TextAlignVertical.center,
             decoration: InputDecoration(
               isCollapsed: true,
-              hintText: 'login_phone_hint'.tr,
+              hintText: 'login_email_hint'.tr,
               hintStyle: const TextStyle(
                 color: Color.fromARGB(255, 129, 133, 145),
                 fontSize: 18,
@@ -588,11 +590,11 @@ class _RegisterPageState extends State<RegisterPage> {
   /// 判断是否可以注册
   bool _canRegister() {
     //1. 同意协议
-    //2. 手机号不为空
+    //2. 邮箱不为空
     //3. 验证码不为空
     //4. 密码不为空
     return _agreed &&
-        _phoneController.text.trim().isNotEmpty &&
+        _emailController.text.trim().isNotEmpty &&
         _codeController.text.trim().isNotEmpty &&
         _passwordController.text.trim().isNotEmpty;
   }
@@ -610,17 +612,16 @@ class _RegisterPageState extends State<RegisterPage> {
   Future<void> _getVerifyCode() async {
     if (_sendingCode) return;
 
-    final String phone = _phoneController.text.trim();
+    final String email = _emailController.text.trim();
 
-    if (phone.isEmpty) {
-      Get.snackbar('提示', '请先输入手机号', backgroundColor: Colors.white);
+    if (email.isEmpty) {
+      Get.snackbar('提示', '请先输入邮箱', backgroundColor: Colors.white);
       return;
     }
 
-    final bool phoneValid = RegExp(r'^1[3-9]\d{9}$').hasMatch(phone);
-
-    if (!phoneValid) {
-      Get.snackbar('提示', '请输入正确的手机号', backgroundColor: Colors.white);
+    // 发送验证码前先校验邮箱，避免把明显无效的地址提交给后端。
+    if (!isValidEmail(email)) {
+      Get.snackbar('提示', '请输入正确的邮箱', backgroundColor: Colors.white);
       return;
     }
 
@@ -629,7 +630,7 @@ class _RegisterPageState extends State<RegisterPage> {
     });
 
     final ApiResponse<String> result = await _registerApi.sendCode(
-      phone: phone,
+      email: email,
     );
 
     if (!mounted) return;
@@ -639,11 +640,11 @@ class _RegisterPageState extends State<RegisterPage> {
     });
 
     if (result.isSuccess) {
-      debugPrint('后端返回的手机号：${result.data}');
+      debugPrint('后端返回的邮箱：${result.data}');
 
       Get.snackbar(
         '提示',
-        '验证码已发送，后端收到手机号：${result.data}',
+        '验证码已发送，后端收到邮箱：${result.data}',
         backgroundColor: Colors.white,
       );
     } else {
@@ -659,16 +660,21 @@ class _RegisterPageState extends State<RegisterPage> {
   Future<void> _register() async {
     if (_registering) return;
 
-    final String phone = _phoneController.text.trim();
+    final String email = _emailController.text.trim();
     final String code = _codeController.text.trim();
     final String password = _passwordController.text.trim();
+
+    if (!isValidEmail(email)) {
+      Get.snackbar('提示', '请输入正确的邮箱', backgroundColor: Colors.white);
+      return;
+    }
 
     setState(() {
       _registering = true;
     });
 
     final ApiResponse<void> result = await _registerApi.register(
-      phone: phone,
+      email: email,
       code: code,
       password: password,
       role: _role,

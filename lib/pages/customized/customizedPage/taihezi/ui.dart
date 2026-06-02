@@ -8,7 +8,8 @@ import 'package:get/get.dart';
 import 'package:infibo_app/components/index.dart';
 import 'package:infibo_app/constants/assets.dart';
 import 'package:infibo_app/pages/customized/customizedPage/setting_page_helpers.dart';
-import 'package:infibo_app/pages/customized/customizedPage/taihezi/logic.dart';
+import 'package:infibo_app/stores/terahertz_setting_store.dart';
+import 'package:infibo_app/utils/number_utils.dart';
 import 'package:lottie/lottie.dart';
 
 class TerahertzExpandResult {
@@ -230,9 +231,7 @@ class _TerahertzExpandPageState extends State<TerahertzExpandPage> {
   }
 
   String _formatPlainValue(double value) {
-    final int rounded = value.round().clamp(0, 100);
-    if (rounded == 100) return '100';
-    return rounded.toString().padLeft(2, '0');
+    return formatPaddedInteger(value);
   }
 
   void _selectMode(String value) => setState(() => _mode = value);

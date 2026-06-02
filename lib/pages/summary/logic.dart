@@ -1,3 +1,6 @@
+// 理疗总结页逻辑。
+//
+// 负责读取总结数据、统计拓展模块时长，并在页面长时间无操作时返回主页。
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';

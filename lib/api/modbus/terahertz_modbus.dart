@@ -1,3 +1,8 @@
+// 太赫兹模块 Modbus 数据构建器。
+//
+// 根据频率、功率、模式和波形生成批量写寄存器所需的数据。
+import 'package:infibo_app/utils/number_utils.dart';
+
 class TerahertzBatchPayload {
   const TerahertzBatchPayload({
     required this.startAddress,
@@ -45,7 +50,7 @@ class TerahertzModbus {
     required int mode,
     required int wave,
   }) {
-    final int safePower = power.clamp(0, 100).toInt();
+    final int safePower = clampPercentage(power);
     final int safeMode = mode.clamp(0, 1).toInt();
     final int safeFrequency = frequency.clamp(1, 100).toInt();
     final int safeWave = wave.clamp(0, 2).toInt();
