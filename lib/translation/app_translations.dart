@@ -1,4 +1,7 @@
-﻿import 'package:get/get.dart';
+// App 多语言文案表。
+//
+// 所有页面展示文案按语言代码集中维护在这里。
+import 'package:get/get.dart';
 
 class AppTranslations extends Translations {
   @override
@@ -60,7 +63,7 @@ class AppTranslations extends Translations {
       'device_fault': '设备故障',
 
       // 登录页面
-      'login_phone_hint': '输入手机号',
+      'login_email_hint': '输入邮箱',
       'login_password_hint': '输入密码',
       'forgot_password': '忘记密码?',
       'login': '登录',
@@ -208,7 +211,7 @@ class AppTranslations extends Translations {
       'mental_healing': 'Emo. Healing', // 情绪疗愈
       'device_fault': 'Device Fault', // 设备故障
       // 登录页面
-      'login_phone_hint': 'Enter phone number', // 输入手机号
+      'login_email_hint': 'Enter email address', // 输入邮箱
       'login_password_hint': 'Enter password', // 输入密码
       'forgot_password': 'Forgot password?', // 忘记密码?
       'login': 'Login', // 登录
@@ -349,7 +352,7 @@ class AppTranslations extends Translations {
       'mental_healing': 'Emoción', // 情绪疗愈
       'device_fault': 'Fallo de dispositivo', // 设备故障
       // 登录页面
-      'login_phone_hint': 'Ingrese número de teléfono', // 输入手机号
+      'login_email_hint': 'Ingrese correo electrónico', // 输入邮箱
       'login_password_hint': 'Ingrese contraseña', // 输入密码
       'forgot_password': '¿Olvidaste la contraseña?', // 忘记密码?
       'login': 'Iniciar sesión', // 登录
@@ -491,7 +494,7 @@ class AppTranslations extends Translations {
       'mental_healing': 'Eq. emocional', // 情绪疗愈
       'device_fault': 'Falha do dispositivo', // 设备故障
       // 登录页面
-      'login_phone_hint': 'Introduza o número de telefone', // 输入手机号
+      'login_email_hint': 'Introduza o e-mail', // 输入邮箱
       'login_password_hint': 'Introduza a palavra-passe', // 输入密码
       'forgot_password': 'Esqueceu-se da palavra-passe?', // 忘记密码?
       'login': 'Iniciar sessão', // 登录
@@ -634,7 +637,7 @@ class AppTranslations extends Translations {
       'mental_healing': 'Эмо-Баланс', // 情绪疗愈
       'device_fault': 'Ошибка устройства', // 设备故障
       // 登录页面
-      'login_phone_hint': 'Введите номер телефона', // 输入手机号
+      'login_email_hint': 'Введите адрес электронной почты', // 输入邮箱
       'login_password_hint': 'Введите пароль', // 输入密码
       'forgot_password': 'Забыли пароль?', // 忘记密码?
       'login': 'Войти', // 登录
@@ -776,7 +779,7 @@ class AppTranslations extends Translations {
       'mental_healing': 'Soin émotionnel', // 情绪疗愈
       'device_fault': 'Défaut de l’appareil', // 设备故障
       // 登录页面
-      'login_phone_hint': 'Saisir le numéro de téléphone', // 输入手机号
+      'login_email_hint': 'Saisir l’adresse e-mail', // 输入邮箱
       'login_password_hint': 'Saisir le mot de passe', // 输入密码
       'forgot_password': 'Mot de passe oublié ?', // 忘记密码?
       'login': 'Connexion', // 登录
@@ -923,7 +926,7 @@ class AppTranslations extends Translations {
       'mental_healing': '정서 치유', // 情绪疗愈
       'device_fault': '장치 고장', // 设备故障
       // 登录页面
-      'login_phone_hint': '전화번호를 입력하세요', // 输入手机号
+      'login_email_hint': '이메일을 입력하세요', // 输入邮箱
       'login_password_hint': '비밀번호를 입력하세요', // 输入密码
       'forgot_password': '비밀번호를 잊으셨나요?', // 忘记密码?
       'login': '로그인', // 登录
@@ -1064,7 +1067,7 @@ class AppTranslations extends Translations {
       'mental_healing': 'شفاء عاطفي', // 情绪疗愈
       'device_fault': 'عطل الجهاز', // 设备故障
       // 登录页面
-      'login_phone_hint': 'أدخل رقم الهاتف', // 输入手机号
+      'login_email_hint': 'أدخل البريد الإلكتروني', // 输入邮箱
       'login_password_hint': 'أدخل كلمة المرور', // 输入密码
       'forgot_password': 'هل نسيت كلمة المرور؟', // 忘记密码?
       'login': 'تسجيل الدخول', // 登录
@@ -1207,7 +1210,7 @@ class AppTranslations extends Translations {
       'mental_healing': 'Emo-Heilung', // 情绪疗愈
       'device_fault': 'Gerätefehler', // 设备故障
       // 登录页面
-      'login_phone_hint': 'Telefonnummer eingeben', // 输入手机号
+      'login_email_hint': 'E-Mail-Adresse eingeben', // 输入邮箱
       'login_password_hint': 'Passwort eingeben', // 输入密码
       'forgot_password': 'Passwort vergessen?', // 忘记密码?
       'login': 'Anmelden', // 登录
@@ -1351,7 +1354,7 @@ class AppTranslations extends Translations {
       'mental_healing': 'Duygusal İyil.', // 情绪疗愈
       'device_fault': 'Cihaz Arızası', // 设备故障
       // 登录页面
-      'login_phone_hint': 'Telefon numarasını girin', // 输入手机号
+      'login_email_hint': 'E-posta adresini girin', // 输入邮箱
       'login_password_hint': 'Şifreyi girin', // 输入密码
       'forgot_password': 'Şifrenizi mi unuttunuz?', // 忘记密码?
       'login': 'Giriş Yap', // 登录

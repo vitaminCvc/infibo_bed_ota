@@ -1,3 +1,6 @@
+// 理疗总结页面。
+//
+// 展示本次理疗的用户、模块运行时长、健康指标和反馈输入区域。
 import 'dart:math' as math;
 import 'dart:ui';
 

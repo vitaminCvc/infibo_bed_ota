@@ -1,9 +1,8 @@
-// HIFEM 设置页的状态模型和控制器。
+// HIFEM 设置页共享状态。
 //
-// UI 页只负责编辑临时值；点击确认时会把四个区域的射频 / HIFES 百分比
-// 保存到这个 GetX controller。controller 设为 permanent，所以返回上级页面
-// 后再次进入 HIFEM 页，之前确认过的设置还在。
+// 保存四个区域的射频和 HIFES 百分比，让页面返回后仍能恢复上次确认的设置。
 import 'package:get/get.dart';
+import 'package:infibo_app/utils/number_utils.dart';
 
 enum HifemRegion { foreheadLeft, foreheadRight, cheekLeft, cheekRight }
 
@@ -17,8 +16,8 @@ class HifemRegionSetting {
 
   HifemRegionSetting copyWith({int? rfPercent, int? hifesPercent}) {
     return HifemRegionSetting(
-      rfPercent: (rfPercent ?? this.rfPercent).clamp(0, 100).toInt(),
-      hifesPercent: (hifesPercent ?? this.hifesPercent).clamp(0, 100).toInt(),
+      rfPercent: clampPercentage(rfPercent ?? this.rfPercent),
+      hifesPercent: clampPercentage(hifesPercent ?? this.hifesPercent),
     );
   }
 }

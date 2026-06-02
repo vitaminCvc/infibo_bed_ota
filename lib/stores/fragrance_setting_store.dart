@@ -1,7 +1,6 @@
-// 香氛设置页的状态控制器。
+// 香氛设置页共享状态。
 //
-// 这里只保存一个 selectedFragranceId。使用 GetX permanent controller，
-// 让用户确认返回后再次进入香氛页时，还能看到上次确认的香型。
+// 保存用户最后确认的香型，让页面返回后仍能恢复上次选择。
 import 'package:get/get.dart';
 
 class FragranceSettingController extends GetxController {

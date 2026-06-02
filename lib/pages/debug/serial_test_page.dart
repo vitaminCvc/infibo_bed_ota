@@ -8,6 +8,8 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:infibo_app/services/android_serial_port_service.dart';
+import 'package:infibo_app/utils/byte_utils.dart';
+import 'package:infibo_app/utils/date_time_utils.dart';
 
 class SerialTestPage extends StatefulWidget {
   const SerialTestPage({super.key});
@@ -275,10 +277,7 @@ class _SerialTestPageState extends State<SerialTestPage> {
 
   void _addLog(String message) {
     final DateTime now = DateTime.now();
-    final String time =
-        '${now.hour.toString().padLeft(2, '0')}:'
-        '${now.minute.toString().padLeft(2, '0')}:'
-        '${now.second.toString().padLeft(2, '0')}';
+    final String time = formatClockTimeWithSeconds(now);
 
     if (!mounted) {
       _logs.add('[$time] $message');

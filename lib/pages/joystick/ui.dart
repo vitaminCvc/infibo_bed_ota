@@ -1,3 +1,6 @@
+// 升降杆控制组件。
+//
+// 处理升降状态展示、按钮交互、设备命令发送和状态轮询。
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:infibo_app/api/modbus/modbus_rtu_service.dart';

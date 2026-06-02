@@ -8,6 +8,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:infibo_app/utils/byte_utils.dart';
 
 class AndroidSerialPortService {
   AndroidSerialPortService._() {
@@ -206,11 +207,4 @@ class AndroidSerialPortEvent {
   final Uint8List? bytes;
   final String? hex;
   final String? message;
-}
-
-String bytesToHex(Iterable<int> bytes) {
-  return bytes
-      .map((byte) => (byte & 0xFF).toRadixString(16).padLeft(2, '0'))
-      .join(' ')
-      .toUpperCase();
 }

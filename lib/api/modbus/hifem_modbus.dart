@@ -1,3 +1,8 @@
+// HIFEM 模块 Modbus 数据构建器。
+//
+// 根据额头和左右脸部的射频、磁场强度生成批量写寄存器所需的数据。
+import 'package:infibo_app/utils/number_utils.dart';
+
 class HifemModbus {
   const HifemModbus._();
 
@@ -27,12 +32,12 @@ class HifemModbus {
     required int rightFaceMagnetic,
     int mode = 0,
   }) {
-    final int safeForeheadRf = _clampPercent(foreheadRf);
-    final int safeForeheadMagnetic = _clampPercent(foreheadMagnetic);
-    final int safeLeftFaceRf = _clampPercent(leftFaceRf);
-    final int safeLeftFaceMagnetic = _clampPercent(leftFaceMagnetic);
-    final int safeRightFaceRf = _clampPercent(rightFaceRf);
-    final int safeRightFaceMagnetic = _clampPercent(rightFaceMagnetic);
+    final int safeForeheadRf = clampPercentage(foreheadRf);
+    final int safeForeheadMagnetic = clampPercentage(foreheadMagnetic);
+    final int safeLeftFaceRf = clampPercentage(leftFaceRf);
+    final int safeLeftFaceMagnetic = clampPercentage(leftFaceMagnetic);
+    final int safeRightFaceRf = clampPercentage(rightFaceRf);
+    final int safeRightFaceMagnetic = clampPercentage(rightFaceMagnetic);
     final int safeMode = mode == 1 ? 1 : 0;
     final bool enabled =
         safeForeheadRf > 0 ||
@@ -69,8 +74,6 @@ class HifemModbus {
       rightFaceMagnetic: safeRightFaceMagnetic,
     );
   }
-
-  static int _clampPercent(int value) => value.clamp(0, 100).toInt();
 }
 
 class HifemBatchPayload {

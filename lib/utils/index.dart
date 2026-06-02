@@ -1,3 +1,10 @@
-// 工具函数占位文件。
+// App 通用工具函数出口。
 //
-// 后续如果需要格式化时间、校验手机号、统一日志等无页面归属的函数，可以从这里统一扩展。
+// 页面或服务可以按需直接引用具体工具文件；需要一次引入多个工具时，从这里统一导出。
+export 'age_utils.dart';
+export 'byte_utils.dart';
+export 'date_time_utils.dart';
+export 'duration_utils.dart';
+export 'email_utils.dart';
+export 'number_utils.dart';
+export 'phone_utils.dart';

@@ -19,15 +19,17 @@ class Assets {
 
   // 登录页：密码输入框左侧图标。
   static const String passwordLogo = "assets/Loginimages/password.png";
-
-  // 登录页：管理员图标。
+  ///////////////////////////注册页/////////////////////////////////////////////
+  // 注册页：管理员图标。
   static const String adminLogo = "assets/Loginimages/adminLogo.png";
 
-  //登录页：操作员图标
+  //注册页：操作员图标
   static const String operatorLogo = "assets/Loginimages/operatorLogo.png";
 
-  // 登录页：个人图标。
+  // 注册页：个人图标。
   static const String userLogo = "assets/Loginimages/userLogo.png";
+
+  ///////////////////////////主页/////////////////////////////////////////////
 
   // 主页：中间人体主视觉图片。
   static const String mainBodyLogo = "assets/Mainimages/body.png";
@@ -38,7 +40,7 @@ class Assets {
   // 公共页头：顶部添加按钮图片。
   static const String addLogo = "assets/Mainimages/add.png";
 
-  // 公共页头：管理员入口按钮图片。
+  // 公共页头：管理员入口底部图片。
   static const String adminMainLogo = "assets/Mainimages/admin.png";
 
   // 主页：底部氛围灯关闭状态按钮。
@@ -49,6 +51,9 @@ class Assets {
 
   // 公共页头：设置按钮图片。
   static const String settingLogo = "assets/Mainimages/setting.png";
+
+  // 公共页头:退出登录背景图片
+  static const String logoOutBackg = "assets/Mainimages/logooutbackground.png";
 
   // 主页：右下角升降杆控制盘背景。
   static const String liftControlLogo =

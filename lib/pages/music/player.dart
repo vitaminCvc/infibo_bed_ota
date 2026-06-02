@@ -1,3 +1,6 @@
+// VAT 音乐播放器。
+//
+// 集中维护播放列表、当前歌曲、音量和播放状态快照。
 import 'package:infibo_app/pages/music/logic.dart';
 import 'package:just_audio/just_audio.dart';
 

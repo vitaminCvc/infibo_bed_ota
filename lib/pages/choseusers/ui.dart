@@ -10,6 +10,8 @@ import 'package:get/get.dart';
 import 'package:infibo_app/components/userindex.dart';
 import 'package:infibo_app/constants/assets.dart';
 import 'package:infibo_app/pages/choseusers/logic.dart';
+import 'package:infibo_app/utils/age_utils.dart';
+import 'package:infibo_app/utils/phone_utils.dart';
 
 // 选择用户页面。
 class ChoseUsersPage extends StatefulWidget {
@@ -595,7 +597,7 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
         _buildInfoBadge(_localizedAge(item.age)),
         const SizedBox(width: 16),
         Text(
-          _maskPhone(item.phone),
+          maskPhoneNumber(item.phone),
           style: const TextStyle(
             color: Color(0xFF8B8E98),
             fontSize: 13,
@@ -616,17 +618,7 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
 
   String _localizedAge(String ageRaw) {
     final String localeCode = Get.locale?.languageCode ?? 'zh';
-    if (localeCode == 'zh') return ageRaw;
-    final String digits = ageRaw.replaceAll(RegExp(r'[^0-9]'), '');
-    if (digits.isEmpty) return ageRaw;
-    return '${digits}y';
-  }
-
-  /// 手机号脱敏显示。
-  String _maskPhone(String phone) {
-    final String text = phone.trim();
-    if (text.length <= 4) return text;
-    return '****${text.substring(text.length - 4)}';
+    return formatAgeForLanguage(ageRaw, localeCode);
   }
 
   /// 构建性别、年龄标签。

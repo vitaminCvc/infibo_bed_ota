@@ -1,3 +1,8 @@
+// PEMF 模块 Modbus 数据构建器。
+//
+// 根据频率、强度和波形等参数生成批量写寄存器所需的数据。
+import 'package:infibo_app/utils/number_utils.dart';
+
 class PemfBatchPayload {
   const PemfBatchPayload({
     required this.enableAddress,
@@ -39,12 +44,12 @@ class PemfModbus {
     int riseTime = 0,
     int fallTime = 0,
   }) {
-    final int safeIntensity = intensity.clamp(0, 100).toInt();
+    final int safeIntensity = clampPercentage(intensity);
     final int enableValue = safeIntensity > 0 ? 1 : 0;
     final int burstFrequency = (frequencyHz.clamp(0, 6553) * 10).toInt();
     final List<int> values = <int>[
       burstFrequency, // 0x00C3
-      dutyCycle.clamp(0, 100).toInt(), // 0x00C4
+      clampPercentage(dutyCycle), // 0x00C4
       safeIntensity, // 0x00C5
       waveform.clamp(0, 65535).toInt(), // 0x00C6
       polarityMode.clamp(0, 65535).toInt(), // 0x00C7

@@ -1,3 +1,8 @@
+// 红光模块 Modbus 数据构建器。
+//
+// 根据红光强度和模式生成批量写寄存器所需的数据。
+import 'package:infibo_app/utils/number_utils.dart';
+
 class RedLightBatchPayload {
   const RedLightBatchPayload({
     required this.startAddress,
@@ -30,8 +35,8 @@ class RedLightModbus {
     required int strength850,
     required int mode,
   }) {
-    final int safe660 = _clampPercent(strength660);
-    final int safe850 = _clampPercent(strength850);
+    final int safe660 = clampPercentage(strength660);
+    final int safe850 = clampPercentage(strength850);
     final int safeMode = mode == 0 ? 0 : 1;
     final bool enabled = safe660 > 0 || safe850 > 0;
 
@@ -73,7 +78,7 @@ class RedLightModbus {
       mode: mode,
     );
     final bool enabled =
-        _clampPercent(strength660) > 0 || _clampPercent(strength850) > 0;
+        clampPercentage(strength660) > 0 || clampPercentage(strength850) > 0;
 
     return RedLightBatchPayload(
       startAddress: startAddress,
@@ -84,6 +89,4 @@ class RedLightModbus {
       commandValue: enabled ? 1 : 2,
     );
   }
-
-  static int _clampPercent(int value) => value.clamp(0, 100).toInt();
 }

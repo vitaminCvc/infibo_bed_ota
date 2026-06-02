@@ -1,9 +1,14 @@
+// 用户选择页公共页头组件。
+//
+// 在标准页头基础上增加“添加用户”按钮。
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:infibo_app/components/index.dart';
 import 'package:infibo_app/components/logic.dart';
+import 'package:infibo_app/components/logout_menu.dart';
 import 'package:infibo_app/constants/assets.dart';
 import 'package:infibo_app/constants/color.dart';
+import 'package:infibo_app/stores/app_header_clock_store.dart';
+import 'package:infibo_app/stores/user_store.dart';
 
 class AppUsersHeaderPage extends StatelessWidget {
   const AppUsersHeaderPage({
@@ -80,24 +85,7 @@ class AppTopHeader extends StatelessWidget {
         const SizedBox(width: 80),
         Obx(() => _buildTimeBlock(clock.timeText, clock.dateText)),
         const Spacer(),
-        _buildImageButton(
-          asset: Assets.adminMainLogo,
-          width: 108,
-          height: 48,
-          onTap: onUserTap,
-          child: Positioned(
-            left: 50,
-            top: 13,
-            child: Text(
-              'administrator'.tr,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-        ),
+        _buildUserButton(),
         const SizedBox(width: 12),
         _buildImageButton(
           asset: Assets.addLogo,
@@ -125,6 +113,72 @@ class AppTopHeader extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  // 构建顶部用户按钮
+  Widget _buildUserButton() {
+    return Obx(() {
+      final UserStore userStore = UserStore.instance;
+
+      return LogoutMenu(
+        onLogout: AppComponentLogic.logout,
+        child: _buildImageButton(
+          asset: Assets.adminMainLogo,
+          width: 108,
+          height: 48,
+          onTap: onUserTap,
+          child: SizedBox(
+            width: 108,
+            height: 48,
+            child: Stack(
+              children: [
+                Positioned(
+                  left: 12,
+                  top: 8,
+                  child: _buildRoleAvatar(userStore.avatarText),
+                ),
+                Positioned(
+                  left: 50,
+                  top: 13,
+                  right: 8,
+                  child: Text(
+                    userStore.roleText,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    });
+  }
+
+  // 构建角色头像
+  Widget _buildRoleAvatar(String text) {
+    return Container(
+      width: 35,
+      height: 35,
+      alignment: Alignment.center,
+      decoration: const BoxDecoration(
+        shape: BoxShape.circle,
+        color: Color.fromARGB(255, 41, 41, 41),
+      ),
+      child: Text(
+        text,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 12,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
     );
   }
 

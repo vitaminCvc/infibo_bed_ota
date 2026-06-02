@@ -1,3 +1,8 @@
+// 分子氢模块 Modbus 数据构建器。
+//
+// 根据浓度生成批量写寄存器所需的数据。
+import 'package:infibo_app/utils/number_utils.dart';
+
 class HydrogenBatchPayload {
   const HydrogenBatchPayload({
     required this.startAddress,
@@ -29,7 +34,7 @@ class HydrogenModbus {
   static const int flowReadAddress = 0x01E4;
 
   static HydrogenBatchPayload buildPayload({required int concentration}) {
-    final int safeConcentration = concentration.clamp(0, 100).toInt();
+    final int safeConcentration = clampPercentage(concentration);
     final int enable = safeConcentration > 0 ? 1 : 0;
     final List<int> values = <int>[
       enable, // 0x01C0

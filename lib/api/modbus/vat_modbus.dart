@@ -1,3 +1,8 @@
+// VAT 模块 Modbus 数据构建器。
+//
+// 根据频率、强度和音乐索引生成批量写寄存器所需的数据。
+import 'package:infibo_app/utils/number_utils.dart';
+
 class VatBatchPayload {
   const VatBatchPayload({
     required this.startAddress,
@@ -34,7 +39,7 @@ class VatModbus {
     required int intensity,
     required int musicIndex,
   }) {
-    final int safeIntensity = intensity.clamp(0, 100).toInt();
+    final int safeIntensity = clampPercentage(intensity);
     final int enable = safeIntensity > 0 ? 1 : 0;
     final double hz = frequencyHz.toDouble();
     final int frequencyValue = (hz * 10).round().clamp(0, 65535).toInt();
