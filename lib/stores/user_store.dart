@@ -32,7 +32,7 @@ class UserStore extends GetxController {
       case 'operator':
         return '操作员';
       case 'user':
-        return '个人';
+        return 'User';
       default:
         return '未登录';
     }

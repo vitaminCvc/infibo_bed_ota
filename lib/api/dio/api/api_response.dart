@@ -2,7 +2,6 @@
 //
 // 原本用于统一导出网络请求接口；当前项目主要是本地页面和串口通信，
 // 所以这个文件暂时没有实际导出内容。后续如果新增 HTTP 接口，可以从这里统一 export。
-
 class ApiResponse<T> {
   const ApiResponse({required this.code, required this.message, this.data});
 

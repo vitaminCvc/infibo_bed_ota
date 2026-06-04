@@ -9,7 +9,7 @@ import 'package:infibo_app/components/logic.dart';
 
 class SummaryLogic {
   // 页面无操作 1 分钟后，走和点击确认一样的返回逻辑。
-  static const Duration _idleDuration = Duration(minutes: 1);
+  static const Duration _idleDuration = Duration(minutes: 100);
 
   final TextEditingController feelingController = TextEditingController();
 
