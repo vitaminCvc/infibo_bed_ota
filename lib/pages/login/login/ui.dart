@@ -341,18 +341,48 @@ class _LoginPageState extends State<LoginPage> {
     final String password = _passwordController.text.trim();
 
     if (email.isEmpty) {
-      Get.snackbar('提示', '请输入邮箱');
+      /////Get.snackbar风格修改：
+      /////保留 Get.snackbar，参数加 snackPosition: SnackPosition.BOTTOM、backgroundColor: const Color(0xFF323232)、colorText: Colors.white、margin: const EdgeInsets.all(16)、borderRadius: 4。
+      Get.snackbar(
+        '提示',
+        '请输入邮箱',
+
+        backgroundColor: const Color(0xFF323232),
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(16),
+        borderRadius: 4,
+      );
       return;
     }
 
     // 固定联调账号不是邮箱，但仍然必须走后端登录接口。
     if (email != _developmentLoginAccount && !isValidEmail(email)) {
-      Get.snackbar('提示', '请输入正确的邮箱');
+      /////Get.snackbar风格修改：
+      /////保留 Get.snackbar，参数加 snackPosition: SnackPosition.BOTTOM、backgroundColor: const Color(0xFF323232)、colorText: Colors.white、margin: const EdgeInsets.all(16)、borderRadius: 4。
+      Get.snackbar(
+        '提示',
+        '请输入正确的邮箱',
+
+        backgroundColor: const Color(0xFF323232),
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(16),
+        borderRadius: 4,
+      );
       return;
     }
 
     if (password.isEmpty) {
-      Get.snackbar('提示', '请输入密码');
+      /////Get.snackbar风格修改：
+      /////保留 Get.snackbar，参数加 snackPosition: SnackPosition.BOTTOM、backgroundColor: const Color(0xFF323232)、colorText: Colors.white、margin: const EdgeInsets.all(16)、borderRadius: 4。
+      Get.snackbar(
+        '提示',
+        '请输入密码',
+
+        backgroundColor: const Color(0xFF323232),
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(16),
+        borderRadius: 4,
+      );
       return;
     }
 
@@ -371,7 +401,17 @@ class _LoginPageState extends State<LoginPage> {
       if (result.isSuccess) {
         final LoginResult? user = result.data;
         if (user == null) {
-          Get.snackbar('提示', '登录成功，但用户信息为空');
+          /////Get.snackbar风格修改：
+          /////保留 Get.snackbar，参数加 snackPosition: SnackPosition.BOTTOM、backgroundColor: const Color(0xFF323232)、colorText: Colors.white、margin: const EdgeInsets.all(16)、borderRadius: 4。
+          Get.snackbar(
+            '提示',
+            '登录成功，但用户信息为空',
+
+            backgroundColor: const Color(0xFF323232),
+            colorText: Colors.white,
+            margin: const EdgeInsets.all(16),
+            borderRadius: 4,
+          );
           return;
         }
         // 登录成功，保存用户信息到 UserStore
@@ -382,16 +422,46 @@ class _LoginPageState extends State<LoginPage> {
         debugPrint('当前用户邮箱:${user.email}');
         debugPrint('当前用户角色:${user.role}');
 
-        Get.snackbar('提示', result.message.isEmpty ? '登录成功' : result.message);
+        /////Get.snackbar风格修改：
+        /////保留 Get.snackbar，参数加 snackPosition: SnackPosition.BOTTOM、backgroundColor: const Color(0xFF323232)、colorText: Colors.white、margin: const EdgeInsets.all(16)、borderRadius: 4。
+        Get.snackbar(
+          '提示',
+          result.message.isEmpty ? '登录成功' : result.message,
+
+          backgroundColor: const Color(0xFF323232),
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(16),
+          borderRadius: 4,
+        );
 
         // 登录成功后跳转主页。
         _logic.login();
       } else {
-        Get.snackbar('提示', result.message.isEmpty ? '登录失败' : result.message);
+        /////Get.snackbar风格修改：
+        /////保留 Get.snackbar，参数加 snackPosition: SnackPosition.BOTTOM、backgroundColor: const Color(0xFF323232)、colorText: Colors.white、margin: const EdgeInsets.all(16)、borderRadius: 4。
+        Get.snackbar(
+          '提示',
+          result.message.isEmpty ? '登录失败' : result.message,
+
+          backgroundColor: const Color(0xFF323232),
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(16),
+          borderRadius: 4,
+        );
       }
     } catch (e) {
       debugPrint('登录接口异常：$e');
-      Get.snackbar('错误', '登录请求失败：$e');
+      /////Get.snackbar风格修改：
+      /////保留 Get.snackbar，参数加 snackPosition: SnackPosition.BOTTOM、backgroundColor: const Color(0xFF323232)、colorText: Colors.white、margin: const EdgeInsets.all(16)、borderRadius: 4。
+      Get.snackbar(
+        '错误',
+        '登录请求失败：$e',
+
+        backgroundColor: const Color(0xFF323232),
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(16),
+        borderRadius: 4,
+      );
     } finally {
       if (mounted) {
         setState(() => _loggingIn = false);

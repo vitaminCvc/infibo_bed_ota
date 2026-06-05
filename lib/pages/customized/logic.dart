@@ -7,6 +7,7 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 // 自定义方案列表逻辑。
+/////自定义方案页与后端联调，之后这里要删除 sqflite/path 依赖和 infibo_app.db/customized_plans 状态，改成后端仓库或 API 成员变量。
 class CustomizedLogic {
   static const String _databaseName = 'infibo_app.db';
   static const String _tableName = 'customized_plans';
@@ -20,6 +21,7 @@ class CustomizedLogic {
 
   int? highlightedIndex;
 
+  /////自定义方案页与后端联调，之后预加载要调用后端方案列表接口，不再打开本地 SQLite。
   static Future<void> preload() async {
     try {
       await CustomizedLogic().init();
@@ -29,12 +31,14 @@ class CustomizedLogic {
     }
   }
 
+  /////自定义方案页与后端联调，之后 init 只需要调用 loadPlans；loadPlans 内部从 GET /therapy/plan/custom/list 取数据。
   Future<void> init() async {
     await _openDatabaseIfNeeded();
     await loadPlans();
     await _seedDefaultPlansIfNeeded();
   }
 
+  /////自定义方案页与后端联调，之后整个本地数据库打开逻辑可以删除，换成类似选择用户页的 BackendCustomizedPlanRepository。
   Future<void> _openDatabaseIfNeeded() async {
     if (_sharedDatabase?.isOpen == true) {
       if (!_didEnsureSchema) {
@@ -49,6 +53,7 @@ class CustomizedLogic {
     _openingDatabase = null;
   }
 
+  /////自定义方案页与后端联调，之后这里不再创建 infibo_app.db，数据库由后端 MySQL 的 therapy_plan 表负责。
   Future<Database> _openSharedDatabase() async {
     final String databasePath = await getDatabasesPath();
     final Database database = await openDatabase(
@@ -67,6 +72,7 @@ class CustomizedLogic {
     return database;
   }
 
+  /////自定义方案页与后端联调，之后这里改成调用 GET /therapy/plan/custom/list，并把后端返回的 plan_config_json/used_modules_json 转成 CustomizedPlanData。
   Future<void> loadPlans() async {
     await _openDatabaseIfNeeded();
 
@@ -89,6 +95,7 @@ class CustomizedLogic {
     highlightedIndex = null;
   }
 
+  /////自定义方案页与后端联调，之后这里改成 POST /therapy/plan/custom；featureIds 需要序列化到 planConfigJson 或 usedModulesJson。
   Future<void> addPlan({
     required String name,
     required List<String> featureIds,
@@ -107,6 +114,7 @@ class CustomizedLogic {
     highlightedIndex = null;
   }
 
+  /////自定义方案页与后端联调，之后这里改成后端更新接口；如果只是改名可调用 PUT /therapy/plan/custom/{planId}/name，编辑完整配置时需要补一个后端更新配置接口。
   Future<void> updatePlan(CustomizedPlanData plan) async {
     if (plan.id == null) return;
     await _openDatabaseIfNeeded();
@@ -123,11 +131,13 @@ class CustomizedLogic {
     await loadPlans();
   }
 
+  /////自定义方案页与后端联调，之后 renamePlan 保留入口，但内部应调用 PUT /therapy/plan/custom/{planId}/name。
   Future<void> renamePlan(int index, String name) async {
     final CustomizedPlanData plan = plans[index].copyWith(name: name.trim());
     await updatePlan(plan);
   }
 
+  /////自定义方案页与后端联调，之后重名校验可以保留前端即时提示，但最终应以后端返回结果为准，避免不同设备并发创建重名方案。
   String? validatePlanName(String name, {int? excludeId}) {
     final String text = name.trim();
     if (text.isEmpty) return '方案名称不能为空';
@@ -140,6 +150,7 @@ class CustomizedLogic {
     return null;
   }
 
+  /////自定义方案页与后端联调，之后这里改成 DELETE /therapy/plan/custom/{planId}，成功后再从 plans 移除。
   Future<void> deletePlan(int index) async {
     await _openDatabaseIfNeeded();
 
@@ -175,12 +186,14 @@ class CustomizedLogic {
     highlightedIndex = index;
   }
 
+  /////自定义方案页与后端联调，之后新增页保存成功后应刷新后端列表，避免本地 plans 与 MySQL 不一致。
   Future<bool> openAddPage() async {
     final Object? result = await Get.toNamed(editRoute);
     await loadPlans();
     return result == true;
   }
 
+  /////自定义方案页与后端联调，之后编辑页需要携带后端 planId 和完整 planConfigJson，保存后刷新后端列表。
   Future<bool> openEditPage(CustomizedPlanData plan) async {
     final Object? result = await Get.toNamed(
       editRoute,
@@ -190,6 +203,7 @@ class CustomizedLogic {
     return result == true;
   }
 
+  /////自定义方案页与后端联调，之后选择方案时建议只传 planId/planName，启动页再按 planId 调 GET /therapy/plan/custom/{planId} 获取最新配置。
   void selectPlan(CustomizedPlanData plan) {
     Get.toNamed(
       choseUsersRoute,
@@ -202,6 +216,7 @@ class CustomizedLogic {
     // 页面跳转返回时可能还有 loadPlans() 在等待执行，立即 close 会导致 database_closed。
   }
 
+  /////自定义方案页与后端联调，之后本地表创建方法可以删除；后端表是 therapy_plan。
   Future<void> _createPlansTable(Database db) async {
     await db.execute('''
       CREATE TABLE IF NOT EXISTS $_tableName (
@@ -212,6 +227,7 @@ class CustomizedLogic {
     ''');
   }
 
+  /////自定义方案页与后端联调，之后默认方案不要写入本地 customized_plans；预设方案继续放 Flutter 本地，自定义方案只从后端读取。
   Future<void> _seedDefaultPlansIfNeeded() async {
     if (plans.isNotEmpty) return;
 
@@ -240,6 +256,7 @@ class CustomizedLogic {
     await loadPlans();
   }
 
+  /////自定义方案页与后端联调，之后删除 _db getter，所有增删改查都通过后端 API。
   Database get _db => _sharedDatabase!;
 }
 
@@ -263,6 +280,7 @@ class CustomizedPlanData {
   final String name;
   final List<String> featureIds;
 
+  /////自定义方案页与后端联调，之后 fromMap 改成 fromDto/fromJson，字段来源从 feature_ids 变成后端 planConfigJson/usedModulesJson。
   factory CustomizedPlanData.fromMap(Map<String, Object?> map) {
     final String featureText = map['feature_ids'] as String? ?? '';
     return CustomizedPlanData(
@@ -275,6 +293,7 @@ class CustomizedPlanData {
     );
   }
 
+  /////自定义方案页与后端联调，之后 toMap 改成 toRequestDto/toJson，发送 planName、durationMinutes、usedModulesJson、planConfigJson 给后端。
   Map<String, Object?> toMap() {
     return {'name': name, 'feature_ids': featureIds.join(',')};
   }

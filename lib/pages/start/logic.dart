@@ -182,6 +182,7 @@ class StartLogic {
   }
 
   // 根据页面参数配置自定义方案。
+  /////自定义方案页与后端联调，之后这里不要只依赖页面传来的 customizedPlan；建议按 planId 调 GET /therapy/plan/custom/{planId} 获取最新后端配置后再 configure。
   void configure(Object? args) {
     if (args is! Map || args['customizedPlan'] is! CustomizedPlanData) return;
 
@@ -217,6 +218,7 @@ class StartLogic {
     );
     int maxIndex = -1;
 
+    /////自定义方案页与后端联调，之后 featureIds 应来自后端 planConfigJson 解析结果；这里的解析规则要和保存到后端的 JSON 结构保持一致。
     for (final String text in plan.featureIds) {
       final List<String> parts = text.split(':');
       if (parts.length < 3) continue;

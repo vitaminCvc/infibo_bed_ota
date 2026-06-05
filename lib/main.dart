@@ -21,7 +21,7 @@ Future<void> main(List<String> args) async {
   // 启动 Flutter 应用,登录的持久化通过 UserStore 的 loadUser 方法实现，根组件根据用户登录状态决定初始路由
   runApp(
     //登录的持久化
-    // getRootWidget(initialRoute: userStore.isLoggedIn ? '/main' : '/login'),
-    getRootWidget(),
+    getRootWidget(initialRoute: userStore.isLoggedIn ? '/main' : '/login'),
+    // getRootWidget(),
   );
 }

@@ -181,6 +181,7 @@ class _CustomizedPageState extends State<CustomizedPage> {
   }
 
   /// 构建已保存的方案列表。
+  /////自定义方案页与后端联调，之后这里展示的数据来自后端列表接口，不再来自本地 customized_plans。
   Widget _buildPlanList() {
     if (!_isReady) return const SizedBox(width: 710, height: 800);
 
@@ -235,6 +236,7 @@ class _CustomizedPageState extends State<CustomizedPage> {
                 },
                 onSelect: () {
                   _cancelEditTimer();
+                  /////自定义方案页与后端联调，之后选择时建议传 planId，并在选择用户页/启动页按 planId 拉后端方案详情。
                   _logic.selectPlan(item);
                 },
               ),
@@ -275,6 +277,7 @@ class _CustomizedPageState extends State<CustomizedPage> {
   }
 
   /// 进入新增方案页面，返回后刷新方案列表。
+  /////自定义方案页与后端联调，之后新增页返回后要刷新后端列表，确认 MySQL 已保存成功。
   Future<void> _openAddPage() async {
     await _logic.openAddPage();
     if (!mounted) return;
@@ -310,6 +313,7 @@ class _CustomizedPageState extends State<CustomizedPage> {
   }
 
   /// 删除指定方案。
+  /////自定义方案页与后端联调，之后这里删除动作要调用 DELETE /therapy/plan/custom/{planId}。
   Future<void> _deletePlan(int index) async {
     await _logic.deletePlan(index);
     if (!mounted) return;
@@ -318,6 +322,7 @@ class _CustomizedPageState extends State<CustomizedPage> {
   }
 
   /// 按住方案卡片 1 秒后进入编辑页面。
+  /////自定义方案页与后端联调，之后进入编辑页时要传完整后端方案对象，至少包含 planId、planName、planConfigJson。
   void _startEditTimer(CustomizedPlanData item) {
     _cancelEditTimer();
     _editTimer = Timer(const Duration(milliseconds: 1000), () async {
@@ -334,6 +339,7 @@ class _CustomizedPageState extends State<CustomizedPage> {
   }
 
   /// 弹出重命名窗口并保存新的方案名称。
+  /////自定义方案页与后端联调，之后这里重命名要调用 PUT /therapy/plan/custom/{planId}/name。
   Future<void> _showRenameDialog(int index) async {
     final TextEditingController controller = TextEditingController(
       text: _logic.plans[index].name,
