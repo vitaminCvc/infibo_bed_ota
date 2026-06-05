@@ -1,21 +1,98 @@
-// 选择用户页的数据和导航逻辑。
-//
-// 负责本地用户数据库的增删改查、搜索高亮，以及进入启动理疗页时传递模式/方案参数。
 import 'package:get/get.dart';
+import 'package:infibo_app/api/dio/api/api_response.dart';
+import 'package:infibo_app/api/dio/therapy_client/therapy_client_api.dart';
+import 'package:infibo_app/api/dio/therapy_client/therapy_client_models.dart';
+import 'package:infibo_app/stores/user_store.dart';
 import 'package:infibo_app/utils/age_utils.dart';
-import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
 
-// 选择用户页逻辑。
+abstract class ChoseUsersRepository {
+  Future<List<UserItemData>> listUsers();
+
+  Future<UserItemData> addUser(UserItemData user);
+
+  Future<void> deleteUser(int id);
+
+  Future<void> dispose();
+}
+
+class BackendChoseUsersRepository implements ChoseUsersRepository {
+  BackendChoseUsersRepository({TherapyClientApi? api})
+    : _api = api ?? TherapyClientApi();
+
+  final TherapyClientApi _api;
+
+  @override
+  Future<List<UserItemData>> listUsers() async {
+    final ApiResponse<List<TherapyClientDto>> response = await _api.list(
+      ownerUserId: _currentOwnerUserId(),
+    );
+    if (!response.isSuccess)
+      throw ChoseUsersRepositoryException(response.message);
+    return (response.data ?? <TherapyClientDto>[])
+        .map(UserItemData.fromDto)
+        .toList();
+  }
+
+  @override
+  Future<UserItemData> addUser(UserItemData user) async {
+    final ApiResponse<TherapyClientDto> response = await _api.create(
+      ownerUserId: _currentOwnerUserId(),
+      request: TherapyClientRequestDto(
+        name: user.name,
+        gender: user.gender,
+        age: int.tryParse(user.age.replaceAll(RegExp(r'[^0-9]'), '')),
+        phone: user.phone,
+      ),
+    );
+    if (!response.isSuccess || response.data == null) {
+      throw ChoseUsersRepositoryException(response.message);
+    }
+    return UserItemData.fromDto(response.data!);
+  }
+
+  @override
+  Future<void> deleteUser(int id) async {
+    final ApiResponse<void> response = await _api.delete(
+      ownerUserId: _currentOwnerUserId(),
+      clientId: id,
+    );
+    if (!response.isSuccess)
+      throw ChoseUsersRepositoryException(response.message);
+  }
+
+  @override
+  Future<void> dispose() async {}
+
+  int _currentOwnerUserId() {
+    final int? userId = UserStore.instance.userId;
+    if (userId == null) {
+      throw const ChoseUsersRepositoryException(
+        'current user is not logged in',
+      );
+    }
+    return userId;
+  }
+}
+
+class ChoseUsersRepositoryException implements Exception {
+  const ChoseUsersRepositoryException(this.message);
+
+  final String message;
+
+  @override
+  String toString() => message;
+}
+
 class ChoseUsersLogic {
-  static const String _databaseName = 'infibo_app.db';
-  static const String _tableName = 'therapy_users';
-  static const String startRoute = '/start';
-  static const String defaultModeTitle = '深度放松';
+  ChoseUsersLogic({ChoseUsersRepository? repository})
+    : _repository = repository ?? BackendChoseUsersRepository();
 
+  static const String startRoute = '/start';
+  static const String defaultModeTitle = '娣卞害鏀炬澗';
+
+  final ChoseUsersRepository _repository;
   final List<UserItemData> users = [];
 
-  Database? _database;
   int? highlightedIndex;
 
   String get selectedModeTitle {
@@ -32,36 +109,18 @@ class ChoseUsersLogic {
     return null;
   }
 
-  // 初始化数据库并加载用户。
   Future<void> init() async {
-    final String databasePath = await getDatabasesPath();
-    _database = await openDatabase(
-      join(databasePath, _databaseName),
-      version: 1,
-      onCreate: (db, version) => _createUsersTable(db),
-      onOpen: (db) => _createUsersTable(db),
-    );
     await loadUsers();
   }
 
-  // 加载已保存用户。
   Future<void> loadUsers() async {
-    List<Map<String, Object?>> rows;
-    try {
-      rows = await _db.query(_tableName, orderBy: 'id ASC');
-    } on DatabaseException catch (error) {
-      if (!error.isNoSuchTableError(_tableName)) rethrow;
-      await _createUsersTable(_db);
-      rows = await _db.query(_tableName, orderBy: 'id ASC');
-    }
-
+    final List<UserItemData> loadedUsers = await _repository.listUsers();
     users
       ..clear()
-      ..addAll(rows.map(UserItemData.fromMap));
+      ..addAll(loadedUsers);
     highlightedIndex = null;
   }
 
-  // 添加用户。
   Future<void> addUser({
     required String name,
     required String gender,
@@ -71,22 +130,21 @@ class ChoseUsersLogic {
     final UserItemData user = UserItemData(
       name: name.trim(),
       gender: gender.trim(),
-      age: normalizeAgeText(age),
+      age: age.trim(),
       phone: phone.trim(),
     );
 
-    final int id = await _db.insert(_tableName, user.toMap());
-    users.add(user.copyWith(id: id));
+    final UserItemData savedUser = await _repository.addUser(user);
+    users.add(savedUser);
     highlightedIndex = null;
   }
 
-  // 删除用户。
   Future<void> deleteUser(int index) async {
     final UserItemData user = users[index];
-    if (user.id != null) {
-      await _db.delete(_tableName, where: 'id = ?', whereArgs: [user.id]);
-    }
+    final int? id = user.id;
+    if (id == null) return;
 
+    await _repository.deleteUser(id);
     users.removeAt(index);
     if (highlightedIndex == index) {
       highlightedIndex = null;
@@ -95,7 +153,6 @@ class ChoseUsersLogic {
     }
   }
 
-  // 根据姓名或手机号查找用户。
   int findUserIndex(String keyword) {
     final String text = keyword.trim();
     if (text.isEmpty) return -1;
@@ -105,12 +162,10 @@ class ChoseUsersLogic {
     );
   }
 
-  // 高亮指定用户。
   void highlightUser(int index) {
     highlightedIndex = index;
   }
 
-  // 选择用户后进入启动页面。
   void selectUser(UserItemData user) {
     Get.toNamed(
       startRoute,
@@ -122,29 +177,11 @@ class ChoseUsersLogic {
     );
   }
 
-  // 释放数据库。
   Future<void> dispose() async {
-    await _database?.close();
-    _database = null;
+    await _repository.dispose();
   }
-
-  // 创建用户表。
-  Future<void> _createUsersTable(Database db) async {
-    await db.execute('''
-      CREATE TABLE IF NOT EXISTS $_tableName (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        gender TEXT NOT NULL,
-        age TEXT NOT NULL,
-        phone TEXT NOT NULL
-      )
-    ''');
-  }
-
-  Database get _db => _database!;
 }
 
-// 用户列表数据。
 class UserItemData {
   const UserItemData({
     this.id,
@@ -154,42 +191,26 @@ class UserItemData {
     required this.phone,
   });
 
-  // 数据库主键。
   final int? id;
-
-  // 用户姓名。
   final String name;
-
-  // 用户性别。
   final String gender;
-
-  // 用户年龄。
   final String age;
-
-  // 手机号。
   final String phone;
 
-  // 从数据库记录转换为用户数据。
-  factory UserItemData.fromMap(Map<String, Object?> map) {
+  factory UserItemData.fromDto(TherapyClientDto dto) {
     return UserItemData(
-      id: map['id'] as int?,
-      name: map['name'] as String,
-      gender: map['gender'] as String,
-      age: map['age'] as String,
-      phone: map['phone'] as String,
+      id: dto.clientId,
+      name: dto.name,
+      gender: dto.gender,
+      age: dto.age?.toString() ?? '',
+      phone: dto.phone,
     );
   }
 
-  // 转换为数据库记录。
-  Map<String, Object?> toMap() {
-    return {'name': name, 'gender': gender, 'age': age, 'phone': phone};
-  }
-
-  // 复制用户数据。
-  UserItemData copyWith({int? id}) {
+  UserItemData copyWith({int? id, String? name}) {
     return UserItemData(
       id: id ?? this.id,
-      name: name,
+      name: name ?? this.name,
       gender: gender,
       age: age,
       phone: phone,

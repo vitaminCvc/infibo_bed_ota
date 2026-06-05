@@ -21,9 +21,9 @@ import 'package:infibo_app/pages/start/ui.dart';
 
 const String _initialRoute = String.fromEnvironment(
   'INFIBO_INITIAL_ROUTE',
-  defaultValue: '/summary',
+  // defaultValue: '/summary',
   //根级路由登录界面
-  // defaultValue: '/login',
+  defaultValue: '/login',
 );
 
 // 获取根级路由

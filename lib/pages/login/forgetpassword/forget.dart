@@ -462,13 +462,31 @@ class _ForgetPageState extends State<ForgetPage> {
     final String email = _emailController.text.trim();
 
     if (email.isEmpty) {
-      Get.snackbar('提示', '请先输入邮箱', backgroundColor: Colors.white);
+      /////Get.snackbar风格修改：
+      /////保留 Get.snackbar，参数加 snackPosition: SnackPosition.BOTTOM、backgroundColor: const Color(0xFF323232)、colorText: Colors.white、margin: const EdgeInsets.all(16)、borderRadius: 4；原有 backgroundColor: Colors.white 要替换掉。
+      Get.snackbar(
+        '提示',
+        '请先输入邮箱',
+        backgroundColor: const Color(0xFF323232),
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(16),
+        borderRadius: 4,
+      );
       return;
     }
 
     // 发送验证码前先校验邮箱，避免把明显无效的地址提交给后端。
     if (!isValidEmail(email)) {
-      Get.snackbar('提示', '请输入正确的邮箱', backgroundColor: Colors.white);
+      /////Get.snackbar风格修改：
+      /////保留 Get.snackbar，参数加 snackPosition: SnackPosition.BOTTOM、backgroundColor: const Color(0xFF323232)、colorText: Colors.white、margin: const EdgeInsets.all(16)、borderRadius: 4；原有 backgroundColor: Colors.white 要替换掉。
+      Get.snackbar(
+        '提示',
+        '请输入正确的邮箱',
+        backgroundColor: const Color(0xFF323232),
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(16),
+        borderRadius: 4,
+      );
       return;
     }
 
@@ -489,16 +507,27 @@ class _ForgetPageState extends State<ForgetPage> {
     if (result.isSuccess) {
       debugPrint('后端返回的邮箱：${result.data}');
 
+      /////Get.snackbar风格修改：
+      /////保留 Get.snackbar，参数加 snackPosition: SnackPosition.BOTTOM、backgroundColor: const Color(0xFF323232)、colorText: Colors.white、margin: const EdgeInsets.all(16)、borderRadius: 4；原有 backgroundColor: Colors.white 要替换掉。
       Get.snackbar(
         '提示',
         '验证码已发送，后端收到邮箱：${result.data}',
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFF323232),
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(16),
+        borderRadius: 4,
       );
     } else {
+      /////Get.snackbar风格修改：
+      /////保留 Get.snackbar，参数加 snackPosition: SnackPosition.BOTTOM、backgroundColor: const Color(0xFF323232)、colorText: Colors.white、margin: const EdgeInsets.all(16)、borderRadius: 4；原有 backgroundColor: Colors.white 要替换掉。
       Get.snackbar(
         '提示',
         result.message.isEmpty ? '验证码发送失败' : result.message,
-        backgroundColor: Colors.white,
+
+        backgroundColor: const Color(0xFF323232),
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(16),
+        borderRadius: 4,
       );
     }
   }
@@ -513,32 +542,89 @@ class _ForgetPageState extends State<ForgetPage> {
     final String confirmPassword = _confirmPasswordController.text.trim();
 
     if (email.isEmpty) {
-      Get.snackbar('提示', '请输入邮箱', backgroundColor: Colors.white);
+      /////Get.snackbar风格修改：
+      /////保留 Get.snackbar，参数加 snackPosition: SnackPosition.BOTTOM、backgroundColor: const Color(0xFF323232)、colorText: Colors.white、margin: const EdgeInsets.all(16)、borderRadius: 4；原有 backgroundColor: Colors.white 要替换掉。
+      Get.snackbar(
+        '提示',
+        '请输入邮箱',
+        backgroundColor: const Color(0xFF323232),
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(16),
+        borderRadius: 4,
+      );
       return;
     }
 
     if (!isValidEmail(email)) {
-      Get.snackbar('提示', '请输入正确的邮箱', backgroundColor: Colors.white);
+      /////Get.snackbar风格修改：
+      /////保留 Get.snackbar，参数加 snackPosition: SnackPosition.BOTTOM、backgroundColor: const Color(0xFF323232)、colorText: Colors.white、margin: const EdgeInsets.all(16)、borderRadius: 4；原有 backgroundColor: Colors.white 要替换掉。
+      Get.snackbar(
+        '提示',
+        '请输入正确的邮箱',
+        backgroundColor: const Color(0xFF323232),
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(16),
+        borderRadius: 4,
+      );
       return;
     }
 
     if (code.isEmpty) {
-      Get.snackbar('提示', '请输入验证码', backgroundColor: Colors.white);
+      /////Get.snackbar风格修改：
+      /////保留 Get.snackbar，参数加 snackPosition: SnackPosition.BOTTOM、backgroundColor: const Color(0xFF323232)、colorText: Colors.white、margin: const EdgeInsets.all(16)、borderRadius: 4；原有 backgroundColor: Colors.white 要替换掉。
+      Get.snackbar(
+        '提示',
+        '请输入验证码',
+        backgroundColor: const Color(0xFF323232),
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(16),
+        borderRadius: 4,
+      );
       return;
     }
 
     if (newPassword.isEmpty) {
-      Get.snackbar('提示', '请输入新密码', backgroundColor: Colors.white);
+      /////Get.snackbar风格修改：
+      /////保留 Get.snackbar，参数加 snackPosition: SnackPosition.BOTTOM、backgroundColor: const Color(0xFF323232)、colorText: Colors.white、margin: const EdgeInsets.all(16)、borderRadius: 4；原有 backgroundColor: Colors.white 要替换掉。
+      Get.snackbar(
+        '提示',
+        '请输入新密码',
+
+        backgroundColor: const Color(0xFF323232),
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(16),
+        borderRadius: 4,
+      );
       return;
     }
 
     if (confirmPassword.isEmpty) {
-      Get.snackbar('提示', '请确认新密码', backgroundColor: Colors.white);
+      /////Get.snackbar风格修改：
+      /////保留 Get.snackbar，参数加 snackPosition: SnackPosition.BOTTOM、backgroundColor: const Color(0xFF323232)、colorText: Colors.white、margin: const EdgeInsets.all(16)、borderRadius: 4；原有 backgroundColor: Colors.white 要替换掉。
+      Get.snackbar(
+        '提示',
+        '请确认新密码',
+
+        backgroundColor: const Color(0xFF323232),
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(16),
+        borderRadius: 4,
+      );
       return;
     }
 
     if (newPassword != confirmPassword) {
-      Get.snackbar('提示', '两次输入的密码不一致', backgroundColor: Colors.white);
+      /////Get.snackbar风格修改：
+      /////保留 Get.snackbar，参数加 snackPosition: SnackPosition.BOTTOM、backgroundColor: const Color(0xFF323232)、colorText: Colors.white、margin: const EdgeInsets.all(16)、borderRadius: 4；原有 backgroundColor: Colors.white 要替换掉。
+      Get.snackbar(
+        '提示',
+        '两次输入的密码不一致',
+
+        backgroundColor: const Color(0xFF323232),
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(16),
+        borderRadius: 4,
+      );
       return;
     }
 
@@ -564,11 +650,16 @@ class _ForgetPageState extends State<ForgetPage> {
       if (!mounted) return;
 
       if (result.isSuccess) {
+        /////Get.snackbar风格修改：
+        /////保留 Get.snackbar，参数加 snackPosition: SnackPosition.BOTTOM、backgroundColor: const Color(0xFF323232)、colorText: Colors.white、margin: const EdgeInsets.all(16)、borderRadius: 4；原有 backgroundColor: Colors.white 要替换掉。
         Get.snackbar(
           '提示',
           result.message.isEmpty ? '密码重置成功' : result.message,
-          backgroundColor: Colors.white,
-          duration: const Duration(seconds: 2),
+
+          backgroundColor: const Color(0xFF323232),
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(16),
+          borderRadius: 4,
         );
 
         await Future.delayed(const Duration(milliseconds: 1200));
@@ -577,10 +668,16 @@ class _ForgetPageState extends State<ForgetPage> {
 
         Get.offNamed('/login');
       } else {
+        /////Get.snackbar风格修改：
+        /////保留 Get.snackbar，参数加 snackPosition: SnackPosition.BOTTOM、backgroundColor: const Color(0xFF323232)、colorText: Colors.white、margin: const EdgeInsets.all(16)、borderRadius: 4；原有 backgroundColor: Colors.white 要替换掉。
         Get.snackbar(
           '提示',
           result.message.isEmpty ? '密码重置失败' : result.message,
-          backgroundColor: Colors.white,
+
+          backgroundColor: const Color(0xFF323232),
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(16),
+          borderRadius: 4,
         );
       }
     } finally {
