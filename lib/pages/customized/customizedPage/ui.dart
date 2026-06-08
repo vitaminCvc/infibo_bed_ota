@@ -1518,6 +1518,17 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     );
   }
 
+  //根据选择过保存的参数的节点，计算这个方案的总时长
+  int _selectedDurationMinutes() {
+    //若保存的节点为空，则返回0
+    if (_savedNodeIndexes.isEmpty) return 0;
+    //转换成列表在排序
+    final List<int> indexes = _savedNodeIndexes.toList()..sort();
+    //返回最后一个节点的索引加1，因为索引从0开始，所以需要加1 ，再乘以5，每个节点持续5分钟
+    return (indexes.last + 1) * 5;
+  }
+
+  //显示保存对话框方法
   Future<void> _showSaveDialog() async {
     final String? name = await showDialog<String>(
       context: context,
@@ -1527,7 +1538,11 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     if (name == null) return;
 
     try {
-      await _logic.savePlan(name: name, featureIds: _buildPlanFeatureIds());
+      await _logic.savePlan(
+        name: name,
+        featureIds: _buildPlanFeatureIds(),
+        durationMinutes: _selectedDurationMinutes(),
+      );
     } on CustomizedPlanNameException catch (error) {
       if (!mounted) return;
       _showMessage(error.message);

@@ -182,7 +182,15 @@ class StartLogic {
   }
 
   // 根据页面参数配置自定义方案。
-  /////自定义方案页与后端联调，之后这里不要只依赖页面传来的 customizedPlan；建议按 planId 调 GET /therapy/plan/custom/{planId} 获取最新后端配置后再 configure。
+  /////自定义方案页与后端联调，这里是启动页使用自定义方案的入口。
+  /////现在依赖：
+  /////  args['customizedPlan'] is CustomizedPlanData
+  /////之后建议改成：
+  /////  final int? planId = int.tryParse(args['planId']?.toString() ?? '');
+  /////  if (planId == null) return;
+  /////  final response = await TherapyPlanApi().detail(ownerUserId: UserStore.instance.userId!, planId: planId);
+  /////  final CustomizedPlanData plan = CustomizedPlanData.fromDto(response.data!);
+  /////注意：因为这里要 await 后端接口，configure 可能要从 void 改成 Future void，调用 configure 的地方也要 await。
   void configure(Object? args) {
     if (args is! Map || args['customizedPlan'] is! CustomizedPlanData) return;
 
@@ -218,7 +226,10 @@ class StartLogic {
     );
     int maxIndex = -1;
 
-    /////自定义方案页与后端联调，之后 featureIds 应来自后端 planConfigJson 解析结果；这里的解析规则要和保存到后端的 JSON 结构保持一致。
+    /////自定义方案页与后端联调，这个循环可以保留。
+    /////但 plan.featureIds 以后必须从后端 planConfigJson 解析出来：
+    /////  planConfigJson = {"featureIds":["phase:0:redlight|pemf", "redlight:0:..."]}
+    /////也就是保存时怎么 jsonEncode，这里就怎么 jsonDecode 回来。
     for (final String text in plan.featureIds) {
       final List<String> parts = text.split(':');
       if (parts.length < 3) continue;
