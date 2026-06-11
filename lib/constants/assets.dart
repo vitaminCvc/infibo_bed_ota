@@ -745,4 +745,17 @@ class Assets {
   static const String relax = "assets/Summary/relax.png";
   //总结页面: 免疫提升
   static const String immune = "assets/Summary/immune.png";
+  ///////////////////////////////历史记录详情页/////////////////////////////////////
+  //历史记录详情页：功能卡片背景
+  static const String fuctionCard = "assets/History/functionCard.png";
+  //历史记录详情页：历史记录卡片背景图
+  static const String historyCard = "assets/History/historyCard.png";
+  //能量指数icon
+  static const String energyicon = "assets/History/energyicon.png";
+  //细胞活化icon
+  static const String cellicon = "assets/History/cellicon.png";
+  //放松指数icon
+  static const String relaxicon = "assets/History/relaxicon.png";
+  //免疫提升icon
+  static const String immuneicon = "assets/History/immuneicon.png";
 }

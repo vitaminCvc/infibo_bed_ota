@@ -1,10 +1,15 @@
 // 年龄文本工具函数。
 //
 // 统一处理年龄存储格式和不同语言下的展示格式。
+import 'package:get/get.dart';
+
 String normalizeAgeText(String age) {
   final String text = age.trim();
-  if (text.isEmpty || text.endsWith('岁')) return text;
-  return '$text岁';
+  final String yearUnit = 'years_old_unit'.tr;
+  if (text.isEmpty || text.endsWith('岁') || text.endsWith(yearUnit)) {
+    return text;
+  }
+  return '$text$yearUnit';
 }
 
 // 根据语言代码格式化年龄展示文本。

@@ -11,6 +11,7 @@ import 'package:infibo_app/components/userindex.dart';
 import 'package:infibo_app/constants/assets.dart';
 import 'package:infibo_app/pages/choseusers/logic.dart';
 import 'package:infibo_app/utils/age_utils.dart';
+import 'package:infibo_app/utils/gender_utils.dart';
 import 'package:infibo_app/utils/phone_utils.dart';
 
 // 选择用户页面。
@@ -610,10 +611,7 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
   }
 
   String _localizedGender(String genderRaw) {
-    final String text = genderRaw.trim().toLowerCase();
-    if (text == '男' || text == 'male') return 'male'.tr;
-    if (text == '女' || text == 'female') return 'female'.tr;
-    return genderRaw;
+    return localizedGenderText(genderRaw);
   }
 
   String _localizedAge(String ageRaw) {

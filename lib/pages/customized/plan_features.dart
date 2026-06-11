@@ -2,12 +2,13 @@
 //
 // 把方案里保存的功能 id 转成页面展示需要的标题、图标和颜色。
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:infibo_app/constants/assets.dart';
 
 const List<PlanFeatureData> planFeatureCatalog = [
   PlanFeatureData(
     id: 'redlight',
-    title: '红光',
+    title: 'red_light',
     asset: Assets.startRedLightIconOn,
     color: Color(0xFFF08A23),
   ),
@@ -25,13 +26,13 @@ const List<PlanFeatureData> planFeatureCatalog = [
   ),
   PlanFeatureData(
     id: 'hydrogen',
-    title: '分子氢',
+    title: 'module_hydrogen',
     asset: Assets.startHydrogenIconOn,
     color: Color(0xFF35A9B8),
   ),
   PlanFeatureData(
     id: 'expand',
-    title: '扩展',
+    title: 'module_expand',
     asset: Assets.expandIcon,
     color: Color(0xFF12A36B),
   ),
@@ -61,6 +62,7 @@ class PlanFeatureData {
 
   final String id;
   final String title;
+  String get translatedTitle => title.tr;
   final String asset;
   final Color color;
 }

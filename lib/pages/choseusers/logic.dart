@@ -3,7 +3,6 @@ import 'package:infibo_app/api/dio/api/api_response.dart';
 import 'package:infibo_app/api/dio/therapy_client/therapy_client_api.dart';
 import 'package:infibo_app/api/dio/therapy_client/therapy_client_models.dart';
 import 'package:infibo_app/stores/user_store.dart';
-import 'package:infibo_app/utils/age_utils.dart';
 
 abstract class ChoseUsersRepository {
   Future<List<UserItemData>> listUsers();
@@ -26,8 +25,9 @@ class BackendChoseUsersRepository implements ChoseUsersRepository {
     final ApiResponse<List<TherapyClientDto>> response = await _api.list(
       ownerUserId: _currentOwnerUserId(),
     );
-    if (!response.isSuccess)
+    if (!response.isSuccess) {
       throw ChoseUsersRepositoryException(response.message);
+    }
     return (response.data ?? <TherapyClientDto>[])
         .map(UserItemData.fromDto)
         .toList();
@@ -56,8 +56,9 @@ class BackendChoseUsersRepository implements ChoseUsersRepository {
       ownerUserId: _currentOwnerUserId(),
       clientId: id,
     );
-    if (!response.isSuccess)
+    if (!response.isSuccess) {
       throw ChoseUsersRepositoryException(response.message);
+    }
   }
 
   @override
@@ -88,7 +89,7 @@ class ChoseUsersLogic {
     : _repository = repository ?? BackendChoseUsersRepository();
 
   static const String startRoute = '/start';
-  static const String defaultModeTitle = '娣卞害鏀炬澗';
+  static String get defaultModeTitle => 'deep_relax'.tr;
 
   final ChoseUsersRepository _repository;
   final List<UserItemData> users = [];

@@ -9,6 +9,7 @@ import 'package:infibo_app/api/dio/reset_password/reset_password_api.dart';
 import 'package:infibo_app/constants/assets.dart';
 import 'package:infibo_app/constants/color.dart';
 import 'package:infibo_app/utils/email_utils.dart';
+import 'package:infibo_app/utils/localized_api_message.dart';
 
 // 忘记密码页UI
 class ForgetPage extends StatefulWidget {
@@ -109,7 +110,7 @@ class _ForgetPageState extends State<ForgetPage> {
     super.dispose();
   }
 
-  ///////////////////////////////////////////////////注册页界面布局///////////////////////////////////////////////////
+  ///////////////////////////////////////////////////忘记密码页界面布局///////////////////////////////////////////////////
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -139,7 +140,7 @@ class _ForgetPageState extends State<ForgetPage> {
                       const SizedBox(height: 38),
                       // 构建品牌页头
                       _buildBrandHeader(),
-                      const SizedBox(height: 160),
+                      const SizedBox(height: 120),
 
                       // 构建邮箱输入框容器。
                       _buildInputEmail(),
@@ -153,7 +154,7 @@ class _ForgetPageState extends State<ForgetPage> {
                       _buildPasswordInput(
                         controller: _newPasswordController,
                         focusNode: _newPasswordFocusNode,
-                        hintText: '输入新密码',
+                        hintText: 'new_password_hint'.tr,
                       ),
                       const SizedBox(height: 38),
 
@@ -161,7 +162,7 @@ class _ForgetPageState extends State<ForgetPage> {
                       _buildPasswordInput(
                         controller: _confirmPasswordController,
                         focusNode: _confirmPasswordFocusNode,
-                        hintText: '确认新密码',
+                        hintText: 'confirm_new_password_hint'.tr,
                       ),
                       const SizedBox(height: 70),
 
@@ -289,10 +290,10 @@ class _ForgetPageState extends State<ForgetPage> {
             cursorColor: const Color(0xFF1464DF),
             style: const TextStyle(color: Colors.white, fontSize: 18),
             textAlignVertical: TextAlignVertical.center,
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               isCollapsed: true,
-              hintText: '输入验证码',
-              hintStyle: TextStyle(
+              hintText: 'verify_code'.tr,
+              hintStyle: const TextStyle(
                 color: Color.fromARGB(255, 129, 133, 145),
                 fontSize: 18,
               ),
@@ -312,7 +313,7 @@ class _ForgetPageState extends State<ForgetPage> {
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 2, vertical: 8),
             child: Text(
-              _sendingCode ? '发送中...' : '获取验证码',
+              _sendingCode ? 'send_code'.tr : 'get_code'.tr,
               style: TextStyle(
                 color: Color(0xFF1464DF),
                 fontSize: 16,
@@ -424,7 +425,9 @@ class _ForgetPageState extends State<ForgetPage> {
                 fontWeight: FontWeight.w900,
               ),
             ),
-            child: Text(_resetting ? '重置密码中...' : '确认重置'),
+            child: Text(
+              _resetting ? 'resetting_password'.tr : 'confirm_reset'.tr,
+            ),
           ),
         );
       },
@@ -465,8 +468,8 @@ class _ForgetPageState extends State<ForgetPage> {
       /////Get.snackbar风格修改：
       /////保留 Get.snackbar，参数加 snackPosition: SnackPosition.BOTTOM、backgroundColor: const Color(0xFF323232)、colorText: Colors.white、margin: const EdgeInsets.all(16)、borderRadius: 4；原有 backgroundColor: Colors.white 要替换掉。
       Get.snackbar(
-        '提示',
-        '请先输入邮箱',
+        'prompt'.tr,
+        'email_empty'.tr,
         backgroundColor: const Color(0xFF323232),
         colorText: Colors.white,
         margin: const EdgeInsets.all(16),
@@ -480,8 +483,8 @@ class _ForgetPageState extends State<ForgetPage> {
       /////Get.snackbar风格修改：
       /////保留 Get.snackbar，参数加 snackPosition: SnackPosition.BOTTOM、backgroundColor: const Color(0xFF323232)、colorText: Colors.white、margin: const EdgeInsets.all(16)、borderRadius: 4；原有 backgroundColor: Colors.white 要替换掉。
       Get.snackbar(
-        '提示',
-        '请输入正确的邮箱',
+        'prompt'.tr,
+        'email_invalid'.tr,
         backgroundColor: const Color(0xFF323232),
         colorText: Colors.white,
         margin: const EdgeInsets.all(16),
@@ -510,8 +513,8 @@ class _ForgetPageState extends State<ForgetPage> {
       /////Get.snackbar风格修改：
       /////保留 Get.snackbar，参数加 snackPosition: SnackPosition.BOTTOM、backgroundColor: const Color(0xFF323232)、colorText: Colors.white、margin: const EdgeInsets.all(16)、borderRadius: 4；原有 backgroundColor: Colors.white 要替换掉。
       Get.snackbar(
-        '提示',
-        '验证码已发送，后端收到邮箱：${result.data}',
+        'prompt'.tr,
+        '${'code_sent_backend_email'.tr}${result.data}',
         backgroundColor: const Color(0xFF323232),
         colorText: Colors.white,
         margin: const EdgeInsets.all(16),
@@ -521,8 +524,8 @@ class _ForgetPageState extends State<ForgetPage> {
       /////Get.snackbar风格修改：
       /////保留 Get.snackbar，参数加 snackPosition: SnackPosition.BOTTOM、backgroundColor: const Color(0xFF323232)、colorText: Colors.white、margin: const EdgeInsets.all(16)、borderRadius: 4；原有 backgroundColor: Colors.white 要替换掉。
       Get.snackbar(
-        '提示',
-        result.message.isEmpty ? '验证码发送失败' : result.message,
+        'prompt'.tr,
+        localizedApiMessage(result.message, fallbackKey: 'code_send_failed'),
 
         backgroundColor: const Color(0xFF323232),
         colorText: Colors.white,
@@ -545,8 +548,8 @@ class _ForgetPageState extends State<ForgetPage> {
       /////Get.snackbar风格修改：
       /////保留 Get.snackbar，参数加 snackPosition: SnackPosition.BOTTOM、backgroundColor: const Color(0xFF323232)、colorText: Colors.white、margin: const EdgeInsets.all(16)、borderRadius: 4；原有 backgroundColor: Colors.white 要替换掉。
       Get.snackbar(
-        '提示',
-        '请输入邮箱',
+        'prompt'.tr,
+        'email_required'.tr,
         backgroundColor: const Color(0xFF323232),
         colorText: Colors.white,
         margin: const EdgeInsets.all(16),
@@ -559,8 +562,8 @@ class _ForgetPageState extends State<ForgetPage> {
       /////Get.snackbar风格修改：
       /////保留 Get.snackbar，参数加 snackPosition: SnackPosition.BOTTOM、backgroundColor: const Color(0xFF323232)、colorText: Colors.white、margin: const EdgeInsets.all(16)、borderRadius: 4；原有 backgroundColor: Colors.white 要替换掉。
       Get.snackbar(
-        '提示',
-        '请输入正确的邮箱',
+        'prompt'.tr,
+        'email_invalid'.tr,
         backgroundColor: const Color(0xFF323232),
         colorText: Colors.white,
         margin: const EdgeInsets.all(16),
@@ -573,8 +576,8 @@ class _ForgetPageState extends State<ForgetPage> {
       /////Get.snackbar风格修改：
       /////保留 Get.snackbar，参数加 snackPosition: SnackPosition.BOTTOM、backgroundColor: const Color(0xFF323232)、colorText: Colors.white、margin: const EdgeInsets.all(16)、borderRadius: 4；原有 backgroundColor: Colors.white 要替换掉。
       Get.snackbar(
-        '提示',
-        '请输入验证码',
+        'prompt'.tr,
+        'verify_code_required'.tr,
         backgroundColor: const Color(0xFF323232),
         colorText: Colors.white,
         margin: const EdgeInsets.all(16),
@@ -587,8 +590,8 @@ class _ForgetPageState extends State<ForgetPage> {
       /////Get.snackbar风格修改：
       /////保留 Get.snackbar，参数加 snackPosition: SnackPosition.BOTTOM、backgroundColor: const Color(0xFF323232)、colorText: Colors.white、margin: const EdgeInsets.all(16)、borderRadius: 4；原有 backgroundColor: Colors.white 要替换掉。
       Get.snackbar(
-        '提示',
-        '请输入新密码',
+        'prompt'.tr,
+        'new_password_required'.tr,
 
         backgroundColor: const Color(0xFF323232),
         colorText: Colors.white,
@@ -602,8 +605,8 @@ class _ForgetPageState extends State<ForgetPage> {
       /////Get.snackbar风格修改：
       /////保留 Get.snackbar，参数加 snackPosition: SnackPosition.BOTTOM、backgroundColor: const Color(0xFF323232)、colorText: Colors.white、margin: const EdgeInsets.all(16)、borderRadius: 4；原有 backgroundColor: Colors.white 要替换掉。
       Get.snackbar(
-        '提示',
-        '请确认新密码',
+        'prompt'.tr,
+        'confirm_new_password_required'.tr,
 
         backgroundColor: const Color(0xFF323232),
         colorText: Colors.white,
@@ -617,8 +620,8 @@ class _ForgetPageState extends State<ForgetPage> {
       /////Get.snackbar风格修改：
       /////保留 Get.snackbar，参数加 snackPosition: SnackPosition.BOTTOM、backgroundColor: const Color(0xFF323232)、colorText: Colors.white、margin: const EdgeInsets.all(16)、borderRadius: 4；原有 backgroundColor: Colors.white 要替换掉。
       Get.snackbar(
-        '提示',
-        '两次输入的密码不一致',
+        'prompt'.tr,
+        'passwords_not_match'.tr,
 
         backgroundColor: const Color(0xFF323232),
         colorText: Colors.white,
@@ -653,8 +656,11 @@ class _ForgetPageState extends State<ForgetPage> {
         /////Get.snackbar风格修改：
         /////保留 Get.snackbar，参数加 snackPosition: SnackPosition.BOTTOM、backgroundColor: const Color(0xFF323232)、colorText: Colors.white、margin: const EdgeInsets.all(16)、borderRadius: 4；原有 backgroundColor: Colors.white 要替换掉。
         Get.snackbar(
-          '提示',
-          result.message.isEmpty ? '密码重置成功' : result.message,
+          'prompt'.tr,
+          localizedApiMessage(
+            result.message,
+            fallbackKey: 'password_reset_success',
+          ),
 
           backgroundColor: const Color(0xFF323232),
           colorText: Colors.white,
@@ -671,8 +677,11 @@ class _ForgetPageState extends State<ForgetPage> {
         /////Get.snackbar风格修改：
         /////保留 Get.snackbar，参数加 snackPosition: SnackPosition.BOTTOM、backgroundColor: const Color(0xFF323232)、colorText: Colors.white、margin: const EdgeInsets.all(16)、borderRadius: 4；原有 backgroundColor: Colors.white 要替换掉。
         Get.snackbar(
-          '提示',
-          result.message.isEmpty ? '密码重置失败' : result.message,
+          'prompt'.tr,
+          localizedApiMessage(
+            result.message,
+            fallbackKey: 'password_reset_failed',
+          ),
 
           backgroundColor: const Color(0xFF323232),
           colorText: Colors.white,

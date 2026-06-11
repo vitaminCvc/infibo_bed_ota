@@ -11,7 +11,7 @@ class ApiClient {
       baseUrl: const String.fromEnvironment(
         'API_BASE_URL',
         // WIFI 环境
-        // defaultValue: 'http://192.168.1.75:8080',
+        // defaultValue: 'http://192.168.1.80:8080',
         // 安卓模拟器环境
         defaultValue: 'http://127.0.0.1:8080',
       ),
@@ -38,7 +38,7 @@ class ApiClient {
         _responseJson(response),
         fromJsonT: fromJsonT,
       );
-    } on DioException catch (e) {
+    } on DioException {
       return ApiResponse<T>(code: -1, message: '网络连接失败，请检查网络或服务器');
     } catch (e) {
       return ApiResponse<T>(code: -1, message: '未知错误: $e');
@@ -61,7 +61,7 @@ class ApiClient {
         _responseJson(response),
         fromJsonT: fromJsonT,
       );
-    } on DioException catch (e) {
+    } on DioException {
       return ApiResponse<T>(code: -1, message: '网络连接失败，请检查网络或服务器');
     } catch (e) {
       return ApiResponse<T>(code: -1, message: '未知错误: $e');
@@ -82,7 +82,7 @@ class ApiClient {
         _responseJson(response),
         fromJsonT: fromJsonT,
       );
-    } on DioException catch (e) {
+    } on DioException {
       return ApiResponse<T>(code: -1, message: '网络连接失败，请检查网络或服务器');
     } catch (e) {
       return ApiResponse<T>(code: -1, message: '未知错误: $e');
@@ -105,7 +105,7 @@ class ApiClient {
         _responseJson(response),
         fromJsonT: fromJsonT,
       );
-    } on DioException catch (e) {
+    } on DioException {
       return ApiResponse<T>(code: -1, message: '网络连接失败，请检查网络或服务器');
     } catch (e) {
       return ApiResponse<T>(code: -1, message: '未知错误: $e');

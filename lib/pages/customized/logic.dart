@@ -138,12 +138,12 @@ class CustomizedLogic {
   // /////前端本地校验用于即时提示，但最终仍要以后端返回结果为准，避免多设备同时创建重名方案。
   String? validatePlanName(String name, {int? excludeId}) {
     final String text = name.trim();
-    if (text.isEmpty) return '方案名称不能为空';
+    if (text.isEmpty) return 'plan_name_empty'.tr;
 
     final bool isDuplicated = plans.any(
       (plan) => plan.id != excludeId && plan.name.trim() == text,
     );
-    if (isDuplicated) return '方案名称不能重复';
+    if (isDuplicated) return 'plan_name_duplicate'.tr;
 
     return null;
   }
@@ -229,7 +229,7 @@ class CustomizedLogic {
   int _currentOwnerUserId() {
     final int? ownerUserId = UserStore.instance.userId;
     if (ownerUserId == null) {
-      throw const CustomizedPlanNameException('用户未登录，请重新登录');
+      throw CustomizedPlanNameException('user_not_logged_in_retry'.tr);
     }
     return ownerUserId;
   }
@@ -256,15 +256,6 @@ class CustomizedPlanData {
   final List<String> featureIds;
 
   // /////自定义方案页与后端联调：这个 fromMap 后面改成 fromDto。
-  // /////删掉 fromMap 里的 feature_ids 解析。
-  // /////新增类似：
-  // /////  factory CustomizedPlanData.fromDto(TherapyPlanDto dto) {
-  // /////    return CustomizedPlanData(
-  // /////      id: dto.planId,
-  // /////      name: dto.planName,
-  // /////      featureIds: decodeFeatureIds(dto.planConfigJson),
-  // /////    );
-  // /////  }
   factory CustomizedPlanData.fromDto(TherapyPlanDto dto) {
     return CustomizedPlanData(
       id: dto.planId,

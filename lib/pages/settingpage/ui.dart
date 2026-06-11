@@ -4,10 +4,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:infibo_app/api/dio/therapy_report/therapy_report_models.dart';
 import 'package:infibo_app/components/settingindex.dart';
 import 'package:infibo_app/pages/customized/customizedPage/setting_page_helpers.dart';
+import 'package:infibo_app/pages/settingpage/logic.dart';
 import 'package:infibo_app/stores/app_header_clock_store.dart';
 import 'package:infibo_app/utils/date_time_utils.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingWidget extends StatefulWidget {
   const SettingWidget({super.key});
@@ -45,6 +48,22 @@ class _SettingWidgetState extends State<SettingWidget> {
 
   // 日期列之间的间距
   static const double _dateTimeGapWidth = 34;
+
+  // 治疗记录菜单索引
+  static const int _historyMenuIndex = 4;
+
+  // 治疗记录搜索框控制器
+  final TextEditingController _historySearchController =
+      TextEditingController();
+
+  // 治疗记录列表滚动控制器
+  final ScrollController _historyListController = ScrollController();
+
+  // 治疗记录列表逻辑
+  final HistoryRecordLogic _historyLogic = HistoryRecordLogic();
+
+  // 治疗记录列表是否准备就绪
+  bool _historyReady = false;
 
   ////////////////////////////// 基础状态 //////////////////////////////
 
@@ -86,10 +105,6 @@ class _SettingWidgetState extends State<SettingWidget> {
     _SettingMenuItemData(
       titleKey: 'history_record',
       icon: Icons.event_note_outlined,
-    ),
-    _SettingMenuItemData(
-      titleKey: 'user_management',
-      icon: Icons.person_outline,
     ),
   ];
 
@@ -152,6 +167,9 @@ class _SettingWidgetState extends State<SettingWidget> {
   void initState() {
     super.initState();
 
+    //历史记录列表滚动监听事件
+    _historyListController.addListener(_handleHistoryScroll);
+
     final Locale? current = Get.locale;
     final int matchedIndex = _languageOptions.indexWhere(
       (option) => option.locale == current,
@@ -189,6 +207,9 @@ class _SettingWidgetState extends State<SettingWidget> {
 
   @override
   void dispose() {
+    //历史记录列表滚动监听事件释放controller
+    _historySearchController.dispose();
+    _historyListController.dispose();
     _yearController.dispose();
     _monthController.dispose();
     _dayController.dispose();
@@ -275,6 +296,10 @@ class _SettingWidgetState extends State<SettingWidget> {
                       setState(() {
                         _selectedMenuIndex = index;
                       });
+                      if (index == _historyMenuIndex) {
+                        // 按需加载历史记录列表
+                        _loadHistoryIfNeeded();
+                      }
                     },
                   );
                 },
@@ -360,7 +385,9 @@ class _SettingWidgetState extends State<SettingWidget> {
     if (_selectedMenuIndex == 1) {
       return _buildDateTimePanel();
     }
-
+    if (_selectedMenuIndex == 4) {
+      return _buildHistoryPanel();
+    }
     return Align(
       alignment: Alignment.topLeft,
       child: Text(
@@ -480,7 +507,7 @@ class _SettingWidgetState extends State<SettingWidget> {
   }
 
   // 确认语言切换
-  void _confirmLanguageChange() {
+  Future<void> _confirmLanguageChange() async {
     final _LanguageOptionData option = _languageOptions[_selectedLanguageIndex];
     final Locale? locale = option.locale;
     if (locale == null) {
@@ -489,8 +516,12 @@ class _SettingWidgetState extends State<SettingWidget> {
       ).showSnackBar(SnackBar(content: Text('unsupported_language'.tr)));
       return;
     }
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('app_language_code', locale.languageCode);
+    await prefs.setString('app_country_code', locale.countryCode ?? '');
+
+    // 保存后只刷新当前语言，继续停留在设置页。
     Get.updateLocale(locale);
-    Get.offAllNamed('/main');
   }
 
   ////////////////////////////////////////日期和时间页面///////////////////////////////
@@ -529,7 +560,7 @@ class _SettingWidgetState extends State<SettingWidget> {
                       controller: _yearController,
                       values: _yearOptions,
                       selectedValue: _selectedYear,
-                      unit: '年',
+                      unit: 'year_unit'.tr,
                       onChanged: (value) {
                         setState(() {
                           _selectedYear = value;
@@ -547,7 +578,7 @@ class _SettingWidgetState extends State<SettingWidget> {
                       controller: _monthController,
                       values: List.generate(12, (index) => index + 1),
                       selectedValue: _selectedMonth,
-                      unit: '月',
+                      unit: 'month_unit'.tr,
                       onChanged: (value) {
                         setState(() {
                           _selectedMonth = value;
@@ -568,7 +599,7 @@ class _SettingWidgetState extends State<SettingWidget> {
                         (index) => index + 1,
                       ),
                       selectedValue: _selectedDay,
-                      unit: '日',
+                      unit: 'day_unit'.tr,
                       onChanged: (value) {
                         setState(() {
                           _selectedDay = value;
@@ -593,7 +624,7 @@ class _SettingWidgetState extends State<SettingWidget> {
                         child: _buildTextWheel(
                           width: 90,
                           controller: _amPmController,
-                          values: const ['上午', '下午'],
+                          values: ['am_label'.tr, 'pm_label'.tr],
                           selectedIndex: _selectedAmPmIndex,
                           onChanged: (index) {
                             setState(() {
@@ -614,7 +645,7 @@ class _SettingWidgetState extends State<SettingWidget> {
                       controller: _hourController,
                       values: List.generate(12, (index) => index + 1),
                       selectedValue: _selectedHour12,
-                      unit: '时',
+                      unit: 'hour_unit'.tr,
                       onChanged: (value) {
                         setState(() {
                           _selectedHour12 = value;
@@ -646,7 +677,7 @@ class _SettingWidgetState extends State<SettingWidget> {
                       controller: _minuteController,
                       values: List.generate(60, (index) => index),
                       selectedValue: _selectedMinute,
-                      unit: '分',
+                      unit: 'minutes_unit'.tr,
                       twoDigits: true,
                       onChanged: (value) {
                         setState(() {
@@ -676,9 +707,12 @@ class _SettingWidgetState extends State<SettingWidget> {
                     borderRadius: BorderRadius.circular(28),
                   ),
                 ),
-                child: const Text(
-                  '保存',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                child: Text(
+                  'save'.tr,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
             ),
@@ -791,6 +825,327 @@ class _SettingWidgetState extends State<SettingWidget> {
     );
   }
 
+  ////////////////////////////////////////历史记录列表页面///////////////////////////////
+  Future<void> _loadHistoryIfNeeded() async {
+    if (_historyReady || _historyLogic.isLoading) return;
+
+    try {
+      await _historyLogic.init();
+      if (!mounted) return;
+      setState(() {
+        _historyReady = true;
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _historyReady = true;
+      });
+      _showHistoryError(e.toString());
+    }
+  }
+
+  Future<void> _searchHistory(String keyword) async {
+    try {
+      await _historyLogic.refresh(keyword: keyword);
+      if (!mounted) return;
+      setState(() {
+        _historyReady = true;
+      });
+      if (_historyListController.hasClients) {
+        _historyListController.jumpTo(0);
+      }
+    } catch (e) {
+      if (!mounted) return;
+      _showHistoryError(e.toString());
+    }
+  }
+
+  Future<void> _loadMoreHistory() async {
+    if (_historyLogic.isLoading || !_historyLogic.hasMore) return;
+
+    try {
+      await _historyLogic.loadNextPage();
+      if (!mounted) return;
+      setState(() {});
+    } catch (e) {
+      if (!mounted) return;
+      _showHistoryError(e.toString());
+    }
+  }
+
+  Future<void> _deleteHistoryUser(HistoryReportUserItemDto item) async {
+    try {
+      await _historyLogic.deleteUserReports(item.clientId);
+      if (!mounted) return;
+      setState(() {});
+    } catch (e) {
+      if (!mounted) return;
+      _showHistoryError(e.toString());
+    }
+  }
+
+  void _handleHistoryScroll() {
+    if (_selectedMenuIndex != _historyMenuIndex) return;
+    if (!_historyListController.hasClients) return;
+
+    final ScrollPosition position = _historyListController.position;
+    if (position.pixels >= position.maxScrollExtent - 80) {
+      _loadMoreHistory();
+    }
+  }
+
+  void _showHistoryError(String message) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  Widget _buildHistoryPanel() {
+    if (!_historyReady && !_historyLogic.isLoading) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _loadHistoryIfNeeded();
+      });
+    }
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 18, 20, 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Text(
+                'history_record'.tr,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontFamily: 'Microsoft YaHei',
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const Spacer(),
+              _buildHistorySearchBox(),
+            ],
+          ),
+          const SizedBox(height: 35),
+          Expanded(child: _buildHistoryList()),
+        ],
+      ),
+    );
+  }
+
+  //创建历史记录详情面板
+  Widget _buildHistorySearchBox() {
+    return Container(
+      width: 185,
+      height: 32,
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            Icons.search,
+            size: 15,
+            color: Colors.white.withValues(alpha: 0.45),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: TextField(
+              controller: _historySearchController,
+              cursorColor: Colors.white,
+              textInputAction: TextInputAction.search,
+              onSubmitted: _searchHistory,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+                fontFamily: 'Microsoft YaHei',
+              ),
+              decoration: InputDecoration(
+                isDense: true,
+                border: InputBorder.none,
+                hintText: 'search_user_hint'.tr,
+                hintStyle: TextStyle(
+                  color: Colors.white.withValues(alpha: 0.36),
+                  fontSize: 12,
+                  fontFamily: 'Microsoft YaHei',
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHistoryList() {
+    if (!_historyReady && _historyLogic.isLoading) {
+      return const Center(
+        child: CircularProgressIndicator(
+          color: Color.fromARGB(255, 52, 64, 81),
+        ),
+      );
+    }
+
+    if (_historyLogic.users.isEmpty) {
+      return Center(
+        child: Text(
+          'no_history_records'.tr,
+          style: TextStyle(
+            color: Colors.white.withValues(alpha: 0.55),
+            fontSize: 16,
+          ),
+        ),
+      );
+    }
+
+    return ListView.separated(
+      controller: _historyListController,
+      padding: EdgeInsets.zero,
+      itemCount: _historyLogic.users.length + (_historyLogic.hasMore ? 1 : 0),
+      separatorBuilder: (_, index) {
+        if (index >= _historyLogic.users.length - 1) {
+          return const SizedBox.shrink();
+        }
+        return Divider(height: 42, color: Colors.white.withValues(alpha: 0.05));
+      },
+      itemBuilder: (context, index) {
+        if (index >= _historyLogic.users.length) {
+          return const SizedBox(
+            height: 48,
+            child: Center(
+              child: CircularProgressIndicator(
+                color: Color(0xFF2E84FF),
+                strokeWidth: 2,
+              ),
+            ),
+          );
+        }
+
+        final HistoryReportUserItemDto item = _historyLogic.users[index];
+        return _buildHistoryRow(item, index);
+      },
+    );
+  }
+
+  Widget _buildHistoryRow(HistoryReportUserItemDto item, int index) {
+    return InkWell(
+      onTap: () {
+        Get.toNamed('/setting/history-detail', arguments: item);
+      },
+      borderRadius: BorderRadius.circular(8),
+      child: SizedBox(
+        height: 48,
+        child: Row(
+          children: [
+            _buildHistoryAvatar(item.userName, index),
+            const SizedBox(width: 15),
+            Expanded(
+              child: Row(
+                children: [
+                  Flexible(
+                    child: Text(
+                      item.userName,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontFamily: 'Microsoft YaHei',
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Icon(
+                    Icons.history,
+                    size: 14,
+                    color: Colors.white.withValues(alpha: 0.42),
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    _formatHistoryTime(item.lastReportTime),
+                    style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.56),
+                      fontSize: 12,
+                      fontFamily: 'Microsoft YaHei',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 12),
+            _buildHistoryDeleteButton(item),
+          ],
+        ),
+      ),
+    );
+  }
+
+  //调整头像大小
+  Widget _buildHistoryAvatar(String name, int index) {
+    final List<Color> colors = [
+      const Color.fromARGB(255, 85, 105, 146),
+      const Color.fromARGB(255, 125, 116, 71),
+      const Color(0xFF4E6476),
+      const Color.fromARGB(255, 104, 161, 139),
+      const Color.fromARGB(255, 147, 115, 158),
+    ];
+    final String text = name.trim().isEmpty ? '?' : name.characters.first;
+
+    return Container(
+      width: 40,
+      height: 40,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: colors[index % colors.length],
+      ),
+      child: Text(
+        text,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 18,
+          fontFamily: 'Microsoft YaHei',
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHistoryDeleteButton(HistoryReportUserItemDto item) {
+    return SizedBox(
+      width: 72,
+      height: 26,
+      child: TextButton.icon(
+        onPressed: () async {
+          await _deleteHistoryUser(item);
+        },
+        style: TextButton.styleFrom(
+          padding: EdgeInsets.zero,
+          backgroundColor: Colors.white.withValues(alpha: 0.09),
+          foregroundColor: Colors.white.withValues(alpha: 0.75),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(13),
+          ),
+        ),
+        icon: const Icon(Icons.delete_outline, size: 12),
+        label: Text(
+          'delete'.tr,
+          style: const TextStyle(fontSize: 12, fontFamily: 'Microsoft YaHei'),
+        ),
+      ),
+    );
+  }
+
+  String _formatHistoryTime(DateTime time) {
+    String two(int value) => value.toString().padLeft(2, '0');
+    return '${time.year}/${time.month}/${time.day} '
+        '${two(time.hour)}:${two(time.minute)}:${two(time.second)}';
+  }
+
   // 根据距离当前选中项的距离，控制未选中项的颜色深浅
   TextStyle _buildWheelTextStyle({required int distance}) {
     double alpha;
@@ -850,7 +1205,7 @@ class _SettingWidgetState extends State<SettingWidget> {
 
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text('日期和时间已保存')));
+    ).showSnackBar(SnackBar(content: Text('date_time_saved'.tr)));
   }
 }
 

@@ -104,7 +104,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
   late final List<_ModuleItem> _modules = [
     _ModuleItem(
       id: 'redlight',
-      title: 'red_ther'.tr,
+      titleKey: 'red_ther',
       iconOff: Assets.startRedLightIconOff,
       iconOn: Assets.startRedLightIconOn,
       addIcon: Assets.redLightAddIcon,
@@ -114,7 +114,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     ),
     _ModuleItem(
       id: 'pemf',
-      title: 'PEMF',
+      titleKey: 'PEMF',
       iconOff: Assets.startPemfIconOff,
       iconOn: Assets.startPemfIconOn,
       addIcon: Assets.pemfAddIcon,
@@ -124,7 +124,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     ),
     _ModuleItem(
       id: 'vat',
-      title: 'VAT',
+      titleKey: 'VAT',
       iconOff: Assets.startVatIconOff,
       iconOn: Assets.startVatIconOn,
       addIcon: Assets.vatAddIcon,
@@ -134,7 +134,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     ),
     _ModuleItem(
       id: 'hydrogen',
-      title: 'module_hydrogen'.tr,
+      titleKey: 'module_hydrogen',
       iconOff: Assets.startHydrogenIconOff,
       iconOn: Assets.startHydrogenIconOn,
       addIcon: Assets.hydrogenAddIcon,
@@ -144,7 +144,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     ),
     _ModuleItem(
       id: 'expand',
-      title: 'module_expand'.tr,
+      titleKey: 'module_expand',
       iconOff: Assets.expandIconOff,
       iconOn: Assets.expandIcon,
       addIcon: Assets.expandAddIcon,
@@ -1452,7 +1452,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
       final int red660 = _percentValue(_redLight660Controllers[index].text);
       final int red850 = _percentValue(_redLight850Controllers[index].text);
       if (red660 == 0 && red850 == 0) {
-        _showMessage('红光660nm和850nm强度不能同时为0');
+        _showMessage('redlight_strength_required'.tr);
         return;
       }
     }
@@ -1466,7 +1466,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
         100,
       );
       if (pemfFrequency == 0 || pemfIntensity == 0) {
-        _showMessage('PEMF频率和强度都不能为0');
+        _showMessage('pemf_params_required'.tr);
         return;
       }
       _nodePemfWaves[index] ??= _defaultPemfWave;
@@ -1478,7 +1478,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
       );
       final int vatIntensity = _rangedValue(_vatIntensityController.text, 100);
       if (vatFrequency == 0 || vatIntensity == 0) {
-        _showMessage('VAT频率和强度都不能为0');
+        _showMessage('vat_params_required'.tr);
         return;
       }
     }
@@ -1488,7 +1488,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
         100,
       );
       if (hydrogenConcentration == 0) {
-        _showMessage('分子氢浓度不能为0');
+        _showMessage('hydrogen_concentration_required'.tr);
         return;
       }
     }
@@ -2471,7 +2471,7 @@ class _PageTitle extends StatelessWidget {
 class _ModuleItem {
   const _ModuleItem({
     required this.id,
-    required this.title,
+    required this.titleKey,
     required this.iconOff,
     required this.iconOn,
     required this.addIcon,
@@ -2481,7 +2481,7 @@ class _ModuleItem {
   });
 
   final String id;
-  final String title;
+  final String titleKey;
   final String iconOff;
   final String iconOn;
   final String addIcon;
@@ -2517,7 +2517,7 @@ class _ModuleRow extends StatelessWidget {
             Positioned(
               left: 67,
               child: Text(
-                item.title,
+                item.titleKey.tr,
                 style: TextStyle(
                   color: isSelected ? Colors.white : const Color(0xFF9B9DA6),
                   fontSize: 18,

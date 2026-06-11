@@ -95,8 +95,6 @@
 // /////  ["redlight", "pemf", "vat", "hydrogen", "expand"]
 // /////完整参数仍然放在 planConfigJson。
 
-import 'package:flutter/foundation.dart';
-
 //创建自定义方案数据模型
 class TherapyPlanDto {
   const TherapyPlanDto({

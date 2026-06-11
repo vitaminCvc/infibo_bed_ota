@@ -16,28 +16,30 @@ import 'package:infibo_app/pages/debug/serial_test_page.dart';
 import 'package:infibo_app/pages/login/login/ui.dart';
 import 'package:infibo_app/pages/main/ui.dart';
 import 'package:infibo_app/pages/music/ui.dart';
+import 'package:infibo_app/pages/settingpage/history_detail.dart';
 import 'package:infibo_app/pages/settingpage/ui.dart';
 import 'package:infibo_app/pages/start/ui.dart';
 
 const String _initialRoute = String.fromEnvironment(
   'INFIBO_INITIAL_ROUTE',
-  defaultValue: '/summary',
+  // defaultValue: '/summary',
   //根级路由登录界面，需main.dart中设置。
-  // defaultValue: '/login',
+  defaultValue: '/login',
 );
 
 // 获取根级路由
-Widget getRootWidget({String? initialRoute}) {
+Widget getRootWidget({String? initialRoute, required Locale locale}) {
   return GetMaterialApp(
+    // 国际化语言配置
+    translations: AppTranslations(),
+    locale: locale,
+    fallbackLocale: const Locale('zh', 'CN'),
     // 初始路由为登录页
     initialRoute: initialRoute ?? _initialRoute,
     // 国际化配置
     defaultTransition: Transition.noTransition,
     transitionDuration: Duration.zero,
     getPages: getRoutes(),
-    translations: AppTranslations(),
-    locale: const Locale('zh', 'CN'),
-    fallbackLocale: const Locale('zh', 'CN'),
     navigatorObservers: [GetObserver(), appRouteObserver],
   );
 }
@@ -69,6 +71,10 @@ List<GetPage> getRoutes() {
     GetPage(name: "/music", page: () => const MusicSelectPage()),
     // 设置页
     GetPage(name: "/setting", page: () => const SettingWidget()),
+    GetPage(
+      name: "/setting/history-detail",
+      page: () => const HistoryDetailPage(),
+    ),
     // 隐藏调试路由：不在正式页面提供入口。
     GetPage(name: "/debug/serial-test", page: () => const SerialTestPage()),
     // 总结页
