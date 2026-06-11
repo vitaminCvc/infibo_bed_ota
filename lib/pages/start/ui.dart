@@ -1961,7 +1961,14 @@ class _StartPageState extends State<StartPage>
     // 停止按钮或理疗自动结束后，不再弹总结框，直接进入总结页面。
     Get.offNamed(
       '/summary',
-      arguments: {'userName': args.userName, 'moduleSeconds': moduleSeconds},
+      arguments: {
+        'clientId': args.clientId,
+        'userName': args.userName,
+        'moduleSeconds': moduleSeconds,
+        'planName': args.modeTitle,
+        'planType': 'preset',
+        'durationSeconds': _logic.elapsedSeconds,
+      },
     );
   }
 
@@ -2355,21 +2362,29 @@ class _CountdownProgressClipper extends CustomClipper<Path> {
 
 // 启动参数类，用于传递启动时的参数
 class _StartArguments {
-  const _StartArguments({required this.modeTitle, required this.userName});
+  const _StartArguments({
+    required this.modeTitle,
+    required this.userName,
+    required this.clientId,
+  });
 
   final String modeTitle;
   final String userName;
+  final int? clientId;
 
   factory _StartArguments.from(Object? args) {
     if (args is Map) {
       return _StartArguments(
         modeTitle: args['modeTitle'] as String? ?? 'default_mode_title'.tr,
         userName: _readName(args['user']),
+        clientId: _readClientId(args['user']),
       );
     }
+    //默认返回主页面
     return _StartArguments(
       modeTitle: 'default_mode_title'.tr,
       userName: 'no_user_selected'.tr,
+      clientId: null,
     );
   }
 
@@ -2388,6 +2403,20 @@ class _StartArguments {
     }
 
     return 'no_user_selected'.tr;
+  }
+
+  static int? _readClientId(Object? user) {
+    if (user is Map) {
+      return int.tryParse(user['id']?.toString() ?? '');
+    }
+
+    try {
+      final dynamic dynamicUser = user;
+      final Object? value = dynamicUser?.id;
+      return int.tryParse(value?.toString() ?? '');
+    } catch (_) {
+      return null;
+    }
   }
 }
 

@@ -28,13 +28,13 @@ class UserStore extends GetxController {
   String get roleText {
     switch (role) {
       case 'admin':
-        return '管理员';
+        return 'Admin';
       case 'operator':
-        return '操作员';
+        return 'Oper.';
       case 'user':
         return 'User';
       default:
-        return '未登录';
+        return 'Unknown';
     }
   }
 

@@ -3,6 +3,7 @@
 //只负责进行展示和点击事件，不负责业务逻辑
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:infibo_app/constants/assets.dart';
 
 class LogoutMenu extends StatefulWidget {
@@ -85,7 +86,7 @@ class _LogoutMenuState extends State<LogoutMenu> {
                       child: Image.asset(Assets.logoOutBackg, fit: BoxFit.fill),
                     ),
                     Positioned(
-                      left: 0,
+                      left: 20,
                       right: 0,
                       top: 2,
                       bottom: 0,
@@ -100,14 +101,25 @@ class _LogoutMenuState extends State<LogoutMenu> {
                               size: 14,
                             ),
                           ),
-                          SizedBox(width: 8),
-                          Text(
-                            '退出登录',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 13,
-                              decoration: TextDecoration.none,
-                              fontWeight: FontWeight.w300,
+                          const SizedBox(width: 6),
+                          SizedBox(
+                            width: 78,
+                            height: 20,
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                'logout'.tr,
+                                maxLines: 1,
+                                softWrap: false,
+                                overflow: TextOverflow.clip,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 13,
+                                  decoration: TextDecoration.none,
+                                  fontWeight: FontWeight.w300,
+                                ),
+                              ),
                             ),
                           ),
                         ],

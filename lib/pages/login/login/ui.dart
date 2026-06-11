@@ -14,6 +14,7 @@ import 'package:infibo_app/pages/login/login/logic.dart';
 import 'package:infibo_app/constants/color.dart';
 import 'package:infibo_app/stores/user_store.dart';
 import 'package:infibo_app/utils/email_utils.dart';
+import 'package:infibo_app/utils/localized_api_message.dart';
 
 //可选登录角色（管理员、操作员、用户）
 // enum LoginRole { admin, operator, user }
@@ -344,8 +345,8 @@ class _LoginPageState extends State<LoginPage> {
       /////Get.snackbar风格修改：
       /////保留 Get.snackbar，参数加 snackPosition: SnackPosition.BOTTOM、backgroundColor: const Color(0xFF323232)、colorText: Colors.white、margin: const EdgeInsets.all(16)、borderRadius: 4。
       Get.snackbar(
-        '提示',
-        '请输入邮箱',
+        'prompt'.tr,
+        'email_required'.tr,
 
         backgroundColor: const Color(0xFF323232),
         colorText: Colors.white,
@@ -360,8 +361,8 @@ class _LoginPageState extends State<LoginPage> {
       /////Get.snackbar风格修改：
       /////保留 Get.snackbar，参数加 snackPosition: SnackPosition.BOTTOM、backgroundColor: const Color(0xFF323232)、colorText: Colors.white、margin: const EdgeInsets.all(16)、borderRadius: 4。
       Get.snackbar(
-        '提示',
-        '请输入正确的邮箱',
+        'prompt'.tr,
+        'email_invalid'.tr,
 
         backgroundColor: const Color(0xFF323232),
         colorText: Colors.white,
@@ -375,8 +376,8 @@ class _LoginPageState extends State<LoginPage> {
       /////Get.snackbar风格修改：
       /////保留 Get.snackbar，参数加 snackPosition: SnackPosition.BOTTOM、backgroundColor: const Color(0xFF323232)、colorText: Colors.white、margin: const EdgeInsets.all(16)、borderRadius: 4。
       Get.snackbar(
-        '提示',
-        '请输入密码',
+        'prompt'.tr,
+        'password_required'.tr,
 
         backgroundColor: const Color(0xFF323232),
         colorText: Colors.white,
@@ -404,8 +405,8 @@ class _LoginPageState extends State<LoginPage> {
           /////Get.snackbar风格修改：
           /////保留 Get.snackbar，参数加 snackPosition: SnackPosition.BOTTOM、backgroundColor: const Color(0xFF323232)、colorText: Colors.white、margin: const EdgeInsets.all(16)、borderRadius: 4。
           Get.snackbar(
-            '提示',
-            '登录成功，但用户信息为空',
+            'prompt'.tr,
+            'login_success_empty_user'.tr,
 
             backgroundColor: const Color(0xFF323232),
             colorText: Colors.white,
@@ -425,8 +426,8 @@ class _LoginPageState extends State<LoginPage> {
         /////Get.snackbar风格修改：
         /////保留 Get.snackbar，参数加 snackPosition: SnackPosition.BOTTOM、backgroundColor: const Color(0xFF323232)、colorText: Colors.white、margin: const EdgeInsets.all(16)、borderRadius: 4。
         Get.snackbar(
-          '提示',
-          result.message.isEmpty ? '登录成功' : result.message,
+          'prompt'.tr,
+          localizedApiMessage(result.message, fallbackKey: 'login_success'),
 
           backgroundColor: const Color(0xFF323232),
           colorText: Colors.white,
@@ -440,8 +441,8 @@ class _LoginPageState extends State<LoginPage> {
         /////Get.snackbar风格修改：
         /////保留 Get.snackbar，参数加 snackPosition: SnackPosition.BOTTOM、backgroundColor: const Color(0xFF323232)、colorText: Colors.white、margin: const EdgeInsets.all(16)、borderRadius: 4。
         Get.snackbar(
-          '提示',
-          result.message.isEmpty ? '登录失败' : result.message,
+          'prompt'.tr,
+          localizedApiMessage(result.message, fallbackKey: 'login_failed'),
 
           backgroundColor: const Color(0xFF323232),
           colorText: Colors.white,
@@ -454,8 +455,8 @@ class _LoginPageState extends State<LoginPage> {
       /////Get.snackbar风格修改：
       /////保留 Get.snackbar，参数加 snackPosition: SnackPosition.BOTTOM、backgroundColor: const Color(0xFF323232)、colorText: Colors.white、margin: const EdgeInsets.all(16)、borderRadius: 4。
       Get.snackbar(
-        '错误',
-        '登录请求失败：$e',
+        'error'.tr,
+        '${'login_request_failed'.tr}$e',
 
         backgroundColor: const Color(0xFF323232),
         colorText: Colors.white,
@@ -535,7 +536,7 @@ class _LoginPageState extends State<LoginPage> {
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
                       _showAgreementDialog(
-                        title: '用户协议',
+                        title: 'user_agreement'.tr,
                         content: _userAgreementContent,
                       );
                     },
@@ -547,7 +548,7 @@ class _LoginPageState extends State<LoginPage> {
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
                       _showAgreementDialog(
-                        title: '隐私政策',
+                        title: 'privacy_policy'.tr,
                         content: _privacyPolicyContent,
                       );
                     },
@@ -567,159 +568,72 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   ////创建用户协议内容
-  static const String _userAgreementContent = '''欢迎您使用本平台提供的产品与服务。
+  static const String _userAgreementContent =
+      '''IMMORTAL CHAMBER – TERMS OF SERVICE
 
-本《用户协议》是您与平台运营方之间就注册、登录、使用本平台相关服务所订立的协议。请您在使用本平台服务前，仔细阅读并充分理解本协议的全部内容。
+Last Updated: June 10, 2026
 
-一、服务说明
+Welcome to the IMMORTAL CHAMBER smart longevity wellness system. This End-User License Agreement ("Agreement") is a legal agreement between you ("User" or "you") and Infibo （Guangzhou）Technology Co., Ltd. ("Company", "we", or "us") for the use of the IMMORTAL CHAMBER Android control software ("Software") and the operating of the immortal chamber hardware ("Device").
 
-1.1 本平台为用户提供账号登录、用户管理、设备操作、疗程记录、数据展示等相关服务。
+1. MEDICAL DISCLAIMER (CRITICAL)
+1.1 NO MEDICAL ADVICE: The IMMORTAL CHAMBER, including its Software and hardware features (such as Photobiomodulation/Red Light Therapy, Pulsed Electromagnetic Fields (PEMF), Acoustic Vibration, and Molecular Hydrogen Therapy), is designed solely for general wellness, relaxation, and physical recovery purposes. It is NOT a medical device and is NOT intended to diagnose, treat, cure, or prevent any medical condition or disease.
+1.2 USER RESPONSIBILITY: You should consult a qualified healthcare professional before using the Device, especially if you have pre-existing medical conditions, implanted medical devices (e.g., pacemakers), are pregnant, or are sensitive to thermal or light stimulation. You assume all risks associated with the use of the therapies provided by the Device.
 
-1.2 平台提供的部分功能可能需要您按照页面提示填写必要信息，或根据实际使用场景完成相关操作。
+2. ELIGIBILITY & USER ACCOUNT
+2.1 AGE REQUIREMENT: You must be at least 18 years old to create an account and operate the Device.
+2.2 ACCOUNT SECURITY: You are responsible for maintaining the confidentiality of your login credentials and for all activities that occur under your account.
 
-1.3 平台有权根据业务发展、产品升级或法律法规要求，对服务内容进行调整、更新或暂停。
+3. LICENSE AND RESTRICTIONS
+3.1 LICENSE GRANT: We grant you a limited, non-exclusive, non-transferable, revocable license to use the Software strictly for operating the Device.
+3.2 PROHIBITED USES: You agree not to:
+- Reverse engineer, decompile, or disassemble the Software.
+- Modify or bypass any safety parameters, session timers, or hardware lockouts built into the Software.
+- Use the Software or Device for any commercial purposes unless explicitly authorized via a commercial distributor agreement.
 
-二、用户账号
+4. LIMITATION OF LIABILITY
+To the maximum extent permitted by applicable law (including EU and US consumer laws), the Company shall not be liable for any indirect, incidental, special, or consequential damages arising out of or in connection with your use or inability to use the Software or Device, including but not limited to improper operation or failure to follow safety instructions.
 
-2.1 用户应当提供真实、准确、完整的信息完成注册或登录。
-
-2.2 用户应妥善保管自己的账号、密码及验证码信息，不得将账号转让、出借或提供给他人使用。
-
-2.3 因用户自身原因导致账号信息泄露、被他人使用或产生损失的，由用户自行承担相应责任。
-
-三、使用规范
-
-3.1 用户在使用本平台服务时，应遵守国家法律法规、社会公德以及平台相关规则。
-
-3.2 用户不得利用本平台从事任何违法、违规、损害平台或第三方合法权益的行为。
-
-3.3 用户不得通过非法方式干扰平台正常运行，包括但不限于恶意攻击、破解、篡改、反向工程等行为。
-
-四、设备与数据
-
-4.1 用户在使用设备相关功能时，应按照平台提示和实际使用规范进行操作。
-
-4.2 平台展示的数据、记录或分析结果仅用于服务展示和辅助参考，不应作为唯一判断依据。
-
-4.3 因用户误操作、设备异常、网络异常或其他不可抗力因素导致的服务异常，平台将在合理范围内协助处理。
-
-五、知识产权
-
-5.1 本平台中的界面设计、文字、图片、图标、程序代码、数据结构等内容，除法律另有规定或另有说明外，其知识产权归平台运营方或相关权利人所有。
-
-5.2 未经平台书面许可，用户不得复制、修改、传播、出售或用于其他商业用途。
-
-六、协议变更
-
-6.1 平台有权根据业务发展或法律法规变化，对本协议内容进行更新。
-
-6.2 协议更新后，平台将通过页面提示、公告或其他合理方式通知用户。
-
-6.3 用户继续使用本平台服务，即视为接受更新后的协议内容。
-
-七、免责声明
-
-7.1 因网络故障、系统维护、设备故障、第三方服务异常、不可抗力等原因导致服务中断或数据异常的，平台将在合理范围内尽快修复。
-
-7.2 在法律允许范围内，平台不对因用户自身原因或不可抗力造成的损失承担责任。
-
-八、其他
-
-8.1 本协议的解释、效力及纠纷处理，适用中华人民共和国法律。
-
-8.2 如因本协议产生争议，双方应友好协商解决；协商不成的，可依法向有管辖权的人民法院提起诉讼。
-
-感谢您使用本平台。''';
+5. GOVERNING LAW
+This Agreement shall be governed by and construed in accordance with the laws of the jurisdiction where the commercial distributor agreement was executed, or as required under local consumer protection laws.''';
   ////创建隐私政策内容
   static const String _privacyPolicyContent = '''
-欢迎您使用本平台。
+IMMORTAL CHAMBER – PRIVACY POLICY
 
-我们非常重视您的个人信息和隐私保护。本《隐私政策》用于说明我们在您使用本平台服务时，如何收集、使用、存储、保护和处理您的相关信息。请您在使用本平台前，仔细阅读并充分理解本政策内容。
+Last Updated: June 10, 2026
 
-一、我们收集的信息
+Your privacy is paramount to us. This Privacy Policy explains how Infibo （Guangzhou）Technology Co., Ltd. ("we", "us", or "our") collects, uses, discloses, and safeguards your information when you use the IMMORTAL CHAMBER Android application ("Software").
 
-在您使用本平台服务过程中，我们可能会根据实际功能需要收集以下信息：
+1. INFORMATION WE COLLECT
+To provide a personalized wellness experience, we may collect the following categories of data:
+1.1 ACCOUNT INFORMATION: Name, email address, password, and profile preferences.
+1.2 WELLNESS & OPERATIONAL DATA (Sensitive Data): To customize session intensities for Red Light, PEMF, and Molecular Hydrogen therapies, the Software may process user-inputted physical indicators (e.g., age, weight, gender, wellness goals) and session history (e.g., duration, frequency, chosen programs).
+1.3 TECHNICAL & DEVICE DATA: IP address, device hardware model, Android OS version, and system crash logs to ensure firmware stability and safety updates.
 
-1.1 账号信息
-包括手机号、账号、密码、验证码、用户角色等用于注册、登录和身份验证的信息。
+2. HOW WE USE YOUR INFORMATION
+We use the collected data strictly for:
+- Creating and managing your personalized wellness profile.
+- Executing and optimizing customized therapy programs (AI-driven optimization).
+- Providing firmware diagnostics, system safety checks, and technical support.
+- Complying with applicable legal and safety certification standards (e.g., CE, ETL).
 
-1.2 用户资料
-包括姓名、性别、年龄、联系方式等您主动填写或授权提供的信息。
+3. LEGAL BASIS FOR PROCESSING (FOR EU/UK USERS)
+Based on relevant laws and regulations, we process your wellness and profile data based on your **explicit consent**, which you grant before initializing your first chamber session. You have the right to withdraw consent at any time.
 
-1.3 设备与使用信息
-包括设备型号、系统版本、应用版本、操作记录、功能使用记录、设备连接状态等信息。
+4. DATA STORAGE AND SECURITY
+4.1 LOCAL & CLOUD STORAGE: Operational data is processed locally on the Android system and securely synced to encrypted cloud servers.
+4.2 SECURITY MEASURES: We implement industry-standard AES-256 encryption for data at rest and TLS encryption for data in transit to prevent unauthorized access.
 
-1.4 疗程与记录信息
-包括用户选择的疗程方案、设备参数、运行记录、疗程结果、历史记录等信息。
+5. DATA SHARING AND CROSS-BORDER TRANSFERS
+We do not sell your personal or wellness data. Data may be shared only with certified cloud service providers or authorized technical partners under strict Data Processing Agreements (DPAs). For international transfers from the EU/UK to overseas servers, we utilize Standard Contractual Clauses (SCCs) to guarantee GDPR-equivalent protection.
 
-1.5 日志信息
-当平台发生异常或需要排查问题时，我们可能会收集必要的运行日志、错误信息和操作记录。
+6. YOUR RIGHTS (GDPR / CCPA / CPRA)
+Depending on your location, you hold the following rights regarding your data:
+- **Right to Access & Portability:** Request a copy of your stored profile and therapy history.
+- **Right to Rectification:** Correct inaccurate data directly via the UI settings.
+- **Right to Erasure:** Delete your account and all associated wellness history.
+- **Opt-Out:** We do not sell personal info, but you retain the right to restrict the use of sensitive personal wellness data.
 
-二、我们如何使用信息
-
-我们收集的信息将主要用于以下目的：
-
-2.1 为您提供注册、登录、用户管理等基础服务。
-
-2.2 为您提供设备控制、参数配置、疗程记录、数据展示等功能。
-
-2.3 保障平台安全稳定运行，排查系统异常、设备异常或操作问题。
-
-2.4 改进平台功能、优化用户体验和提升服务质量。
-
-2.5 遵守法律法规、监管要求或处理相关争议。
-
-三、信息的存储
-
-3.1 我们会在实现服务目的所必要的期限内保存您的个人信息。
-
-3.2 超出必要期限后，我们将根据法律法规要求删除或匿名化处理相关信息。
-
-3.3 如法律法规对保存期限另有规定，我们将按照相关规定执行。
-
-四、信息的保护
-
-4.1 我们会采取合理的安全措施保护您的个人信息，防止信息被未经授权访问、使用、泄露、修改或损坏。
-
-4.2 我们会对重要信息采取加密、权限控制、访问限制等方式进行保护。
-
-4.3 尽管我们会尽力保护您的信息安全，但由于互联网环境并非绝对安全，我们无法保证信息传输或存储过程中的绝对安全。
-
-五、信息的共享与披露
-
-我们不会随意向第三方提供您的个人信息，但以下情况除外：
-
-5.1 已获得您的明确同意或授权。
-
-5.2 根据法律法规、司法机关或行政机关要求需要提供。
-
-5.3 为实现平台服务所必需，与合作服务方进行必要的信息处理，但我们会要求其遵守保密和安全保护义务。
-
-5.4 为保护平台、用户或其他第三方的合法权益，在合理必要范围内进行披露。
-
-六、您的权利
-
-您有权依法对您的个人信息进行查询、更正、删除或撤回授权。
-
-如您需要注销账号、删除信息或反馈隐私相关问题，可通过平台提供的联系方式与我们联系。
-
-七、未成年人信息保护
-
-若您为未成年人，应在监护人指导和同意下使用本平台服务。
-
-我们不会主动收集未成年人的个人信息。如发现未经监护人同意收集了未成年人信息，我们将依法及时处理。
-
-八、政策更新
-
-我们可能会根据法律法规变化、业务调整或产品功能变化，对本隐私政策进行更新。
-
-更新后的隐私政策将在平台内进行提示或公告。您继续使用本平台服务，即视为接受更新后的政策内容。
-
-九、联系我们
-
-如您对本隐私政策或个人信息保护有任何疑问、意见或建议，可通过平台公布的联系方式与我们联系。
-
-感谢您对本平台的信任。
+To exercise these rights, please contact our privacy compliance team at: [info@infibo.com.cn].
 ''';
 
   ///毛玻璃方法

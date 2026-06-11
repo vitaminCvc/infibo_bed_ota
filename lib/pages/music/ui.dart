@@ -531,7 +531,7 @@ class _MusicSelectPageState extends State<MusicSelectPage> {
     if (!ok && mounted) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('当前音乐暂无音频资源')));
+      ).showSnackBar(SnackBar(content: Text('music_resource_missing'.tr)));
     }
   }
 }

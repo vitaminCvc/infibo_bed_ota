@@ -439,14 +439,25 @@ class _ChakraLine extends StatelessWidget {
         children: [
           Positioned.fill(child: Image.asset(Assets.chakraIntensityPanel)),
           Positioned(
-            left: 31,
-            top: 28,
-            child: Text(
-              'intensity'.tr,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 17,
-                fontWeight: FontWeight.w500,
+            left: 26,
+            top: 30,
+            child: SizedBox(
+              width: 60,
+              height: 22,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'chakra_power'.tr,
+                  maxLines: 1,
+                  softWrap: false,
+                  overflow: TextOverflow.clip,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
               ),
             ),
           ),

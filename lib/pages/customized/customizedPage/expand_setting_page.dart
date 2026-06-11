@@ -63,14 +63,14 @@ class ExpandSettingPage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            '参数设置',
-            style: TextStyle(color: Colors.white, fontSize: 22),
+          Text(
+            'parameter_settings'.tr,
+            style: const TextStyle(color: Colors.white, fontSize: 22),
           ),
           const SizedBox(height: 26),
-          _buildInput('强度'),
+          _buildInput('intensity'.tr),
           const SizedBox(height: 18),
-          _buildInput('频率'),
+          _buildInput('frequency'.tr),
           const Spacer(),
           Align(
             alignment: Alignment.centerRight,
@@ -83,7 +83,7 @@ class ExpandSettingPage extends StatelessWidget {
                   backgroundColor: const Color(0xFF1F74E8),
                   foregroundColor: Colors.white,
                 ),
-                child: const Text('确认'),
+                child: Text('confirm'.tr),
               ),
             ),
           ),

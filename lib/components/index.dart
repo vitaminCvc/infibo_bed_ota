@@ -121,8 +121,8 @@ class AppTopHeader extends StatelessWidget {
             child: Stack(
               children: [
                 Positioned(
-                  left: 12,
-                  top: 8,
+                  left: 8,
+                  top: 6,
                   child: _buildRoleAvatar(userStore.avatarText),
                 ),
                 Positioned(

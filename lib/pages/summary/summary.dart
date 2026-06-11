@@ -156,9 +156,9 @@ Widget _buildSummaryTitle1() {
         decoration: BoxDecoration(color: Color(0xff1464DF)),
       ),
       SizedBox(width: 12),
-      const Text(
-        '疗程报告',
-        style: TextStyle(
+      Text(
+        'therapy_report'.tr,
+        style: const TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.w600,
           color: Color(0xFFFFFFFF),
@@ -188,7 +188,7 @@ Widget _buildrunDuration(SummaryLogic logic) {
 Widget _buildRedLight(SummaryLogic logic) {
   return _buildModuleCard(
     icon: Assets.startRedLightIconOn,
-    title: '红光',
+    title: 'red_light'.tr,
     durationText: logic.moduleDurationText('red'),
   );
 }
@@ -215,7 +215,7 @@ Widget _buildVAT(SummaryLogic logic) {
 Widget _buildHydrogen(SummaryLogic logic) {
   return _buildModuleCard(
     icon: Assets.startHydrogenIconOn,
-    title: '分子氢',
+    title: 'module_hydrogen'.tr,
     durationText: logic.moduleDurationText('hydrogen'),
   );
 }
@@ -224,7 +224,7 @@ Widget _buildHydrogen(SummaryLogic logic) {
 Widget _buildExpand(SummaryLogic logic) {
   return _buildModuleCard(
     icon: Assets.expandIcon,
-    title: '拓展',
+    title: 'module_expand'.tr,
     durationText: logic.moduleDurationText('expand'),
     titleWeight: FontWeight.w100,
   );
@@ -273,9 +273,9 @@ Widget _buildSummaryTitle2() {
         decoration: BoxDecoration(color: Color(0xff1464DF)),
       ),
       SizedBox(width: 12),
-      const Text(
-        '健康效果评估',
-        style: TextStyle(
+      Text(
+        'health_effect_assessment'.tr,
+        style: const TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.w600,
           color: Color(0xFFFFFFFF),
@@ -320,11 +320,11 @@ Widget _buildEnergyCard() {
 
   return _buildHealthEffectCard(
     backgroundImage: Assets.energy,
-    title: '能量指数',
-    tagText: '良好',
+    title: 'energy_score'.tr,
+    tagText: 'status_good'.tr,
     score: score,
     unit: '/100',
-    changeText: '较上次   ↗ 8%',
+    changeText: '${'compared_to_last'.tr}   ↗ 8%',
     scoreColor: const Color(0xFF1299FF),
     scoreGradientColors: themeColors,
     chartLeft: 185,
@@ -346,11 +346,11 @@ Widget _buildCellCard() {
 
   return _buildHealthEffectCard(
     backgroundImage: Assets.cell,
-    title: '细胞活化',
-    tagText: '良好',
+    title: 'cell_score'.tr,
+    tagText: 'status_good'.tr,
     score: score,
     unit: '/100',
-    changeText: '较上次   ↗ 3%',
+    changeText: '${'compared_to_last'.tr}   ↗ 3%',
     scoreColor: const Color(0xFFFF7A2A),
     scoreGradientColors: themeColors,
     chartLeft: 185,
@@ -375,11 +375,11 @@ Widget _buildRelaxCard() {
 
   return _buildHealthEffectCard(
     backgroundImage: Assets.relax,
-    title: '放松指数',
-    tagText: '良好',
+    title: 'relaxation_score'.tr,
+    tagText: 'status_good'.tr,
     score: score,
     unit: '/100',
-    changeText: '较上次   ↗ 8%',
+    changeText: '${'compared_to_last'.tr}   ↗ 8%',
     scoreColor: const Color(0xFF9B6BFF),
     scoreGradientColors: themeColors,
     //放松指数坐标轴的位置
@@ -409,11 +409,11 @@ Widget _buildImmuneCard() {
 
   return _buildHealthEffectCard(
     backgroundImage: Assets.immune,
-    title: '免疫提升',
-    tagText: '良好',
+    title: 'immune_score'.tr,
+    tagText: 'status_good'.tr,
     score: score,
     unit: '/100',
-    changeText: '较上次   ↗ 3%',
+    changeText: '${'compared_to_last'.tr}   ↗ 3%',
     scoreColor: const Color(0xFF28D3A3),
     scoreGradientColors: themeColors,
     chartLeft: 175,
@@ -622,10 +622,10 @@ Widget _buildCircleScoreChart({
               style: const TextStyle(fontSize: 20, color: Color(0xFFFFFFFF)),
             ),
             const SizedBox(height: 2),
-            const Text(
-              '综合得分',
+            Text(
+              'overall_score'.tr,
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 10, color: Color(0xFFFFFFFF)),
+              style: const TextStyle(fontSize: 10, color: Color(0xFFFFFFFF)),
             ),
           ],
         ),
@@ -837,7 +837,12 @@ class _BarChartPainter extends CustomPainter {
     );
 
     const List<String> yLabels = ['100', '75', '50', '25', '0'];
-    const List<String> xLabels = ['1次', '2次', '3次', '本次'];
+    final List<String> xLabels = [
+      'session_once_1'.tr,
+      'session_once_2'.tr,
+      'session_once_3'.tr,
+      'current_session'.tr,
+    ];
 
     final double chartLeft = 28;
     final double chartTop = 8;
@@ -980,9 +985,9 @@ class _RelaxSliderPainter extends CustomPainter {
       textPainter.paint(canvas, offset);
     }
 
-    drawText('低', Offset(startX, 0));
-    drawText('中', Offset(size.width / 2 - 5, 0));
-    drawText('高', Offset(endX - 10, 0));
+    drawText('level_low'.tr, Offset(startX, 0));
+    drawText('level_medium'.tr, Offset(size.width / 2 - 5, 0));
+    drawText('level_high'.tr, Offset(endX - 10, 0));
 
     final RRect bubble = RRect.fromRectAndRadius(
       Rect.fromCenter(
@@ -1187,9 +1192,9 @@ Widget _buildButton(SummaryLogic logic) {
       padding: EdgeInsets.zero,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(29)),
     ),
-    child: const Text(
-      '确认',
-      style: TextStyle(
+    child: Text(
+      'confirm'.tr,
+      style: const TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.w100,
         color: Color(0xFFFFFFFF),
@@ -1221,11 +1226,11 @@ Widget _buildFeelingBox(SummaryLogic logic) {
       maxLines: null,
       cursorColor: Colors.white,
       style: const TextStyle(fontSize: 18, color: Color(0xFFFFFFFF)),
-      decoration: const InputDecoration(
+      decoration: InputDecoration(
         isCollapsed: true,
         border: InputBorder.none,
-        hintText: '请输入本次疗程的感受、身体反应等',
-        hintStyle: TextStyle(fontSize: 18, color: Color(0xFF4c4c4c)),
+        hintText: 'therapy_feedback_hint'.tr,
+        hintStyle: const TextStyle(fontSize: 18, color: Color(0xFF4c4c4c)),
       ),
     ),
   );

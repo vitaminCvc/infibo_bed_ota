@@ -3,6 +3,7 @@
 // 负责总时长、当前 5 分钟阶段、运行/暂停状态，以及解析自定义方案传入的节点配置。
 import 'package:infibo_app/pages/customized/logic.dart';
 import 'package:infibo_app/utils/duration_utils.dart';
+import 'package:get/get.dart';
 
 // 启动理疗页逻辑。
 class StartLogic {
@@ -53,7 +54,7 @@ class StartLogic {
   // 当前阶段工作的功能。
   List<String> activeDevices(String modeTitle) {
     final List<List<String>> phases =
-        customizedPhases ?? modePhases[modeTitle] ?? modePhases['深度放松']!;
+        customizedPhases ?? _presetPhases(modeTitle);
     final int index = activePhaseIndex.clamp(0, phases.length - 1);
     return phases[index];
   }
@@ -127,7 +128,7 @@ class StartLogic {
 
   Map<String, int> workSecondsByDevice(String modeTitle) {
     final List<List<String>> phases =
-        customizedPhases ?? modePhases[modeTitle] ?? modePhases['深度放松']!;
+        customizedPhases ?? _presetPhases(modeTitle);
     final Map<String, int> result = <String, int>{};
 
     for (final List<String> phase in phases) {
@@ -141,7 +142,7 @@ class StartLogic {
 
   Map<String, int> actualWorkSecondsByDevice(String modeTitle) {
     final List<List<String>> phases =
-        customizedPhases ?? modePhases[modeTitle] ?? modePhases['深度放松']!;
+        customizedPhases ?? _presetPhases(modeTitle);
     final Map<String, int> result = <String, int>{};
     int remainingElapsed = elapsedSeconds.clamp(0, totalSeconds).toInt();
 
@@ -167,18 +168,34 @@ class StartLogic {
   static String deviceName(String id) {
     switch (id) {
       case 'red':
-        return '红光';
+        return 'red_light'.tr;
       case 'pemf':
         return 'PEMF';
       case 'vat':
         return 'VAT';
       case 'hydrogen':
-        return '分子氢';
+        return 'module_hydrogen'.tr;
       case 'expand':
-        return '拓展功能';
+        return 'module_expand'.tr;
       default:
         return id;
     }
+  }
+
+  List<List<String>> _presetPhases(String modeTitle) {
+    final String modeKey = presetModeTitleKey(modeTitle);
+    return modePhases[modeKey] ?? modePhases['deep_relax']!;
+  }
+
+  static String presetModeTitleKey(String modeTitle) {
+    final String text = modeTitle.trim();
+    for (final MapEntry<String, String> entry
+        in _legacyPresetModeTitles.entries) {
+      if (text == entry.key || text == entry.value || text == entry.value.tr) {
+        return entry.key;
+      }
+    }
+    return text;
   }
 
   // 根据页面参数配置自定义方案。
@@ -843,7 +860,7 @@ class FragrancePhaseSetting {
 
 // 十种理疗模式的 5 分钟阶段配置。
 const Map<String, List<List<String>>> modePhases = {
-  '深度放松': [
+  'deep_relax': [
     ['red', 'vat'],
     ['pemf', 'vat'],
     ['hydrogen', 'vat'],
@@ -851,7 +868,7 @@ const Map<String, List<List<String>>> modePhases = {
     ['vat', 'expand'],
     ['red', 'hydrogen'],
   ],
-  '压力释放': [
+  'stress_release': [
     ['pemf', 'vat'],
     ['vat', 'hydrogen'],
     ['red', 'vat'],
@@ -859,7 +876,7 @@ const Map<String, List<List<String>>> modePhases = {
     ['hydrogen', 'expand'],
     ['vat'],
   ],
-  '能量提升': [
+  'energy_boost': [
     ['red', 'pemf'],
     ['pemf', 'hydrogen'],
     ['red', 'vat'],
@@ -867,7 +884,7 @@ const Map<String, List<List<String>>> modePhases = {
     ['red', 'expand'],
     ['hydrogen', 'vat'],
   ],
-  '免疫增强': [
+  'immune_boost': [
     ['pemf', 'hydrogen'],
     ['red', 'hydrogen'],
     ['vat', 'hydrogen'],
@@ -875,7 +892,7 @@ const Map<String, List<List<String>>> modePhases = {
     ['hydrogen', 'expand'],
     ['red', 'vat'],
   ],
-  '疼痛缓解': [
+  'pain_relief': [
     ['pemf', 'red'],
     ['pemf', 'vat'],
     ['red', 'vat'],
@@ -883,7 +900,7 @@ const Map<String, List<List<String>>> modePhases = {
     ['red', 'expand'],
     ['vat'],
   ],
-  '抗衰老': [
+  'anti_aging': [
     ['red', 'hydrogen'],
     ['pemf', 'hydrogen'],
     ['red', 'vat'],
@@ -891,7 +908,7 @@ const Map<String, List<List<String>>> modePhases = {
     ['red', 'pemf'],
     ['vat', 'hydrogen'],
   ],
-  '睡眠改善': [
+  'sleep_enhancement': [
     ['pemf', 'vat'],
     ['vat'],
     ['red', 'vat'],
@@ -899,7 +916,7 @@ const Map<String, List<List<String>>> modePhases = {
     ['vat', 'expand'],
     ['red'],
   ],
-  '全面养护': [
+  'full_care': [
     ['red', 'pemf'],
     ['vat', 'hydrogen'],
     ['red', 'vat'],
@@ -907,7 +924,7 @@ const Map<String, List<List<String>>> modePhases = {
     ['hydrogen', 'expand'],
     ['red', 'hydrogen'],
   ],
-  '运动恢复': [
+  'sports_recovery': [
     ['pemf', 'red'],
     ['pemf', 'vat'],
     ['red', 'hydrogen'],
@@ -915,7 +932,7 @@ const Map<String, List<List<String>>> modePhases = {
     ['pemf', 'hydrogen'],
     ['red', 'vat'],
   ],
-  '情绪疗愈': [
+  'mental_healing': [
     ['vat'],
     ['pemf', 'vat'],
     ['red', 'vat'],
@@ -923,4 +940,17 @@ const Map<String, List<List<String>>> modePhases = {
     ['expand', 'vat'],
     ['red', 'hydrogen'],
   ],
+};
+
+const Map<String, String> _legacyPresetModeTitles = {
+  'deep_relax': '深度放松',
+  'stress_release': '压力释放',
+  'energy_boost': '能量提升',
+  'immune_boost': '免疫增强',
+  'pain_relief': '疼痛缓解',
+  'anti_aging': '抗衰老',
+  'sleep_enhancement': '睡眠改善',
+  'full_care': '全面养护',
+  'sports_recovery': '运动恢复',
+  'mental_healing': '情绪疗愈',
 };

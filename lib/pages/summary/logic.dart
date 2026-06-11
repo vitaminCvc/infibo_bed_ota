@@ -2,20 +2,31 @@
 //
 // 负责读取总结数据、统计拓展模块时长，并在页面长时间无操作时返回主页。
 import 'dart:async';
-
+import 'dart:convert';
+import 'package:infibo_app/api/dio/therapy_report/therapy_report_api.dart';
+import 'package:infibo_app/api/dio/therapy_report/therapy_report_models.dart';
+import 'package:infibo_app/stores/app_header_clock_store.dart';
+import 'package:infibo_app/stores/user_store.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:infibo_app/components/logic.dart';
 
 class SummaryLogic {
   // 页面无操作 1 分钟后，走和点击确认一样的返回逻辑。
-  static const Duration _idleDuration = Duration(minutes: 100);
+  static const Duration _idleDuration = Duration(minutes: 1);
 
   final TextEditingController feelingController = TextEditingController();
 
   Timer? _idleTimer;
   String userName = 'no_user_selected'.tr;
   Map<String, int> moduleSeconds = <String, int>{};
+
+  int? clientId;
+  int? planId;
+  String planName = '';
+  String planType = '';
+  int durationSeconds = 0;
+  bool reportSaved = false;
 
   // 读取启动理疗页传过来的用户和模块运行时间。
   void configure(Object? args) {
@@ -33,6 +44,15 @@ class SummaryLogic {
         return MapEntry(key.toString(), safeValue);
       });
     }
+
+    // 从启动理疗页传过来的参数中读取客户端ID、计划ID、计划名称、计划类型、疗程时长。
+    clientId = int.tryParse(args['clientId']?.toString() ?? '');
+    planId = int.tryParse(args['planId']?.toString() ?? '');
+    planName = args['planName']?.toString() ?? '';
+    planType = args['planType']?.toString() ?? '';
+    durationSeconds =
+        int.tryParse(args['durationSeconds']?.toString() ?? '0') ??
+        moduleSeconds.values.fold<int>(0, (sum, seconds) => sum + seconds);
   }
 
   // 点击、拖动、滚动、输入都算一次用户操作，会重新开始 2 分钟计时。
@@ -45,9 +65,66 @@ class SummaryLogic {
     _idleTimer = Timer(_idleDuration, confirmBackToMain);
   }
 
+  //新增保存报告方法
+  Future<bool> saveReport() async {
+    if (reportSaved) return true;
+    final int? currentClientId = clientId;
+    final int? ownerUserId = UserStore.instance.userId;
+    if (currentClientId == null || ownerUserId == null) return false;
+
+    final SaveTherapyReportRequestDto request = SaveTherapyReportRequestDto(
+      clientId: currentClientId,
+      planId: planId,
+      planName: planName,
+      planType: planType,
+      reportTime: AppHeaderClockController.instance.currentTime,
+      durationSeconds: durationSeconds,
+      usedModulesJson: jsonEncode(moduleSeconds.keys.toList()),
+      therapyFeedback: feelingController.text.trim(),
+      modules: _buildModuleRequests(),
+    );
+
+    final response = await TherapyReportApi().save(
+      ownerUserId: ownerUserId,
+      request: request,
+    );
+    reportSaved = response.isSuccess;
+    return response.isSuccess;
+  }
+
+  // 构建模块请求列表
+  List<ReportModuleRequestDto> _buildModuleRequests() {
+    return moduleSeconds.entries.where((entry) => entry.value > 0).map((entry) {
+      return ReportModuleRequestDto(
+        moduleCode: entry.key,
+        moduleName: _moduleName(entry.key),
+        runDurationMinutes: (entry.value / 60).ceil(),
+        runStatus: 'completed',
+      );
+    }).toList();
+  }
+
+  String _moduleName(String code) {
+    switch (code) {
+      case 'red':
+        return 'red_light'.tr;
+      case 'pemf':
+        return 'PEMF';
+      case 'vat':
+        return 'VAT';
+      case 'hydrogen':
+        return 'module_hydrogen'.tr;
+      case 'expand':
+        return 'module_expand'.tr;
+      default:
+        return code;
+    }
+  }
+
   // 确认按钮和无操作自动返回，都统一从这里回到首页。
-  void confirmBackToMain() {
+  void confirmBackToMain() async {
     _idleTimer?.cancel();
+    await saveReport();
     AppComponentLogic.backToMainPage();
   }
 
@@ -55,8 +132,17 @@ class SummaryLogic {
     final int seconds = id == 'expand'
         ? expandSeconds
         : (moduleSeconds[id] ?? 0);
-    if (seconds <= 0) return '\u672a\u8fd0\u884c';
-    return '\u8fd0\u884c  $seconds\u79d2';
+    if (seconds <= 0) return 'not_running'.tr;
+    return '${'running_label'.tr}  ${formatDuration(seconds)}';
+  }
+
+  String formatDuration(int seconds) {
+    final int minutes = seconds ~/ 60;
+    final int remainSeconds = seconds % 60;
+
+    if (minutes <= 0) return '$remainSeconds${'seconds_unit'.tr}';
+    if (remainSeconds <= 0) return '$minutes${'minutes_unit'.tr}';
+    return '$minutes${'minutes_unit'.tr}$remainSeconds${'seconds_unit'.tr}';
   }
 
   int get expandSeconds {
