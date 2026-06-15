@@ -1,0 +1,182 @@
+{
+  "projectRoot": "D:/FlutterProject/infibo_app",
+  "batchFiles": [
+    {
+      "path": "lib/pages/debug/serial_test_page.dart",
+      "language": "dart",
+      "sizeLines": 328,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/joystick/ui.dart",
+      "language": "dart",
+      "sizeLines": 466,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/login/forgetpassword/forget.dart",
+      "language": "dart",
+      "sizeLines": 741,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/login/login/logic.dart",
+      "language": "dart",
+      "sizeLines": 10,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/login/login/ui.dart",
+      "language": "dart",
+      "sizeLines": 871,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/login/register/register.dart",
+      "language": "dart",
+      "sizeLines": 949,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/main/logic.dart",
+      "language": "dart",
+      "sizeLines": 29,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/main/ui.dart",
+      "language": "dart",
+      "sizeLines": 651,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/music/logic.dart",
+      "language": "dart",
+      "sizeLines": 117,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/music/player.dart",
+      "language": "dart",
+      "sizeLines": 155,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/music/ui.dart",
+      "language": "dart",
+      "sizeLines": 537,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/settingpage/history_detail.dart",
+      "language": "dart",
+      "sizeLines": 672,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/settingpage/logic.dart",
+      "language": "dart",
+      "sizeLines": 151,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/settingpage/ui.dart",
+      "language": "dart",
+      "sizeLines": 1229,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/start/logic.dart",
+      "language": "dart",
+      "sizeLines": 985,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/start/ui.dart",
+      "language": "dart",
+      "sizeLines": 2466,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/summary/logic.dart",
+      "language": "dart",
+      "sizeLines": 168,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/summary/summary.dart",
+      "language": "dart",
+      "sizeLines": 1279,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/routes/index.dart",
+      "language": "dart",
+      "sizeLines": 83,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/routes/route_observer.dart",
+      "language": "dart",
+      "sizeLines": 7,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/services/android_serial_port_service.dart",
+      "language": "dart",
+      "sizeLines": 210,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/stores/app_header_clock_store.dart",
+      "language": "dart",
+      "sizeLines": 105,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/stores/fragrance_setting_store.dart",
+      "language": "dart",
+      "sizeLines": 25,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/stores/hifem_setting_store.dart",
+      "language": "dart",
+      "sizeLines": 82,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/stores/index.dart",
+      "language": "dart",
+      "sizeLines": 8,
+      "fileCategory": "code"
+    }
+  ],
+  "batchImportData": {
+    "lib/pages/debug/serial_test_page.dart": [],
+    "lib/pages/joystick/ui.dart": [],
+    "lib/pages/login/forgetpassword/forget.dart": [],
+    "lib/pages/login/login/logic.dart": [],
+    "lib/pages/login/login/ui.dart": [],
+    "lib/pages/login/register/register.dart": [],
+    "lib/pages/main/logic.dart": [],
+    "lib/pages/main/ui.dart": [],
+    "lib/pages/music/logic.dart": [],
+    "lib/pages/music/player.dart": [],
+    "lib/pages/music/ui.dart": [],
+    "lib/pages/settingpage/history_detail.dart": [],
+    "lib/pages/settingpage/logic.dart": [],
+    "lib/pages/settingpage/ui.dart": [],
+    "lib/pages/start/logic.dart": [],
+    "lib/pages/start/ui.dart": [],
+    "lib/pages/summary/logic.dart": [],
+    "lib/pages/summary/summary.dart": [],
+    "lib/routes/index.dart": [],
+    "lib/routes/route_observer.dart": [],
+    "lib/services/android_serial_port_service.dart": [],
+    "lib/stores/app_header_clock_store.dart": [],
+    "lib/stores/fragrance_setting_store.dart": [],
+    "lib/stores/hifem_setting_store.dart": [],
+    "lib/stores/index.dart": []
+  }
+}

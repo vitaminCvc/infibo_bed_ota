@@ -1,0 +1,553 @@
+{
+  "nodes": [
+    {
+      "id": "file:infibo/.metadata",
+      "type": "file",
+      "name": ".metadata",
+      "filePath": "infibo/.metadata",
+      "summary": "项目文件，承担 .metadata 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "metadata"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:infibo/lib/main.dart",
+      "type": "file",
+      "name": "main.dart",
+      "filePath": "infibo/lib/main.dart",
+      "summary": "Dart 源文件，承载 main.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "project-file",
+        "internal",
+        "main"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:infibo/lib/main.dart:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "infibo/lib/main.dart",
+      "lineRange": [
+        4,
+        6
+      ],
+      "summary": "函数 main 位于 main.dart 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:infibo/lib/pages/login/index.dart",
+      "type": "file",
+      "name": "index.dart",
+      "filePath": "infibo/lib/pages/login/index.dart",
+      "summary": "Dart 源文件，承载 index.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "screen",
+        "project-file",
+        "internal",
+        "index"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:infibo/lib/pages/login/index.dart:LoginPage",
+      "type": "class",
+      "name": "LoginPage",
+      "filePath": "infibo/lib/pages/login/index.dart",
+      "lineRange": [
+        4,
+        9
+      ],
+      "summary": "类型 LoginPage 位于 index.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:infibo/lib/pages/login/index.dart:_LoginPageState",
+      "type": "class",
+      "name": "_LoginPageState",
+      "filePath": "infibo/lib/pages/login/index.dart",
+      "lineRange": [
+        12,
+        20
+      ],
+      "summary": "类型 _LoginPageState 位于 index.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:infibo/lib/pages/main/index.dart",
+      "type": "file",
+      "name": "index.dart",
+      "filePath": "infibo/lib/pages/main/index.dart",
+      "summary": "Dart 源文件，承载 index.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "screen",
+        "project-file",
+        "internal",
+        "index"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:infibo/lib/pages/main/index.dart:MainPage",
+      "type": "class",
+      "name": "MainPage",
+      "filePath": "infibo/lib/pages/main/index.dart",
+      "lineRange": [
+        3,
+        8
+      ],
+      "summary": "类型 MainPage 位于 index.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:infibo/lib/pages/main/index.dart:_MainPageState",
+      "type": "class",
+      "name": "_MainPageState",
+      "filePath": "infibo/lib/pages/main/index.dart",
+      "lineRange": [
+        11,
+        19
+      ],
+      "summary": "类型 _MainPageState 位于 index.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:infibo/lib/routes/index.dart",
+      "type": "file",
+      "name": "index.dart",
+      "filePath": "infibo/lib/routes/index.dart",
+      "summary": "Dart 源文件，承载 index.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "project-file",
+        "internal",
+        "index"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:infibo/test/widget_test.dart",
+      "type": "file",
+      "name": "widget_test.dart",
+      "filePath": "infibo/test/widget_test.dart",
+      "summary": "Dart 源文件，承载 widget_test.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "component",
+        "project-file",
+        "internal",
+        "widget-test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:infibo/test/widget_test.dart:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "infibo/test/widget_test.dart",
+      "lineRange": [
+        13,
+        30
+      ],
+      "summary": "函数 main 位于 widget_test.dart 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:infibo/web/index.html",
+      "type": "file",
+      "name": "index.html",
+      "filePath": "infibo/web/index.html",
+      "summary": "项目文件，承担 index.html 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "index"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:infibo/web/manifest.json",
+      "type": "config",
+      "name": "manifest.json",
+      "filePath": "infibo/web/manifest.json",
+      "summary": "配置文件，定义 manifest.json 对构建、分析或运行行为的约束。",
+      "tags": [
+        "configuration",
+        "project-file",
+        "internal",
+        "manifest"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:ios/Flutter/AppFrameworkInfo.plist",
+      "type": "config",
+      "name": "AppFrameworkInfo.plist",
+      "filePath": "ios/Flutter/AppFrameworkInfo.plist",
+      "summary": "配置文件，定义 AppFrameworkInfo.plist 对构建、分析或运行行为的约束。",
+      "tags": [
+        "configuration",
+        "project-file",
+        "internal",
+        "app-framework-info"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:ios/Flutter/Debug.xcconfig",
+      "type": "file",
+      "name": "Debug.xcconfig",
+      "filePath": "ios/Flutter/Debug.xcconfig",
+      "summary": "项目文件，承担 Debug.xcconfig 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "debug"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:ios/Flutter/Release.xcconfig",
+      "type": "file",
+      "name": "Release.xcconfig",
+      "filePath": "ios/Flutter/Release.xcconfig",
+      "summary": "项目文件，承担 Release.xcconfig 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "release"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:ios/Runner.xcodeproj/project.pbxproj",
+      "type": "file",
+      "name": "project.pbxproj",
+      "filePath": "ios/Runner.xcodeproj/project.pbxproj",
+      "summary": "项目文件，承担 project.pbxproj 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "project"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:ios/Runner.xcodeproj/project.xcworkspace/contents.xcworkspacedata",
+      "type": "file",
+      "name": "contents.xcworkspacedata",
+      "filePath": "ios/Runner.xcodeproj/project.xcworkspace/contents.xcworkspacedata",
+      "summary": "项目文件，承担 contents.xcworkspacedata 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "contents"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist",
+      "type": "config",
+      "name": "IDEWorkspaceChecks.plist",
+      "filePath": "ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist",
+      "summary": "配置文件，定义 IDEWorkspaceChecks.plist 对构建、分析或运行行为的约束。",
+      "tags": [
+        "configuration",
+        "project-file",
+        "internal",
+        "ideworkspace-checks"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings",
+      "type": "file",
+      "name": "WorkspaceSettings.xcsettings",
+      "filePath": "ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings",
+      "summary": "项目文件，承担 WorkspaceSettings.xcsettings 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "workspace-settings"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:ios/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme",
+      "type": "file",
+      "name": "Runner.xcscheme",
+      "filePath": "ios/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme",
+      "summary": "项目文件，承担 Runner.xcscheme 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "runner"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:ios/Runner.xcworkspace/contents.xcworkspacedata",
+      "type": "file",
+      "name": "contents.xcworkspacedata",
+      "filePath": "ios/Runner.xcworkspace/contents.xcworkspacedata",
+      "summary": "项目文件，承担 contents.xcworkspacedata 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "contents"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:ios/Runner.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist",
+      "type": "config",
+      "name": "IDEWorkspaceChecks.plist",
+      "filePath": "ios/Runner.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist",
+      "summary": "配置文件，定义 IDEWorkspaceChecks.plist 对构建、分析或运行行为的约束。",
+      "tags": [
+        "configuration",
+        "project-file",
+        "internal",
+        "ideworkspace-checks"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:ios/Runner.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings",
+      "type": "file",
+      "name": "WorkspaceSettings.xcsettings",
+      "filePath": "ios/Runner.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings",
+      "summary": "项目文件，承担 WorkspaceSettings.xcsettings 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "workspace-settings"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:ios/Runner/AppDelegate.swift",
+      "type": "file",
+      "name": "AppDelegate.swift",
+      "filePath": "ios/Runner/AppDelegate.swift",
+      "summary": "项目文件，承担 AppDelegate.swift 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "app-delegate"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:ios/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json",
+      "type": "config",
+      "name": "Contents.json",
+      "filePath": "ios/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json",
+      "summary": "配置文件，定义 Contents.json 对构建、分析或运行行为的约束。",
+      "tags": [
+        "configuration",
+        "project-file",
+        "internal",
+        "contents"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json",
+      "type": "config",
+      "name": "Contents.json",
+      "filePath": "ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json",
+      "summary": "配置文件，定义 Contents.json 对构建、分析或运行行为的约束。",
+      "tags": [
+        "configuration",
+        "project-file",
+        "internal",
+        "contents"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md",
+      "type": "document",
+      "name": "README.md",
+      "filePath": "ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md",
+      "summary": "文档文件，说明 README.md 相关的项目背景、使用方式或开发信息。",
+      "tags": [
+        "documentation",
+        "project-file",
+        "internal",
+        "readme"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:ios/Runner/Base.lproj/LaunchScreen.storyboard",
+      "type": "file",
+      "name": "LaunchScreen.storyboard",
+      "filePath": "ios/Runner/Base.lproj/LaunchScreen.storyboard",
+      "summary": "项目文件，承担 LaunchScreen.storyboard 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "launch-screen"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:ios/Runner/Base.lproj/Main.storyboard",
+      "type": "file",
+      "name": "Main.storyboard",
+      "filePath": "ios/Runner/Base.lproj/Main.storyboard",
+      "summary": "项目文件，承担 Main.storyboard 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "main"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:infibo/lib/main.dart",
+      "target": "function:infibo/lib/main.dart:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:infibo/lib/main.dart",
+      "target": "function:infibo/lib/main.dart:main",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:infibo/lib/pages/login/index.dart",
+      "target": "class:infibo/lib/pages/login/index.dart:LoginPage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:infibo/lib/pages/login/index.dart",
+      "target": "class:infibo/lib/pages/login/index.dart:_LoginPageState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:infibo/lib/pages/main/index.dart",
+      "target": "class:infibo/lib/pages/main/index.dart:MainPage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:infibo/lib/pages/main/index.dart",
+      "target": "class:infibo/lib/pages/main/index.dart:_MainPageState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:infibo/test/widget_test.dart",
+      "target": "function:infibo/test/widget_test.dart:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:infibo/test/widget_test.dart",
+      "target": "function:infibo/test/widget_test.dart:main",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "config:infibo/web/manifest.json",
+      "target": "file:lib/main.dart",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:ios/Flutter/AppFrameworkInfo.plist",
+      "target": "file:lib/main.dart",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist",
+      "target": "file:lib/main.dart",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:ios/Runner.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist",
+      "target": "file:lib/main.dart",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:ios/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json",
+      "target": "file:lib/main.dart",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json",
+      "target": "file:lib/main.dart",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "document:ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md",
+      "target": "file:lib/main.dart",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

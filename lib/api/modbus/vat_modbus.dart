@@ -36,11 +36,13 @@ class VatModbus {
 
   static VatBatchPayload buildPayload({
     required int frequencyHz,
-    required int intensity,
+    required int energyPercent,
+    required int volumePercent,
     required int musicIndex,
   }) {
-    final int safeIntensity = clampPercentage(intensity);
-    final int enable = safeIntensity > 0 ? 1 : 0;
+    final int safeEnergy = clampPercentage(energyPercent);
+    final int safeVolume = clampPercentage(volumePercent);
+    final int enable = safeEnergy > 0 || safeVolume > 0 ? 1 : 0;
     final double hz = frequencyHz.toDouble();
     final int frequencyValue = (hz * 10).round().clamp(0, 65535).toInt();
     final int safeMusic = musicIndex.clamp(0, 65535).toInt();
@@ -48,14 +50,14 @@ class VatModbus {
     final List<int> values = <int>[
       enable, // 0x0180
       0, // 0x0181
-      safeIntensity, // 0x0182
+      safeEnergy, // 0x0182
       0, // 0x0183
       0, // 0x0184
       frequencyValue, // 0x0185
       0, // 0x0186
       0, // 0x0187
       0, // 0x0188
-      100, // 0x0189
+      safeVolume, // 0x0189
       safeMusic, // 0x018A
     ];
     if (values.length != quantity) {

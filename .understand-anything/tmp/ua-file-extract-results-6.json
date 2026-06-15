@@ -1,0 +1,494 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 7,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "assets/lottie/aroma.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 1,
+      "nonEmptyLines": 1,
+      "sections": [
+        {
+          "heading": "nm",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "ddd",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "h",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "w",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "meta",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "layers",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "v",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "fr",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "op",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "ip",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "assets",
+          "level": 1,
+          "line": 1
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 11
+      }
+    },
+    {
+      "path": "assets/lottie/hydrogen.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 1,
+      "nonEmptyLines": 1,
+      "sections": [
+        {
+          "heading": "nm",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "ddd",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "h",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "w",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "meta",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "layers",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "v",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "fr",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "op",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "ip",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "assets",
+          "level": 1,
+          "line": 1
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 11
+      }
+    },
+    {
+      "path": "assets/lottie/music.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 1,
+      "nonEmptyLines": 1,
+      "sections": [
+        {
+          "heading": "assets",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "fr",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "h",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "ip",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "layers",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "meta",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "op",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "v",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "w",
+          "level": 1,
+          "line": 1
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 9
+      }
+    },
+    {
+      "path": "assets/lottie/pemf.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 1,
+      "nonEmptyLines": 1,
+      "sections": [
+        {
+          "heading": "nm",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "ddd",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "h",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "w",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "meta",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "layers",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "v",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "fr",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "op",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "ip",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "assets",
+          "level": 1,
+          "line": 1
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 11
+      }
+    },
+    {
+      "path": "assets/lottie/redlight.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 1,
+      "nonEmptyLines": 1,
+      "sections": [
+        {
+          "heading": "nm",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "ddd",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "h",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "w",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "meta",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "layers",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "v",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "fr",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "op",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "ip",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "assets",
+          "level": 1,
+          "line": 1
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 11
+      }
+    },
+    {
+      "path": "assets/lottie/taihez.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 1,
+      "nonEmptyLines": 1,
+      "sections": [
+        {
+          "heading": "nm",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "ddd",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "h",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "w",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "meta",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "layers",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "v",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "fr",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "op",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "ip",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "assets",
+          "level": 1,
+          "line": 1
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 11
+      }
+    },
+    {
+      "path": "assets/lottie/vat.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 1,
+      "nonEmptyLines": 1,
+      "sections": [
+        {
+          "heading": "nm",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "ddd",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "h",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "w",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "meta",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "layers",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "v",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "fr",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "op",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "ip",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "assets",
+          "level": 1,
+          "line": 1
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 11
+      }
+    }
+  ]
+}

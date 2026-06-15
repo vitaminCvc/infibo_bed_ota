@@ -1,0 +1,523 @@
+{
+  "nodes": [
+    {
+      "id": "file:lib/stores/terahertz_setting_store.dart",
+      "type": "file",
+      "name": "terahertz_setting_store.dart",
+      "filePath": "lib/stores/terahertz_setting_store.dart",
+      "summary": "Dart 源文件，承载 terahertz_setting_store.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "terahertz-setting-store"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/stores/terahertz_setting_store.dart:TerahertzSettingController",
+      "type": "class",
+      "name": "TerahertzSettingController",
+      "filePath": "lib/stores/terahertz_setting_store.dart",
+      "lineRange": [
+        21,
+        55
+      ],
+      "summary": "类型 TerahertzSettingController 位于 terahertz_setting_store.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/stores/user_store.dart",
+      "type": "file",
+      "name": "user_store.dart",
+      "filePath": "lib/stores/user_store.dart",
+      "summary": "Dart 源文件，承载 user_store.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "user-store"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/stores/user_store.dart:UserStore",
+      "type": "class",
+      "name": "UserStore",
+      "filePath": "lib/stores/user_store.dart",
+      "lineRange": [
+        14,
+        96
+      ],
+      "summary": "类型 UserStore 位于 user_store.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/translation/app_translations.dart",
+      "type": "file",
+      "name": "app_translations.dart",
+      "filePath": "lib/translation/app_translations.dart",
+      "summary": "Dart 源文件，承载 app_translations.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "app-translations"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:lib/translation/app_translations.dart:AppTranslations",
+      "type": "class",
+      "name": "AppTranslations",
+      "filePath": "lib/translation/app_translations.dart",
+      "lineRange": [
+        6,
+        2396
+      ],
+      "summary": "类型 AppTranslations 位于 app_translations.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:lib/utils/age_utils.dart",
+      "type": "file",
+      "name": "age_utils.dart",
+      "filePath": "lib/utils/age_utils.dart",
+      "summary": "Dart 源文件，承载 age_utils.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "age-utils"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/utils/byte_utils.dart",
+      "type": "file",
+      "name": "byte_utils.dart",
+      "filePath": "lib/utils/byte_utils.dart",
+      "summary": "Dart 源文件，承载 byte_utils.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "byte-utils"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/utils/date_time_utils.dart",
+      "type": "file",
+      "name": "date_time_utils.dart",
+      "filePath": "lib/utils/date_time_utils.dart",
+      "summary": "Dart 源文件，承载 date_time_utils.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "date-time-utils"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/utils/duration_utils.dart",
+      "type": "file",
+      "name": "duration_utils.dart",
+      "filePath": "lib/utils/duration_utils.dart",
+      "summary": "Dart 源文件，承载 duration_utils.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "duration-utils"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/utils/email_utils.dart",
+      "type": "file",
+      "name": "email_utils.dart",
+      "filePath": "lib/utils/email_utils.dart",
+      "summary": "Dart 源文件，承载 email_utils.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "email-utils"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/utils/gender_utils.dart",
+      "type": "file",
+      "name": "gender_utils.dart",
+      "filePath": "lib/utils/gender_utils.dart",
+      "summary": "Dart 源文件，承载 gender_utils.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "gender-utils"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/utils/gender_utils.dart:localizedGenderText",
+      "type": "function",
+      "name": "localizedGenderText",
+      "filePath": "lib/utils/gender_utils.dart",
+      "lineRange": [
+        6,
+        22
+      ],
+      "summary": "函数 localizedGenderText 位于 gender_utils.dart 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/utils/index.dart",
+      "type": "file",
+      "name": "index.dart",
+      "filePath": "lib/utils/index.dart",
+      "summary": "Dart 源文件，承载 index.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "index"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/utils/localized_api_message.dart",
+      "type": "file",
+      "name": "localized_api_message.dart",
+      "filePath": "lib/utils/localized_api_message.dart",
+      "summary": "Dart 源文件，承载 localized_api_message.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "localized-api-message"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/utils/number_utils.dart",
+      "type": "file",
+      "name": "number_utils.dart",
+      "filePath": "lib/utils/number_utils.dart",
+      "summary": "Dart 源文件，承载 number_utils.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "number-utils"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/utils/phone_utils.dart",
+      "type": "file",
+      "name": "phone_utils.dart",
+      "filePath": "lib/utils/phone_utils.dart",
+      "summary": "Dart 源文件，承载 phone_utils.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "phone-utils"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:linux/CMakeLists.txt",
+      "type": "document",
+      "name": "CMakeLists.txt",
+      "filePath": "linux/CMakeLists.txt",
+      "summary": "文档文件，说明 CMakeLists.txt 相关的项目背景、使用方式或开发信息。",
+      "tags": [
+        "documentation",
+        "project-file",
+        "internal",
+        "cmake-lists"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:linux/flutter/CMakeLists.txt",
+      "type": "document",
+      "name": "CMakeLists.txt",
+      "filePath": "linux/flutter/CMakeLists.txt",
+      "summary": "文档文件，说明 CMakeLists.txt 相关的项目背景、使用方式或开发信息。",
+      "tags": [
+        "documentation",
+        "project-file",
+        "internal",
+        "cmake-lists"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:linux/flutter/generated_plugin_registrant.cc",
+      "type": "file",
+      "name": "generated_plugin_registrant.cc",
+      "filePath": "linux/flutter/generated_plugin_registrant.cc",
+      "summary": "项目文件，承担 generated_plugin_registrant.cc 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "generated-plugin-registrant"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:linux/flutter/generated_plugin_registrant.cc:fl_register_plugins",
+      "type": "function",
+      "name": "fl_register_plugins",
+      "filePath": "linux/flutter/generated_plugin_registrant.cc",
+      "lineRange": [
+        11,
+        15
+      ],
+      "summary": "函数 fl_register_plugins 位于 generated_plugin_registrant.cc 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:linux/flutter/generated_plugin_registrant.h",
+      "type": "file",
+      "name": "generated_plugin_registrant.h",
+      "filePath": "linux/flutter/generated_plugin_registrant.h",
+      "summary": "项目文件，承担 generated_plugin_registrant.h 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "generated-plugin-registrant"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:linux/flutter/generated_plugins.cmake",
+      "type": "file",
+      "name": "generated_plugins.cmake",
+      "filePath": "linux/flutter/generated_plugins.cmake",
+      "summary": "项目文件，承担 generated_plugins.cmake 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "generated-plugins"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:linux/runner/CMakeLists.txt",
+      "type": "document",
+      "name": "CMakeLists.txt",
+      "filePath": "linux/runner/CMakeLists.txt",
+      "summary": "文档文件，说明 CMakeLists.txt 相关的项目背景、使用方式或开发信息。",
+      "tags": [
+        "documentation",
+        "project-file",
+        "internal",
+        "cmake-lists"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:macos/Flutter/Flutter-Debug.xcconfig",
+      "type": "file",
+      "name": "Flutter-Debug.xcconfig",
+      "filePath": "macos/Flutter/Flutter-Debug.xcconfig",
+      "summary": "项目文件，承担 Flutter-Debug.xcconfig 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "flutter-debug"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:macos/Flutter/Flutter-Release.xcconfig",
+      "type": "file",
+      "name": "Flutter-Release.xcconfig",
+      "filePath": "macos/Flutter/Flutter-Release.xcconfig",
+      "summary": "项目文件，承担 Flutter-Release.xcconfig 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "flutter-release"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:macos/Flutter/GeneratedPluginRegistrant.swift",
+      "type": "file",
+      "name": "GeneratedPluginRegistrant.swift",
+      "filePath": "macos/Flutter/GeneratedPluginRegistrant.swift",
+      "summary": "项目文件，承担 GeneratedPluginRegistrant.swift 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "generated-plugin-registrant"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:macos/Runner.xcodeproj/project.pbxproj",
+      "type": "file",
+      "name": "project.pbxproj",
+      "filePath": "macos/Runner.xcodeproj/project.pbxproj",
+      "summary": "项目文件，承担 project.pbxproj 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "project"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:macos/Runner.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist",
+      "type": "config",
+      "name": "IDEWorkspaceChecks.plist",
+      "filePath": "macos/Runner.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist",
+      "summary": "配置文件，定义 IDEWorkspaceChecks.plist 对构建、分析或运行行为的约束。",
+      "tags": [
+        "configuration",
+        "project-file",
+        "internal",
+        "ideworkspace-checks"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:macos/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme",
+      "type": "file",
+      "name": "Runner.xcscheme",
+      "filePath": "macos/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme",
+      "summary": "项目文件，承担 Runner.xcscheme 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "runner"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:lib/stores/terahertz_setting_store.dart",
+      "target": "class:lib/stores/terahertz_setting_store.dart:TerahertzSettingController",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/stores/user_store.dart",
+      "target": "class:lib/stores/user_store.dart:UserStore",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/translation/app_translations.dart",
+      "target": "class:lib/translation/app_translations.dart:AppTranslations",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/utils/gender_utils.dart",
+      "target": "function:lib/utils/gender_utils.dart:localizedGenderText",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "document:linux/CMakeLists.txt",
+      "target": "file:lib/main.dart",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:linux/flutter/CMakeLists.txt",
+      "target": "file:lib/main.dart",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:linux/flutter/generated_plugin_registrant.cc",
+      "target": "function:linux/flutter/generated_plugin_registrant.cc:fl_register_plugins",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:linux/flutter/generated_plugin_registrant.cc",
+      "target": "function:linux/flutter/generated_plugin_registrant.cc:fl_register_plugins",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:linux/flutter/generated_plugin_registrant.cc",
+      "target": "file:linux/flutter/generated_plugin_registrant.h",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "document:linux/runner/CMakeLists.txt",
+      "target": "file:lib/main.dart",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "config:macos/Runner.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist",
+      "target": "file:lib/main.dart",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}

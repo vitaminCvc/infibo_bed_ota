@@ -100,14 +100,24 @@ class AppTopHeader extends StatelessWidget {
           height: 48,
           onTap: AppComponentLogic.openSettingPage,
           child: Positioned(
-            left: 41,
-            top: 13,
-            child: Text(
-              'settings'.tr,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
+            left: 18,
+            top: 10,
+            child: SizedBox(
+              height: 28,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.settings_outlined, color: Colors.white, size: 18),
+                  const SizedBox(width: 4),
+                  Text(
+                    'settings'.tr,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

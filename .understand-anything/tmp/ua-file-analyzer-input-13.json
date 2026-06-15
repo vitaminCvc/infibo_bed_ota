@@ -1,0 +1,184 @@
+{
+  "projectRoot": "D:/FlutterProject/infibo_app",
+  "batchFiles": [
+    {
+      "path": "lib/stores/terahertz_setting_store.dart",
+      "language": "dart",
+      "sizeLines": 55,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/stores/user_store.dart",
+      "language": "dart",
+      "sizeLines": 96,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/translation/app_translations.dart",
+      "language": "dart",
+      "sizeLines": 2396,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/utils/age_utils.dart",
+      "language": "dart",
+      "sizeLines": 22,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/utils/byte_utils.dart",
+      "language": "dart",
+      "sizeLines": 11,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/utils/date_time_utils.dart",
+      "language": "dart",
+      "sizeLines": 39,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/utils/duration_utils.dart",
+      "language": "dart",
+      "sizeLines": 20,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/utils/email_utils.dart",
+      "language": "dart",
+      "sizeLines": 12,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/utils/gender_utils.dart",
+      "language": "dart",
+      "sizeLines": 22,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/utils/index.dart",
+      "language": "dart",
+      "sizeLines": 10,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/utils/localized_api_message.dart",
+      "language": "dart",
+      "sizeLines": 18,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/utils/number_utils.dart",
+      "language": "dart",
+      "sizeLines": 26,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/utils/phone_utils.dart",
+      "language": "dart",
+      "sizeLines": 19,
+      "fileCategory": "code"
+    },
+    {
+      "path": "linux/CMakeLists.txt",
+      "language": "txt",
+      "sizeLines": 128,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "linux/flutter/CMakeLists.txt",
+      "language": "txt",
+      "sizeLines": 88,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "linux/flutter/generated_plugin_registrant.cc",
+      "language": "cpp",
+      "sizeLines": 15,
+      "fileCategory": "code"
+    },
+    {
+      "path": "linux/flutter/generated_plugin_registrant.h",
+      "language": "c",
+      "sizeLines": 15,
+      "fileCategory": "code"
+    },
+    {
+      "path": "linux/flutter/generated_plugins.cmake",
+      "language": "cmake",
+      "sizeLines": 25,
+      "fileCategory": "code"
+    },
+    {
+      "path": "linux/runner/CMakeLists.txt",
+      "language": "txt",
+      "sizeLines": 26,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "macos/Flutter/Flutter-Debug.xcconfig",
+      "language": "xcconfig",
+      "sizeLines": 1,
+      "fileCategory": "code"
+    },
+    {
+      "path": "macos/Flutter/Flutter-Release.xcconfig",
+      "language": "xcconfig",
+      "sizeLines": 1,
+      "fileCategory": "code"
+    },
+    {
+      "path": "macos/Flutter/GeneratedPluginRegistrant.swift",
+      "language": "swift",
+      "sizeLines": 20,
+      "fileCategory": "code"
+    },
+    {
+      "path": "macos/Runner.xcodeproj/project.pbxproj",
+      "language": "pbxproj",
+      "sizeLines": 705,
+      "fileCategory": "code"
+    },
+    {
+      "path": "macos/Runner.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist",
+      "language": "xml",
+      "sizeLines": 8,
+      "fileCategory": "config"
+    },
+    {
+      "path": "macos/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme",
+      "language": "xcscheme",
+      "sizeLines": 99,
+      "fileCategory": "code"
+    }
+  ],
+  "batchImportData": {
+    "lib/stores/terahertz_setting_store.dart": [],
+    "lib/stores/user_store.dart": [],
+    "lib/translation/app_translations.dart": [],
+    "lib/utils/age_utils.dart": [],
+    "lib/utils/byte_utils.dart": [],
+    "lib/utils/date_time_utils.dart": [],
+    "lib/utils/duration_utils.dart": [],
+    "lib/utils/email_utils.dart": [],
+    "lib/utils/gender_utils.dart": [],
+    "lib/utils/index.dart": [],
+    "lib/utils/localized_api_message.dart": [],
+    "lib/utils/number_utils.dart": [],
+    "lib/utils/phone_utils.dart": [],
+    "linux/CMakeLists.txt": [],
+    "linux/flutter/CMakeLists.txt": [],
+    "linux/flutter/generated_plugin_registrant.cc": [
+      "linux/flutter/generated_plugin_registrant.h"
+    ],
+    "linux/flutter/generated_plugin_registrant.h": [],
+    "linux/flutter/generated_plugins.cmake": [],
+    "linux/runner/CMakeLists.txt": [],
+    "macos/Flutter/Flutter-Debug.xcconfig": [],
+    "macos/Flutter/Flutter-Release.xcconfig": [],
+    "macos/Flutter/GeneratedPluginRegistrant.swift": [],
+    "macos/Runner.xcodeproj/project.pbxproj": [],
+    "macos/Runner.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist": [],
+    "macos/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme": []
+  }
+}

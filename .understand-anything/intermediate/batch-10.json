@@ -1,0 +1,1169 @@
+{
+  "nodes": [
+    {
+      "id": "file:ios/Runner/GeneratedPluginRegistrant.h",
+      "type": "file",
+      "name": "GeneratedPluginRegistrant.h",
+      "filePath": "ios/Runner/GeneratedPluginRegistrant.h",
+      "summary": "项目文件，承担 GeneratedPluginRegistrant.h 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "generated-plugin-registrant"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:ios/Runner/GeneratedPluginRegistrant.m",
+      "type": "file",
+      "name": "GeneratedPluginRegistrant.m",
+      "filePath": "ios/Runner/GeneratedPluginRegistrant.m",
+      "summary": "项目文件，承担 GeneratedPluginRegistrant.m 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "generated-plugin-registrant"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:ios/Runner/Info.plist",
+      "type": "config",
+      "name": "Info.plist",
+      "filePath": "ios/Runner/Info.plist",
+      "summary": "配置文件，定义 Info.plist 对构建、分析或运行行为的约束。",
+      "tags": [
+        "configuration",
+        "project-file",
+        "internal",
+        "info"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:ios/Runner/Runner-Bridging-Header.h",
+      "type": "file",
+      "name": "Runner-Bridging-Header.h",
+      "filePath": "ios/Runner/Runner-Bridging-Header.h",
+      "summary": "项目文件，承担 Runner-Bridging-Header.h 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "runner-bridging-header"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:ios/Runner/SceneDelegate.swift",
+      "type": "file",
+      "name": "SceneDelegate.swift",
+      "filePath": "ios/Runner/SceneDelegate.swift",
+      "summary": "项目文件，承担 SceneDelegate.swift 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "scene-delegate"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:ios/RunnerTests/RunnerTests.swift",
+      "type": "file",
+      "name": "RunnerTests.swift",
+      "filePath": "ios/RunnerTests/RunnerTests.swift",
+      "summary": "项目文件，承担 RunnerTests.swift 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "runner-tests"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/api/dio/api/api_client.dart",
+      "type": "file",
+      "name": "api_client.dart",
+      "filePath": "lib/api/dio/api/api_client.dart",
+      "summary": "Dart 源文件，承载 api_client.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "api-client"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/api/dio/api/api_client.dart:ApiClient",
+      "type": "class",
+      "name": "ApiClient",
+      "filePath": "lib/api/dio/api/api_client.dart",
+      "lineRange": [
+        4,
+        118
+      ],
+      "summary": "类型 ApiClient 位于 api_client.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/api/dio/api/api_response.dart",
+      "type": "file",
+      "name": "api_response.dart",
+      "filePath": "lib/api/dio/api/api_response.dart",
+      "summary": "Dart 源文件，承载 api_response.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "api-response"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/api/dio/api/api_response.dart:ApiResponse",
+      "type": "class",
+      "name": "ApiResponse",
+      "filePath": "lib/api/dio/api/api_response.dart",
+      "lineRange": [
+        5,
+        25
+      ],
+      "summary": "类型 ApiResponse 位于 api_response.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/api/dio/login/login_api.dart",
+      "type": "file",
+      "name": "login_api.dart",
+      "filePath": "lib/api/dio/login/login_api.dart",
+      "summary": "Dart 源文件，承载 login_api.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "login-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/api/dio/login/login_models.dart",
+      "type": "file",
+      "name": "login_models.dart",
+      "filePath": "lib/api/dio/login/login_models.dart",
+      "summary": "Dart 源文件，承载 login_models.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "login-models"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/api/dio/login/login_models.dart:LoginResult",
+      "type": "class",
+      "name": "LoginResult",
+      "filePath": "lib/api/dio/login/login_models.dart",
+      "lineRange": [
+        1,
+        20
+      ],
+      "summary": "类型 LoginResult 位于 login_models.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/api/dio/register/register_api.dart",
+      "type": "file",
+      "name": "register_api.dart",
+      "filePath": "lib/api/dio/register/register_api.dart",
+      "summary": "Dart 源文件，承载 register_api.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "register-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/api/dio/register/register_api.dart:RegisterApi",
+      "type": "class",
+      "name": "RegisterApi",
+      "filePath": "lib/api/dio/register/register_api.dart",
+      "lineRange": [
+        7,
+        37
+      ],
+      "summary": "类型 RegisterApi 位于 register_api.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/api/dio/register/register_models.dart",
+      "type": "file",
+      "name": "register_models.dart",
+      "filePath": "lib/api/dio/register/register_models.dart",
+      "summary": "Dart 源文件，承载 register_models.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "register-models"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/api/dio/reset_password/reset_password_api.dart",
+      "type": "file",
+      "name": "reset_password_api.dart",
+      "filePath": "lib/api/dio/reset_password/reset_password_api.dart",
+      "summary": "Dart 源文件，承载 reset_password_api.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "reset-password-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/api/dio/reset_password/reset_password_api.dart:ResetPasswordApi",
+      "type": "class",
+      "name": "ResetPasswordApi",
+      "filePath": "lib/api/dio/reset_password/reset_password_api.dart",
+      "lineRange": [
+        4,
+        25
+      ],
+      "summary": "类型 ResetPasswordApi 位于 reset_password_api.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/api/dio/therapy_client/therapy_client_api.dart",
+      "type": "file",
+      "name": "therapy_client_api.dart",
+      "filePath": "lib/api/dio/therapy_client/therapy_client_api.dart",
+      "summary": "Dart 源文件，承载 therapy_client_api.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "therapy-client-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/api/dio/therapy_client/therapy_client_api.dart:TherapyClientApi",
+      "type": "class",
+      "name": "TherapyClientApi",
+      "filePath": "lib/api/dio/therapy_client/therapy_client_api.dart",
+      "lineRange": [
+        5,
+        49
+      ],
+      "summary": "类型 TherapyClientApi 位于 therapy_client_api.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/api/dio/therapy_client/therapy_client_models.dart",
+      "type": "file",
+      "name": "therapy_client_models.dart",
+      "filePath": "lib/api/dio/therapy_client/therapy_client_models.dart",
+      "summary": "Dart 源文件，承载 therapy_client_models.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "therapy-client-models"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/api/dio/therapy_client/therapy_client_models.dart:TherapyClientDto",
+      "type": "class",
+      "name": "TherapyClientDto",
+      "filePath": "lib/api/dio/therapy_client/therapy_client_models.dart",
+      "lineRange": [
+        1,
+        28
+      ],
+      "summary": "类型 TherapyClientDto 位于 therapy_client_models.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/api/dio/therapy_client/therapy_client_models.dart:TherapyClientRequestDto",
+      "type": "class",
+      "name": "TherapyClientRequestDto",
+      "filePath": "lib/api/dio/therapy_client/therapy_client_models.dart",
+      "lineRange": [
+        30,
+        54
+      ],
+      "summary": "类型 TherapyClientRequestDto 位于 therapy_client_models.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/api/dio/therapy_plan/therapy_plan_api.dart",
+      "type": "file",
+      "name": "therapy_plan_api.dart",
+      "filePath": "lib/api/dio/therapy_plan/therapy_plan_api.dart",
+      "summary": "Dart 源文件，承载 therapy_plan_api.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "therapy-plan-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/api/dio/therapy_plan/therapy_plan_api.dart:TherapyPlanApi",
+      "type": "class",
+      "name": "TherapyPlanApi",
+      "filePath": "lib/api/dio/therapy_plan/therapy_plan_api.dart",
+      "lineRange": [
+        5,
+        117
+      ],
+      "summary": "类型 TherapyPlanApi 位于 therapy_plan_api.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/api/dio/therapy_plan/therapy_plan_models.dart",
+      "type": "file",
+      "name": "therapy_plan_models.dart",
+      "filePath": "lib/api/dio/therapy_plan/therapy_plan_models.dart",
+      "summary": "Dart 源文件，承载 therapy_plan_models.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "therapy-plan-models"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/api/dio/therapy_plan/therapy_plan_models.dart:TherapyPlanDto",
+      "type": "class",
+      "name": "TherapyPlanDto",
+      "filePath": "lib/api/dio/therapy_plan/therapy_plan_models.dart",
+      "lineRange": [
+        99,
+        126
+      ],
+      "summary": "类型 TherapyPlanDto 位于 therapy_plan_models.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/api/dio/therapy_plan/therapy_plan_models.dart:TherapyPlanRequestDto",
+      "type": "class",
+      "name": "TherapyPlanRequestDto",
+      "filePath": "lib/api/dio/therapy_plan/therapy_plan_models.dart",
+      "lineRange": [
+        129,
+        150
+      ],
+      "summary": "类型 TherapyPlanRequestDto 位于 therapy_plan_models.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/api/dio/therapy_report/therapy_report_api.dart",
+      "type": "file",
+      "name": "therapy_report_api.dart",
+      "filePath": "lib/api/dio/therapy_report/therapy_report_api.dart",
+      "summary": "Dart 源文件，承载 therapy_report_api.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "therapy-report-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/api/dio/therapy_report/therapy_report_api.dart:TherapyReportApi",
+      "type": "class",
+      "name": "TherapyReportApi",
+      "filePath": "lib/api/dio/therapy_report/therapy_report_api.dart",
+      "lineRange": [
+        5,
+        91
+      ],
+      "summary": "类型 TherapyReportApi 位于 therapy_report_api.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/api/dio/therapy_report/therapy_report_models.dart",
+      "type": "file",
+      "name": "therapy_report_models.dart",
+      "filePath": "lib/api/dio/therapy_report/therapy_report_models.dart",
+      "summary": "Dart 源文件，承载 therapy_report_models.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "therapy-report-models"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:lib/api/dio/therapy_report/therapy_report_models.dart:SaveTherapyReportRequestDto",
+      "type": "class",
+      "name": "SaveTherapyReportRequestDto",
+      "filePath": "lib/api/dio/therapy_report/therapy_report_models.dart",
+      "lineRange": [
+        2,
+        62
+      ],
+      "summary": "类型 SaveTherapyReportRequestDto 位于 therapy_report_models.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/api/dio/therapy_report/therapy_report_models.dart:ReportModuleRequestDto",
+      "type": "class",
+      "name": "ReportModuleRequestDto",
+      "filePath": "lib/api/dio/therapy_report/therapy_report_models.dart",
+      "lineRange": [
+        65,
+        89
+      ],
+      "summary": "类型 ReportModuleRequestDto 位于 therapy_report_models.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/api/dio/therapy_report/therapy_report_models.dart:HistoryReportUserItemDto",
+      "type": "class",
+      "name": "HistoryReportUserItemDto",
+      "filePath": "lib/api/dio/therapy_report/therapy_report_models.dart",
+      "lineRange": [
+        93,
+        126
+      ],
+      "summary": "类型 HistoryReportUserItemDto 位于 therapy_report_models.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/api/dio/therapy_report/therapy_report_models.dart:HistoryReportUserPageDto",
+      "type": "class",
+      "name": "HistoryReportUserPageDto",
+      "filePath": "lib/api/dio/therapy_report/therapy_report_models.dart",
+      "lineRange": [
+        130,
+        164
+      ],
+      "summary": "类型 HistoryReportUserPageDto 位于 therapy_report_models.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/api/dio/therapy_report/therapy_report_models.dart:TherapyReportDto",
+      "type": "class",
+      "name": "TherapyReportDto",
+      "filePath": "lib/api/dio/therapy_report/therapy_report_models.dart",
+      "lineRange": [
+        166,
+        217
+      ],
+      "summary": "类型 TherapyReportDto 位于 therapy_report_models.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/api/dio/therapy_report/therapy_report_models.dart:TherapyReportModuleDto",
+      "type": "class",
+      "name": "TherapyReportModuleDto",
+      "filePath": "lib/api/dio/therapy_report/therapy_report_models.dart",
+      "lineRange": [
+        219,
+        241
+      ],
+      "summary": "类型 TherapyReportModuleDto 位于 therapy_report_models.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/api/dio/therapy_report/therapy_report_models.dart:TherapyReportVitalDto",
+      "type": "class",
+      "name": "TherapyReportVitalDto",
+      "filePath": "lib/api/dio/therapy_report/therapy_report_models.dart",
+      "lineRange": [
+        243,
+        264
+      ],
+      "summary": "类型 TherapyReportVitalDto 位于 therapy_report_models.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/api/dio/therapy_report/therapy_report_models.dart:TherapyReportDetailDto",
+      "type": "class",
+      "name": "TherapyReportDetailDto",
+      "filePath": "lib/api/dio/therapy_report/therapy_report_models.dart",
+      "lineRange": [
+        266,
+        305
+      ],
+      "summary": "类型 TherapyReportDetailDto 位于 therapy_report_models.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/api/dio/therapy_report/therapy_report_models.dart:TherapyReportDetailPageDto",
+      "type": "class",
+      "name": "TherapyReportDetailPageDto",
+      "filePath": "lib/api/dio/therapy_report/therapy_report_models.dart",
+      "lineRange": [
+        307,
+        340
+      ],
+      "summary": "类型 TherapyReportDetailPageDto 位于 therapy_report_models.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/api/modbus/chakra_modbus.dart",
+      "type": "file",
+      "name": "chakra_modbus.dart",
+      "filePath": "lib/api/modbus/chakra_modbus.dart",
+      "summary": "Dart 源文件，承载 chakra_modbus.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "chakra-modbus"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/api/modbus/chakra_modbus.dart:ChakraBatchPayload",
+      "type": "class",
+      "name": "ChakraBatchPayload",
+      "filePath": "lib/api/modbus/chakra_modbus.dart",
+      "lineRange": [
+        6,
+        39
+      ],
+      "summary": "类型 ChakraBatchPayload 位于 chakra_modbus.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/api/modbus/chakra_modbus.dart:ChakraModbus",
+      "type": "class",
+      "name": "ChakraModbus",
+      "filePath": "lib/api/modbus/chakra_modbus.dart",
+      "lineRange": [
+        41,
+        115
+      ],
+      "summary": "类型 ChakraModbus 位于 chakra_modbus.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/api/modbus/fragrance_modbus.dart",
+      "type": "file",
+      "name": "fragrance_modbus.dart",
+      "filePath": "lib/api/modbus/fragrance_modbus.dart",
+      "summary": "Dart 源文件，承载 fragrance_modbus.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "fragrance-modbus"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/api/modbus/fragrance_modbus.dart:FragranceBatchPayload",
+      "type": "class",
+      "name": "FragranceBatchPayload",
+      "filePath": "lib/api/modbus/fragrance_modbus.dart",
+      "lineRange": [
+        2,
+        24
+      ],
+      "summary": "类型 FragranceBatchPayload 位于 fragrance_modbus.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/api/modbus/fragrance_modbus.dart:FragranceModbus",
+      "type": "class",
+      "name": "FragranceModbus",
+      "filePath": "lib/api/modbus/fragrance_modbus.dart",
+      "lineRange": [
+        26,
+        65
+      ],
+      "summary": "类型 FragranceModbus 位于 fragrance_modbus.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/api/modbus/hifem_modbus.dart",
+      "type": "file",
+      "name": "hifem_modbus.dart",
+      "filePath": "lib/api/modbus/hifem_modbus.dart",
+      "summary": "Dart 源文件，承载 hifem_modbus.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "hifem-modbus"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/api/modbus/hifem_modbus.dart:HifemModbus",
+      "type": "class",
+      "name": "HifemModbus",
+      "filePath": "lib/api/modbus/hifem_modbus.dart",
+      "lineRange": [
+        6,
+        77
+      ],
+      "summary": "类型 HifemModbus 位于 hifem_modbus.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/api/modbus/hifem_modbus.dart:HifemBatchPayload",
+      "type": "class",
+      "name": "HifemBatchPayload",
+      "filePath": "lib/api/modbus/hifem_modbus.dart",
+      "lineRange": [
+        79,
+        109
+      ],
+      "summary": "类型 HifemBatchPayload 位于 hifem_modbus.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/api/modbus/hydrogen_modbus.dart",
+      "type": "file",
+      "name": "hydrogen_modbus.dart",
+      "filePath": "lib/api/modbus/hydrogen_modbus.dart",
+      "summary": "Dart 源文件，承载 hydrogen_modbus.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "hydrogen-modbus"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/api/modbus/hydrogen_modbus.dart:HydrogenBatchPayload",
+      "type": "class",
+      "name": "HydrogenBatchPayload",
+      "filePath": "lib/api/modbus/hydrogen_modbus.dart",
+      "lineRange": [
+        6,
+        26
+      ],
+      "summary": "类型 HydrogenBatchPayload 位于 hydrogen_modbus.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/api/modbus/hydrogen_modbus.dart:HydrogenModbus",
+      "type": "class",
+      "name": "HydrogenModbus",
+      "filePath": "lib/api/modbus/hydrogen_modbus.dart",
+      "lineRange": [
+        28,
+        61
+      ],
+      "summary": "类型 HydrogenModbus 位于 hydrogen_modbus.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/api/modbus/modbus_rtu_service.dart",
+      "type": "file",
+      "name": "modbus_rtu_service.dart",
+      "filePath": "lib/api/modbus/modbus_rtu_service.dart",
+      "summary": "Dart 源文件，承载 modbus_rtu_service.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "modbus-rtu-service"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:lib/api/modbus/modbus_rtu_service.dart:ModbusRtuService",
+      "type": "class",
+      "name": "ModbusRtuService",
+      "filePath": "lib/api/modbus/modbus_rtu_service.dart",
+      "lineRange": [
+        22,
+        2539
+      ],
+      "summary": "类型 ModbusRtuService 位于 modbus_rtu_service.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:lib/api/modbus/modbus_rtu_service.dart:ModbusRtuException",
+      "type": "class",
+      "name": "ModbusRtuException",
+      "filePath": "lib/api/modbus/modbus_rtu_service.dart",
+      "lineRange": [
+        2558,
+        2565
+      ],
+      "summary": "类型 ModbusRtuException 位于 modbus_rtu_service.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/api/modbus/pemf_modbus.dart",
+      "type": "file",
+      "name": "pemf_modbus.dart",
+      "filePath": "lib/api/modbus/pemf_modbus.dart",
+      "summary": "Dart 源文件，承载 pemf_modbus.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "pemf-modbus"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/api/modbus/pemf_modbus.dart:PemfBatchPayload",
+      "type": "class",
+      "name": "PemfBatchPayload",
+      "filePath": "lib/api/modbus/pemf_modbus.dart",
+      "lineRange": [
+        6,
+        28
+      ],
+      "summary": "类型 PemfBatchPayload 位于 pemf_modbus.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/api/modbus/pemf_modbus.dart:PemfModbus",
+      "type": "class",
+      "name": "PemfModbus",
+      "filePath": "lib/api/modbus/pemf_modbus.dart",
+      "lineRange": [
+        30,
+        78
+      ],
+      "summary": "类型 PemfModbus 位于 pemf_modbus.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "config:ios/Runner/Info.plist",
+      "target": "file:lib/main.dart",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:lib/api/dio/api/api_client.dart",
+      "target": "class:lib/api/dio/api/api_client.dart:ApiClient",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/api/dio/api/api_response.dart",
+      "target": "class:lib/api/dio/api/api_response.dart:ApiResponse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/api/dio/login/login_models.dart",
+      "target": "class:lib/api/dio/login/login_models.dart:LoginResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/api/dio/register/register_api.dart",
+      "target": "class:lib/api/dio/register/register_api.dart:RegisterApi",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/api/dio/reset_password/reset_password_api.dart",
+      "target": "class:lib/api/dio/reset_password/reset_password_api.dart:ResetPasswordApi",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/api/dio/therapy_client/therapy_client_api.dart",
+      "target": "class:lib/api/dio/therapy_client/therapy_client_api.dart:TherapyClientApi",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/api/dio/therapy_client/therapy_client_models.dart",
+      "target": "class:lib/api/dio/therapy_client/therapy_client_models.dart:TherapyClientDto",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/api/dio/therapy_client/therapy_client_models.dart",
+      "target": "class:lib/api/dio/therapy_client/therapy_client_models.dart:TherapyClientRequestDto",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/api/dio/therapy_plan/therapy_plan_api.dart",
+      "target": "class:lib/api/dio/therapy_plan/therapy_plan_api.dart:TherapyPlanApi",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/api/dio/therapy_plan/therapy_plan_models.dart",
+      "target": "class:lib/api/dio/therapy_plan/therapy_plan_models.dart:TherapyPlanDto",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/api/dio/therapy_plan/therapy_plan_models.dart",
+      "target": "class:lib/api/dio/therapy_plan/therapy_plan_models.dart:TherapyPlanRequestDto",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/api/dio/therapy_report/therapy_report_api.dart",
+      "target": "class:lib/api/dio/therapy_report/therapy_report_api.dart:TherapyReportApi",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/api/dio/therapy_report/therapy_report_models.dart",
+      "target": "class:lib/api/dio/therapy_report/therapy_report_models.dart:SaveTherapyReportRequestDto",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/api/dio/therapy_report/therapy_report_models.dart",
+      "target": "class:lib/api/dio/therapy_report/therapy_report_models.dart:ReportModuleRequestDto",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/api/dio/therapy_report/therapy_report_models.dart",
+      "target": "class:lib/api/dio/therapy_report/therapy_report_models.dart:HistoryReportUserItemDto",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/api/dio/therapy_report/therapy_report_models.dart",
+      "target": "class:lib/api/dio/therapy_report/therapy_report_models.dart:HistoryReportUserPageDto",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/api/dio/therapy_report/therapy_report_models.dart",
+      "target": "class:lib/api/dio/therapy_report/therapy_report_models.dart:TherapyReportDto",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/api/dio/therapy_report/therapy_report_models.dart",
+      "target": "class:lib/api/dio/therapy_report/therapy_report_models.dart:TherapyReportModuleDto",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/api/dio/therapy_report/therapy_report_models.dart",
+      "target": "class:lib/api/dio/therapy_report/therapy_report_models.dart:TherapyReportVitalDto",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/api/dio/therapy_report/therapy_report_models.dart",
+      "target": "class:lib/api/dio/therapy_report/therapy_report_models.dart:TherapyReportDetailDto",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/api/dio/therapy_report/therapy_report_models.dart",
+      "target": "class:lib/api/dio/therapy_report/therapy_report_models.dart:TherapyReportDetailPageDto",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/api/modbus/chakra_modbus.dart",
+      "target": "class:lib/api/modbus/chakra_modbus.dart:ChakraBatchPayload",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/api/modbus/chakra_modbus.dart",
+      "target": "class:lib/api/modbus/chakra_modbus.dart:ChakraModbus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/api/modbus/fragrance_modbus.dart",
+      "target": "class:lib/api/modbus/fragrance_modbus.dart:FragranceBatchPayload",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/api/modbus/fragrance_modbus.dart",
+      "target": "class:lib/api/modbus/fragrance_modbus.dart:FragranceModbus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/api/modbus/hifem_modbus.dart",
+      "target": "class:lib/api/modbus/hifem_modbus.dart:HifemModbus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/api/modbus/hifem_modbus.dart",
+      "target": "class:lib/api/modbus/hifem_modbus.dart:HifemBatchPayload",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/api/modbus/hydrogen_modbus.dart",
+      "target": "class:lib/api/modbus/hydrogen_modbus.dart:HydrogenBatchPayload",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/api/modbus/hydrogen_modbus.dart",
+      "target": "class:lib/api/modbus/hydrogen_modbus.dart:HydrogenModbus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/api/modbus/modbus_rtu_service.dart",
+      "target": "class:lib/api/modbus/modbus_rtu_service.dart:ModbusRtuService",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/api/modbus/modbus_rtu_service.dart",
+      "target": "class:lib/api/modbus/modbus_rtu_service.dart:ModbusRtuException",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/api/modbus/pemf_modbus.dart",
+      "target": "class:lib/api/modbus/pemf_modbus.dart:PemfBatchPayload",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/api/modbus/pemf_modbus.dart",
+      "target": "class:lib/api/modbus/pemf_modbus.dart:PemfModbus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

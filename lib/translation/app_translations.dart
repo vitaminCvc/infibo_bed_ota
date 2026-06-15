@@ -1,4 +1,4 @@
-// App 多语言文案表。
+﻿// App 多语言文案表。
 //
 // 所有页面展示文案按语言代码集中维护在这里。
 import 'package:get/get.dart';
@@ -17,9 +17,9 @@ class AppTranslations extends Translations {
       'save': '保存',
       'delete': '删除',
       'select': '选择',
-      'name': '姓名',
-      'age': '年龄',
-      'phone': '手机号',
+      'name': '输入姓名',
+      'age': '输入年龄',
+      'phone': '输入手机号',
       'gender': '性别',
       'male': '男',
       'female': '女',
@@ -27,6 +27,7 @@ class AppTranslations extends Translations {
       'intensity': '强度',
       'mode': '模式',
       'waveform': '波形',
+      'select_waveform': '选择波形',
       'continuous': '连续',
       'pulse': '脉冲',
       'power': '功率',
@@ -207,6 +208,8 @@ class AppTranslations extends Translations {
       'pemf_params_required': 'PEMF频率和强度都不能为0',
       'vat_params_required': 'VAT频率和强度都不能为0',
       'hydrogen_concentration_required': '分子氢浓度不能为0',
+      'node_copied_prefix': '已复制到',
+      'node_copied_suffix': '分钟节点',
 
       // 拓展页面
       'fragrance_setting': '香氛设置',
@@ -251,9 +254,9 @@ class AppTranslations extends Translations {
       'save': 'Save', // 保存
       'delete': 'Delete', // 删除
       'select': 'Select', // 选择
-      'name': 'Name', // 姓名
-      'age': 'Age', // 年龄
-      'phone': 'Phone', // 手机号
+      'name': 'Enter name', // 输入姓名
+      'age': 'Enter age', // 输入年龄
+      'phone': 'Enter phone', // 输入手机号
       'gender': 'Gender', // 性别
       'male': 'M', // 男
       'female': 'F', // 女
@@ -261,6 +264,7 @@ class AppTranslations extends Translations {
       'intensity': 'Intensity', // 强度
       'mode': 'Mode', // 模式
       'waveform': 'Wave', // 波形
+      'select_waveform': 'Select Waveform', // 选择波形
       'continuous': 'Conti. ', // 连续
       'pulse': 'Pulse', // 脉冲
       'power': 'Power', // 功率
@@ -444,6 +448,8 @@ class AppTranslations extends Translations {
           'VAT frequency and intensity cannot both be 0', // VAT频率和强度都不能为0
       'hydrogen_concentration_required':
           'H₂ concentration cannot be 0', // 分子氢浓度不能为0
+      'node_copied_prefix': 'Copied to ',
+      'node_copied_suffix': ' min node',
       // 拓展页面
       'fragrance_setting': 'Aroma Setting', // 香氛设置
       'terahertz_setting': 'Terahertz Setting', // 太赫兹设置
@@ -486,9 +492,9 @@ class AppTranslations extends Translations {
       'save': 'Guardar', // 保存
       'delete': 'Eliminar', // 删除
       'select': 'Elegir', // 选择
-      'name': 'Nombre', // 姓名
-      'age': 'Edad', // 年龄
-      'phone': 'Teléfono', // 手机号
+      'name': 'Ingrese nombre', // 输入姓名
+      'age': 'Ingrese edad', // 输入年龄
+      'phone': 'Ingrese teléfono', // 输入手机号
       'gender': 'Género', // 性别
       'male': 'M', // 男
       'female': 'F', // 女
@@ -496,6 +502,7 @@ class AppTranslations extends Translations {
       'intensity': 'Intensidad', // 强度
       'mode': 'Modo', // 模式
       'waveform': 'Onda', // 波形
+      'select_waveform': 'Seleccionar forma de onda', // 选择波形
       'continuous': 'Cont.', // 连续
       'pulse': 'Pulso', // 脉冲
       'power': 'Potencia', // 功率
@@ -684,6 +691,8 @@ class AppTranslations extends Translations {
           'La frecuencia e intensidad de VAT no pueden ser 0', // VAT频率和强度都不能为0
       'hydrogen_concentration_required':
           'La concentración de H₂ no puede ser 0', // 分子氢浓度不能为0
+      'node_copied_prefix': 'Copiado al nodo de ', // 已复制到
+      'node_copied_suffix': ' min', // 分钟节点
       // 拓展页面
       'fragrance_setting': 'Configuración de aroma', // 香氛设置
       'terahertz_setting': 'Ajuste terahercios', // 太赫兹设置
@@ -726,9 +735,9 @@ class AppTranslations extends Translations {
       'save': 'Guardar', // 保存
       'delete': 'Eliminar', // 删除
       'select': 'Usar', // 选择
-      'name': 'Nome', // 姓名
-      'age': 'Idade', // 年龄
-      'phone': 'Telefone', // 手机号
+      'name': 'Introduzir nome', // 输入姓名
+      'age': 'Introduzir idade', // 输入年龄
+      'phone': 'Introduzir telefone', // 输入手机号
       'gender': 'Género', // 性别
       'male': 'M', // 男
       'female': 'F', // 女
@@ -736,6 +745,7 @@ class AppTranslations extends Translations {
       'intensity': 'Intens.', // 强度
       'mode': 'Modo', // 模式
       'waveform': 'Onda', // 波形
+      'select_waveform': 'Selecionar forma de onda', // 选择波形
       'continuous': 'Cont.', // 连续
       'pulse': 'Pulso', // 脉冲
       'power': 'Potência', // 功率
@@ -922,6 +932,8 @@ class AppTranslations extends Translations {
           'A frequência e intensidade VAT não podem ser 0', // VAT频率和强度都不能为0
       'hydrogen_concentration_required':
           'A concentração de H₂ não pode ser 0', // 分子氢浓度不能为0
+      'node_copied_prefix': 'Copiado para o nó de ', // 已复制到
+      'node_copied_suffix': ' min', // 分钟节点
       // 拓展页面
       'fragrance_setting': 'Definições de aroma', // 香氛设置
       'terahertz_setting': 'Definições de terahertz', // 太赫兹设置
@@ -964,9 +976,9 @@ class AppTranslations extends Translations {
       'save': 'Сохранить', // 保存
       'delete': 'Удалить', // 删除
       'select': 'Выбрать', // 选择
-      'name': 'Имя', // 姓名
-      'age': 'Возраст', // 年龄
-      'phone': 'Телефон', // 手机号
+      'name': 'Введите имя', // 输入姓名
+      'age': 'Введите возраст', // 输入年龄
+      'phone': 'Введите телефон', // 输入手机号
       'gender': 'Пол', // 性别
       'male': 'М', // 男
       'female': 'Ж', // 女
@@ -974,6 +986,7 @@ class AppTranslations extends Translations {
       'intensity': 'Интенсив.', // 强度
       'mode': 'Режим', // 模式
       'waveform': 'Волна', // 波形
+      'select_waveform': 'Выбор формы волны', // 选择波形
       'continuous': 'Непр.', // 连续
       'pulse': 'Имп.', // 脉冲
       'power': 'Мощность', // 功率
@@ -1155,6 +1168,8 @@ class AppTranslations extends Translations {
           'Частота и интенсивность VAT не могут быть 0', // VAT频率和强度都不能为0
       'hydrogen_concentration_required':
           'Концентрация H₂ не может быть 0', // 分子氢浓度不能为0
+      'node_copied_prefix': 'Скопировано в узел ', // 已复制到
+      'node_copied_suffix': ' мин', // 分钟节点
       // 拓展页面
       'fragrance_setting': 'Настройки аромата', // 香氛设置
       'terahertz_setting': 'Настройки терагерц', // 太赫兹设置
@@ -1197,9 +1212,9 @@ class AppTranslations extends Translations {
       'save': 'Enregistrer', // 保存
       'delete': 'Supprimer', // 删除
       'select': 'Выб.', // 选择
-      'name': 'Nom', // 姓名
-      'age': 'Âge', // 年龄
-      'phone': 'Téléphone', // 手机号
+      'name': 'Saisir le nom', // 输入姓名
+      'age': 'Saisir l’âge', // 输入年龄
+      'phone': 'Saisir le téléphone', // 输入手机号
       'gender': 'Sexe', // 性别
       'male': 'H', // 男
       'female': 'F', // 女
@@ -1207,6 +1222,7 @@ class AppTranslations extends Translations {
       'intensity': 'Intensité', // 强度
       'mode': 'Mode', // 模式
       'waveform': 'Onde', // 波形
+      'select_waveform': 'Choisir la forme d’onde', // 选择波形
       'continuous': 'Continu', // 连续
       'pulse': 'Pulsé', // 脉冲
       'power': 'Puissance', // 功率
@@ -1400,6 +1416,8 @@ class AppTranslations extends Translations {
           'La fréquence et l’intensité VAT ne peuvent pas être à 0', // VAT频率和强度都不能为0
       'hydrogen_concentration_required':
           'La concentration H₂ ne peut pas être 0', // 分子氢浓度不能为0
+      'node_copied_prefix': 'Copié vers le nœud de ', // 已复制到
+      'node_copied_suffix': ' min', // 分钟节点
       // 拓展页面
       'fragrance_setting': 'Paramètres du parfum', // 香氛设置
       'terahertz_setting': 'Paramètres térahertz', // 太赫兹设置
@@ -1442,9 +1460,9 @@ class AppTranslations extends Translations {
       'save': '저장', // 保存
       'delete': '삭제', // 删除
       'select': '선택', // 选择
-      'name': '이름', // 姓名
-      'age': '나이', // 年龄
-      'phone': '전화번호', // 手机号
+      'name': '이름 입력', // 输入姓名
+      'age': '나이 입력', // 输入年龄
+      'phone': '전화번호 입력', // 输入手机号
       'gender': '성별', // 性别
       'male': '남', // 男
       'female': '여', // 女
@@ -1452,6 +1470,7 @@ class AppTranslations extends Translations {
       'intensity': '강도', // 强度
       'mode': '모드', // 模式
       'waveform': '파형', // 波形
+      'select_waveform': '파형 선택', // 选择波形
       'continuous': '연속', // 连续
       'pulse': '펄스', // 脉冲
       'power': '출력', // 功率
@@ -1624,6 +1643,8 @@ class AppTranslations extends Translations {
       'pemf_params_required': 'PEMF 주파수와 강도는 모두 0일 수 없습니다', // PEMF频率和强度都不能为0
       'vat_params_required': 'VAT 주파수와 강도는 모두 0일 수 없습니다', // VAT频率和强度都不能为0
       'hydrogen_concentration_required': '수소 농도는 0일 수 없습니다', // 分子氢浓度不能为0
+      'node_copied_prefix': '', // 已复制到
+      'node_copied_suffix': '분 노드에 복사됨', // 分钟节点
       // 拓展页面
       'fragrance_setting': '아로마 설정', // 香氛设置
       'terahertz_setting': '테라헤르츠', // 太赫兹设置
@@ -1666,9 +1687,9 @@ class AppTranslations extends Translations {
       'save': 'حفظ', // 保存
       'delete': 'حذف', // 删除
       'select': 'اختيار', // 选择
-      'name': 'الاسم', // 姓名
-      'age': 'العمر', // 年龄
-      'phone': 'الهاتف', // 手机号
+      'name': 'أدخل الاسم', // 输入姓名
+      'age': 'أدخل العمر', // 输入年龄
+      'phone': 'أدخل الهاتف', // 输入手机号
       'gender': 'الجنس', // 性别
       'male': 'ذكر', // 男
       'female': 'أنثى', // 女
@@ -1676,6 +1697,7 @@ class AppTranslations extends Translations {
       'intensity': 'الشدة', // 强度
       'mode': 'الوضع', // 模式
       'waveform': 'شكل الموجة', // 波形
+      'select_waveform': 'اختيار شكل الموجة', // 选择波形
       'continuous': 'مستمر', // 连续
       'pulse': 'نبضي', // 脉冲
       'power': 'القدرة', // 功率
@@ -1857,6 +1879,8 @@ class AppTranslations extends Translations {
           'لا يمكن أن يكون تردد وشدة VAT صفرًا', // VAT频率和强度都不能为0
       'hydrogen_concentration_required':
           'لا يمكن أن يكون تركيز H₂ صفرًا', // 分子氢浓度不能为0
+      'node_copied_prefix': 'تم النسخ إلى عقدة ', // 已复制到
+      'node_copied_suffix': ' دقيقة', // 分钟节点
       // 拓展页面
       'fragrance_setting': 'إعدادات العطر', // 香氛设置
       'terahertz_setting': 'إعدادات التيراهرتز', // 太赫兹设置
@@ -1899,9 +1923,9 @@ class AppTranslations extends Translations {
       'save': 'Speichern', // 保存
       'delete': 'Löschen', // 删除
       'select': 'Wählen', // 选择
-      'name': 'Name', // 姓名
-      'age': 'Alter', // 年龄
-      'phone': 'Telefon', // 手机号
+      'name': 'Namen eingeben', // 输入姓名
+      'age': 'Alter eingeben', // 输入年龄
+      'phone': 'Telefon eingeben', // 输入手机号
       'gender': 'Geschlecht', // 性别
       'male': 'M', // 男
       'female': 'W', // 女
@@ -1909,6 +1933,7 @@ class AppTranslations extends Translations {
       'intensity': 'Intensität', // 强度
       'mode': 'Modus', // 模式
       'waveform': 'Welle', // 波形
+      'select_waveform': 'Wellenform wählen', // 选择波形
       'continuous': 'Kont.', // 连续
       'pulse': 'Impuls', // 脉冲
       'power': 'Leistung', // 功率
@@ -2098,6 +2123,8 @@ class AppTranslations extends Translations {
           'VAT-Frequenz und Intensität dürfen nicht 0 sein', // VAT频率和强度都不能为0
       'hydrogen_concentration_required':
           'H₂-Konzentration darf nicht 0 sein', // 分子氢浓度不能为0
+      'node_copied_prefix': 'Kopiert zum ', // 已复制到
+      'node_copied_suffix': '-Min.-Knoten', // 分钟节点
       // 拓展页面
       'fragrance_setting': 'Aroma-Einstellungen', // 香氛设置
       'terahertz_setting': 'Terahertz-Einstellungen', // 太赫兹设置
@@ -2140,9 +2167,9 @@ class AppTranslations extends Translations {
       'save': 'Kaydet', // 保存
       'delete': 'Sil', // 删除
       'select': 'Seç', // 选择
-      'name': 'Ad', // 姓名
-      'age': 'Yaş', // 年龄
-      'phone': 'Telefon', // 手机号
+      'name': 'Ad girin', // 输入姓名
+      'age': 'Yaş girin', // 输入年龄
+      'phone': 'Telefon girin', // 输入手机号
       'gender': 'Cinsiyet', // 性别
       'male': 'E', // 男
       'female': 'K', // 女
@@ -2150,6 +2177,7 @@ class AppTranslations extends Translations {
       'intensity': 'Yoğunluk', // 强度
       'mode': 'Mod', // 模式
       'waveform': 'Dalga', // 波形
+      'select_waveform': 'Dalga biçimi seç', // 选择波形
       'continuous': 'Sürekli', // 连续
       'pulse': 'Darbeli', // 脉冲
       'power': 'Güç', // 功率
@@ -2331,6 +2359,8 @@ class AppTranslations extends Translations {
           'VAT frekansı ve yoğunluğu 0 olamaz', // VAT频率和强度都不能为0
       'hydrogen_concentration_required':
           'H₂ konsantrasyonu 0 olamaz', // 分子氢浓度不能为0
+      'node_copied_prefix': '', // 已复制到
+      'node_copied_suffix': ' dk düğümüne kopyalandı', // 分钟节点
       // 拓展页面
       'fragrance_setting': 'Aroma Ayarları', // 香氛设置
       'terahertz_setting': 'Terahertz Ayarları', // 太赫兹设置

@@ -1,0 +1,182 @@
+{
+  "projectRoot": "D:/FlutterProject/infibo_app",
+  "batchFiles": [
+    {
+      "path": "lib/api/modbus/red_light_modbus.dart",
+      "language": "dart",
+      "sizeLines": 100,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/api/modbus/terahertz_modbus.dart",
+      "language": "dart",
+      "sizeLines": 86,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/api/modbus/vat_modbus.dart",
+      "language": "dart",
+      "sizeLines": 79,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/components/index.dart",
+      "language": "dart",
+      "sizeLines": 262,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/components/logic.dart",
+      "language": "dart",
+      "sizeLines": 31,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/components/logout_menu.dart",
+      "language": "dart",
+      "sizeLines": 145,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/components/settingindex.dart",
+      "language": "dart",
+      "sizeLines": 237,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/components/userindex.dart",
+      "language": "dart",
+      "sizeLines": 270,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/constants/assets.dart",
+      "language": "dart",
+      "sizeLines": 777,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/constants/color.dart",
+      "language": "dart",
+      "sizeLines": 10,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/main.dart",
+      "language": "dart",
+      "sizeLines": 43,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/choseusers/logic.dart",
+      "language": "dart",
+      "sizeLines": 238,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/choseusers/ui.dart",
+      "language": "dart",
+      "sizeLines": 694,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/customized/customizedPage/expand_setting_page.dart",
+      "language": "dart",
+      "sizeLines": 118,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/customized/customizedPage/hifem/ui.dart",
+      "language": "dart",
+      "sizeLines": 588,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/customized/customizedPage/logic.dart",
+      "language": "dart",
+      "sizeLines": 48,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/customized/customizedPage/mailun/logic.dart",
+      "language": "dart",
+      "sizeLines": 4,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/customized/customizedPage/mailun/ui.dart",
+      "language": "dart",
+      "sizeLines": 569,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/customized/customizedPage/setting_page_helpers.dart",
+      "language": "dart",
+      "sizeLines": 302,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/customized/customizedPage/taihezi/ui.dart",
+      "language": "dart",
+      "sizeLines": 412,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/customized/customizedPage/ui.dart",
+      "language": "dart",
+      "sizeLines": 3490,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/customized/customizedPage/xiangfen/ui.dart",
+      "language": "dart",
+      "sizeLines": 296,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/customized/logic.dart",
+      "language": "dart",
+      "sizeLines": 318,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/customized/plan_features.dart",
+      "language": "dart",
+      "sizeLines": 84,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/customized/ui.dart",
+      "language": "dart",
+      "sizeLines": 623,
+      "fileCategory": "code"
+    }
+  ],
+  "batchImportData": {
+    "lib/api/modbus/red_light_modbus.dart": [],
+    "lib/api/modbus/terahertz_modbus.dart": [],
+    "lib/api/modbus/vat_modbus.dart": [],
+    "lib/components/index.dart": [],
+    "lib/components/logic.dart": [],
+    "lib/components/logout_menu.dart": [],
+    "lib/components/settingindex.dart": [],
+    "lib/components/userindex.dart": [],
+    "lib/constants/assets.dart": [],
+    "lib/constants/color.dart": [],
+    "lib/main.dart": [],
+    "lib/pages/choseusers/logic.dart": [],
+    "lib/pages/choseusers/ui.dart": [],
+    "lib/pages/customized/customizedPage/expand_setting_page.dart": [],
+    "lib/pages/customized/customizedPage/hifem/ui.dart": [],
+    "lib/pages/customized/customizedPage/logic.dart": [],
+    "lib/pages/customized/customizedPage/mailun/logic.dart": [],
+    "lib/pages/customized/customizedPage/mailun/ui.dart": [],
+    "lib/pages/customized/customizedPage/setting_page_helpers.dart": [],
+    "lib/pages/customized/customizedPage/taihezi/ui.dart": [],
+    "lib/pages/customized/customizedPage/ui.dart": [],
+    "lib/pages/customized/customizedPage/xiangfen/ui.dart": [],
+    "lib/pages/customized/logic.dart": [],
+    "lib/pages/customized/plan_features.dart": [],
+    "lib/pages/customized/ui.dart": []
+  }
+}

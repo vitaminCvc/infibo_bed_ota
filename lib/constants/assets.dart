@@ -106,6 +106,10 @@ class Assets {
   // 选择用户：性别年龄信息标签背景。
   static const String choseUserInfoBg = "assets/Choseusers/informationBox.png";
 
+  // 选择用户：添加用户弹窗背景
+  static const String choseUserAddBg =
+      "assets/Choseusers/adduserBackground.png";
+
   // 启动治疗页：人体主视觉图片。
   static const String startBodyLogo = "assets/Start/startBody.png";
   /////////////////////////////////////功能框背景/////////////////////////////////////
@@ -172,6 +176,9 @@ class Assets {
   static const String startExpandContinuous =
       "assets/Start/Expand/continuous.png";
 
+  // 启动治疗页：拓展功能脉冲模式图标。
+  static const String maichong = "assets/Start/Expand/maichong.png";
+
   // 自定义红光 / 启动页：脉冲模式曲线图。
   static const String redLightPulseWave = "assets/waveforms/pulse.png";
 
@@ -229,6 +236,15 @@ class Assets {
 
   // 自定义方案列表：左滑删除按钮图标。
   static const String customizedDeleteIcon = "assets/customized/delete.png";
+
+  ///////////////////////////自定义方案编辑页//////////////////////////////////////////
+
+  //自定义方案编辑页：方案命名弹窗背景图
+  static const String customizedPlanNameDialog =
+      "assets/customized/planName.png";
+
+  //自定义方案编辑页：复制上一个节点参数图标
+  static const String customizedCopyIcon = "assets/customized/copy.png";
 
   // 自定义方案编辑页：拓展功能模块未选中图标。
   static const String expandIconOff = "assets/customized/expandno.png";

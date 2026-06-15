@@ -1,0 +1,398 @@
+{
+  "nodes": [
+    {
+      "id": "file:lib/preset/a_cankao/preset_models.dart",
+      "type": "file",
+      "name": "preset_models.dart",
+      "filePath": "lib/preset/a_cankao/preset_models.dart",
+      "summary": "Dart 源文件，承载 preset_models.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "preset-models"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/preset/a_cankao/preset_models.dart:PresetMode",
+      "type": "class",
+      "name": "PresetMode",
+      "filePath": "lib/preset/a_cankao/preset_models.dart",
+      "lineRange": [
+        28,
+        48
+      ],
+      "summary": "类型 PresetMode 位于 preset_models.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/preset/a_cankao/preset_models.dart:PresetPhase",
+      "type": "class",
+      "name": "PresetPhase",
+      "filePath": "lib/preset/a_cankao/preset_models.dart",
+      "lineRange": [
+        50,
+        73
+      ],
+      "summary": "类型 PresetPhase 位于 preset_models.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/preset/a_cankao/preset_models.dart:PresetRedLightConfig",
+      "type": "class",
+      "name": "PresetRedLightConfig",
+      "filePath": "lib/preset/a_cankao/preset_models.dart",
+      "lineRange": [
+        94,
+        115
+      ],
+      "summary": "类型 PresetRedLightConfig 位于 preset_models.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/preset/a_cankao/preset_registry.dart",
+      "type": "file",
+      "name": "preset_registry.dart",
+      "filePath": "lib/preset/a_cankao/preset_registry.dart",
+      "summary": "Dart 源文件，承载 preset_registry.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "preset-registry"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/preset/anti_aging/anti_aging.dart",
+      "type": "file",
+      "name": "anti_aging.dart",
+      "filePath": "lib/preset/anti_aging/anti_aging.dart",
+      "summary": "Dart 源文件，承载 anti_aging.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "anti-aging"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/preset/deep_relax/deep_relax.dart",
+      "type": "file",
+      "name": "deep_relax.dart",
+      "filePath": "lib/preset/deep_relax/deep_relax.dart",
+      "summary": "Dart 源文件，承载 deep_relax.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "deep-relax"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/preset/emo_healing/emo_healing.dart",
+      "type": "file",
+      "name": "emo_healing.dart",
+      "filePath": "lib/preset/emo_healing/emo_healing.dart",
+      "summary": "Dart 源文件，承载 emo_healing.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "emo-healing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/preset/energy_boost/energy_boost.dart",
+      "type": "file",
+      "name": "energy_boost.dart",
+      "filePath": "lib/preset/energy_boost/energy_boost.dart",
+      "summary": "Dart 源文件，承载 energy_boost.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "energy-boost"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/preset/immune_boost/immune_boost.dart",
+      "type": "file",
+      "name": "immune_boost.dart",
+      "filePath": "lib/preset/immune_boost/immune_boost.dart",
+      "summary": "Dart 源文件，承载 immune_boost.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "immune-boost"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/preset/pain_relief/pain_relief.dart",
+      "type": "file",
+      "name": "pain_relief.dart",
+      "filePath": "lib/preset/pain_relief/pain_relief.dart",
+      "summary": "Dart 源文件，承载 pain_relief.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "pain-relief"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/preset/sleep_imp/sleep_imp.dart",
+      "type": "file",
+      "name": "sleep_imp.dart",
+      "filePath": "lib/preset/sleep_imp/sleep_imp.dart",
+      "summary": "Dart 源文件，承载 sleep_imp.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "sleep-imp"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/preset/sports_rec/sports_rec.dart",
+      "type": "file",
+      "name": "sports_rec.dart",
+      "filePath": "lib/preset/sports_rec/sports_rec.dart",
+      "summary": "Dart 源文件，承载 sports_rec.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "sports-rec"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/preset/stress_relief/stress_relief.dart",
+      "type": "file",
+      "name": "stress_relief.dart",
+      "filePath": "lib/preset/stress_relief/stress_relief.dart",
+      "summary": "Dart 源文件，承载 stress_relief.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "stress-relief"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/preset/total_care/total_care.dart",
+      "type": "file",
+      "name": "total_care.dart",
+      "filePath": "lib/preset/total_care/total_care.dart",
+      "summary": "Dart 源文件，承载 total_care.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "total-care"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:lib/preset/a_cankao/preset_models.dart",
+      "target": "class:lib/preset/a_cankao/preset_models.dart:PresetMode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/preset/a_cankao/preset_models.dart",
+      "target": "class:lib/preset/a_cankao/preset_models.dart:PresetPhase",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/preset/a_cankao/preset_models.dart",
+      "target": "class:lib/preset/a_cankao/preset_models.dart:PresetRedLightConfig",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/preset/a_cankao/preset_registry.dart",
+      "target": "file:lib/preset/anti_aging/anti_aging.dart",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/preset/a_cankao/preset_registry.dart",
+      "target": "file:lib/preset/deep_relax/deep_relax.dart",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/preset/a_cankao/preset_registry.dart",
+      "target": "file:lib/preset/emo_healing/emo_healing.dart",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/preset/a_cankao/preset_registry.dart",
+      "target": "file:lib/preset/energy_boost/energy_boost.dart",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/preset/a_cankao/preset_registry.dart",
+      "target": "file:lib/preset/immune_boost/immune_boost.dart",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/preset/a_cankao/preset_registry.dart",
+      "target": "file:lib/preset/pain_relief/pain_relief.dart",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/preset/a_cankao/preset_registry.dart",
+      "target": "file:lib/preset/sleep_imp/sleep_imp.dart",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/preset/a_cankao/preset_registry.dart",
+      "target": "file:lib/preset/sports_rec/sports_rec.dart",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/preset/a_cankao/preset_registry.dart",
+      "target": "file:lib/preset/stress_relief/stress_relief.dart",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/preset/a_cankao/preset_registry.dart",
+      "target": "file:lib/preset/total_care/total_care.dart",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/preset/anti_aging/anti_aging.dart",
+      "target": "file:lib/preset/a_cankao/preset_models.dart",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/preset/deep_relax/deep_relax.dart",
+      "target": "file:lib/preset/a_cankao/preset_models.dart",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/preset/emo_healing/emo_healing.dart",
+      "target": "file:lib/preset/a_cankao/preset_models.dart",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/preset/energy_boost/energy_boost.dart",
+      "target": "file:lib/preset/a_cankao/preset_models.dart",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/preset/immune_boost/immune_boost.dart",
+      "target": "file:lib/preset/a_cankao/preset_models.dart",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/preset/pain_relief/pain_relief.dart",
+      "target": "file:lib/preset/a_cankao/preset_models.dart",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/preset/sleep_imp/sleep_imp.dart",
+      "target": "file:lib/preset/a_cankao/preset_models.dart",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/preset/sports_rec/sports_rec.dart",
+      "target": "file:lib/preset/a_cankao/preset_models.dart",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/preset/stress_relief/stress_relief.dart",
+      "target": "file:lib/preset/a_cankao/preset_models.dart",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/preset/total_care/total_care.dart",
+      "target": "file:lib/preset/a_cankao/preset_models.dart",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

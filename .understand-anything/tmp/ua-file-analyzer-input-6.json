@@ -1,0 +1,56 @@
+{
+  "projectRoot": "D:/FlutterProject/infibo_app",
+  "batchFiles": [
+    {
+      "path": "assets/lottie/aroma.json",
+      "language": "json",
+      "sizeLines": 0,
+      "fileCategory": "config"
+    },
+    {
+      "path": "assets/lottie/hydrogen.json",
+      "language": "json",
+      "sizeLines": 0,
+      "fileCategory": "config"
+    },
+    {
+      "path": "assets/lottie/music.json",
+      "language": "json",
+      "sizeLines": 0,
+      "fileCategory": "config"
+    },
+    {
+      "path": "assets/lottie/pemf.json",
+      "language": "json",
+      "sizeLines": 0,
+      "fileCategory": "config"
+    },
+    {
+      "path": "assets/lottie/redlight.json",
+      "language": "json",
+      "sizeLines": 0,
+      "fileCategory": "config"
+    },
+    {
+      "path": "assets/lottie/taihez.json",
+      "language": "json",
+      "sizeLines": 0,
+      "fileCategory": "config"
+    },
+    {
+      "path": "assets/lottie/vat.json",
+      "language": "json",
+      "sizeLines": 0,
+      "fileCategory": "config"
+    }
+  ],
+  "batchImportData": {
+    "assets/lottie/aroma.json": [],
+    "assets/lottie/hydrogen.json": [],
+    "assets/lottie/music.json": [],
+    "assets/lottie/pemf.json": [],
+    "assets/lottie/redlight.json": [],
+    "assets/lottie/taihez.json": [],
+    "assets/lottie/vat.json": []
+  }
+}

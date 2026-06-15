@@ -1,0 +1,378 @@
+{
+  "nodes": [
+    {
+      "id": "file:windows/runner/flutter_window.cpp",
+      "type": "file",
+      "name": "flutter_window.cpp",
+      "filePath": "windows/runner/flutter_window.cpp",
+      "summary": "项目文件，承担 flutter_window.cpp 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "flutter-window"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:windows/runner/flutter_window.cpp:FlutterWindow",
+      "type": "function",
+      "name": "FlutterWindow",
+      "filePath": "windows/runner/flutter_window.cpp",
+      "lineRange": [
+        7,
+        8
+      ],
+      "summary": "函数 FlutterWindow 位于 flutter_window.cpp 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:windows/runner/flutter_window.cpp:~FlutterWindow",
+      "type": "function",
+      "name": "~FlutterWindow",
+      "filePath": "windows/runner/flutter_window.cpp",
+      "lineRange": [
+        10,
+        10
+      ],
+      "summary": "函数 ~FlutterWindow 位于 flutter_window.cpp 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:windows/runner/flutter_window.cpp:OnCreate",
+      "type": "function",
+      "name": "OnCreate",
+      "filePath": "windows/runner/flutter_window.cpp",
+      "lineRange": [
+        12,
+        40
+      ],
+      "summary": "函数 OnCreate 位于 flutter_window.cpp 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:windows/runner/flutter_window.cpp:OnDestroy",
+      "type": "function",
+      "name": "OnDestroy",
+      "filePath": "windows/runner/flutter_window.cpp",
+      "lineRange": [
+        42,
+        48
+      ],
+      "summary": "函数 OnDestroy 位于 flutter_window.cpp 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:windows/runner/flutter_window.cpp:MessageHandler",
+      "type": "function",
+      "name": "MessageHandler",
+      "filePath": "windows/runner/flutter_window.cpp",
+      "lineRange": [
+        50,
+        71
+      ],
+      "summary": "函数 MessageHandler 位于 flutter_window.cpp 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:windows/runner/flutter_window.h",
+      "type": "file",
+      "name": "flutter_window.h",
+      "filePath": "windows/runner/flutter_window.h",
+      "summary": "项目文件，承担 flutter_window.h 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "flutter-window"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:windows/runner/main.cpp",
+      "type": "file",
+      "name": "main.cpp",
+      "filePath": "windows/runner/main.cpp",
+      "summary": "项目文件，承担 main.cpp 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "main"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:windows/runner/main.cpp:wWinMain",
+      "type": "function",
+      "name": "wWinMain",
+      "filePath": "windows/runner/main.cpp",
+      "lineRange": [
+        8,
+        43
+      ],
+      "summary": "函数 wWinMain 位于 main.cpp 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:windows/runner/utils.cpp",
+      "type": "file",
+      "name": "utils.cpp",
+      "filePath": "windows/runner/utils.cpp",
+      "summary": "项目文件，承担 utils.cpp 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "utils"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:windows/runner/utils.cpp:CreateAndAttachConsole",
+      "type": "function",
+      "name": "CreateAndAttachConsole",
+      "filePath": "windows/runner/utils.cpp",
+      "lineRange": [
+        10,
+        22
+      ],
+      "summary": "函数 CreateAndAttachConsole 位于 utils.cpp 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:windows/runner/utils.cpp:GetCommandLineArguments",
+      "type": "function",
+      "name": "GetCommandLineArguments",
+      "filePath": "windows/runner/utils.cpp",
+      "lineRange": [
+        24,
+        42
+      ],
+      "summary": "函数 GetCommandLineArguments 位于 utils.cpp 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:windows/runner/utils.cpp:Utf8FromUtf16",
+      "type": "function",
+      "name": "Utf8FromUtf16",
+      "filePath": "windows/runner/utils.cpp",
+      "lineRange": [
+        44,
+        65
+      ],
+      "summary": "函数 Utf8FromUtf16 位于 utils.cpp 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:windows/runner/utils.h",
+      "type": "file",
+      "name": "utils.h",
+      "filePath": "windows/runner/utils.h",
+      "summary": "项目文件，承担 utils.h 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "utils"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:windows/runner/flutter_window.cpp",
+      "target": "function:windows/runner/flutter_window.cpp:FlutterWindow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:windows/runner/flutter_window.cpp",
+      "target": "function:windows/runner/flutter_window.cpp:FlutterWindow",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:windows/runner/flutter_window.cpp",
+      "target": "function:windows/runner/flutter_window.cpp:~FlutterWindow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:windows/runner/flutter_window.cpp",
+      "target": "function:windows/runner/flutter_window.cpp:~FlutterWindow",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:windows/runner/flutter_window.cpp",
+      "target": "function:windows/runner/flutter_window.cpp:OnCreate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:windows/runner/flutter_window.cpp",
+      "target": "function:windows/runner/flutter_window.cpp:OnCreate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:windows/runner/flutter_window.cpp",
+      "target": "function:windows/runner/flutter_window.cpp:OnDestroy",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:windows/runner/flutter_window.cpp",
+      "target": "function:windows/runner/flutter_window.cpp:OnDestroy",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:windows/runner/flutter_window.cpp",
+      "target": "function:windows/runner/flutter_window.cpp:MessageHandler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:windows/runner/flutter_window.cpp",
+      "target": "function:windows/runner/flutter_window.cpp:MessageHandler",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:windows/runner/flutter_window.cpp",
+      "target": "file:windows/runner/flutter_window.h",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:windows/runner/main.cpp",
+      "target": "function:windows/runner/main.cpp:wWinMain",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:windows/runner/main.cpp",
+      "target": "function:windows/runner/main.cpp:wWinMain",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:windows/runner/main.cpp",
+      "target": "file:windows/runner/flutter_window.h",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:windows/runner/main.cpp",
+      "target": "file:windows/runner/utils.h",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:windows/runner/utils.cpp",
+      "target": "function:windows/runner/utils.cpp:CreateAndAttachConsole",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:windows/runner/utils.cpp",
+      "target": "function:windows/runner/utils.cpp:CreateAndAttachConsole",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:windows/runner/utils.cpp",
+      "target": "function:windows/runner/utils.cpp:GetCommandLineArguments",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:windows/runner/utils.cpp",
+      "target": "function:windows/runner/utils.cpp:GetCommandLineArguments",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:windows/runner/utils.cpp",
+      "target": "function:windows/runner/utils.cpp:Utf8FromUtf16",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:windows/runner/utils.cpp",
+      "target": "function:windows/runner/utils.cpp:Utf8FromUtf16",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:windows/runner/utils.cpp",
+      "target": "file:windows/runner/utils.h",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

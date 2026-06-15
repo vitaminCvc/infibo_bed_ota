@@ -1,0 +1,2762 @@
+{
+  "version": "1.0.0",
+  "gitCommitHash": "27e998081623fa219aa34558699eb510b25e492c",
+  "generatedAt": "2026-06-15T07:54:40.173Z",
+  "files": {
+    ".flutter-plugins-dependencies": {
+      "filePath": ".flutter-plugins-dependencies",
+      "contentHash": "d85f29b7ed5c1e018ec58eae6db6363a54d4bd9bd0936783d09b8e844c752e38",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 1,
+      "hasStructuralAnalysis": false
+    },
+    ".metadata": {
+      "filePath": ".metadata",
+      "contentHash": "0326b17d2df7548e6328765d5b5b1195924461137a44ecc6c831f393731cded0",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 31,
+      "hasStructuralAnalysis": false
+    },
+    ".understand-anything/.understandignore": {
+      "filePath": ".understand-anything/.understandignore",
+      "contentHash": "35d8f928e4d2d4484118c10899e54eb4df22ed42c3c4ed08828cec4d57e7a5b2",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 33,
+      "hasStructuralAnalysis": false
+    },
+    "android/app/build.gradle.kts": {
+      "filePath": "android/app/build.gradle.kts",
+      "contentHash": "519bf7a94e6f0217f488ddc92706fee1ff5bf58c92b0f170fa1de4d76ab9f180",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 49,
+      "hasStructuralAnalysis": true
+    },
+    "android/app/libs/mcSerialPort.aar": {
+      "filePath": "android/app/libs/mcSerialPort.aar",
+      "contentHash": "b2a39a10b8f91046e3e50f195d57e579901904ba3ff9b545c9e6964ffb146168",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 181,
+      "hasStructuralAnalysis": false
+    },
+    "android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java": {
+      "filePath": "android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java",
+      "contentHash": "0096b0e725e98862b2b7685caa82da17b97d4d55b3f9b1980a435a798d5c3a20",
+      "functions": [
+        {
+          "name": "registerWith",
+          "params": [
+            "flutterEngine"
+          ],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 37
+        }
+      ],
+      "classes": [
+        {
+          "name": "GeneratedPluginRegistrant",
+          "methods": [
+            "registerWith"
+          ],
+          "properties": [
+            "TAG"
+          ],
+          "exported": true,
+          "lineCount": 41
+        }
+      ],
+      "imports": [
+        {
+          "source": "androidx.annotation.Keep",
+          "specifiers": [
+            "Keep"
+          ]
+        },
+        {
+          "source": "androidx.annotation.NonNull",
+          "specifiers": [
+            "NonNull"
+          ]
+        },
+        {
+          "source": "io.flutter.Log",
+          "specifiers": [
+            "Log"
+          ]
+        },
+        {
+          "source": "io.flutter.embedding.engine.FlutterEngine",
+          "specifiers": [
+            "FlutterEngine"
+          ]
+        }
+      ],
+      "exports": [
+        "registerWith",
+        "GeneratedPluginRegistrant"
+      ],
+      "totalLines": 55,
+      "hasStructuralAnalysis": true
+    },
+    "android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt": {
+      "filePath": "android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt",
+      "contentHash": "3bd3c757e15b14322bb2068b4301f89713b5151e314ceb1194b2481d64335315",
+      "functions": [
+        {
+          "name": "onMethodCall",
+          "params": [
+            "call",
+            "result"
+          ],
+          "exported": true,
+          "lineCount": 92
+        },
+        {
+          "name": "dispose",
+          "params": [],
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "openSerialPort",
+          "params": [
+            "path",
+            "baudRate",
+            "startReader"
+          ],
+          "exported": false,
+          "lineCount": 20
+        },
+        {
+          "name": "sendBytes",
+          "params": [
+            "bytes"
+          ],
+          "exported": false,
+          "lineCount": 4
+        },
+        {
+          "name": "closeSerialPort",
+          "params": [],
+          "exported": false,
+          "lineCount": 12
+        },
+        {
+          "name": "transceiveBytes",
+          "params": [
+            "path",
+            "baudRate",
+            "bytes",
+            "timeoutMs"
+          ],
+          "returnType": "ByteArray",
+          "exported": false,
+          "lineCount": 22
+        },
+        {
+          "name": "writeBytesOnce",
+          "params": [
+            "path",
+            "baudRate",
+            "bytes"
+          ],
+          "exported": false,
+          "lineCount": 11
+        },
+        {
+          "name": "writeModbusQueue",
+          "params": [
+            "path",
+            "baudRate",
+            "frames",
+            "timeoutMs",
+            "delayMs",
+            "maxRetries"
+          ],
+          "returnType": "List<ByteArray>",
+          "exported": false,
+          "lineCount": 41
+        },
+        {
+          "name": "writeModbusQueueNoResponse",
+          "params": [
+            "path",
+            "baudRate",
+            "frames",
+            "delayMs"
+          ],
+          "returnType": "Int",
+          "exported": false,
+          "lineCount": 38
+        },
+        {
+          "name": "writeModbusFrameWithRetry",
+          "params": [
+            "serialManager",
+            "frame",
+            "index",
+            "timeoutMs",
+            "delayMs",
+            "maxRetries"
+          ],
+          "returnType": "ByteArray",
+          "exported": false,
+          "lineCount": 60
+        },
+        {
+          "name": "drainInput",
+          "params": [
+            "serialManager"
+          ],
+          "exported": false,
+          "lineCount": 11
+        },
+        {
+          "name": "readModbusResponse",
+          "params": [
+            "serialManager",
+            "timeoutMs"
+          ],
+          "returnType": "ByteArray",
+          "exported": false,
+          "lineCount": 46
+        },
+        {
+          "name": "readModbusResponseByPacket",
+          "params": [
+            "serialManager",
+            "timeoutMs"
+          ],
+          "returnType": "ByteArray",
+          "exported": false,
+          "lineCount": 47
+        },
+        {
+          "name": "expectedModbusResponseLength",
+          "params": [
+            "bytes"
+          ],
+          "returnType": "Int?",
+          "exported": false,
+          "lineCount": 11
+        },
+        {
+          "name": "validateWriteSingleRegisterResponse",
+          "params": [
+            "request",
+            "response"
+          ],
+          "exported": false,
+          "lineCount": 19
+        },
+        {
+          "name": "validateCrc",
+          "params": [
+            "frame",
+            "dataLength"
+          ],
+          "exported": false,
+          "lineCount": 11
+        },
+        {
+          "name": "crc16",
+          "params": [
+            "bytes",
+            "length"
+          ],
+          "returnType": "Int",
+          "exported": false,
+          "lineCount": 12
+        },
+        {
+          "name": "modbusAddressText",
+          "params": [
+            "frame"
+          ],
+          "returnType": "String",
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "modbusValue",
+          "params": [
+            "frame"
+          ],
+          "returnType": "Int",
+          "exported": false,
+          "lineCount": 4
+        },
+        {
+          "name": "startReadLoop",
+          "params": [],
+          "exported": false,
+          "lineCount": 30
+        },
+        {
+          "name": "emitReceive",
+          "params": [
+            "bytes"
+          ],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "emitError",
+          "params": [
+            "message"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "extractBytes",
+          "params": [
+            "value"
+          ],
+          "returnType": "ByteArray",
+          "exported": false,
+          "lineCount": 14
+        },
+        {
+          "name": "extractFrames",
+          "params": [
+            "value"
+          ],
+          "returnType": "List<ByteArray>",
+          "exported": false,
+          "lineCount": 4
+        },
+        {
+          "name": "toHexString",
+          "params": [],
+          "returnType": "String",
+          "exported": false,
+          "lineCount": 5
+        }
+      ],
+      "classes": [
+        {
+          "name": "AndroidSerialPortBridge",
+          "methods": [
+            "onMethodCall",
+            "dispose",
+            "openSerialPort",
+            "sendBytes",
+            "closeSerialPort",
+            "transceiveBytes",
+            "writeBytesOnce",
+            "writeModbusQueue",
+            "writeModbusQueueNoResponse",
+            "writeModbusFrameWithRetry",
+            "drainInput",
+            "readModbusResponse",
+            "readModbusResponseByPacket",
+            "expectedModbusResponseLength",
+            "validateWriteSingleRegisterResponse",
+            "validateCrc",
+            "crc16",
+            "modbusAddressText",
+            "modbusValue",
+            "startReadLoop",
+            "emitReceive",
+            "emitError",
+            "extractBytes",
+            "extractFrames",
+            "toHexString"
+          ],
+          "properties": [
+            "channel",
+            "mainHandler",
+            "reading",
+            "lock",
+            "manager",
+            "readThread",
+            "currentPath"
+          ],
+          "exported": true,
+          "lineCount": 582
+        }
+      ],
+      "imports": [
+        {
+          "source": "android.os.Handler",
+          "specifiers": [
+            "Handler"
+          ]
+        },
+        {
+          "source": "android.os.Looper",
+          "specifiers": [
+            "Looper"
+          ]
+        },
+        {
+          "source": "android_serialport_api.Device",
+          "specifiers": [
+            "Device"
+          ]
+        },
+        {
+          "source": "android_serialport_api.SerialPortManager",
+          "specifiers": [
+            "SerialPortManager"
+          ]
+        },
+        {
+          "source": "io.flutter.plugin.common.BinaryMessenger",
+          "specifiers": [
+            "BinaryMessenger"
+          ]
+        },
+        {
+          "source": "io.flutter.plugin.common.MethodCall",
+          "specifiers": [
+            "MethodCall"
+          ]
+        },
+        {
+          "source": "io.flutter.plugin.common.MethodChannel",
+          "specifiers": [
+            "MethodChannel"
+          ]
+        },
+        {
+          "source": "java.io.ByteArrayOutputStream",
+          "specifiers": [
+            "ByteArrayOutputStream"
+          ]
+        },
+        {
+          "source": "java.util.Locale",
+          "specifiers": [
+            "Locale"
+          ]
+        },
+        {
+          "source": "java.util.concurrent.atomic.AtomicBoolean",
+          "specifiers": [
+            "AtomicBoolean"
+          ]
+        }
+      ],
+      "exports": [
+        "onMethodCall",
+        "dispose",
+        "AndroidSerialPortBridge"
+      ],
+      "totalLines": 596,
+      "hasStructuralAnalysis": true
+    },
+    "android/app/src/main/kotlin/com/example/infibo_app/MainActivity.kt": {
+      "filePath": "android/app/src/main/kotlin/com/example/infibo_app/MainActivity.kt",
+      "contentHash": "c58a4c98a8a3f4f9b58480a1e8a045b4479671f0e3fe59448894b48f7d45be24",
+      "functions": [
+        {
+          "name": "configureFlutterEngine",
+          "params": [
+            "flutterEngine"
+          ],
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "onDestroy",
+          "params": [],
+          "exported": true,
+          "lineCount": 5
+        }
+      ],
+      "classes": [
+        {
+          "name": "MainActivity",
+          "methods": [
+            "configureFlutterEngine",
+            "onDestroy"
+          ],
+          "properties": [
+            "serialPortBridge"
+          ],
+          "exported": true,
+          "lineCount": 14
+        }
+      ],
+      "imports": [
+        {
+          "source": "io.flutter.embedding.engine.FlutterEngine",
+          "specifiers": [
+            "FlutterEngine"
+          ]
+        },
+        {
+          "source": "io.flutter.embedding.android.FlutterActivity",
+          "specifiers": [
+            "FlutterActivity"
+          ]
+        }
+      ],
+      "exports": [
+        "configureFlutterEngine",
+        "onDestroy",
+        "MainActivity"
+      ],
+      "totalLines": 20,
+      "hasStructuralAnalysis": true
+    },
+    "android/build.gradle.kts": {
+      "filePath": "android/build.gradle.kts",
+      "contentHash": "218f400e3fff31c9c986a2535dfb974560e1b4d33cc27b7c1fee96a2b7e44454",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 25,
+      "hasStructuralAnalysis": true
+    },
+    "android/gradle/wrapper/gradle-wrapper.jar": {
+      "filePath": "android/gradle/wrapper/gradle-wrapper.jar",
+      "contentHash": "292bf1970b8e0027e5edcb1dd22b9c57c2ee6dc285fe8815177835fdb9783087",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 360,
+      "hasStructuralAnalysis": false
+    },
+    "android/gradlew": {
+      "filePath": "android/gradlew",
+      "contentHash": "4ab3ff211f4bfc2d61062a4c28c7f78dd29891e51bc34ad4e64bfe99a40478ef",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 161,
+      "hasStructuralAnalysis": false
+    },
+    "android/gradlew.bat": {
+      "filePath": "android/gradlew.bat",
+      "contentHash": "c13c6e91b9a517783976de213d46398c661ea9e17651376d7301e839eaedcc62",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 91,
+      "hasStructuralAnalysis": false
+    },
+    "android/infibo_app_android.iml": {
+      "filePath": "android/infibo_app_android.iml",
+      "contentHash": "c8e0091edeca4e766e9dcf948e59c86a0427381fb5e31768ae396eedde5f1dfc",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 30,
+      "hasStructuralAnalysis": false
+    },
+    "android/settings.gradle.kts": {
+      "filePath": "android/settings.gradle.kts",
+      "contentHash": "6ccc43d2a0ea261d6531670a7f4e4d5de8955c744d588d86909dae78de8c5be4",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 28,
+      "hasStructuralAnalysis": true
+    },
+    "infibo_app.iml": {
+      "filePath": "infibo_app.iml",
+      "contentHash": "d2052ef022de364483e3823043cb6a5be1c3f33217cae65c1a40b48b17669199",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 18,
+      "hasStructuralAnalysis": false
+    },
+    "infibo/.metadata": {
+      "filePath": "infibo/.metadata",
+      "contentHash": "7f5e2246ed542e85ca9d940d951a1a06fd7f62b8fabd398f8e374315a1a8cb48",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 31,
+      "hasStructuralAnalysis": false
+    },
+    "infibo/lib/main.dart": {
+      "filePath": "infibo/lib/main.dart",
+      "contentHash": "35e84c7d1c899b5878c37c0b23662aadbaba93ff6af3e5e9048aa9df2fdf1242",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 7,
+      "hasStructuralAnalysis": false
+    },
+    "infibo/lib/pages/login/index.dart": {
+      "filePath": "infibo/lib/pages/login/index.dart",
+      "contentHash": "467cf50487d22c9b67f8fe73f788c4fb3c4cb70e72f1158aecfa0a4721af8c5c",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 21,
+      "hasStructuralAnalysis": false
+    },
+    "infibo/lib/pages/main/index.dart": {
+      "filePath": "infibo/lib/pages/main/index.dart",
+      "contentHash": "3d4c768648a47559931bac3c9d367599a6422c7d3adcddcaa3145504709c72db",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 20,
+      "hasStructuralAnalysis": false
+    },
+    "infibo/lib/routes/index.dart": {
+      "filePath": "infibo/lib/routes/index.dart",
+      "contentHash": "98546c4b050c063611edbf79fad961cd6f6d0009d8a363a152c46d6063344e38",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 19,
+      "hasStructuralAnalysis": false
+    },
+    "infibo/test/widget_test.dart": {
+      "filePath": "infibo/test/widget_test.dart",
+      "contentHash": "e3dfe12a1660ff88569a26cc54c1a54c67f1eb29cf096600d79d10315802db10",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 31,
+      "hasStructuralAnalysis": false
+    },
+    "infibo/web/index.html": {
+      "filePath": "infibo/web/index.html",
+      "contentHash": "6cc9c058be3af8ad956ae77413defd4931b13c54910501e9bcab3f0f9409c8eb",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 47,
+      "hasStructuralAnalysis": false
+    },
+    "ios/Flutter/Debug.xcconfig": {
+      "filePath": "ios/Flutter/Debug.xcconfig",
+      "contentHash": "c0d1da54718e75f2028962b689258ecc741abf7cdaed50483aa5225264d0a7d7",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 2,
+      "hasStructuralAnalysis": false
+    },
+    "ios/Flutter/Release.xcconfig": {
+      "filePath": "ios/Flutter/Release.xcconfig",
+      "contentHash": "c0d1da54718e75f2028962b689258ecc741abf7cdaed50483aa5225264d0a7d7",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 2,
+      "hasStructuralAnalysis": false
+    },
+    "ios/Runner.xcodeproj/project.pbxproj": {
+      "filePath": "ios/Runner.xcodeproj/project.pbxproj",
+      "contentHash": "e7ea7b51751dafa54f92f9c1cba8f6db05c192f107d3124b1ad41a5c965a75b0",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 621,
+      "hasStructuralAnalysis": false
+    },
+    "ios/Runner.xcodeproj/project.xcworkspace/contents.xcworkspacedata": {
+      "filePath": "ios/Runner.xcodeproj/project.xcworkspace/contents.xcworkspacedata",
+      "contentHash": "ac28b35c2b940210bec0fff8e424b07fd0efe9112ab178a10533583f251a386c",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 8,
+      "hasStructuralAnalysis": false
+    },
+    "ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings": {
+      "filePath": "ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings",
+      "contentHash": "dd64c0308ab2971c456871b990b24a008bdc3ece09833e8dbe9675e33a496e74",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 9,
+      "hasStructuralAnalysis": false
+    },
+    "ios/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme": {
+      "filePath": "ios/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme",
+      "contentHash": "570c49fd61c67330efb75097018d1b0df0c68d03667631105a5acf5621112b1b",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 102,
+      "hasStructuralAnalysis": false
+    },
+    "ios/Runner.xcworkspace/contents.xcworkspacedata": {
+      "filePath": "ios/Runner.xcworkspace/contents.xcworkspacedata",
+      "contentHash": "706a4c812f2a1e220e6785c27580020d58048e2ae4d30d1280f3c43344ce6b38",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 8,
+      "hasStructuralAnalysis": false
+    },
+    "ios/Runner.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings": {
+      "filePath": "ios/Runner.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings",
+      "contentHash": "dd64c0308ab2971c456871b990b24a008bdc3ece09833e8dbe9675e33a496e74",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 9,
+      "hasStructuralAnalysis": false
+    },
+    "ios/Runner/AppDelegate.swift": {
+      "filePath": "ios/Runner/AppDelegate.swift",
+      "contentHash": "54a5e98d6c3e8a79413ad50607b83aac8ded8828bc913eda1fe86bb33a66cd5d",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 17,
+      "hasStructuralAnalysis": false
+    },
+    "ios/Runner/Base.lproj/LaunchScreen.storyboard": {
+      "filePath": "ios/Runner/Base.lproj/LaunchScreen.storyboard",
+      "contentHash": "bc3644fbb251ff1e18de25a4932c927850ae1a025be3dd1447940429633fe4b2",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 38,
+      "hasStructuralAnalysis": false
+    },
+    "ios/Runner/Base.lproj/Main.storyboard": {
+      "filePath": "ios/Runner/Base.lproj/Main.storyboard",
+      "contentHash": "dcea4686c02065e56217fd19fcfb73d7509b41872e7486126149d47a18559363",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 27,
+      "hasStructuralAnalysis": false
+    },
+    "ios/Runner/GeneratedPluginRegistrant.h": {
+      "filePath": "ios/Runner/GeneratedPluginRegistrant.h",
+      "contentHash": "a5f88cc6415d2e639d2cb549348b84e02a7fdd0261603b0063abef6fa11f075a",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 20,
+      "hasStructuralAnalysis": true
+    },
+    "ios/Runner/GeneratedPluginRegistrant.m": {
+      "filePath": "ios/Runner/GeneratedPluginRegistrant.m",
+      "contentHash": "b295f04e59255b0f65f1f348b60a2e17301981af529101347f2da1291e8d71fe",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 43,
+      "hasStructuralAnalysis": false
+    },
+    "ios/Runner/Runner-Bridging-Header.h": {
+      "filePath": "ios/Runner/Runner-Bridging-Header.h",
+      "contentHash": "efe657d8b27f7f8595a0d416bffb33fe7d93bd2869d81f7353b556c439d7a1a7",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 2,
+      "hasStructuralAnalysis": true
+    },
+    "ios/Runner/SceneDelegate.swift": {
+      "filePath": "ios/Runner/SceneDelegate.swift",
+      "contentHash": "edce811c671ca0a6ccb14753e14e16deb0d89a0adf4f1b685e362d87d8f4c366",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 7,
+      "hasStructuralAnalysis": false
+    },
+    "ios/RunnerTests/RunnerTests.swift": {
+      "filePath": "ios/RunnerTests/RunnerTests.swift",
+      "contentHash": "c0e04141287eb7f9c9f3d31cf5be8cb626a9ea71351206c9121578e8b8f480c3",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 13,
+      "hasStructuralAnalysis": false
+    },
+    "lib/api/dio/api/api_client.dart": {
+      "filePath": "lib/api/dio/api/api_client.dart",
+      "contentHash": "aaecad86b603b256ef1936b0defd361714fbb4266fed1c88a070a0e0e0835346",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 119,
+      "hasStructuralAnalysis": false
+    },
+    "lib/api/dio/api/api_response.dart": {
+      "filePath": "lib/api/dio/api/api_response.dart",
+      "contentHash": "608bbce022c334dff4948849f3a6682f52fb6f15a4e641c54b949b2a4509b6f6",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 26,
+      "hasStructuralAnalysis": false
+    },
+    "lib/api/dio/login/login_api.dart": {
+      "filePath": "lib/api/dio/login/login_api.dart",
+      "contentHash": "6b546df9ea6237f60aeb4cd0aa3f7c7b763e355606522a05ec32e4b8be206160",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 26,
+      "hasStructuralAnalysis": false
+    },
+    "lib/api/dio/login/login_models.dart": {
+      "filePath": "lib/api/dio/login/login_models.dart",
+      "contentHash": "b1110514365ecb01098d8ea98cfd2c5cbd1cb80dc7845e817b3e8ccc4571c0a4",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 21,
+      "hasStructuralAnalysis": false
+    },
+    "lib/api/dio/register/register_api.dart": {
+      "filePath": "lib/api/dio/register/register_api.dart",
+      "contentHash": "5027bd05d7db9df2e2082d070306444e633fe11a0394deafdba22b4f3586ed5b",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 38,
+      "hasStructuralAnalysis": false
+    },
+    "lib/api/dio/register/register_models.dart": {
+      "filePath": "lib/api/dio/register/register_models.dart",
+      "contentHash": "93d826587ed8c2595a379de0e6c9fb09f8be521af3a8fffdc8df0308bd23ac3c",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 17,
+      "hasStructuralAnalysis": false
+    },
+    "lib/api/dio/reset_password/reset_password_api.dart": {
+      "filePath": "lib/api/dio/reset_password/reset_password_api.dart",
+      "contentHash": "6cd15037023d4a4c05d433545a4991016502c77569c973e492b27bbbc007da1e",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 26,
+      "hasStructuralAnalysis": false
+    },
+    "lib/api/dio/therapy_client/therapy_client_api.dart": {
+      "filePath": "lib/api/dio/therapy_client/therapy_client_api.dart",
+      "contentHash": "c1cdd11dd29de686a94fbf24b8a062623a8f2c719db804cbde8c10b9e7fda077",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 50,
+      "hasStructuralAnalysis": false
+    },
+    "lib/api/dio/therapy_client/therapy_client_models.dart": {
+      "filePath": "lib/api/dio/therapy_client/therapy_client_models.dart",
+      "contentHash": "1d647f5e61f734133c7d1795548c3fcfa3afc75278605880ff435ec8f6a127f3",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 55,
+      "hasStructuralAnalysis": false
+    },
+    "lib/api/dio/therapy_plan/therapy_plan_api.dart": {
+      "filePath": "lib/api/dio/therapy_plan/therapy_plan_api.dart",
+      "contentHash": "4980261555086fe591d0c9b8b3c3afd5c00360e22184ec2f4134faf55503376b",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 118,
+      "hasStructuralAnalysis": false
+    },
+    "lib/api/dio/therapy_plan/therapy_plan_models.dart": {
+      "filePath": "lib/api/dio/therapy_plan/therapy_plan_models.dart",
+      "contentHash": "3d2fb63f9feb08aa1c5653e55c4be7aa19a3785ec96ebd2b9e476018f78d3f73",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 151,
+      "hasStructuralAnalysis": false
+    },
+    "lib/api/dio/therapy_report/therapy_report_api.dart": {
+      "filePath": "lib/api/dio/therapy_report/therapy_report_api.dart",
+      "contentHash": "b865441414467b8d7075475dca2988a751355bcc3be40aaf44b647423fec053e",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 92,
+      "hasStructuralAnalysis": false
+    },
+    "lib/api/dio/therapy_report/therapy_report_models.dart": {
+      "filePath": "lib/api/dio/therapy_report/therapy_report_models.dart",
+      "contentHash": "111ea523b212d0b7bb33c6105f02623cd8ad5578da99e81f6c5e21b119de7f64",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 341,
+      "hasStructuralAnalysis": false
+    },
+    "lib/api/modbus/chakra_modbus.dart": {
+      "filePath": "lib/api/modbus/chakra_modbus.dart",
+      "contentHash": "9f1fc6d3a595d04443748e51754a26ac691dcc79bd69bbebe932addbaf8a22f8",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 116,
+      "hasStructuralAnalysis": false
+    },
+    "lib/api/modbus/fragrance_modbus.dart": {
+      "filePath": "lib/api/modbus/fragrance_modbus.dart",
+      "contentHash": "06b154967f5662966bb7dd5f8ff79b13a4570406195dcb25740980bb1ad835c6",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 66,
+      "hasStructuralAnalysis": false
+    },
+    "lib/api/modbus/hifem_modbus.dart": {
+      "filePath": "lib/api/modbus/hifem_modbus.dart",
+      "contentHash": "c42e604ddfc622c532a884c04963b7aaa4aab663e1c4dbdeedc66fa5f713ee00",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 110,
+      "hasStructuralAnalysis": false
+    },
+    "lib/api/modbus/hydrogen_modbus.dart": {
+      "filePath": "lib/api/modbus/hydrogen_modbus.dart",
+      "contentHash": "ac66a3465cb4ba4c219c2735428925cb9dbf4af0534fa46dc1d9bbcc94021603",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 62,
+      "hasStructuralAnalysis": false
+    },
+    "lib/api/modbus/modbus_rtu_service.dart": {
+      "filePath": "lib/api/modbus/modbus_rtu_service.dart",
+      "contentHash": "1d8c3a8a8f3b369106716530abe602787472fae7bab486d0b36e9f881f3464d1",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 2637,
+      "hasStructuralAnalysis": false
+    },
+    "lib/api/modbus/pemf_modbus.dart": {
+      "filePath": "lib/api/modbus/pemf_modbus.dart",
+      "contentHash": "244b69efc7c4fe0b9140b1fe88eb126a19cd87ef23c9ad6eb19a77f4339f8b9c",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 79,
+      "hasStructuralAnalysis": false
+    },
+    "lib/api/modbus/red_light_modbus.dart": {
+      "filePath": "lib/api/modbus/red_light_modbus.dart",
+      "contentHash": "d30c877e26caa18220ce1c69a9a15153ca53ff1adfa5ae8fad1de00cc36fda5e",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 101,
+      "hasStructuralAnalysis": false
+    },
+    "lib/api/modbus/terahertz_modbus.dart": {
+      "filePath": "lib/api/modbus/terahertz_modbus.dart",
+      "contentHash": "50feaeed71dbfff0f0516adb883cd0a80fe7286a36f45a153789d734a07a3af1",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 87,
+      "hasStructuralAnalysis": false
+    },
+    "lib/api/modbus/vat_modbus.dart": {
+      "filePath": "lib/api/modbus/vat_modbus.dart",
+      "contentHash": "03bd2b920dae8b97e7c3933a35414e2c9bc87a2c95eb8c500f8e184319698313",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 80,
+      "hasStructuralAnalysis": false
+    },
+    "lib/components/index.dart": {
+      "filePath": "lib/components/index.dart",
+      "contentHash": "23f71628d83eadedf3ed176ccc583c27212a8690667e8bf7e917d64a443e735b",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 263,
+      "hasStructuralAnalysis": false
+    },
+    "lib/components/logic.dart": {
+      "filePath": "lib/components/logic.dart",
+      "contentHash": "9219e9368d3e464608c9fde58b2699f915ce9aca6a121acb29106fee81c9f709",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 32,
+      "hasStructuralAnalysis": false
+    },
+    "lib/components/logout_menu.dart": {
+      "filePath": "lib/components/logout_menu.dart",
+      "contentHash": "338cbc8dca0277ac0aba9432fa44fe7e59765092ea77170a0dc2916a4a1fd87e",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 146,
+      "hasStructuralAnalysis": false
+    },
+    "lib/components/settingindex.dart": {
+      "filePath": "lib/components/settingindex.dart",
+      "contentHash": "52efb264c9dc7552300c2774c847de0aa21c882e3315bbc2d08b821d15a193ce",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 238,
+      "hasStructuralAnalysis": false
+    },
+    "lib/components/userindex.dart": {
+      "filePath": "lib/components/userindex.dart",
+      "contentHash": "c50adac1902663e100252c86f0d0cec43cf45645a296deb134159c219cadc420",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 271,
+      "hasStructuralAnalysis": false
+    },
+    "lib/constants/assets.dart": {
+      "filePath": "lib/constants/assets.dart",
+      "contentHash": "f733352c456da58b7b69acce023361c889f7df49c9994bb9bd868129031b5b74",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 778,
+      "hasStructuralAnalysis": false
+    },
+    "lib/constants/color.dart": {
+      "filePath": "lib/constants/color.dart",
+      "contentHash": "180f894123733d8d3ef2fdbff90b77741be3d27de65fd785118b11fd7c79ea88",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 11,
+      "hasStructuralAnalysis": false
+    },
+    "lib/main.dart": {
+      "filePath": "lib/main.dart",
+      "contentHash": "c86a12d265656758aaedaf646b7085971e81902db154be4687f64a1f41d27d44",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 44,
+      "hasStructuralAnalysis": false
+    },
+    "lib/pages/choseusers/logic.dart": {
+      "filePath": "lib/pages/choseusers/logic.dart",
+      "contentHash": "379e30700aca0b14b95bded172e1123668540ddf2d7e3d192eea30df24f722ce",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 239,
+      "hasStructuralAnalysis": false
+    },
+    "lib/pages/choseusers/ui.dart": {
+      "filePath": "lib/pages/choseusers/ui.dart",
+      "contentHash": "1d077662ba830ceb9bb27c24d67d7d4dd50d7cb0286223ce77d4b98de26cf181",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 695,
+      "hasStructuralAnalysis": false
+    },
+    "lib/pages/customized/customizedPage/expand_setting_page.dart": {
+      "filePath": "lib/pages/customized/customizedPage/expand_setting_page.dart",
+      "contentHash": "80bafb9234c3fabab08c36994efa65cbfe16ae91d50704223b580a978ce953ae",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 119,
+      "hasStructuralAnalysis": false
+    },
+    "lib/pages/customized/customizedPage/hifem/ui.dart": {
+      "filePath": "lib/pages/customized/customizedPage/hifem/ui.dart",
+      "contentHash": "8eda28afaa2d6c8c7e2353fcb4fbf3d83403fa67763ff2838afbdd11411f07e7",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 589,
+      "hasStructuralAnalysis": false
+    },
+    "lib/pages/customized/customizedPage/logic.dart": {
+      "filePath": "lib/pages/customized/customizedPage/logic.dart",
+      "contentHash": "1c52a18cd28e1af5153ea3627227b4f7572114a63dd990dabc3292abb7d92470",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 49,
+      "hasStructuralAnalysis": false
+    },
+    "lib/pages/customized/customizedPage/mailun/logic.dart": {
+      "filePath": "lib/pages/customized/customizedPage/mailun/logic.dart",
+      "contentHash": "4bdc0375ec578be7b2263d9ce164e4687a8af02cae21d04905f791f775a9dc0d",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 5,
+      "hasStructuralAnalysis": false
+    },
+    "lib/pages/customized/customizedPage/mailun/ui.dart": {
+      "filePath": "lib/pages/customized/customizedPage/mailun/ui.dart",
+      "contentHash": "184e81216f4c7b4bc103649b0cac7875f55e3c08e085795a50b8b593a6868580",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 570,
+      "hasStructuralAnalysis": false
+    },
+    "lib/pages/customized/customizedPage/setting_page_helpers.dart": {
+      "filePath": "lib/pages/customized/customizedPage/setting_page_helpers.dart",
+      "contentHash": "2cae92fb68269d58d071ac2e598c671e424a075ac05521406adba12e58ec8435",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 303,
+      "hasStructuralAnalysis": false
+    },
+    "lib/pages/customized/customizedPage/taihezi/ui.dart": {
+      "filePath": "lib/pages/customized/customizedPage/taihezi/ui.dart",
+      "contentHash": "eefb591b7b63fb616813a15f484095e3561998d40b78502ebfa2eb141a1ed0ca",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 413,
+      "hasStructuralAnalysis": false
+    },
+    "lib/pages/customized/customizedPage/ui.dart": {
+      "filePath": "lib/pages/customized/customizedPage/ui.dart",
+      "contentHash": "733547cbc6851679fd85b9cf431ce99cf9a06abe2003b1cf87a798d4debda7ed",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 3491,
+      "hasStructuralAnalysis": false
+    },
+    "lib/pages/customized/customizedPage/xiangfen/ui.dart": {
+      "filePath": "lib/pages/customized/customizedPage/xiangfen/ui.dart",
+      "contentHash": "8e8f8c91508918de3253739ea0d939de28f914b0b26f01b952310442eaaa3bef",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 297,
+      "hasStructuralAnalysis": false
+    },
+    "lib/pages/customized/logic.dart": {
+      "filePath": "lib/pages/customized/logic.dart",
+      "contentHash": "53a385643162541150252eb571c114cfc97e85787cdea62a11a3a74675142baa",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 319,
+      "hasStructuralAnalysis": false
+    },
+    "lib/pages/customized/plan_features.dart": {
+      "filePath": "lib/pages/customized/plan_features.dart",
+      "contentHash": "c0b8ca98138958ec0561e2b0b8ce58b46ff61d846e15060eec4a395a9cfa1dd9",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 85,
+      "hasStructuralAnalysis": false
+    },
+    "lib/pages/customized/ui.dart": {
+      "filePath": "lib/pages/customized/ui.dart",
+      "contentHash": "36432ccbf9370951791d87e355e4bebcd79d291a655e9d033ac7def80af67b48",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 624,
+      "hasStructuralAnalysis": false
+    },
+    "lib/pages/debug/serial_test_page.dart": {
+      "filePath": "lib/pages/debug/serial_test_page.dart",
+      "contentHash": "1dd7fdbe9c732197396f4abab357f214552355e0cce0bcec31a7e01fdbb59ffd",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 329,
+      "hasStructuralAnalysis": false
+    },
+    "lib/pages/joystick/ui.dart": {
+      "filePath": "lib/pages/joystick/ui.dart",
+      "contentHash": "526371a9f76f473c610b79d3118c12532e342a39aaefab8dd5468ffe86964556",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 467,
+      "hasStructuralAnalysis": false
+    },
+    "lib/pages/login/forgetpassword/forget.dart": {
+      "filePath": "lib/pages/login/forgetpassword/forget.dart",
+      "contentHash": "190b8315d634c89af42b4dd9ce2e064ff87a75e38732ad9dcc7006bf6d61ce5f",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 742,
+      "hasStructuralAnalysis": false
+    },
+    "lib/pages/login/login/logic.dart": {
+      "filePath": "lib/pages/login/login/logic.dart",
+      "contentHash": "0d8c298f928b3a41cd0c40e77cf1d141a08a4f02a4675ec29049025605588b23",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 11,
+      "hasStructuralAnalysis": false
+    },
+    "lib/pages/login/login/ui.dart": {
+      "filePath": "lib/pages/login/login/ui.dart",
+      "contentHash": "055890ecc7be4b937c3f2e8af2387f9d8c8f8c2e3ea3ab0c7d6594c97a37311b",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 872,
+      "hasStructuralAnalysis": false
+    },
+    "lib/pages/login/register/register.dart": {
+      "filePath": "lib/pages/login/register/register.dart",
+      "contentHash": "eb990c6fcad749edbee294f2791293539b4e3d1deb0600487be8e3d5480cb227",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 950,
+      "hasStructuralAnalysis": false
+    },
+    "lib/pages/main/logic.dart": {
+      "filePath": "lib/pages/main/logic.dart",
+      "contentHash": "786a069f0e5e33ce625880f9bc367f4d6e9be148da4a48315ccf53f53e8477af",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 30,
+      "hasStructuralAnalysis": false
+    },
+    "lib/pages/main/ui.dart": {
+      "filePath": "lib/pages/main/ui.dart",
+      "contentHash": "9a07264594a1a9da2eb9ea6dd2031767b960c584d7e39659fe9d1130fad20ccd",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 652,
+      "hasStructuralAnalysis": false
+    },
+    "lib/pages/music/logic.dart": {
+      "filePath": "lib/pages/music/logic.dart",
+      "contentHash": "133388ea1c12b7769c816e4ba0bde101c933131fadeb04430dd1cf9e0d0b945f",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 118,
+      "hasStructuralAnalysis": false
+    },
+    "lib/pages/music/player.dart": {
+      "filePath": "lib/pages/music/player.dart",
+      "contentHash": "3a272f5be77daca1a2bb91d5e0338434df26e5dfd84325328c36be34d0ef93b2",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 156,
+      "hasStructuralAnalysis": false
+    },
+    "lib/pages/music/ui.dart": {
+      "filePath": "lib/pages/music/ui.dart",
+      "contentHash": "b47405dc3d9045a0d630776a07a6b1225d5e11d741a6b9e428e4ae9a4a05cf55",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 538,
+      "hasStructuralAnalysis": false
+    },
+    "lib/pages/settingpage/history_detail.dart": {
+      "filePath": "lib/pages/settingpage/history_detail.dart",
+      "contentHash": "6969d3d480e182ba1f8099032d1381349fcfcd685b5963e1f432537bd98fc4bf",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 673,
+      "hasStructuralAnalysis": false
+    },
+    "lib/pages/settingpage/logic.dart": {
+      "filePath": "lib/pages/settingpage/logic.dart",
+      "contentHash": "fcbeec703d4df2409db856cf07c28d45b19b3e8e88594875c1347beacef73f73",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 152,
+      "hasStructuralAnalysis": false
+    },
+    "lib/pages/settingpage/ui.dart": {
+      "filePath": "lib/pages/settingpage/ui.dart",
+      "contentHash": "e009f50a000d8cb92855dcda6fb28bce1c469575522769ed1d0f22f952e58294",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 1230,
+      "hasStructuralAnalysis": false
+    },
+    "lib/pages/start/logic.dart": {
+      "filePath": "lib/pages/start/logic.dart",
+      "contentHash": "54f3939ad5b093abdb250bda4a3e848e7a84762e2e45bff82c1b221b4bec3aed",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 986,
+      "hasStructuralAnalysis": false
+    },
+    "lib/pages/start/ui.dart": {
+      "filePath": "lib/pages/start/ui.dart",
+      "contentHash": "815ba3949fa6d73e50836897c190ab51d1356dc012541b03c204106212760d28",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 2467,
+      "hasStructuralAnalysis": false
+    },
+    "lib/pages/summary/logic.dart": {
+      "filePath": "lib/pages/summary/logic.dart",
+      "contentHash": "448cd8f051e3b0b87a8d6f9cded80d3617646fd4ebc0bcef049a66651d216a2d",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 169,
+      "hasStructuralAnalysis": false
+    },
+    "lib/pages/summary/summary.dart": {
+      "filePath": "lib/pages/summary/summary.dart",
+      "contentHash": "c8ce080825085461659a246d68d559e8f7af57705b951a15d8c05f4412f35462",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 1280,
+      "hasStructuralAnalysis": false
+    },
+    "lib/preset/a_cankao/preset_models.dart": {
+      "filePath": "lib/preset/a_cankao/preset_models.dart",
+      "contentHash": "b220c8d21c9f200399ba5952be3f731345ea74f95bf93a4f020d713f853632b9",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 136,
+      "hasStructuralAnalysis": false
+    },
+    "lib/preset/a_cankao/preset_registry.dart": {
+      "filePath": "lib/preset/a_cankao/preset_registry.dart",
+      "contentHash": "2cc736c79ca72ec717e8e9c36a6c546c4d7bf0522d613c2aacc3486eb7e18708",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 39,
+      "hasStructuralAnalysis": false
+    },
+    "lib/preset/anti_aging/anti_aging.dart": {
+      "filePath": "lib/preset/anti_aging/anti_aging.dart",
+      "contentHash": "6d393d0b0c396ffeb589f8d4420615480bb776bafcf3fb731045359a15923758",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 162,
+      "hasStructuralAnalysis": false
+    },
+    "lib/preset/deep_relax/deep_relax.dart": {
+      "filePath": "lib/preset/deep_relax/deep_relax.dart",
+      "contentHash": "8774dee5edaecd4056f9f1a87a7fee27e9e5f2c6829644c9400456f7837dcab6",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 162,
+      "hasStructuralAnalysis": false
+    },
+    "lib/preset/emo_healing/emo_healing.dart": {
+      "filePath": "lib/preset/emo_healing/emo_healing.dart",
+      "contentHash": "737341af6ef151fbc224ac4eb277835c22101fb9f2f53d6fa725144f4f50f84a",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 137,
+      "hasStructuralAnalysis": false
+    },
+    "lib/preset/energy_boost/energy_boost.dart": {
+      "filePath": "lib/preset/energy_boost/energy_boost.dart",
+      "contentHash": "2d5324264dd2b7079ef111125cc4e0c7639983b0901d2bb79d87034325ff451b",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 112,
+      "hasStructuralAnalysis": false
+    },
+    "lib/preset/immune_boost/immune_boost.dart": {
+      "filePath": "lib/preset/immune_boost/immune_boost.dart",
+      "contentHash": "d3e711d609841a5fcd343ef5c613ca857d519800a1fdbb9d2238e6ba0de35ec1",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 162,
+      "hasStructuralAnalysis": false
+    },
+    "lib/preset/pain_relief/pain_relief.dart": {
+      "filePath": "lib/preset/pain_relief/pain_relief.dart",
+      "contentHash": "cd9be6f36a7eb2d8ba9e8a382c3adb0a984c98e5a8bbb363e7e539128f738f33",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 162,
+      "hasStructuralAnalysis": false
+    },
+    "lib/preset/sleep_imp/sleep_imp.dart": {
+      "filePath": "lib/preset/sleep_imp/sleep_imp.dart",
+      "contentHash": "8d79dca76f578786bff27c6036338c00d014eb9c363ce5aae7355eb6fef641e4",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 162,
+      "hasStructuralAnalysis": false
+    },
+    "lib/preset/sports_rec/sports_rec.dart": {
+      "filePath": "lib/preset/sports_rec/sports_rec.dart",
+      "contentHash": "0757be24bb4b089c72237009fc72397138599a91d30bb4248ae310d6642256ec",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 137,
+      "hasStructuralAnalysis": false
+    },
+    "lib/preset/stress_relief/stress_relief.dart": {
+      "filePath": "lib/preset/stress_relief/stress_relief.dart",
+      "contentHash": "aba2abf8d2fd3cfdb8956c6027c92c10de530d46286d0c206a6737de0df672bb",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 137,
+      "hasStructuralAnalysis": false
+    },
+    "lib/preset/total_care/total_care.dart": {
+      "filePath": "lib/preset/total_care/total_care.dart",
+      "contentHash": "980155abaeb495100145921e86223893410a13b1822e3ec0dfe1279328640470",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 137,
+      "hasStructuralAnalysis": false
+    },
+    "lib/routes/index.dart": {
+      "filePath": "lib/routes/index.dart",
+      "contentHash": "c61182e7bcdb4efd29d8df7050bb94f5702050fd1fb10129214f7b298a723641",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 84,
+      "hasStructuralAnalysis": false
+    },
+    "lib/routes/route_observer.dart": {
+      "filePath": "lib/routes/route_observer.dart",
+      "contentHash": "f8b917b8716727728ec0b99bc290b11dd1cbc25a0a9a68b04b72ee50dc312a2e",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 8,
+      "hasStructuralAnalysis": false
+    },
+    "lib/services/android_serial_port_service.dart": {
+      "filePath": "lib/services/android_serial_port_service.dart",
+      "contentHash": "7a1996d258586eb82a1482a833323d811884be34758505b2b6f15b7ac39d3f9a",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 211,
+      "hasStructuralAnalysis": false
+    },
+    "lib/stores/app_header_clock_store.dart": {
+      "filePath": "lib/stores/app_header_clock_store.dart",
+      "contentHash": "789471a7468d80a494709654fb8dd3b0feeff5127ae1b6d23d8e017bf72e40e8",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 106,
+      "hasStructuralAnalysis": false
+    },
+    "lib/stores/fragrance_setting_store.dart": {
+      "filePath": "lib/stores/fragrance_setting_store.dart",
+      "contentHash": "3a986d3321a36a318118f4d7415033ba2e21a8528a4ffb92cf67d61080b99128",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 26,
+      "hasStructuralAnalysis": false
+    },
+    "lib/stores/hifem_setting_store.dart": {
+      "filePath": "lib/stores/hifem_setting_store.dart",
+      "contentHash": "69895e3ac0a51330854fed2820b7f0328fe8e6552f512cd04d43095cdf27c142",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 83,
+      "hasStructuralAnalysis": false
+    },
+    "lib/stores/index.dart": {
+      "filePath": "lib/stores/index.dart",
+      "contentHash": "3cd2e21c0ffc25892e3fc7dbf92dffb68ac89593b8e229f3a8ff3963a99aa001",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 9,
+      "hasStructuralAnalysis": false
+    },
+    "lib/stores/terahertz_setting_store.dart": {
+      "filePath": "lib/stores/terahertz_setting_store.dart",
+      "contentHash": "6af4a9a0bcf1b0b1c1d76e6198272bff6d7c1f948229c69e4b0d41d3492a2662",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 56,
+      "hasStructuralAnalysis": false
+    },
+    "lib/stores/user_store.dart": {
+      "filePath": "lib/stores/user_store.dart",
+      "contentHash": "f12b6555d36f02f5a8ed1f28029d81ed90d6148353de153580b5eeaf28e19832",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 97,
+      "hasStructuralAnalysis": false
+    },
+    "lib/translation/app_translations.dart": {
+      "filePath": "lib/translation/app_translations.dart",
+      "contentHash": "7304164769f0513c0efb1b4e79c8137887fb90a15d150b5f67befdaf3cc41a7e",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 2397,
+      "hasStructuralAnalysis": false
+    },
+    "lib/utils/age_utils.dart": {
+      "filePath": "lib/utils/age_utils.dart",
+      "contentHash": "f78a7cbb4c443a8121d8bd1e72ac739ee9d1fd6b4566e59508044fb284fc692f",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 23,
+      "hasStructuralAnalysis": false
+    },
+    "lib/utils/byte_utils.dart": {
+      "filePath": "lib/utils/byte_utils.dart",
+      "contentHash": "d30bff1ba0f763bc6341c7a3ab4447e021142e4f91cba6303fe9d67f861727d1",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 12,
+      "hasStructuralAnalysis": false
+    },
+    "lib/utils/date_time_utils.dart": {
+      "filePath": "lib/utils/date_time_utils.dart",
+      "contentHash": "a22415456a41c8b14711498680e3f12f8329ba43e72e498cff540b875453b785",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 40,
+      "hasStructuralAnalysis": false
+    },
+    "lib/utils/duration_utils.dart": {
+      "filePath": "lib/utils/duration_utils.dart",
+      "contentHash": "7a6b452b74f30f557caed9e72c3660521370731746467daaba69fde4964e7984",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 21,
+      "hasStructuralAnalysis": false
+    },
+    "lib/utils/email_utils.dart": {
+      "filePath": "lib/utils/email_utils.dart",
+      "contentHash": "2bc499c5d1ca3d8cd741f9d0fae94d13d41aeaa8be426c609401ec94f492b7db",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 13,
+      "hasStructuralAnalysis": false
+    },
+    "lib/utils/gender_utils.dart": {
+      "filePath": "lib/utils/gender_utils.dart",
+      "contentHash": "b3e7e56b7c6367a962609195f7883e8ccc0928c65fd3e4d0afaa11f711d16831",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 23,
+      "hasStructuralAnalysis": false
+    },
+    "lib/utils/index.dart": {
+      "filePath": "lib/utils/index.dart",
+      "contentHash": "3780966fde46a6b18ce4a2c16e81fbb2f9da46873731fec3dcaeeea17fceab53",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 11,
+      "hasStructuralAnalysis": false
+    },
+    "lib/utils/localized_api_message.dart": {
+      "filePath": "lib/utils/localized_api_message.dart",
+      "contentHash": "00d03ef3307d20881b5eef78ad94a74c97405f9d47c8e8e697260504b75f55eb",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 19,
+      "hasStructuralAnalysis": false
+    },
+    "lib/utils/number_utils.dart": {
+      "filePath": "lib/utils/number_utils.dart",
+      "contentHash": "56fc13c918f214048296426d08ae43168026467d09945a80afed7a616cb0211c",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 27,
+      "hasStructuralAnalysis": false
+    },
+    "lib/utils/phone_utils.dart": {
+      "filePath": "lib/utils/phone_utils.dart",
+      "contentHash": "014a89afd38382e1584ff4d33e48bf0fbeeea8d61fa3f525db3bdc9d14fc7ddd",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 20,
+      "hasStructuralAnalysis": false
+    },
+    "linux/flutter/generated_plugin_registrant.cc": {
+      "filePath": "linux/flutter/generated_plugin_registrant.cc",
+      "contentHash": "93ac138f746b6ece3cb21f6f6d822fef987334a09f1bc18e85197c3891a7eb34",
+      "functions": [
+        {
+          "name": "fl_register_plugins",
+          "params": [
+            "registry"
+          ],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 5
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "generated_plugin_registrant.h",
+          "specifiers": [
+            "generated_plugin_registrant.h"
+          ]
+        },
+        {
+          "source": "flutter_libserialport/flutter_libserialport_plugin.h",
+          "specifiers": [
+            "flutter_libserialport/flutter_libserialport_plugin.h"
+          ]
+        }
+      ],
+      "exports": [
+        "fl_register_plugins"
+      ],
+      "totalLines": 16,
+      "hasStructuralAnalysis": true
+    },
+    "linux/flutter/generated_plugin_registrant.h": {
+      "filePath": "linux/flutter/generated_plugin_registrant.h",
+      "contentHash": "00f93bb5b1faefdede8f6065df327522900fb0b8efee86bacf424fd947ed14bb",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 16,
+      "hasStructuralAnalysis": true
+    },
+    "linux/flutter/generated_plugins.cmake": {
+      "filePath": "linux/flutter/generated_plugins.cmake",
+      "contentHash": "c550641d2cdb77758276df25094bdb22258c359119b5fa27abc879e898e8bce8",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 26,
+      "hasStructuralAnalysis": false
+    },
+    "linux/runner/main.cc": {
+      "filePath": "linux/runner/main.cc",
+      "contentHash": "905b4dfa4eab584c1eb6244899b7d5ef56d0bceaf3bffb5ea335ed7e0ba3c549",
+      "functions": [
+        {
+          "name": "main",
+          "params": [
+            "argc",
+            "argv"
+          ],
+          "returnType": "int",
+          "exported": true,
+          "lineCount": 4
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "my_application.h",
+          "specifiers": [
+            "my_application.h"
+          ]
+        }
+      ],
+      "exports": [
+        "main"
+      ],
+      "totalLines": 7,
+      "hasStructuralAnalysis": true
+    },
+    "linux/runner/my_application.cc": {
+      "filePath": "linux/runner/my_application.cc",
+      "contentHash": "6841411bf898fea1f3ad1b365e5bf64b8add23deb5a932437c7a9645c0082a29",
+      "functions": [
+        {
+          "name": "first_frame_cb",
+          "params": [
+            "self",
+            "view"
+          ],
+          "returnType": "void",
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "my_application_activate",
+          "params": [
+            "application"
+          ],
+          "returnType": "void",
+          "exported": false,
+          "lineCount": 57
+        },
+        {
+          "name": "my_application_local_command_line",
+          "params": [
+            "application",
+            "arguments",
+            "exit_status"
+          ],
+          "returnType": "gboolean",
+          "exported": false,
+          "lineCount": 19
+        },
+        {
+          "name": "my_application_startup",
+          "params": [
+            "application"
+          ],
+          "returnType": "void",
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "my_application_shutdown",
+          "params": [
+            "application"
+          ],
+          "returnType": "void",
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "my_application_dispose",
+          "params": [
+            "object"
+          ],
+          "returnType": "void",
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "my_application_class_init",
+          "params": [
+            "klass"
+          ],
+          "returnType": "void",
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "my_application_init",
+          "params": [
+            "self"
+          ],
+          "returnType": "void",
+          "exported": false,
+          "lineCount": 1
+        }
+      ],
+      "classes": [
+        {
+          "name": "_MyApplication",
+          "methods": [],
+          "properties": [
+            "parent_instance",
+            "dart_entrypoint_arguments"
+          ],
+          "exported": true,
+          "lineCount": 4
+        }
+      ],
+      "imports": [
+        {
+          "source": "my_application.h",
+          "specifiers": [
+            "my_application.h"
+          ]
+        },
+        {
+          "source": "flutter_linux/flutter_linux.h",
+          "specifiers": [
+            "flutter_linux/flutter_linux.h"
+          ]
+        },
+        {
+          "source": "flutter/generated_plugin_registrant.h",
+          "specifiers": [
+            "flutter/generated_plugin_registrant.h"
+          ]
+        }
+      ],
+      "exports": [
+        "_MyApplication"
+      ],
+      "totalLines": 149,
+      "hasStructuralAnalysis": true
+    },
+    "linux/runner/my_application.h": {
+      "filePath": "linux/runner/my_application.h",
+      "contentHash": "880393cb82d7feaaa95d9acd6c2317749afae0e17ea5f5ee44b456bc081b5987",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 22,
+      "hasStructuralAnalysis": true
+    },
+    "macos/Flutter/Flutter-Debug.xcconfig": {
+      "filePath": "macos/Flutter/Flutter-Debug.xcconfig",
+      "contentHash": "7e9b3ee3961b7d7718b418ceaed812a5f06a4e4cec894aae712a78e159c32ab0",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 2,
+      "hasStructuralAnalysis": false
+    },
+    "macos/Flutter/Flutter-Release.xcconfig": {
+      "filePath": "macos/Flutter/Flutter-Release.xcconfig",
+      "contentHash": "7e9b3ee3961b7d7718b418ceaed812a5f06a4e4cec894aae712a78e159c32ab0",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 2,
+      "hasStructuralAnalysis": false
+    },
+    "macos/Flutter/GeneratedPluginRegistrant.swift": {
+      "filePath": "macos/Flutter/GeneratedPluginRegistrant.swift",
+      "contentHash": "f5d66de5c7706ed5ae8f9e1f27618bb0236aca725cf229ffbac4fa54cd737875",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 21,
+      "hasStructuralAnalysis": false
+    },
+    "macos/Runner.xcodeproj/project.pbxproj": {
+      "filePath": "macos/Runner.xcodeproj/project.pbxproj",
+      "contentHash": "6181e663d61f142b29080f78a4728be269679d31897e188a2e0090cef4d3593b",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 706,
+      "hasStructuralAnalysis": false
+    },
+    "macos/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme": {
+      "filePath": "macos/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme",
+      "contentHash": "89d6b20eef23d2bc65440505e68ab4662fa82c543af64d078b663a857f1c88fa",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 100,
+      "hasStructuralAnalysis": false
+    },
+    "macos/Runner.xcworkspace/contents.xcworkspacedata": {
+      "filePath": "macos/Runner.xcworkspace/contents.xcworkspacedata",
+      "contentHash": "706a4c812f2a1e220e6785c27580020d58048e2ae4d30d1280f3c43344ce6b38",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 8,
+      "hasStructuralAnalysis": false
+    },
+    "macos/Runner/AppDelegate.swift": {
+      "filePath": "macos/Runner/AppDelegate.swift",
+      "contentHash": "5b9cbdcb563ad8578a99b7c283958490e4af537322e9092fe1efbb3c29ab3e1b",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 14,
+      "hasStructuralAnalysis": false
+    },
+    "macos/Runner/Base.lproj/MainMenu.xib": {
+      "filePath": "macos/Runner/Base.lproj/MainMenu.xib",
+      "contentHash": "776c35481f6581f14148b90071558b25f6ce6262e771988985e9fe8d3e70a472",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 344,
+      "hasStructuralAnalysis": false
+    },
+    "macos/Runner/Configs/AppInfo.xcconfig": {
+      "filePath": "macos/Runner/Configs/AppInfo.xcconfig",
+      "contentHash": "b0718ac7bdf95d56f36348cd842a540d1a32102359bc89867e29e6827d2928e0",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 15,
+      "hasStructuralAnalysis": false
+    },
+    "macos/Runner/Configs/Debug.xcconfig": {
+      "filePath": "macos/Runner/Configs/Debug.xcconfig",
+      "contentHash": "86be603022e2a385dd7884fce4cc29255676c3dda579d3d4a56c958bf1e57de0",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 3,
+      "hasStructuralAnalysis": false
+    },
+    "macos/Runner/Configs/Release.xcconfig": {
+      "filePath": "macos/Runner/Configs/Release.xcconfig",
+      "contentHash": "d1bf3f0349aadd5c58ee9d46c0ce4ce45467127c438936e9bb481d861d296565",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 3,
+      "hasStructuralAnalysis": false
+    },
+    "macos/Runner/Configs/Warnings.xcconfig": {
+      "filePath": "macos/Runner/Configs/Warnings.xcconfig",
+      "contentHash": "aa8ded4c14068cb05f51f5446509fe56805cf1e29961ad6d5a97233bb0632bc1",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 14,
+      "hasStructuralAnalysis": false
+    },
+    "macos/Runner/DebugProfile.entitlements": {
+      "filePath": "macos/Runner/DebugProfile.entitlements",
+      "contentHash": "b2aa41d03e18907d360b721b7bb3edb302897c8a3de98ec47b6665033fea0b0e",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 13,
+      "hasStructuralAnalysis": false
+    },
+    "macos/Runner/MainFlutterWindow.swift": {
+      "filePath": "macos/Runner/MainFlutterWindow.swift",
+      "contentHash": "8178ad756f958f986f794a8bb06e321a6630ceaaf8f235b3b4ae3936e415dc7c",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 16,
+      "hasStructuralAnalysis": false
+    },
+    "macos/Runner/Release.entitlements": {
+      "filePath": "macos/Runner/Release.entitlements",
+      "contentHash": "c3b881c72aa4cca9cf50da6654c4d675dec929056692af46a6fbecd00aef5990",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 9,
+      "hasStructuralAnalysis": false
+    },
+    "macos/RunnerTests/RunnerTests.swift": {
+      "filePath": "macos/RunnerTests/RunnerTests.swift",
+      "contentHash": "8a0ff977c64ceac0750fffa48087988b7b4125d1b1c49019221e7fffb574423e",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 13,
+      "hasStructuralAnalysis": false
+    },
+    "test/choseusers_logic_test.dart": {
+      "filePath": "test/choseusers_logic_test.dart",
+      "contentHash": "5d4a3bce5e38f7d879f027e69321ea6de22422afd39591d2f7b49570a7fc8b3f",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 99,
+      "hasStructuralAnalysis": false
+    },
+    "test/pemf_modbus_test.dart": {
+      "filePath": "test/pemf_modbus_test.dart",
+      "contentHash": "3e8a62aa620f9cd58f39162233121ba2a5d469bb304fdba3c5ee7bb2a3cdefb6",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 18,
+      "hasStructuralAnalysis": false
+    },
+    "test/preset_configs_test.dart": {
+      "filePath": "test/preset_configs_test.dart",
+      "contentHash": "daed89349180c224f6e748a2f3c4074217f8adb2d430e2bd206520ed9761440e",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 43,
+      "hasStructuralAnalysis": false
+    },
+    "test/preset_registry_test.dart": {
+      "filePath": "test/preset_registry_test.dart",
+      "contentHash": "4b25f3bf19b462cf23978437fc204dc1af90c97d9d652b6e8e1f417f8a4bc165",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 29,
+      "hasStructuralAnalysis": false
+    },
+    "test/preset_start_logic_test.dart": {
+      "filePath": "test/preset_start_logic_test.dart",
+      "contentHash": "7f635ffdb40da858eaf79cd0c8a7ba875bca840eef774ee03add638090b9d58a",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 27,
+      "hasStructuralAnalysis": false
+    },
+    "test/therapy_modbus_mapping_test.dart": {
+      "filePath": "test/therapy_modbus_mapping_test.dart",
+      "contentHash": "f5665c0d73dfbabb1576064da16af22ee49bdefbbeaa3a5f70bb7b31d85f2308",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 33,
+      "hasStructuralAnalysis": false
+    },
+    "test/widget_test.dart": {
+      "filePath": "test/widget_test.dart",
+      "contentHash": "18c7fc3602a9af036d1b61f79b6c6a99fc775493b986f2b91171bfb280565b2b",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 411,
+      "hasStructuralAnalysis": false
+    },
+    "web/index.html": {
+      "filePath": "web/index.html",
+      "contentHash": "6cc9c058be3af8ad956ae77413defd4931b13c54910501e9bcab3f0f9409c8eb",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 47,
+      "hasStructuralAnalysis": false
+    },
+    "windows/flutter/generated_plugin_registrant.cc": {
+      "filePath": "windows/flutter/generated_plugin_registrant.cc",
+      "contentHash": "9f11a5fa08217d9ed0dd84d8d04e2104f7c1c1e977b817f87cdb5c4d328534a5",
+      "functions": [
+        {
+          "name": "RegisterPlugins",
+          "params": [
+            "registry"
+          ],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 4
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "generated_plugin_registrant.h",
+          "specifiers": [
+            "generated_plugin_registrant.h"
+          ]
+        },
+        {
+          "source": "flutter_libserialport/flutter_libserialport_plugin.h",
+          "specifiers": [
+            "flutter_libserialport/flutter_libserialport_plugin.h"
+          ]
+        }
+      ],
+      "exports": [
+        "RegisterPlugins"
+      ],
+      "totalLines": 15,
+      "hasStructuralAnalysis": true
+    },
+    "windows/flutter/generated_plugin_registrant.h": {
+      "filePath": "windows/flutter/generated_plugin_registrant.h",
+      "contentHash": "dbc11635d7b1ba1887adf40df5b83d634e9c3ab0bee34510c71528bb4d73602a",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 16,
+      "hasStructuralAnalysis": true
+    },
+    "windows/flutter/generated_plugins.cmake": {
+      "filePath": "windows/flutter/generated_plugins.cmake",
+      "contentHash": "1fef36242086330bfd23de448994b51666a9638906ef2827ff67405942b6599a",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 26,
+      "hasStructuralAnalysis": false
+    },
+    "windows/runner/flutter_window.cpp": {
+      "filePath": "windows/runner/flutter_window.cpp",
+      "contentHash": "d615eedc06ae37321e59c2c00c7687d1887dcd97904eb7225fafd8dcb5b83da6",
+      "functions": [
+        {
+          "name": "FlutterWindow",
+          "params": [
+            "project"
+          ],
+          "exported": true,
+          "lineCount": 2
+        },
+        {
+          "name": "~FlutterWindow",
+          "params": [],
+          "exported": true,
+          "lineCount": 1
+        },
+        {
+          "name": "OnCreate",
+          "params": [],
+          "returnType": "bool",
+          "exported": true,
+          "lineCount": 29
+        },
+        {
+          "name": "OnDestroy",
+          "params": [],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "MessageHandler",
+          "params": [
+            "hwnd",
+            "message",
+            "wparam",
+            "lparam"
+          ],
+          "returnType": "LRESULT",
+          "exported": true,
+          "lineCount": 22
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "flutter_window.h",
+          "specifiers": [
+            "flutter_window.h"
+          ]
+        },
+        {
+          "source": "optional",
+          "specifiers": [
+            "optional"
+          ]
+        },
+        {
+          "source": "flutter/generated_plugin_registrant.h",
+          "specifiers": [
+            "flutter/generated_plugin_registrant.h"
+          ]
+        }
+      ],
+      "exports": [
+        "FlutterWindow",
+        "~FlutterWindow",
+        "OnCreate",
+        "OnDestroy",
+        "MessageHandler"
+      ],
+      "totalLines": 72,
+      "hasStructuralAnalysis": true
+    },
+    "windows/runner/flutter_window.h": {
+      "filePath": "windows/runner/flutter_window.h",
+      "contentHash": "0252b804f5da380c7709cbe1daff2b8d18daf6c49d7e6dd43e5af3c99c19f56c",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 34,
+      "hasStructuralAnalysis": true
+    },
+    "windows/runner/main.cpp": {
+      "filePath": "windows/runner/main.cpp",
+      "contentHash": "320159aa9746e2e2edd5f73dcd6d1981999862e6714b80482257c676dfc0b232",
+      "functions": [
+        {
+          "name": "wWinMain",
+          "params": [
+            "instance",
+            "HINSTANCE",
+            "show_command"
+          ],
+          "returnType": "int",
+          "exported": true,
+          "lineCount": 36
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "flutter/dart_project.h",
+          "specifiers": [
+            "flutter/dart_project.h"
+          ]
+        },
+        {
+          "source": "flutter/flutter_view_controller.h",
+          "specifiers": [
+            "flutter/flutter_view_controller.h"
+          ]
+        },
+        {
+          "source": "windows.h",
+          "specifiers": [
+            "windows.h"
+          ]
+        },
+        {
+          "source": "flutter_window.h",
+          "specifiers": [
+            "flutter_window.h"
+          ]
+        },
+        {
+          "source": "utils.h",
+          "specifiers": [
+            "utils.h"
+          ]
+        }
+      ],
+      "exports": [
+        "wWinMain"
+      ],
+      "totalLines": 44,
+      "hasStructuralAnalysis": true
+    },
+    "windows/runner/resource.h": {
+      "filePath": "windows/runner/resource.h",
+      "contentHash": "d0e8bf7835468b4b6b1f8f0747f2e8f25c19841f2df2ac60aaa584ddae3aa7c6",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 17,
+      "hasStructuralAnalysis": true
+    },
+    "windows/runner/runner.exe.manifest": {
+      "filePath": "windows/runner/runner.exe.manifest",
+      "contentHash": "639a56233fcd8cbcb8bbefcd93e4680ec2664f32d9acfb3d2ec1d8726a96e090",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 15,
+      "hasStructuralAnalysis": false
+    },
+    "windows/runner/Runner.rc": {
+      "filePath": "windows/runner/Runner.rc",
+      "contentHash": "395111dd41fc4e3ac67f0b402f51bb86d1b6d6ee23d29873898f9b9cbc5f0f53",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 122,
+      "hasStructuralAnalysis": false
+    },
+    "windows/runner/utils.cpp": {
+      "filePath": "windows/runner/utils.cpp",
+      "contentHash": "fbb18524c22593d0ce7869b0733e237be38e668fe045e3023bcf2d0b31784fa3",
+      "functions": [
+        {
+          "name": "CreateAndAttachConsole",
+          "params": [],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 13
+        },
+        {
+          "name": "GetCommandLineArguments",
+          "params": [],
+          "returnType": "std::vector<std::string>",
+          "exported": true,
+          "lineCount": 19
+        },
+        {
+          "name": "Utf8FromUtf16",
+          "params": [
+            "utf16_string"
+          ],
+          "returnType": "std::string",
+          "exported": true,
+          "lineCount": 22
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "utils.h",
+          "specifiers": [
+            "utils.h"
+          ]
+        },
+        {
+          "source": "flutter_windows.h",
+          "specifiers": [
+            "flutter_windows.h"
+          ]
+        },
+        {
+          "source": "io.h",
+          "specifiers": [
+            "io.h"
+          ]
+        },
+        {
+          "source": "stdio.h",
+          "specifiers": [
+            "stdio.h"
+          ]
+        },
+        {
+          "source": "windows.h",
+          "specifiers": [
+            "windows.h"
+          ]
+        },
+        {
+          "source": "iostream",
+          "specifiers": [
+            "iostream"
+          ]
+        }
+      ],
+      "exports": [
+        "CreateAndAttachConsole",
+        "GetCommandLineArguments",
+        "Utf8FromUtf16"
+      ],
+      "totalLines": 66,
+      "hasStructuralAnalysis": true
+    },
+    "windows/runner/utils.h": {
+      "filePath": "windows/runner/utils.h",
+      "contentHash": "832e246b6758253f89016fb0374b30791242e97ad950d27fc678b3d9feacfdc4",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 20,
+      "hasStructuralAnalysis": true
+    },
+    "windows/runner/win32_window.cpp": {
+      "filePath": "windows/runner/win32_window.cpp",
+      "contentHash": "4e4f4dcf8e86ea6e097562cb3476039e693449bd8045367538afee579c017511",
+      "functions": [
+        {
+          "name": "Scale",
+          "params": [
+            "source",
+            "scale_factor"
+          ],
+          "returnType": "int",
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "EnableFullDpiSupportIfAvailable",
+          "params": [
+            "hwnd"
+          ],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 13
+        },
+        {
+          "name": "~WindowClassRegistrar",
+          "params": [],
+          "exported": true,
+          "lineCount": 1
+        },
+        {
+          "name": "WindowClassRegistrar",
+          "params": [],
+          "exported": true,
+          "lineCount": 1
+        },
+        {
+          "name": "UnregisterWindowClass",
+          "params": [],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "Win32Window",
+          "params": [],
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "~Win32Window",
+          "params": [],
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "Create",
+          "params": [
+            "title",
+            "origin",
+            "size"
+          ],
+          "returnType": "bool",
+          "exported": true,
+          "lineCount": 28
+        },
+        {
+          "name": "Show",
+          "params": [],
+          "returnType": "bool",
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "Win32Window::WndProc",
+          "params": [
+            "window",
+            "message",
+            "wparam",
+            "lparam"
+          ],
+          "returnType": "LRESULT",
+          "exported": true,
+          "lineCount": 18
+        },
+        {
+          "name": "MessageHandler",
+          "params": [
+            "hwnd",
+            "message",
+            "wparam",
+            "lparam"
+          ],
+          "returnType": "LRESULT",
+          "exported": true,
+          "lineCount": 47
+        },
+        {
+          "name": "Destroy",
+          "params": [],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 11
+        },
+        {
+          "name": "SetChildContent",
+          "params": [
+            "content"
+          ],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 10
+        },
+        {
+          "name": "GetClientArea",
+          "params": [],
+          "returnType": "RECT",
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "GetHandle",
+          "params": [],
+          "returnType": "HWND",
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "SetQuitOnClose",
+          "params": [
+            "quit_on_close"
+          ],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "OnCreate",
+          "params": [],
+          "returnType": "bool",
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "OnDestroy",
+          "params": [],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "UpdateTheme",
+          "params": [
+            "window"
+          ],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 14
+        }
+      ],
+      "classes": [
+        {
+          "name": "WindowClassRegistrar",
+          "methods": [
+            "~WindowClassRegistrar",
+            "UnregisterWindowClass",
+            "WindowClassRegistrar"
+          ],
+          "properties": [
+            "GetWindowClass",
+            "instance_",
+            "class_registered_"
+          ],
+          "exported": true,
+          "lineCount": 27
+        }
+      ],
+      "imports": [
+        {
+          "source": "win32_window.h",
+          "specifiers": [
+            "win32_window.h"
+          ]
+        },
+        {
+          "source": "dwmapi.h",
+          "specifiers": [
+            "dwmapi.h"
+          ]
+        },
+        {
+          "source": "flutter_windows.h",
+          "specifiers": [
+            "flutter_windows.h"
+          ]
+        },
+        {
+          "source": "resource.h",
+          "specifiers": [
+            "resource.h"
+          ]
+        }
+      ],
+      "exports": [
+        "Scale",
+        "EnableFullDpiSupportIfAvailable",
+        "~WindowClassRegistrar",
+        "UnregisterWindowClass",
+        "WindowClassRegistrar",
+        "UnregisterWindowClass",
+        "Win32Window",
+        "~Win32Window",
+        "Create",
+        "Show",
+        "Win32Window::WndProc",
+        "MessageHandler",
+        "Destroy",
+        "SetChildContent",
+        "GetClientArea",
+        "GetHandle",
+        "SetQuitOnClose",
+        "OnCreate",
+        "OnDestroy",
+        "UpdateTheme"
+      ],
+      "totalLines": 289,
+      "hasStructuralAnalysis": true
+    },
+    "windows/runner/win32_window.h": {
+      "filePath": "windows/runner/win32_window.h",
+      "contentHash": "d154cf89ba85f820631a9b5bedacbe64fc5815e428fe6bc5da579ce649f69841",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 103,
+      "hasStructuralAnalysis": true
+    }
+  }
+}

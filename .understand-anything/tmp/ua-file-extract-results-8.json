@@ -1,0 +1,1958 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 25,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": ".flutter-plugins-dependencies",
+      "language": "unknown",
+      "fileCategory": "code",
+      "totalLines": 1,
+      "nonEmptyLines": 1,
+      "metrics": {}
+    },
+    {
+      "path": ".metadata",
+      "language": "unknown",
+      "fileCategory": "code",
+      "totalLines": 30,
+      "nonEmptyLines": 25,
+      "metrics": {}
+    },
+    {
+      "path": ".understand-anything/.understandignore",
+      "language": "unknown",
+      "fileCategory": "code",
+      "totalLines": 32,
+      "nonEmptyLines": 27,
+      "metrics": {}
+    },
+    {
+      "path": ".understand-anything/config.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 3,
+      "nonEmptyLines": 3,
+      "sections": [
+        {
+          "heading": "outputLanguage",
+          "level": 1,
+          "line": 2
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 1
+      }
+    },
+    {
+      "path": "android/app/build.gradle.kts",
+      "language": "kotlin",
+      "fileCategory": "code",
+      "totalLines": 48,
+      "nonEmptyLines": 41,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "android/app/libs/mcSerialPort.aar",
+      "language": "aar",
+      "fileCategory": "code",
+      "totalLines": 181,
+      "nonEmptyLines": 181,
+      "metrics": {}
+    },
+    {
+      "path": "android/app/src/debug/AndroidManifest.xml",
+      "language": "xml",
+      "fileCategory": "config",
+      "totalLines": 7,
+      "nonEmptyLines": 7,
+      "metrics": {}
+    },
+    {
+      "path": "android/app/src/main/AndroidManifest.xml",
+      "language": "xml",
+      "fileCategory": "config",
+      "totalLines": 47,
+      "nonEmptyLines": 46,
+      "metrics": {}
+    },
+    {
+      "path": "android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java",
+      "language": "java",
+      "fileCategory": "code",
+      "totalLines": 54,
+      "nonEmptyLines": 51,
+      "functions": [
+        {
+          "name": "registerWith",
+          "startLine": 17,
+          "endLine": 53,
+          "params": [
+            "flutterEngine"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "GeneratedPluginRegistrant",
+          "startLine": 14,
+          "endLine": 54,
+          "methods": [
+            "registerWith"
+          ],
+          "properties": [
+            "TAG"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "registerWith",
+          "line": 17,
+          "isDefault": false
+        },
+        {
+          "name": "GeneratedPluginRegistrant",
+          "line": 14,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "registerWith",
+          "callee": "flutterEngine.getPlugins().add",
+          "lineNumber": 19
+        },
+        {
+          "caller": "registerWith",
+          "callee": "flutterEngine.getPlugins",
+          "lineNumber": 19
+        },
+        {
+          "caller": "registerWith",
+          "callee": "new com.ryanheise.audio_session.AudioSessionPlugin",
+          "lineNumber": 19
+        },
+        {
+          "caller": "registerWith",
+          "callee": "Log.e",
+          "lineNumber": 21
+        },
+        {
+          "caller": "registerWith",
+          "callee": "flutterEngine.getPlugins().add",
+          "lineNumber": 24
+        },
+        {
+          "caller": "registerWith",
+          "callee": "flutterEngine.getPlugins",
+          "lineNumber": 24
+        },
+        {
+          "caller": "registerWith",
+          "callee": "new org.sigrok.flutter_libserialport.FlutterLibserialportPlugin",
+          "lineNumber": 24
+        },
+        {
+          "caller": "registerWith",
+          "callee": "Log.e",
+          "lineNumber": 26
+        },
+        {
+          "caller": "registerWith",
+          "callee": "flutterEngine.getPlugins().add",
+          "lineNumber": 29
+        },
+        {
+          "caller": "registerWith",
+          "callee": "flutterEngine.getPlugins",
+          "lineNumber": 29
+        },
+        {
+          "caller": "registerWith",
+          "callee": "new com.github.dart_lang.jni.JniPlugin",
+          "lineNumber": 29
+        },
+        {
+          "caller": "registerWith",
+          "callee": "Log.e",
+          "lineNumber": 31
+        },
+        {
+          "caller": "registerWith",
+          "callee": "flutterEngine.getPlugins().add",
+          "lineNumber": 34
+        },
+        {
+          "caller": "registerWith",
+          "callee": "flutterEngine.getPlugins",
+          "lineNumber": 34
+        },
+        {
+          "caller": "registerWith",
+          "callee": "new com.github.dart_lang.jni_flutter.JniFlutterPlugin",
+          "lineNumber": 34
+        },
+        {
+          "caller": "registerWith",
+          "callee": "Log.e",
+          "lineNumber": 36
+        },
+        {
+          "caller": "registerWith",
+          "callee": "flutterEngine.getPlugins().add",
+          "lineNumber": 39
+        },
+        {
+          "caller": "registerWith",
+          "callee": "flutterEngine.getPlugins",
+          "lineNumber": 39
+        },
+        {
+          "caller": "registerWith",
+          "callee": "new com.ryanheise.just_audio.JustAudioPlugin",
+          "lineNumber": 39
+        },
+        {
+          "caller": "registerWith",
+          "callee": "Log.e",
+          "lineNumber": 41
+        },
+        {
+          "caller": "registerWith",
+          "callee": "flutterEngine.getPlugins().add",
+          "lineNumber": 44
+        },
+        {
+          "caller": "registerWith",
+          "callee": "flutterEngine.getPlugins",
+          "lineNumber": 44
+        },
+        {
+          "caller": "registerWith",
+          "callee": "new io.flutter.plugins.sharedpreferences.SharedPreferencesPlugin",
+          "lineNumber": 44
+        },
+        {
+          "caller": "registerWith",
+          "callee": "Log.e",
+          "lineNumber": 46
+        },
+        {
+          "caller": "registerWith",
+          "callee": "flutterEngine.getPlugins().add",
+          "lineNumber": 49
+        },
+        {
+          "caller": "registerWith",
+          "callee": "flutterEngine.getPlugins",
+          "lineNumber": 49
+        },
+        {
+          "caller": "registerWith",
+          "callee": "new com.tekartik.sqflite.SqflitePlugin",
+          "lineNumber": 49
+        },
+        {
+          "caller": "registerWith",
+          "callee": "Log.e",
+          "lineNumber": 51
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt",
+      "language": "kotlin",
+      "fileCategory": "code",
+      "totalLines": 595,
+      "nonEmptyLines": 529,
+      "functions": [
+        {
+          "name": "onMethodCall",
+          "startLine": 28,
+          "endLine": 119,
+          "params": [
+            "call",
+            "result"
+          ]
+        },
+        {
+          "name": "dispose",
+          "startLine": 121,
+          "endLine": 124,
+          "params": []
+        },
+        {
+          "name": "openSerialPort",
+          "startLine": 126,
+          "endLine": 145,
+          "params": [
+            "path",
+            "baudRate",
+            "startReader"
+          ]
+        },
+        {
+          "name": "sendBytes",
+          "startLine": 147,
+          "endLine": 150,
+          "params": [
+            "bytes"
+          ]
+        },
+        {
+          "name": "closeSerialPort",
+          "startLine": 152,
+          "endLine": 163,
+          "params": []
+        },
+        {
+          "name": "transceiveBytes",
+          "startLine": 165,
+          "endLine": 186,
+          "params": [
+            "path",
+            "baudRate",
+            "bytes",
+            "timeoutMs"
+          ]
+        },
+        {
+          "name": "writeBytesOnce",
+          "startLine": 188,
+          "endLine": 198,
+          "params": [
+            "path",
+            "baudRate",
+            "bytes"
+          ]
+        },
+        {
+          "name": "writeModbusQueue",
+          "startLine": 200,
+          "endLine": 240,
+          "params": [
+            "path",
+            "baudRate",
+            "frames",
+            "timeoutMs",
+            "delayMs",
+            "maxRetries"
+          ]
+        },
+        {
+          "name": "writeModbusQueueNoResponse",
+          "startLine": 242,
+          "endLine": 279,
+          "params": [
+            "path",
+            "baudRate",
+            "frames",
+            "delayMs"
+          ]
+        },
+        {
+          "name": "writeModbusFrameWithRetry",
+          "startLine": 281,
+          "endLine": 340,
+          "params": [
+            "serialManager",
+            "frame",
+            "index",
+            "timeoutMs",
+            "delayMs",
+            "maxRetries"
+          ]
+        },
+        {
+          "name": "drainInput",
+          "startLine": 342,
+          "endLine": 352,
+          "params": [
+            "serialManager"
+          ]
+        },
+        {
+          "name": "readModbusResponse",
+          "startLine": 354,
+          "endLine": 399,
+          "params": [
+            "serialManager",
+            "timeoutMs"
+          ]
+        },
+        {
+          "name": "readModbusResponseByPacket",
+          "startLine": 401,
+          "endLine": 447,
+          "params": [
+            "serialManager",
+            "timeoutMs"
+          ]
+        },
+        {
+          "name": "expectedModbusResponseLength",
+          "startLine": 449,
+          "endLine": 459,
+          "params": [
+            "bytes"
+          ]
+        },
+        {
+          "name": "validateWriteSingleRegisterResponse",
+          "startLine": 461,
+          "endLine": 479,
+          "params": [
+            "request",
+            "response"
+          ]
+        },
+        {
+          "name": "validateCrc",
+          "startLine": 481,
+          "endLine": 491,
+          "params": [
+            "frame",
+            "dataLength"
+          ]
+        },
+        {
+          "name": "crc16",
+          "startLine": 493,
+          "endLine": 504,
+          "params": [
+            "bytes",
+            "length"
+          ]
+        },
+        {
+          "name": "modbusAddressText",
+          "startLine": 506,
+          "endLine": 510,
+          "params": [
+            "frame"
+          ]
+        },
+        {
+          "name": "modbusValue",
+          "startLine": 512,
+          "endLine": 515,
+          "params": [
+            "frame"
+          ]
+        },
+        {
+          "name": "startReadLoop",
+          "startLine": 517,
+          "endLine": 546,
+          "params": []
+        },
+        {
+          "name": "emitReceive",
+          "startLine": 548,
+          "endLine": 555,
+          "params": [
+            "bytes"
+          ]
+        },
+        {
+          "name": "emitError",
+          "startLine": 557,
+          "endLine": 559,
+          "params": [
+            "message"
+          ]
+        },
+        {
+          "name": "extractBytes",
+          "startLine": 561,
+          "endLine": 574,
+          "params": [
+            "value"
+          ]
+        },
+        {
+          "name": "extractFrames",
+          "startLine": 576,
+          "endLine": 579,
+          "params": [
+            "value"
+          ]
+        },
+        {
+          "name": "toHexString",
+          "startLine": 581,
+          "endLine": 585,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "AndroidSerialPortBridge",
+          "startLine": 14,
+          "endLine": 595,
+          "methods": [
+            "onMethodCall",
+            "dispose",
+            "openSerialPort",
+            "sendBytes",
+            "closeSerialPort",
+            "transceiveBytes",
+            "writeBytesOnce",
+            "writeModbusQueue",
+            "writeModbusQueueNoResponse",
+            "writeModbusFrameWithRetry",
+            "drainInput",
+            "readModbusResponse",
+            "readModbusResponseByPacket",
+            "expectedModbusResponseLength",
+            "validateWriteSingleRegisterResponse",
+            "validateCrc",
+            "crc16",
+            "modbusAddressText",
+            "modbusValue",
+            "startReadLoop",
+            "emitReceive",
+            "emitError",
+            "extractBytes",
+            "extractFrames",
+            "toHexString"
+          ],
+          "properties": [
+            "channel",
+            "mainHandler",
+            "reading",
+            "lock",
+            "manager",
+            "readThread",
+            "currentPath"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "onMethodCall",
+          "line": 28,
+          "isDefault": false
+        },
+        {
+          "name": "dispose",
+          "line": 121,
+          "isDefault": false
+        },
+        {
+          "name": "AndroidSerialPortBridge",
+          "line": 14,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "onMethodCall",
+          "callee": "takeIf",
+          "lineNumber": 32
+        },
+        {
+          "caller": "onMethodCall",
+          "callee": "argument",
+          "lineNumber": 32
+        },
+        {
+          "caller": "onMethodCall",
+          "callee": "isNotBlank",
+          "lineNumber": 33
+        },
+        {
+          "caller": "onMethodCall",
+          "callee": "argument",
+          "lineNumber": 35
+        },
+        {
+          "caller": "onMethodCall",
+          "callee": "openSerialPort",
+          "lineNumber": 37
+        },
+        {
+          "caller": "onMethodCall",
+          "callee": "success",
+          "lineNumber": 38
+        },
+        {
+          "caller": "onMethodCall",
+          "callee": "extractBytes",
+          "lineNumber": 42
+        },
+        {
+          "caller": "onMethodCall",
+          "callee": "sendBytes",
+          "lineNumber": 43
+        },
+        {
+          "caller": "onMethodCall",
+          "callee": "success",
+          "lineNumber": 44
+        },
+        {
+          "caller": "onMethodCall",
+          "callee": "takeIf",
+          "lineNumber": 48
+        },
+        {
+          "caller": "onMethodCall",
+          "callee": "argument",
+          "lineNumber": 48
+        },
+        {
+          "caller": "onMethodCall",
+          "callee": "isNotBlank",
+          "lineNumber": 49
+        },
+        {
+          "caller": "onMethodCall",
+          "callee": "argument",
+          "lineNumber": 51
+        },
+        {
+          "caller": "onMethodCall",
+          "callee": "argument",
+          "lineNumber": 52
+        },
+        {
+          "caller": "onMethodCall",
+          "callee": "extractBytes",
+          "lineNumber": 53
+        },
+        {
+          "caller": "onMethodCall",
+          "callee": "transceiveBytes",
+          "lineNumber": 55
+        },
+        {
+          "caller": "onMethodCall",
+          "callee": "success",
+          "lineNumber": 56
+        },
+        {
+          "caller": "onMethodCall",
+          "callee": "takeIf",
+          "lineNumber": 60
+        },
+        {
+          "caller": "onMethodCall",
+          "callee": "argument",
+          "lineNumber": 60
+        },
+        {
+          "caller": "onMethodCall",
+          "callee": "isNotBlank",
+          "lineNumber": 61
+        },
+        {
+          "caller": "onMethodCall",
+          "callee": "argument",
+          "lineNumber": 63
+        },
+        {
+          "caller": "onMethodCall",
+          "callee": "extractBytes",
+          "lineNumber": 64
+        },
+        {
+          "caller": "onMethodCall",
+          "callee": "writeBytesOnce",
+          "lineNumber": 66
+        },
+        {
+          "caller": "onMethodCall",
+          "callee": "success",
+          "lineNumber": 67
+        },
+        {
+          "caller": "onMethodCall",
+          "callee": "takeIf",
+          "lineNumber": 71
+        },
+        {
+          "caller": "onMethodCall",
+          "callee": "argument",
+          "lineNumber": 71
+        },
+        {
+          "caller": "onMethodCall",
+          "callee": "isNotBlank",
+          "lineNumber": 72
+        },
+        {
+          "caller": "onMethodCall",
+          "callee": "argument",
+          "lineNumber": 74
+        },
+        {
+          "caller": "onMethodCall",
+          "callee": "argument",
+          "lineNumber": 75
+        },
+        {
+          "caller": "onMethodCall",
+          "callee": "argument",
+          "lineNumber": 76
+        },
+        {
+          "caller": "onMethodCall",
+          "callee": "argument",
+          "lineNumber": 77
+        },
+        {
+          "caller": "onMethodCall",
+          "callee": "extractFrames",
+          "lineNumber": 78
+        },
+        {
+          "caller": "onMethodCall",
+          "callee": "writeModbusQueue",
+          "lineNumber": 80
+        },
+        {
+          "caller": "onMethodCall",
+          "callee": "success",
+          "lineNumber": 88
+        },
+        {
+          "caller": "onMethodCall",
+          "callee": "takeIf",
+          "lineNumber": 92
+        },
+        {
+          "caller": "onMethodCall",
+          "callee": "argument",
+          "lineNumber": 92
+        },
+        {
+          "caller": "onMethodCall",
+          "callee": "isNotBlank",
+          "lineNumber": 93
+        },
+        {
+          "caller": "onMethodCall",
+          "callee": "argument",
+          "lineNumber": 95
+        },
+        {
+          "caller": "onMethodCall",
+          "callee": "argument",
+          "lineNumber": 96
+        },
+        {
+          "caller": "onMethodCall",
+          "callee": "extractFrames",
+          "lineNumber": 97
+        },
+        {
+          "caller": "onMethodCall",
+          "callee": "writeModbusQueueNoResponse",
+          "lineNumber": 99
+        },
+        {
+          "caller": "onMethodCall",
+          "callee": "success",
+          "lineNumber": 105
+        },
+        {
+          "caller": "onMethodCall",
+          "callee": "closeSerialPort",
+          "lineNumber": 109
+        },
+        {
+          "caller": "onMethodCall",
+          "callee": "success",
+          "lineNumber": 110
+        },
+        {
+          "caller": "onMethodCall",
+          "callee": "notImplemented",
+          "lineNumber": 113
+        },
+        {
+          "caller": "onMethodCall",
+          "callee": "emitError",
+          "lineNumber": 116
+        },
+        {
+          "caller": "onMethodCall",
+          "callee": "error",
+          "lineNumber": 117
+        },
+        {
+          "caller": "dispose",
+          "callee": "closeSerialPort",
+          "lineNumber": 122
+        },
+        {
+          "caller": "dispose",
+          "callee": "setMethodCallHandler",
+          "lineNumber": 123
+        },
+        {
+          "caller": "openSerialPort",
+          "callee": "synchronized",
+          "lineNumber": 127
+        },
+        {
+          "caller": "openSerialPort",
+          "callee": "closeSerialPort",
+          "lineNumber": 128
+        },
+        {
+          "caller": "openSerialPort",
+          "callee": "apply",
+          "lineNumber": 130
+        },
+        {
+          "caller": "openSerialPort",
+          "callee": "Device",
+          "lineNumber": 130
+        },
+        {
+          "caller": "openSerialPort",
+          "callee": "SerialPortManager",
+          "lineNumber": 139
+        },
+        {
+          "caller": "openSerialPort",
+          "callee": "startReadLoop",
+          "lineNumber": 142
+        },
+        {
+          "caller": "sendBytes",
+          "callee": "error",
+          "lineNumber": 148
+        },
+        {
+          "caller": "sendBytes",
+          "callee": "sendPacket",
+          "lineNumber": 149
+        },
+        {
+          "caller": "closeSerialPort",
+          "callee": "synchronized",
+          "lineNumber": 153
+        },
+        {
+          "caller": "closeSerialPort",
+          "callee": "i",
+          "lineNumber": 154
+        },
+        {
+          "caller": "closeSerialPort",
+          "callee": "set",
+          "lineNumber": 155
+        },
+        {
+          "caller": "closeSerialPort",
+          "callee": "interrupt",
+          "lineNumber": 156
+        },
+        {
+          "caller": "closeSerialPort",
+          "callee": "closeSerialPort",
+          "lineNumber": 158
+        },
+        {
+          "caller": "closeSerialPort",
+          "callee": "i",
+          "lineNumber": 161
+        },
+        {
+          "caller": "transceiveBytes",
+          "callee": "synchronized",
+          "lineNumber": 171
+        },
+        {
+          "caller": "transceiveBytes",
+          "callee": "openSerialPort",
+          "lineNumber": 173
+        },
+        {
+          "caller": "transceiveBytes",
+          "callee": "error",
+          "lineNumber": 174
+        },
+        {
+          "caller": "transceiveBytes",
+          "callee": "drainInput",
+          "lineNumber": 176
+        },
+        {
+          "caller": "transceiveBytes",
+          "callee": "sendPacket",
+          "lineNumber": 177
+        },
+        {
+          "caller": "transceiveBytes",
+          "callee": "readModbusResponse",
+          "lineNumber": 179
+        },
+        {
+          "caller": "transceiveBytes",
+          "callee": "i",
+          "lineNumber": 180
+        },
+        {
+          "caller": "transceiveBytes",
+          "callee": "toHexString",
+          "lineNumber": 180
+        },
+        {
+          "caller": "transceiveBytes",
+          "callee": "closeSerialPort",
+          "lineNumber": 183
+        },
+        {
+          "caller": "writeBytesOnce",
+          "callee": "synchronized",
+          "lineNumber": 189
+        },
+        {
+          "caller": "writeBytesOnce",
+          "callee": "openSerialPort",
+          "lineNumber": 191
+        },
+        {
+          "caller": "writeBytesOnce",
+          "callee": "error",
+          "lineNumber": 192
+        },
+        {
+          "caller": "writeBytesOnce",
+          "callee": "sendPacket",
+          "lineNumber": 193
+        },
+        {
+          "caller": "writeBytesOnce",
+          "callee": "closeSerialPort",
+          "lineNumber": 195
+        },
+        {
+          "caller": "writeModbusQueue",
+          "callee": "synchronized",
+          "lineNumber": 208
+        },
+        {
+          "caller": "writeModbusQueue",
+          "callee": "i",
+          "lineNumber": 210
+        },
+        {
+          "caller": "writeModbusQueue",
+          "callee": "openSerialPort",
+          "lineNumber": 214
+        },
+        {
+          "caller": "writeModbusQueue",
+          "callee": "error",
+          "lineNumber": 215
+        },
+        {
+          "caller": "writeModbusQueue",
+          "callee": "mutableListOf",
+          "lineNumber": 216
+        },
+        {
+          "caller": "writeModbusQueue",
+          "callee": "currentTimeMillis",
+          "lineNumber": 217
+        },
+        {
+          "caller": "writeModbusQueue",
+          "callee": "forEachIndexed",
+          "lineNumber": 219
+        },
+        {
+          "caller": "writeModbusQueue",
+          "callee": "add",
+          "lineNumber": 220
+        },
+        {
+          "caller": "writeModbusQueue",
+          "callee": "writeModbusFrameWithRetry",
+          "lineNumber": 221
+        },
+        {
+          "caller": "writeModbusQueue",
+          "callee": "currentTimeMillis",
+          "lineNumber": 231
+        },
+        {
+          "caller": "writeModbusQueue",
+          "callee": "i",
+          "lineNumber": 232
+        },
+        {
+          "caller": "writeModbusQueue",
+          "callee": "i",
+          "lineNumber": 233
+        },
+        {
+          "caller": "writeModbusQueue",
+          "callee": "i",
+          "lineNumber": 236
+        },
+        {
+          "caller": "writeModbusQueue",
+          "callee": "closeSerialPort",
+          "lineNumber": 237
+        },
+        {
+          "caller": "writeModbusQueueNoResponse",
+          "callee": "synchronized",
+          "lineNumber": 248
+        },
+        {
+          "caller": "writeModbusQueueNoResponse",
+          "callee": "i",
+          "lineNumber": 250
+        },
+        {
+          "caller": "writeModbusQueueNoResponse",
+          "callee": "openSerialPort",
+          "lineNumber": 254
+        },
+        {
+          "caller": "writeModbusQueueNoResponse",
+          "callee": "error",
+          "lineNumber": 255
+        },
+        {
+          "caller": "writeModbusQueueNoResponse",
+          "callee": "currentTimeMillis",
+          "lineNumber": 256
+        },
+        {
+          "caller": "writeModbusQueueNoResponse",
+          "callee": "forEachIndexed",
+          "lineNumber": 258
+        },
+        {
+          "caller": "writeModbusQueueNoResponse",
+          "callee": "i",
+          "lineNumber": 259
+        },
+        {
+          "caller": "writeModbusQueueNoResponse",
+          "callee": "toHexString",
+          "lineNumber": 261
+        },
+        {
+          "caller": "writeModbusQueueNoResponse",
+          "callee": "sendPacket",
+          "lineNumber": 263
+        },
+        {
+          "caller": "writeModbusQueueNoResponse",
+          "callee": "sleep",
+          "lineNumber": 265
+        },
+        {
+          "caller": "writeModbusQueueNoResponse",
+          "callee": "toLong",
+          "lineNumber": 265
+        },
+        {
+          "caller": "writeModbusQueueNoResponse",
+          "callee": "currentTimeMillis",
+          "lineNumber": 268
+        },
+        {
+          "caller": "writeModbusQueueNoResponse",
+          "callee": "i",
+          "lineNumber": 269
+        },
+        {
+          "caller": "writeModbusQueueNoResponse",
+          "callee": "i",
+          "lineNumber": 275
+        },
+        {
+          "caller": "writeModbusQueueNoResponse",
+          "callee": "closeSerialPort",
+          "lineNumber": 276
+        },
+        {
+          "caller": "writeModbusFrameWithRetry",
+          "callee": "modbusAddressText",
+          "lineNumber": 289
+        },
+        {
+          "caller": "writeModbusFrameWithRetry",
+          "callee": "modbusValue",
+          "lineNumber": 290
+        },
+        {
+          "caller": "writeModbusFrameWithRetry",
+          "callee": "coerceAtLeast",
+          "lineNumber": 293
+        },
+        {
+          "caller": "writeModbusFrameWithRetry",
+          "callee": "currentTimeMillis",
+          "lineNumber": 294
+        },
+        {
+          "caller": "writeModbusFrameWithRetry",
+          "callee": "drainInput",
+          "lineNumber": 296
+        },
+        {
+          "caller": "writeModbusFrameWithRetry",
+          "callee": "i",
+          "lineNumber": 297
+        },
+        {
+          "caller": "writeModbusFrameWithRetry",
+          "callee": "toHexString",
+          "lineNumber": 299
+        },
+        {
+          "caller": "writeModbusFrameWithRetry",
+          "callee": "sendPacket",
+          "lineNumber": 301
+        },
+        {
+          "caller": "writeModbusFrameWithRetry",
+          "callee": "readModbusResponse",
+          "lineNumber": 303
+        },
+        {
+          "caller": "writeModbusFrameWithRetry",
+          "callee": "i",
+          "lineNumber": 304
+        },
+        {
+          "caller": "writeModbusFrameWithRetry",
+          "callee": "toHexString",
+          "lineNumber": 306
+        },
+        {
+          "caller": "writeModbusFrameWithRetry",
+          "callee": "validateWriteSingleRegisterResponse",
+          "lineNumber": 308
+        },
+        {
+          "caller": "writeModbusFrameWithRetry",
+          "callee": "i",
+          "lineNumber": 309
+        },
+        {
+          "caller": "writeModbusFrameWithRetry",
+          "callee": "currentTimeMillis",
+          "lineNumber": 313
+        },
+        {
+          "caller": "writeModbusFrameWithRetry",
+          "callee": "i",
+          "lineNumber": 314
+        },
+        {
+          "caller": "writeModbusFrameWithRetry",
+          "callee": "sleep",
+          "lineNumber": 319
+        },
+        {
+          "caller": "writeModbusFrameWithRetry",
+          "callee": "toLong",
+          "lineNumber": 319
+        },
+        {
+          "caller": "writeModbusFrameWithRetry",
+          "callee": "currentTimeMillis",
+          "lineNumber": 322
+        },
+        {
+          "caller": "writeModbusFrameWithRetry",
+          "callee": "e",
+          "lineNumber": 323
+        },
+        {
+          "caller": "writeModbusFrameWithRetry",
+          "callee": "sleep",
+          "lineNumber": 329
+        },
+        {
+          "caller": "writeModbusFrameWithRetry",
+          "callee": "toLong",
+          "lineNumber": 329
+        },
+        {
+          "caller": "writeModbusFrameWithRetry",
+          "callee": "coerceAtLeast",
+          "lineNumber": 329
+        },
+        {
+          "caller": "writeModbusFrameWithRetry",
+          "callee": "contains",
+          "lineNumber": 334
+        },
+        {
+          "caller": "writeModbusFrameWithRetry",
+          "callee": "error",
+          "lineNumber": 339
+        },
+        {
+          "caller": "drainInput",
+          "callee": "ByteArray",
+          "lineNumber": 344
+        },
+        {
+          "caller": "drainInput",
+          "callee": "repeat",
+          "lineNumber": 346
+        },
+        {
+          "caller": "drainInput",
+          "callee": "available",
+          "lineNumber": 347
+        },
+        {
+          "caller": "drainInput",
+          "callee": "read",
+          "lineNumber": 349
+        },
+        {
+          "caller": "drainInput",
+          "callee": "minOf",
+          "lineNumber": 349
+        },
+        {
+          "caller": "readModbusResponse",
+          "callee": "w",
+          "lineNumber": 360
+        },
+        {
+          "caller": "readModbusResponse",
+          "callee": "readModbusResponseByPacket",
+          "lineNumber": 364
+        },
+        {
+          "caller": "readModbusResponse",
+          "callee": "ByteArrayOutputStream",
+          "lineNumber": 366
+        },
+        {
+          "caller": "readModbusResponse",
+          "callee": "ByteArray",
+          "lineNumber": 367
+        },
+        {
+          "caller": "readModbusResponse",
+          "callee": "currentTimeMillis",
+          "lineNumber": 368
+        },
+        {
+          "caller": "readModbusResponse",
+          "callee": "coerceAtLeast",
+          "lineNumber": 368
+        },
+        {
+          "caller": "readModbusResponse",
+          "callee": "i",
+          "lineNumber": 369
+        },
+        {
+          "caller": "readModbusResponse",
+          "callee": "currentTimeMillis",
+          "lineNumber": 371
+        },
+        {
+          "caller": "readModbusResponse",
+          "callee": "available",
+          "lineNumber": 372
+        },
+        {
+          "caller": "readModbusResponse",
+          "callee": "read",
+          "lineNumber": 374
+        },
+        {
+          "caller": "readModbusResponse",
+          "callee": "minOf",
+          "lineNumber": 374
+        },
+        {
+          "caller": "readModbusResponse",
+          "callee": "write",
+          "lineNumber": 380
+        },
+        {
+          "caller": "readModbusResponse",
+          "callee": "toByteArray",
+          "lineNumber": 381
+        },
+        {
+          "caller": "readModbusResponse",
+          "callee": "i",
+          "lineNumber": 382
+        },
+        {
+          "caller": "readModbusResponse",
+          "callee": "toHexString",
+          "lineNumber": 382
+        },
+        {
+          "caller": "readModbusResponse",
+          "callee": "expectedModbusResponseLength",
+          "lineNumber": 383
+        },
+        {
+          "caller": "readModbusResponse",
+          "callee": "copyOf",
+          "lineNumber": 385
+        },
+        {
+          "caller": "readModbusResponse",
+          "callee": "i",
+          "lineNumber": 386
+        },
+        {
+          "caller": "readModbusResponse",
+          "callee": "toHexString",
+          "lineNumber": 388
+        },
+        {
+          "caller": "readModbusResponse",
+          "callee": "sleep",
+          "lineNumber": 393
+        },
+        {
+          "caller": "readModbusResponse",
+          "callee": "e",
+          "lineNumber": 397
+        },
+        {
+          "caller": "readModbusResponse",
+          "callee": "error",
+          "lineNumber": 398
+        },
+        {
+          "caller": "readModbusResponseByPacket",
+          "callee": "ByteArrayOutputStream",
+          "lineNumber": 405
+        },
+        {
+          "caller": "readModbusResponseByPacket",
+          "callee": "ByteArray",
+          "lineNumber": 406
+        },
+        {
+          "caller": "readModbusResponseByPacket",
+          "callee": "currentTimeMillis",
+          "lineNumber": 407
+        },
+        {
+          "caller": "readModbusResponseByPacket",
+          "callee": "coerceAtLeast",
+          "lineNumber": 407
+        },
+        {
+          "caller": "readModbusResponseByPacket",
+          "callee": "i",
+          "lineNumber": 408
+        },
+        {
+          "caller": "readModbusResponseByPacket",
+          "callee": "currentTimeMillis",
+          "lineNumber": 413
+        },
+        {
+          "caller": "readModbusResponseByPacket",
+          "callee": "readPacket",
+          "lineNumber": 417
+        },
+        {
+          "caller": "readModbusResponseByPacket",
+          "callee": "copyOf",
+          "lineNumber": 420
+        },
+        {
+          "caller": "readModbusResponseByPacket",
+          "callee": "write",
+          "lineNumber": 425
+        },
+        {
+          "caller": "readModbusResponseByPacket",
+          "callee": "toByteArray",
+          "lineNumber": 426
+        },
+        {
+          "caller": "readModbusResponseByPacket",
+          "callee": "i",
+          "lineNumber": 427
+        },
+        {
+          "caller": "readModbusResponseByPacket",
+          "callee": "toHexString",
+          "lineNumber": 427
+        },
+        {
+          "caller": "readModbusResponseByPacket",
+          "callee": "expectedModbusResponseLength",
+          "lineNumber": 428
+        },
+        {
+          "caller": "readModbusResponseByPacket",
+          "callee": "copyOf",
+          "lineNumber": 430
+        },
+        {
+          "caller": "readModbusResponseByPacket",
+          "callee": "i",
+          "lineNumber": 431
+        },
+        {
+          "caller": "readModbusResponseByPacket",
+          "callee": "toHexString",
+          "lineNumber": 433
+        },
+        {
+          "caller": "readModbusResponseByPacket",
+          "callee": "sleep",
+          "lineNumber": 438
+        },
+        {
+          "caller": "readModbusResponseByPacket",
+          "callee": "e",
+          "lineNumber": 442
+        },
+        {
+          "caller": "readModbusResponseByPacket",
+          "callee": "error",
+          "lineNumber": 446
+        },
+        {
+          "caller": "expectedModbusResponseLength",
+          "callee": "toInt",
+          "lineNumber": 451
+        },
+        {
+          "caller": "expectedModbusResponseLength",
+          "callee": "toInt",
+          "lineNumber": 455
+        },
+        {
+          "caller": "validateWriteSingleRegisterResponse",
+          "callee": "error",
+          "lineNumber": 462
+        },
+        {
+          "caller": "validateWriteSingleRegisterResponse",
+          "callee": "toInt",
+          "lineNumber": 463
+        },
+        {
+          "caller": "validateWriteSingleRegisterResponse",
+          "callee": "error",
+          "lineNumber": 464
+        },
+        {
+          "caller": "validateWriteSingleRegisterResponse",
+          "callee": "validateCrc",
+          "lineNumber": 465
+        },
+        {
+          "caller": "validateWriteSingleRegisterResponse",
+          "callee": "error",
+          "lineNumber": 466
+        },
+        {
+          "caller": "validateWriteSingleRegisterResponse",
+          "callee": "toInt",
+          "lineNumber": 466
+        },
+        {
+          "caller": "validateWriteSingleRegisterResponse",
+          "callee": "error",
+          "lineNumber": 469
+        },
+        {
+          "caller": "validateWriteSingleRegisterResponse",
+          "callee": "validateCrc",
+          "lineNumber": 470
+        },
+        {
+          "caller": "validateWriteSingleRegisterResponse",
+          "callee": "error",
+          "lineNumber": 474
+        },
+        {
+          "caller": "validateWriteSingleRegisterResponse",
+          "callee": "toHexString",
+          "lineNumber": 475
+        },
+        {
+          "caller": "validateWriteSingleRegisterResponse",
+          "callee": "toHexString",
+          "lineNumber": 475
+        },
+        {
+          "caller": "validateCrc",
+          "callee": "error",
+          "lineNumber": 482
+        },
+        {
+          "caller": "validateCrc",
+          "callee": "toInt",
+          "lineNumber": 483
+        },
+        {
+          "caller": "validateCrc",
+          "callee": "toInt",
+          "lineNumber": 484
+        },
+        {
+          "caller": "validateCrc",
+          "callee": "crc16",
+          "lineNumber": 485
+        },
+        {
+          "caller": "validateCrc",
+          "callee": "error",
+          "lineNumber": 487
+        },
+        {
+          "caller": "validateCrc",
+          "callee": "toString",
+          "lineNumber": 488
+        },
+        {
+          "caller": "validateCrc",
+          "callee": "toString",
+          "lineNumber": 488
+        },
+        {
+          "caller": "crc16",
+          "callee": "toInt",
+          "lineNumber": 496
+        },
+        {
+          "caller": "crc16",
+          "callee": "repeat",
+          "lineNumber": 497
+        },
+        {
+          "caller": "modbusAddressText",
+          "callee": "toInt",
+          "lineNumber": 508
+        },
+        {
+          "caller": "modbusAddressText",
+          "callee": "toInt",
+          "lineNumber": 508
+        },
+        {
+          "caller": "modbusAddressText",
+          "callee": "padStart",
+          "lineNumber": 509
+        },
+        {
+          "caller": "modbusAddressText",
+          "callee": "uppercase",
+          "lineNumber": 509
+        },
+        {
+          "caller": "modbusAddressText",
+          "callee": "toString",
+          "lineNumber": 509
+        },
+        {
+          "caller": "modbusValue",
+          "callee": "toInt",
+          "lineNumber": 514
+        },
+        {
+          "caller": "modbusValue",
+          "callee": "toInt",
+          "lineNumber": 514
+        },
+        {
+          "caller": "startReadLoop",
+          "callee": "set",
+          "lineNumber": 518
+        },
+        {
+          "caller": "startReadLoop",
+          "callee": "apply",
+          "lineNumber": 519
+        },
+        {
+          "caller": "startReadLoop",
+          "callee": "Thread",
+          "lineNumber": 519
+        },
+        {
+          "caller": "startReadLoop",
+          "callee": "ByteArray",
+          "lineNumber": 520
+        },
+        {
+          "caller": "startReadLoop",
+          "callee": "get",
+          "lineNumber": 522
+        },
+        {
+          "caller": "startReadLoop",
+          "callee": "readPacket",
+          "lineNumber": 525
+        },
+        {
+          "caller": "startReadLoop",
+          "callee": "copyOf",
+          "lineNumber": 528
+        },
+        {
+          "caller": "startReadLoop",
+          "callee": "emitReceive",
+          "lineNumber": 529
+        },
+        {
+          "caller": "startReadLoop",
+          "callee": "sleep",
+          "lineNumber": 531
+        },
+        {
+          "caller": "startReadLoop",
+          "callee": "get",
+          "lineNumber": 535
+        },
+        {
+          "caller": "startReadLoop",
+          "callee": "emitError",
+          "lineNumber": 536
+        },
+        {
+          "caller": "startReadLoop",
+          "callee": "sleep",
+          "lineNumber": 538
+        },
+        {
+          "caller": "startReadLoop",
+          "callee": "start",
+          "lineNumber": 544
+        },
+        {
+          "caller": "emitReceive",
+          "callee": "mapOf",
+          "lineNumber": 549
+        },
+        {
+          "caller": "emitReceive",
+          "callee": "toHexString",
+          "lineNumber": 552
+        },
+        {
+          "caller": "emitReceive",
+          "callee": "post",
+          "lineNumber": 554
+        },
+        {
+          "caller": "emitReceive",
+          "callee": "invokeMethod",
+          "lineNumber": 554
+        },
+        {
+          "caller": "emitError",
+          "callee": "post",
+          "lineNumber": 558
+        },
+        {
+          "caller": "emitError",
+          "callee": "invokeMethod",
+          "lineNumber": 558
+        },
+        {
+          "caller": "emitError",
+          "callee": "mapOf",
+          "lineNumber": 558
+        },
+        {
+          "caller": "extractBytes",
+          "callee": "ByteArray",
+          "lineNumber": 564
+        },
+        {
+          "caller": "extractBytes",
+          "callee": "toByte",
+          "lineNumber": 567
+        },
+        {
+          "caller": "extractBytes",
+          "callee": "toInt",
+          "lineNumber": 567
+        },
+        {
+          "caller": "extractBytes",
+          "callee": "error",
+          "lineNumber": 568
+        },
+        {
+          "caller": "extractBytes",
+          "callee": "error",
+          "lineNumber": 572
+        },
+        {
+          "caller": "extractFrames",
+          "callee": "error",
+          "lineNumber": 577
+        },
+        {
+          "caller": "extractFrames",
+          "callee": "map",
+          "lineNumber": 578
+        },
+        {
+          "caller": "extractFrames",
+          "callee": "extractBytes",
+          "lineNumber": 578
+        },
+        {
+          "caller": "toHexString",
+          "callee": "joinToString",
+          "lineNumber": 582
+        },
+        {
+          "caller": "toHexString",
+          "callee": "format",
+          "lineNumber": 583
+        },
+        {
+          "caller": "toHexString",
+          "callee": "toInt",
+          "lineNumber": 583
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 3,
+        "functionCount": 25,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "android/app/src/main/kotlin/com/example/infibo_app/MainActivity.kt",
+      "language": "kotlin",
+      "fileCategory": "code",
+      "totalLines": 19,
+      "nonEmptyLines": 15,
+      "functions": [
+        {
+          "name": "configureFlutterEngine",
+          "startLine": 9,
+          "endLine": 12,
+          "params": [
+            "flutterEngine"
+          ]
+        },
+        {
+          "name": "onDestroy",
+          "startLine": 14,
+          "endLine": 18,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "MainActivity",
+          "startLine": 6,
+          "endLine": 19,
+          "methods": [
+            "configureFlutterEngine",
+            "onDestroy"
+          ],
+          "properties": [
+            "serialPortBridge"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "configureFlutterEngine",
+          "line": 9,
+          "isDefault": false
+        },
+        {
+          "name": "onDestroy",
+          "line": 14,
+          "isDefault": false
+        },
+        {
+          "name": "MainActivity",
+          "line": 6,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "configureFlutterEngine",
+          "callee": "configureFlutterEngine",
+          "lineNumber": 10
+        },
+        {
+          "caller": "configureFlutterEngine",
+          "callee": "AndroidSerialPortBridge",
+          "lineNumber": 11
+        },
+        {
+          "caller": "onDestroy",
+          "callee": "dispose",
+          "lineNumber": 15
+        },
+        {
+          "caller": "onDestroy",
+          "callee": "onDestroy",
+          "lineNumber": 17
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 3,
+        "functionCount": 2,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "android/app/src/main/res/drawable-v21/launch_background.xml",
+      "language": "xml",
+      "fileCategory": "config",
+      "totalLines": 12,
+      "nonEmptyLines": 11,
+      "metrics": {}
+    },
+    {
+      "path": "android/app/src/main/res/drawable/launch_background.xml",
+      "language": "xml",
+      "fileCategory": "config",
+      "totalLines": 12,
+      "nonEmptyLines": 11,
+      "metrics": {}
+    },
+    {
+      "path": "android/app/src/main/res/values-night/styles.xml",
+      "language": "xml",
+      "fileCategory": "config",
+      "totalLines": 18,
+      "nonEmptyLines": 17,
+      "metrics": {}
+    },
+    {
+      "path": "android/app/src/main/res/values/styles.xml",
+      "language": "xml",
+      "fileCategory": "config",
+      "totalLines": 18,
+      "nonEmptyLines": 17,
+      "metrics": {}
+    },
+    {
+      "path": "android/app/src/profile/AndroidManifest.xml",
+      "language": "xml",
+      "fileCategory": "config",
+      "totalLines": 7,
+      "nonEmptyLines": 7,
+      "metrics": {}
+    },
+    {
+      "path": "android/build.gradle.kts",
+      "language": "kotlin",
+      "fileCategory": "code",
+      "totalLines": 24,
+      "nonEmptyLines": 21,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "android/gradle/wrapper/gradle-wrapper.jar",
+      "language": "jar",
+      "fileCategory": "code",
+      "totalLines": 360,
+      "nonEmptyLines": 358,
+      "metrics": {}
+    },
+    {
+      "path": "android/gradle/wrapper/gradle-wrapper.properties",
+      "language": "properties",
+      "fileCategory": "config",
+      "totalLines": 7,
+      "nonEmptyLines": 7,
+      "metrics": {}
+    },
+    {
+      "path": "android/gradlew",
+      "language": "unknown",
+      "fileCategory": "code",
+      "totalLines": 160,
+      "nonEmptyLines": 141,
+      "metrics": {}
+    },
+    {
+      "path": "android/gradlew.bat",
+      "language": "batch",
+      "fileCategory": "script",
+      "totalLines": 90,
+      "nonEmptyLines": 66,
+      "metrics": {}
+    },
+    {
+      "path": "android/infibo_app_android.iml",
+      "language": "iml",
+      "fileCategory": "code",
+      "totalLines": 29,
+      "nonEmptyLines": 29,
+      "metrics": {}
+    },
+    {
+      "path": "android/local.properties",
+      "language": "properties",
+      "fileCategory": "config",
+      "totalLines": 5,
+      "nonEmptyLines": 5,
+      "metrics": {}
+    },
+    {
+      "path": "android/settings.gradle.kts",
+      "language": "kotlin",
+      "fileCategory": "code",
+      "totalLines": 27,
+      "nonEmptyLines": 22,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "infibo_app.iml",
+      "language": "iml",
+      "fileCategory": "code",
+      "totalLines": 17,
+      "nonEmptyLines": 17,
+      "metrics": {}
+    }
+  ]
+}

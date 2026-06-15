@@ -1,0 +1,314 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 25,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "infibo/.metadata",
+      "language": "unknown",
+      "fileCategory": "code",
+      "totalLines": 30,
+      "nonEmptyLines": 25,
+      "metrics": {}
+    },
+    {
+      "path": "infibo/lib/main.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 6,
+      "nonEmptyLines": 5,
+      "metrics": {}
+    },
+    {
+      "path": "infibo/lib/pages/login/index.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 20,
+      "nonEmptyLines": 17,
+      "metrics": {}
+    },
+    {
+      "path": "infibo/lib/pages/main/index.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 19,
+      "nonEmptyLines": 16,
+      "metrics": {}
+    },
+    {
+      "path": "infibo/lib/routes/index.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 18,
+      "nonEmptyLines": 16,
+      "metrics": {}
+    },
+    {
+      "path": "infibo/test/widget_test.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 30,
+      "nonEmptyLines": 24,
+      "metrics": {}
+    },
+    {
+      "path": "infibo/web/index.html",
+      "language": "html",
+      "fileCategory": "markup",
+      "totalLines": 46,
+      "nonEmptyLines": 38,
+      "metrics": {}
+    },
+    {
+      "path": "infibo/web/manifest.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 35,
+      "nonEmptyLines": 35,
+      "sections": [
+        {
+          "heading": "name",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "short_name",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "start_url",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "display",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "background_color",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "theme_color",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "orientation",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "prefer_related_applications",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "icons",
+          "level": 1,
+          "line": 11
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 10
+      }
+    },
+    {
+      "path": "ios/Flutter/AppFrameworkInfo.plist",
+      "language": "xml",
+      "fileCategory": "config",
+      "totalLines": 24,
+      "nonEmptyLines": 24,
+      "metrics": {}
+    },
+    {
+      "path": "ios/Flutter/Debug.xcconfig",
+      "language": "xcconfig",
+      "fileCategory": "code",
+      "totalLines": 1,
+      "nonEmptyLines": 1,
+      "metrics": {}
+    },
+    {
+      "path": "ios/Flutter/Release.xcconfig",
+      "language": "xcconfig",
+      "fileCategory": "code",
+      "totalLines": 1,
+      "nonEmptyLines": 1,
+      "metrics": {}
+    },
+    {
+      "path": "ios/Runner.xcodeproj/project.pbxproj",
+      "language": "pbxproj",
+      "fileCategory": "code",
+      "totalLines": 620,
+      "nonEmptyLines": 605,
+      "metrics": {}
+    },
+    {
+      "path": "ios/Runner.xcodeproj/project.xcworkspace/contents.xcworkspacedata",
+      "language": "xcworkspacedata",
+      "fileCategory": "code",
+      "totalLines": 7,
+      "nonEmptyLines": 7,
+      "metrics": {}
+    },
+    {
+      "path": "ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist",
+      "language": "xml",
+      "fileCategory": "config",
+      "totalLines": 8,
+      "nonEmptyLines": 8,
+      "metrics": {}
+    },
+    {
+      "path": "ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings",
+      "language": "xcsettings",
+      "fileCategory": "code",
+      "totalLines": 8,
+      "nonEmptyLines": 8,
+      "metrics": {}
+    },
+    {
+      "path": "ios/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme",
+      "language": "xcscheme",
+      "fileCategory": "code",
+      "totalLines": 101,
+      "nonEmptyLines": 101,
+      "metrics": {}
+    },
+    {
+      "path": "ios/Runner.xcworkspace/contents.xcworkspacedata",
+      "language": "xcworkspacedata",
+      "fileCategory": "code",
+      "totalLines": 7,
+      "nonEmptyLines": 7,
+      "metrics": {}
+    },
+    {
+      "path": "ios/Runner.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist",
+      "language": "xml",
+      "fileCategory": "config",
+      "totalLines": 8,
+      "nonEmptyLines": 8,
+      "metrics": {}
+    },
+    {
+      "path": "ios/Runner.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings",
+      "language": "xcsettings",
+      "fileCategory": "code",
+      "totalLines": 8,
+      "nonEmptyLines": 8,
+      "metrics": {}
+    },
+    {
+      "path": "ios/Runner/AppDelegate.swift",
+      "language": "swift",
+      "fileCategory": "code",
+      "totalLines": 16,
+      "nonEmptyLines": 14,
+      "metrics": {}
+    },
+    {
+      "path": "ios/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 122,
+      "nonEmptyLines": 122,
+      "sections": [
+        {
+          "heading": "images",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "info",
+          "level": 1,
+          "line": 118
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 2
+      }
+    },
+    {
+      "path": "ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 23,
+      "nonEmptyLines": 23,
+      "sections": [
+        {
+          "heading": "images",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "info",
+          "level": 1,
+          "line": 19
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 2
+      }
+    },
+    {
+      "path": "ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 5,
+      "nonEmptyLines": 3,
+      "sections": [
+        {
+          "heading": "Launch Screen Assets",
+          "level": 1,
+          "line": 1
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 1
+      }
+    },
+    {
+      "path": "ios/Runner/Base.lproj/LaunchScreen.storyboard",
+      "language": "storyboard",
+      "fileCategory": "code",
+      "totalLines": 37,
+      "nonEmptyLines": 37,
+      "metrics": {}
+    },
+    {
+      "path": "ios/Runner/Base.lproj/Main.storyboard",
+      "language": "storyboard",
+      "fileCategory": "code",
+      "totalLines": 26,
+      "nonEmptyLines": 26,
+      "metrics": {}
+    }
+  ]
+}

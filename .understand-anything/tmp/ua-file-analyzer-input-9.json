@@ -1,0 +1,182 @@
+{
+  "projectRoot": "D:/FlutterProject/infibo_app",
+  "batchFiles": [
+    {
+      "path": "infibo/.metadata",
+      "language": "unknown",
+      "sizeLines": 30,
+      "fileCategory": "code"
+    },
+    {
+      "path": "infibo/lib/main.dart",
+      "language": "dart",
+      "sizeLines": 6,
+      "fileCategory": "code"
+    },
+    {
+      "path": "infibo/lib/pages/login/index.dart",
+      "language": "dart",
+      "sizeLines": 20,
+      "fileCategory": "code"
+    },
+    {
+      "path": "infibo/lib/pages/main/index.dart",
+      "language": "dart",
+      "sizeLines": 19,
+      "fileCategory": "code"
+    },
+    {
+      "path": "infibo/lib/routes/index.dart",
+      "language": "dart",
+      "sizeLines": 18,
+      "fileCategory": "code"
+    },
+    {
+      "path": "infibo/test/widget_test.dart",
+      "language": "dart",
+      "sizeLines": 30,
+      "fileCategory": "code"
+    },
+    {
+      "path": "infibo/web/index.html",
+      "language": "html",
+      "sizeLines": 46,
+      "fileCategory": "markup"
+    },
+    {
+      "path": "infibo/web/manifest.json",
+      "language": "json",
+      "sizeLines": 35,
+      "fileCategory": "config"
+    },
+    {
+      "path": "ios/Flutter/AppFrameworkInfo.plist",
+      "language": "xml",
+      "sizeLines": 24,
+      "fileCategory": "config"
+    },
+    {
+      "path": "ios/Flutter/Debug.xcconfig",
+      "language": "xcconfig",
+      "sizeLines": 1,
+      "fileCategory": "code"
+    },
+    {
+      "path": "ios/Flutter/Release.xcconfig",
+      "language": "xcconfig",
+      "sizeLines": 1,
+      "fileCategory": "code"
+    },
+    {
+      "path": "ios/Runner.xcodeproj/project.pbxproj",
+      "language": "pbxproj",
+      "sizeLines": 620,
+      "fileCategory": "code"
+    },
+    {
+      "path": "ios/Runner.xcodeproj/project.xcworkspace/contents.xcworkspacedata",
+      "language": "xcworkspacedata",
+      "sizeLines": 7,
+      "fileCategory": "code"
+    },
+    {
+      "path": "ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist",
+      "language": "xml",
+      "sizeLines": 8,
+      "fileCategory": "config"
+    },
+    {
+      "path": "ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings",
+      "language": "xcsettings",
+      "sizeLines": 8,
+      "fileCategory": "code"
+    },
+    {
+      "path": "ios/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme",
+      "language": "xcscheme",
+      "sizeLines": 101,
+      "fileCategory": "code"
+    },
+    {
+      "path": "ios/Runner.xcworkspace/contents.xcworkspacedata",
+      "language": "xcworkspacedata",
+      "sizeLines": 7,
+      "fileCategory": "code"
+    },
+    {
+      "path": "ios/Runner.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist",
+      "language": "xml",
+      "sizeLines": 8,
+      "fileCategory": "config"
+    },
+    {
+      "path": "ios/Runner.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings",
+      "language": "xcsettings",
+      "sizeLines": 8,
+      "fileCategory": "code"
+    },
+    {
+      "path": "ios/Runner/AppDelegate.swift",
+      "language": "swift",
+      "sizeLines": 16,
+      "fileCategory": "code"
+    },
+    {
+      "path": "ios/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json",
+      "language": "json",
+      "sizeLines": 122,
+      "fileCategory": "config"
+    },
+    {
+      "path": "ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json",
+      "language": "json",
+      "sizeLines": 23,
+      "fileCategory": "config"
+    },
+    {
+      "path": "ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md",
+      "language": "markdown",
+      "sizeLines": 4,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "ios/Runner/Base.lproj/LaunchScreen.storyboard",
+      "language": "storyboard",
+      "sizeLines": 37,
+      "fileCategory": "code"
+    },
+    {
+      "path": "ios/Runner/Base.lproj/Main.storyboard",
+      "language": "storyboard",
+      "sizeLines": 26,
+      "fileCategory": "code"
+    }
+  ],
+  "batchImportData": {
+    "infibo/.metadata": [],
+    "infibo/lib/main.dart": [],
+    "infibo/lib/pages/login/index.dart": [],
+    "infibo/lib/pages/main/index.dart": [],
+    "infibo/lib/routes/index.dart": [],
+    "infibo/test/widget_test.dart": [],
+    "infibo/web/index.html": [],
+    "infibo/web/manifest.json": [],
+    "ios/Flutter/AppFrameworkInfo.plist": [],
+    "ios/Flutter/Debug.xcconfig": [],
+    "ios/Flutter/Release.xcconfig": [],
+    "ios/Runner.xcodeproj/project.pbxproj": [],
+    "ios/Runner.xcodeproj/project.xcworkspace/contents.xcworkspacedata": [],
+    "ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist": [],
+    "ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings": [],
+    "ios/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme": [],
+    "ios/Runner.xcworkspace/contents.xcworkspacedata": [],
+    "ios/Runner.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist": [],
+    "ios/Runner.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings": [],
+    "ios/Runner/AppDelegate.swift": [],
+    "ios/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json": [],
+    "ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json": [],
+    "ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md": [],
+    "ios/Runner/Base.lproj/LaunchScreen.storyboard": [],
+    "ios/Runner/Base.lproj/Main.storyboard": []
+  }
+}

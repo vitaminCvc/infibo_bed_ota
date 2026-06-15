@@ -2,6 +2,8 @@
 //
 // 负责总时长、当前 5 分钟阶段、运行/暂停状态，以及解析自定义方案传入的节点配置。
 import 'package:infibo_app/pages/customized/logic.dart';
+import 'package:infibo_app/preset/a_cankao/preset_models.dart';
+import 'package:infibo_app/preset/a_cankao/preset_registry.dart';
 import 'package:infibo_app/utils/duration_utils.dart';
 import 'package:get/get.dart';
 
@@ -13,6 +15,7 @@ class StartLogic {
   int elapsedSeconds = 0;
   bool isRunning = false;
   bool isPaused = false;
+  bool isPresetPlan = false;
   List<List<String>>? customizedPhases;
   List<RedLightPhaseSetting?>? customizedRedLightSettings;
   List<PemfPhaseSetting?>? customizedPemfSettings;
@@ -54,7 +57,10 @@ class StartLogic {
   // 当前阶段工作的功能。
   List<String> activeDevices(String modeTitle) {
     final List<List<String>> phases =
-        customizedPhases ?? _presetPhases(modeTitle);
+        customizedPhases ?? const <List<String>>[];
+
+    if (phases.isEmpty) return const <String>[];
+
     final int index = activePhaseIndex.clamp(0, phases.length - 1);
     return phases[index];
   }
@@ -128,7 +134,7 @@ class StartLogic {
 
   Map<String, int> workSecondsByDevice(String modeTitle) {
     final List<List<String>> phases =
-        customizedPhases ?? _presetPhases(modeTitle);
+        customizedPhases ?? const <List<String>>[];
     final Map<String, int> result = <String, int>{};
 
     for (final List<String> phase in phases) {
@@ -142,7 +148,7 @@ class StartLogic {
 
   Map<String, int> actualWorkSecondsByDevice(String modeTitle) {
     final List<List<String>> phases =
-        customizedPhases ?? _presetPhases(modeTitle);
+        customizedPhases ?? const <List<String>>[];
     final Map<String, int> result = <String, int>{};
     int remainingElapsed = elapsedSeconds.clamp(0, totalSeconds).toInt();
 
@@ -182,21 +188,21 @@ class StartLogic {
     }
   }
 
-  List<List<String>> _presetPhases(String modeTitle) {
-    final String modeKey = presetModeTitleKey(modeTitle);
-    return modePhases[modeKey] ?? modePhases['deep_relax']!;
-  }
+  // List<List<String>> _presetPhases(String modeTitle) {
+  //   final String modeKey = presetModeTitleKey(modeTitle);
+  //   return modePhases[modeKey] ?? modePhases['deep_relax']!;
+  // }
 
-  static String presetModeTitleKey(String modeTitle) {
-    final String text = modeTitle.trim();
-    for (final MapEntry<String, String> entry
-        in _legacyPresetModeTitles.entries) {
-      if (text == entry.key || text == entry.value || text == entry.value.tr) {
-        return entry.key;
-      }
-    }
-    return text;
-  }
+  // static String presetModeTitleKey(String modeTitle) {
+  //   final String text = modeTitle.trim();
+  //   for (final MapEntry<String, String> entry
+  //       in _legacyPresetModeTitles.entries) {
+  //     if (text == entry.key || text == entry.value || text == entry.value.tr) {
+  //       return entry.key;
+  //     }
+  //   }
+  //   return text;
+  // }
 
   // 根据页面参数配置自定义方案。
   /////自定义方案页与后端联调，这里是启动页使用自定义方案的入口。
@@ -209,6 +215,21 @@ class StartLogic {
   /////  final CustomizedPlanData plan = CustomizedPlanData.fromDto(response.data!);
   /////注意：因为这里要 await 后端接口，configure 可能要从 void 改成 Future void，调用 configure 的地方也要 await。
   void configure(Object? args) {
+    isPresetPlan = false;
+    if (args is Map && args['customizedPlan'] is! CustomizedPlanData) {
+      final String? presetCode = args['presetCode']?.toString();
+      final String? presetTitleKey = args['presetTitleKey']?.toString();
+      final PresetMode? preset = presetCode != null
+          ? presetByCode(presetCode)
+          : presetTitleKey != null
+          ? presetByTitleKey(presetTitleKey)
+          : null;
+      if (preset != null) {
+        _configurePreset(preset);
+        return;
+      }
+    }
+
     if (args is! Map || args['customizedPlan'] is! CustomizedPlanData) return;
 
     final CustomizedPlanData plan =
@@ -310,6 +331,93 @@ class StartLogic {
     isPaused = false;
   }
 
+  void _configurePreset(PresetMode preset) {
+    final List<List<String>> phases = <List<String>>[];
+    final List<RedLightPhaseSetting?> redLightSettings =
+        <RedLightPhaseSetting?>[];
+    final List<PemfPhaseSetting?> pemfSettings = <PemfPhaseSetting?>[];
+    final List<HydrogenPhaseSetting?> hydrogenSettings =
+        <HydrogenPhaseSetting?>[];
+    final List<VatPhaseSetting?> vatSettings = <VatPhaseSetting?>[];
+
+    for (final PresetPhase phase in preset.phases) {
+      final List<String> devices = <String>[];
+      if (phase.redLight.power660Percent > 0 ||
+          phase.redLight.power850Percent > 0) {
+        devices.add('red');
+      }
+      if (phase.pemf.intensityPercent > 0) devices.add('pemf');
+      if (phase.vat.energyPercent > 0 || phase.vat.volumePercent > 0) {
+        devices.add('vat');
+      }
+      if (phase.hydrogen.outputPercent > 0) devices.add('hydrogen');
+      phases.add(devices);
+
+      redLightSettings.add(
+        RedLightPhaseSetting(
+          strength660: phase.redLight.power660Percent,
+          strength850: phase.redLight.power850Percent,
+          mode: phase.redLight.mode == redModels.continuous
+              ? RedLightWorkMode.continuous
+              : RedLightWorkMode.pulse,
+          pulseFrequencyHz: phase.redLight.pulseFrequencyHz,
+          dutyCyclePercent: phase.redLight.dutyCyclePercent,
+        ),
+      );
+      pemfSettings.add(
+        PemfPhaseSetting(
+          frequency: phase.pemf.frequencyHz,
+          intensity: phase.pemf.intensityPercent,
+          waveform: phase.pemf.waveform.name,
+          waveformValue: phase.pemf.waveform.deviceValue,
+          burstFrequencyHz: phase.pemf.burstFrequencyHz,
+        ),
+      );
+      hydrogenSettings.add(
+        HydrogenPhaseSetting(
+          concentration: phase.hydrogen.outputPercent,
+          flowRate: 0,
+        ),
+      );
+      vatSettings.add(
+        VatPhaseSetting(
+          frequency: phase.vat.frequencyHz,
+          intensity: phase.vat.energyPercent,
+          volumePercent: phase.vat.volumePercent,
+          songId: phase.vat.trackId.toString(),
+        ),
+      );
+    }
+
+    customizedPhases = phases;
+    customizedRedLightSettings = redLightSettings;
+    customizedPemfSettings = pemfSettings;
+    customizedHydrogenSettings = hydrogenSettings;
+    customizedVatSettings = vatSettings;
+    _customizedVatModuleSetting = null;
+    customizedChakraSettings = List<ChakraPhaseSetting?>.filled(
+      phases.length,
+      null,
+    );
+    customizedTerahertzSettings = List<TerahertzPhaseSetting?>.filled(
+      phases.length,
+      null,
+    );
+    customizedHifemSettings = List<HifemPhaseSetting?>.filled(
+      phases.length,
+      null,
+    );
+    customizedFragranceSettings = List<FragrancePhaseSetting?>.filled(
+      phases.length,
+      null,
+    );
+    totalSeconds = preset.durationMinutes * 60;
+    elapsedSeconds = 0;
+    isRunning = false;
+    isPaused = false;
+    isPresetPlan = true;
+  }
+
   // 每秒推进倒计时。
   void tick() {
     if (!isRunning || elapsedSeconds >= totalSeconds) return;
@@ -358,11 +466,15 @@ class RedLightPhaseSetting {
     required this.strength660,
     required this.strength850,
     required this.mode,
+    this.pulseFrequencyHz = 0,
+    this.dutyCyclePercent = 100,
   });
 
   final int strength660;
   final int strength850;
   final RedLightWorkMode mode;
+  final int pulseFrequencyHz;
+  final int dutyCyclePercent;
 
   bool get hasOutput => strength660 > 0 || strength850 > 0;
   int get modbusMode => mode == RedLightWorkMode.continuous ? 0 : 1;
@@ -413,36 +525,44 @@ class PemfPhaseSetting {
     required this.frequency,
     required this.intensity,
     required this.waveform,
+    this.waveformValue,
+    this.burstFrequencyHz = 0,
   });
 
   final int frequency;
   final int intensity;
   final String waveform;
+  final int? waveformValue;
+  final int burstFrequencyHz;
 
   int get waveformNumber {
+    if (waveformValue != null) return waveformValue!;
     switch (waveform) {
       case 'sine':
-        return 1;
+        return 0;
       case 'halfSine':
-        return 2;
-      case 'trapezoid':
-        return 3;
-      case 'standardSine':
-        return 4;
-      case 'saw':
-        return 5;
-      case 'triangle':
-        return 6;
-      case 'pulse':
-        return 7;
-      case 'fastRise':
-        return 8;
-      case 'dualFrequency':
-        return 9;
-      case 'cubic':
-        return 10;
-      default:
         return 1;
+      case 'trapezoid':
+        return 2;
+      case 'standardSine':
+        return 3;
+      case 'saw':
+      case 'sawtooth':
+        return 4;
+      case 'triangle':
+        return 5;
+      case 'pulse':
+        return 6;
+      case 'fastRise':
+        return 7;
+      case 'dualFrequency':
+      case 'infibo':
+        return 8;
+      case 'cubic':
+      case 'burstSquare':
+        return 9;
+      default:
+        return 0;
     }
   }
 
@@ -528,6 +648,7 @@ class VatPhaseSetting {
   const VatPhaseSetting({
     required this.frequency,
     required this.intensity,
+    this.volumePercent,
     this.songId,
     this.songName,
     this.seriesName,
@@ -535,14 +656,18 @@ class VatPhaseSetting {
 
   final int frequency;
   final int intensity;
+  final int? volumePercent;
   final String? songId;
   final String? songName;
   final String? seriesName;
+  int get volume => volumePercent ?? intensity;
+  int? get musicIndex => int.tryParse(songId ?? '');
 
   VatPhaseSetting withModuleSetting(VatPhaseSetting setting) {
     return VatPhaseSetting(
       frequency: frequency,
       intensity: setting.intensity,
+      volumePercent: setting.volumePercent,
       songId: setting.songId,
       songName: setting.songName,
       seriesName: setting.seriesName,
@@ -553,6 +678,7 @@ class VatPhaseSetting {
     return VatPhaseSetting(
       frequency: frequency,
       intensity: intensity > 0 ? intensity : setting.intensity,
+      volumePercent: volumePercent ?? setting.volumePercent,
       songId: _nonEmpty(songId) ?? setting.songId,
       songName: _nonEmpty(songName) ?? setting.songName,
       seriesName: _nonEmpty(seriesName) ?? setting.seriesName,
@@ -857,100 +983,3 @@ class FragrancePhaseSetting {
     return FragrancePhaseSetting(fragranceId: fragranceId);
   }
 }
-
-// 十种理疗模式的 5 分钟阶段配置。
-const Map<String, List<List<String>>> modePhases = {
-  'deep_relax': [
-    ['red', 'vat'],
-    ['pemf', 'vat'],
-    ['hydrogen', 'vat'],
-    ['red', 'pemf'],
-    ['vat', 'expand'],
-    ['red', 'hydrogen'],
-  ],
-  'stress_release': [
-    ['pemf', 'vat'],
-    ['vat', 'hydrogen'],
-    ['red', 'vat'],
-    ['pemf', 'expand'],
-    ['hydrogen', 'expand'],
-    ['vat'],
-  ],
-  'energy_boost': [
-    ['red', 'pemf'],
-    ['pemf', 'hydrogen'],
-    ['red', 'vat'],
-    ['pemf', 'vat'],
-    ['red', 'expand'],
-    ['hydrogen', 'vat'],
-  ],
-  'immune_boost': [
-    ['pemf', 'hydrogen'],
-    ['red', 'hydrogen'],
-    ['vat', 'hydrogen'],
-    ['red', 'pemf'],
-    ['hydrogen', 'expand'],
-    ['red', 'vat'],
-  ],
-  'pain_relief': [
-    ['pemf', 'red'],
-    ['pemf', 'vat'],
-    ['red', 'vat'],
-    ['pemf', 'hydrogen'],
-    ['red', 'expand'],
-    ['vat'],
-  ],
-  'anti_aging': [
-    ['red', 'hydrogen'],
-    ['pemf', 'hydrogen'],
-    ['red', 'vat'],
-    ['hydrogen', 'expand'],
-    ['red', 'pemf'],
-    ['vat', 'hydrogen'],
-  ],
-  'sleep_enhancement': [
-    ['pemf', 'vat'],
-    ['vat'],
-    ['red', 'vat'],
-    ['pemf', 'hydrogen'],
-    ['vat', 'expand'],
-    ['red'],
-  ],
-  'full_care': [
-    ['red', 'pemf'],
-    ['vat', 'hydrogen'],
-    ['red', 'vat'],
-    ['pemf', 'expand'],
-    ['hydrogen', 'expand'],
-    ['red', 'hydrogen'],
-  ],
-  'sports_recovery': [
-    ['pemf', 'red'],
-    ['pemf', 'vat'],
-    ['red', 'hydrogen'],
-    ['vat', 'expand'],
-    ['pemf', 'hydrogen'],
-    ['red', 'vat'],
-  ],
-  'mental_healing': [
-    ['vat'],
-    ['pemf', 'vat'],
-    ['red', 'vat'],
-    ['hydrogen', 'vat'],
-    ['expand', 'vat'],
-    ['red', 'hydrogen'],
-  ],
-};
-
-const Map<String, String> _legacyPresetModeTitles = {
-  'deep_relax': '深度放松',
-  'stress_release': '压力释放',
-  'energy_boost': '能量提升',
-  'immune_boost': '免疫增强',
-  'pain_relief': '疼痛缓解',
-  'anti_aging': '抗衰老',
-  'sleep_enhancement': '睡眠改善',
-  'full_care': '全面养护',
-  'sports_recovery': '运动恢复',
-  'mental_healing': '情绪疗愈',
-};

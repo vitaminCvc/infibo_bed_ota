@@ -1,0 +1,130 @@
+{
+  "nodes": [
+    {
+      "id": "file:windows/flutter/generated_plugin_registrant.cc",
+      "type": "file",
+      "name": "generated_plugin_registrant.cc",
+      "filePath": "windows/flutter/generated_plugin_registrant.cc",
+      "summary": "项目文件，承担 generated_plugin_registrant.cc 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "generated-plugin-registrant"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:windows/flutter/generated_plugin_registrant.cc:RegisterPlugins",
+      "type": "function",
+      "name": "RegisterPlugins",
+      "filePath": "windows/flutter/generated_plugin_registrant.cc",
+      "lineRange": [
+        11,
+        14
+      ],
+      "summary": "函数 RegisterPlugins 位于 generated_plugin_registrant.cc 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:windows/flutter/generated_plugin_registrant.h",
+      "type": "file",
+      "name": "generated_plugin_registrant.h",
+      "filePath": "windows/flutter/generated_plugin_registrant.h",
+      "summary": "项目文件，承担 generated_plugin_registrant.h 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "generated-plugin-registrant"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:windows/flutter/generated_plugins.cmake",
+      "type": "file",
+      "name": "generated_plugins.cmake",
+      "filePath": "windows/flutter/generated_plugins.cmake",
+      "summary": "项目文件，承担 generated_plugins.cmake 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "generated-plugins"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:windows/runner/CMakeLists.txt",
+      "type": "document",
+      "name": "CMakeLists.txt",
+      "filePath": "windows/runner/CMakeLists.txt",
+      "summary": "文档文件，说明 CMakeLists.txt 相关的项目背景、使用方式或开发信息。",
+      "tags": [
+        "documentation",
+        "project-file",
+        "internal",
+        "cmake-lists"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:windows/runner/runner.exe.manifest",
+      "type": "file",
+      "name": "runner.exe.manifest",
+      "filePath": "windows/runner/runner.exe.manifest",
+      "summary": "项目文件，承担 runner.exe.manifest 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "runner-exe"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:windows/runner/Runner.rc",
+      "type": "file",
+      "name": "Runner.rc",
+      "filePath": "windows/runner/Runner.rc",
+      "summary": "项目文件，承担 Runner.rc 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "runner"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:windows/flutter/generated_plugin_registrant.cc",
+      "target": "function:windows/flutter/generated_plugin_registrant.cc:RegisterPlugins",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:windows/flutter/generated_plugin_registrant.cc",
+      "target": "function:windows/flutter/generated_plugin_registrant.cc:RegisterPlugins",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:windows/flutter/generated_plugin_registrant.cc",
+      "target": "file:windows/flutter/generated_plugin_registrant.h",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "document:windows/runner/CMakeLists.txt",
+      "target": "file:lib/main.dart",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

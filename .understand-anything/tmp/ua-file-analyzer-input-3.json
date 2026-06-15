@@ -1,0 +1,32 @@
+{
+  "projectRoot": "D:/FlutterProject/infibo_app",
+  "batchFiles": [
+    {
+      "path": "linux/runner/main.cc",
+      "language": "cpp",
+      "sizeLines": 6,
+      "fileCategory": "code"
+    },
+    {
+      "path": "linux/runner/my_application.cc",
+      "language": "cpp",
+      "sizeLines": 148,
+      "fileCategory": "code"
+    },
+    {
+      "path": "linux/runner/my_application.h",
+      "language": "c",
+      "sizeLines": 21,
+      "fileCategory": "code"
+    }
+  ],
+  "batchImportData": {
+    "linux/runner/main.cc": [
+      "linux/runner/my_application.h"
+    ],
+    "linux/runner/my_application.cc": [
+      "linux/runner/my_application.h"
+    ],
+    "linux/runner/my_application.h": []
+  }
+}

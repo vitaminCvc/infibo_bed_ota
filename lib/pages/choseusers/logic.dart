@@ -110,6 +110,22 @@ class ChoseUsersLogic {
     return null;
   }
 
+  String? get selectedPresetCode {
+    final Object? args = Get.arguments;
+    if (args is Map && args['presetCode'] is String) {
+      return args['presetCode'] as String;
+    }
+    return null;
+  }
+
+  String? get selectedPresetTitleKey {
+    final Object? args = Get.arguments;
+    if (args is Map && args['presetTitleKey'] is String) {
+      return args['presetTitleKey'] as String;
+    }
+    return null;
+  }
+
   Future<void> init() async {
     await loadUsers();
   }
@@ -172,6 +188,8 @@ class ChoseUsersLogic {
       startRoute,
       arguments: {
         'modeTitle': selectedModeTitle,
+        'presetCode': selectedPresetCode,
+        'presetTitleKey': selectedPresetTitleKey,
         'user': user,
         'customizedPlan': selectedCustomizedPlan,
       },

@@ -1,0 +1,1170 @@
+{
+  "nodes": [
+    {
+      "id": "file:lib/pages/settingpage/ui.dart",
+      "type": "file",
+      "name": "ui.dart",
+      "filePath": "lib/pages/settingpage/ui.dart",
+      "summary": "Dart 源文件，承载 ui.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "screen",
+        "internal",
+        "ui"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:lib/pages/settingpage/ui.dart:SettingWidget",
+      "type": "class",
+      "name": "SettingWidget",
+      "filePath": "lib/pages/settingpage/ui.dart",
+      "lineRange": [
+        15,
+        20
+      ],
+      "summary": "类型 SettingWidget 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/settingpage/ui.dart:_SettingWidgetState",
+      "type": "class",
+      "name": "_SettingWidgetState",
+      "filePath": "lib/pages/settingpage/ui.dart",
+      "lineRange": [
+        22,
+        1210
+      ],
+      "summary": "类型 _SettingWidgetState 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:lib/pages/start/logic.dart",
+      "type": "file",
+      "name": "logic.dart",
+      "filePath": "lib/pages/start/logic.dart",
+      "summary": "Dart 源文件，承载 logic.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "screen",
+        "state-management",
+        "logic"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:lib/pages/start/logic.dart:StartLogic",
+      "type": "class",
+      "name": "StartLogic",
+      "filePath": "lib/pages/start/logic.dart",
+      "lineRange": [
+        11,
+        460
+      ],
+      "summary": "类型 StartLogic 位于 logic.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:lib/pages/start/logic.dart:RedLightPhaseSetting",
+      "type": "class",
+      "name": "RedLightPhaseSetting",
+      "filePath": "lib/pages/start/logic.dart",
+      "lineRange": [
+        464,
+        521
+      ],
+      "summary": "类型 RedLightPhaseSetting 位于 logic.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/pages/start/logic.dart:PemfPhaseSetting",
+      "type": "class",
+      "name": "PemfPhaseSetting",
+      "filePath": "lib/pages/start/logic.dart",
+      "lineRange": [
+        523,
+        606
+      ],
+      "summary": "类型 PemfPhaseSetting 位于 logic.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/pages/start/logic.dart:HydrogenPhaseSetting",
+      "type": "class",
+      "name": "HydrogenPhaseSetting",
+      "filePath": "lib/pages/start/logic.dart",
+      "lineRange": [
+        608,
+        645
+      ],
+      "summary": "类型 HydrogenPhaseSetting 位于 logic.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/start/logic.dart:VatPhaseSetting",
+      "type": "class",
+      "name": "VatPhaseSetting",
+      "filePath": "lib/pages/start/logic.dart",
+      "lineRange": [
+        647,
+        731
+      ],
+      "summary": "类型 VatPhaseSetting 位于 logic.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/pages/start/logic.dart:ChakraPhaseSetting",
+      "type": "class",
+      "name": "ChakraPhaseSetting",
+      "filePath": "lib/pages/start/logic.dart",
+      "lineRange": [
+        737,
+        767
+      ],
+      "summary": "类型 ChakraPhaseSetting 位于 logic.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/start/logic.dart:TerahertzPhaseSetting",
+      "type": "class",
+      "name": "TerahertzPhaseSetting",
+      "filePath": "lib/pages/start/logic.dart",
+      "lineRange": [
+        769,
+        847
+      ],
+      "summary": "类型 TerahertzPhaseSetting 位于 logic.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/pages/start/logic.dart:HifemPhaseSetting",
+      "type": "class",
+      "name": "HifemPhaseSetting",
+      "filePath": "lib/pages/start/logic.dart",
+      "lineRange": [
+        849,
+        948
+      ],
+      "summary": "类型 HifemPhaseSetting 位于 logic.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/pages/start/logic.dart:FragrancePhaseSetting",
+      "type": "class",
+      "name": "FragrancePhaseSetting",
+      "filePath": "lib/pages/start/logic.dart",
+      "lineRange": [
+        950,
+        985
+      ],
+      "summary": "类型 FragrancePhaseSetting 位于 logic.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/pages/start/ui.dart",
+      "type": "file",
+      "name": "ui.dart",
+      "filePath": "lib/pages/start/ui.dart",
+      "summary": "Dart 源文件，承载 ui.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "screen",
+        "internal",
+        "ui"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:lib/pages/start/ui.dart:StartPage",
+      "type": "class",
+      "name": "StartPage",
+      "filePath": "lib/pages/start/ui.dart",
+      "lineRange": [
+        18,
+        23
+      ],
+      "summary": "类型 StartPage 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/start/ui.dart:_StartPageState",
+      "type": "class",
+      "name": "_StartPageState",
+      "filePath": "lib/pages/start/ui.dart",
+      "lineRange": [
+        25,
+        2344
+      ],
+      "summary": "类型 _StartPageState 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:lib/pages/start/ui.dart:_CountdownProgressClipper",
+      "type": "class",
+      "name": "_CountdownProgressClipper",
+      "filePath": "lib/pages/start/ui.dart",
+      "lineRange": [
+        2346,
+        2382
+      ],
+      "summary": "类型 _CountdownProgressClipper 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/start/ui.dart:_StartArguments",
+      "type": "class",
+      "name": "_StartArguments",
+      "filePath": "lib/pages/start/ui.dart",
+      "lineRange": [
+        2385,
+        2442
+      ],
+      "summary": "类型 _StartArguments 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/pages/summary/logic.dart",
+      "type": "file",
+      "name": "logic.dart",
+      "filePath": "lib/pages/summary/logic.dart",
+      "summary": "Dart 源文件，承载 logic.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "screen",
+        "state-management",
+        "logic"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/pages/summary/logic.dart:SummaryLogic",
+      "type": "class",
+      "name": "SummaryLogic",
+      "filePath": "lib/pages/summary/logic.dart",
+      "lineRange": [
+        14,
+        168
+      ],
+      "summary": "类型 SummaryLogic 位于 logic.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/pages/summary/summary.dart",
+      "type": "file",
+      "name": "summary.dart",
+      "filePath": "lib/pages/summary/summary.dart",
+      "summary": "Dart 源文件，承载 summary.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "screen",
+        "internal",
+        "summary"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:lib/pages/summary/summary.dart:_buildSummary",
+      "type": "function",
+      "name": "_buildSummary",
+      "filePath": "lib/pages/summary/summary.dart",
+      "lineRange": [
+        109,
+        139
+      ],
+      "summary": "函数 _buildSummary 位于 summary.dart 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/pages/summary/summary.dart:_buildSummaryTitle1",
+      "type": "function",
+      "name": "_buildSummaryTitle1",
+      "filePath": "lib/pages/summary/summary.dart",
+      "lineRange": [
+        150,
+        169
+      ],
+      "summary": "函数 _buildSummaryTitle1 位于 summary.dart 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/pages/summary/summary.dart:_buildrunDuration",
+      "type": "function",
+      "name": "_buildrunDuration",
+      "filePath": "lib/pages/summary/summary.dart",
+      "lineRange": [
+        171,
+        185
+      ],
+      "summary": "函数 _buildrunDuration 位于 summary.dart 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/pages/summary/summary.dart:_buildSummaryTitle2",
+      "type": "function",
+      "name": "_buildSummaryTitle2",
+      "filePath": "lib/pages/summary/summary.dart",
+      "lineRange": [
+        267,
+        286
+      ],
+      "summary": "函数 _buildSummaryTitle2 位于 summary.dart 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/pages/summary/summary.dart:_buildHealthEffectCards",
+      "type": "function",
+      "name": "_buildHealthEffectCards",
+      "filePath": "lib/pages/summary/summary.dart",
+      "lineRange": [
+        290,
+        310
+      ],
+      "summary": "函数 _buildHealthEffectCards 位于 summary.dart 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/pages/summary/summary.dart:_buildEnergyCard",
+      "type": "function",
+      "name": "_buildEnergyCard",
+      "filePath": "lib/pages/summary/summary.dart",
+      "lineRange": [
+        313,
+        336
+      ],
+      "summary": "函数 _buildEnergyCard 位于 summary.dart 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/pages/summary/summary.dart:_buildCellCard",
+      "type": "function",
+      "name": "_buildCellCard",
+      "filePath": "lib/pages/summary/summary.dart",
+      "lineRange": [
+        339,
+        365
+      ],
+      "summary": "函数 _buildCellCard 位于 summary.dart 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/pages/summary/summary.dart:_buildRelaxCard",
+      "type": "function",
+      "name": "_buildRelaxCard",
+      "filePath": "lib/pages/summary/summary.dart",
+      "lineRange": [
+        368,
+        399
+      ],
+      "summary": "函数 _buildRelaxCard 位于 summary.dart 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/pages/summary/summary.dart:_buildImmuneCard",
+      "type": "function",
+      "name": "_buildImmuneCard",
+      "filePath": "lib/pages/summary/summary.dart",
+      "lineRange": [
+        402,
+        428
+      ],
+      "summary": "函数 _buildImmuneCard 位于 summary.dart 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/pages/summary/summary.dart:_getGradientColor",
+      "type": "function",
+      "name": "_getGradientColor",
+      "filePath": "lib/pages/summary/summary.dart",
+      "lineRange": [
+        677,
+        700
+      ],
+      "summary": "函数 _getGradientColor 位于 summary.dart 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/pages/summary/summary.dart:_buildButton",
+      "type": "function",
+      "name": "_buildButton",
+      "filePath": "lib/pages/summary/summary.dart",
+      "lineRange": [
+        1183,
+        1204
+      ],
+      "summary": "函数 _buildButton 位于 summary.dart 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/pages/summary/summary.dart:_buildFeelingBox",
+      "type": "function",
+      "name": "_buildFeelingBox",
+      "filePath": "lib/pages/summary/summary.dart",
+      "lineRange": [
+        1208,
+        1237
+      ],
+      "summary": "函数 _buildFeelingBox 位于 summary.dart 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/summary/summary.dart:SummaryPage",
+      "type": "class",
+      "name": "SummaryPage",
+      "filePath": "lib/pages/summary/summary.dart",
+      "lineRange": [
+        13,
+        18
+      ],
+      "summary": "类型 SummaryPage 位于 summary.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/summary/summary.dart:_SummaryPageState",
+      "type": "class",
+      "name": "_SummaryPageState",
+      "filePath": "lib/pages/summary/summary.dart",
+      "lineRange": [
+        20,
+        107
+      ],
+      "summary": "类型 _SummaryPageState 位于 summary.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/pages/summary/summary.dart:_CircleScorePainter",
+      "type": "class",
+      "name": "_CircleScorePainter",
+      "filePath": "lib/pages/summary/summary.dart",
+      "lineRange": [
+        703,
+        820
+      ],
+      "summary": "类型 _CircleScorePainter 位于 summary.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/pages/summary/summary.dart:_BarChartPainter",
+      "type": "class",
+      "name": "_BarChartPainter",
+      "filePath": "lib/pages/summary/summary.dart",
+      "lineRange": [
+        823,
+        903
+      ],
+      "summary": "类型 _BarChartPainter 位于 summary.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/pages/summary/summary.dart:_RelaxSliderPainter",
+      "type": "class",
+      "name": "_RelaxSliderPainter",
+      "filePath": "lib/pages/summary/summary.dart",
+      "lineRange": [
+        906,
+        1027
+      ],
+      "summary": "类型 _RelaxSliderPainter 位于 summary.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/pages/summary/summary.dart:_GaugePainter",
+      "type": "class",
+      "name": "_GaugePainter",
+      "filePath": "lib/pages/summary/summary.dart",
+      "lineRange": [
+        1030,
+        1180
+      ],
+      "summary": "类型 _GaugePainter 位于 summary.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/routes/index.dart",
+      "type": "file",
+      "name": "index.dart",
+      "filePath": "lib/routes/index.dart",
+      "summary": "Dart 源文件，承载 index.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "index"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:lib/routes/index.dart:getRoutes",
+      "type": "function",
+      "name": "getRoutes",
+      "filePath": "lib/routes/index.dart",
+      "lineRange": [
+        47,
+        83
+      ],
+      "summary": "函数 getRoutes 位于 index.dart 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/routes/route_observer.dart",
+      "type": "file",
+      "name": "route_observer.dart",
+      "filePath": "lib/routes/route_observer.dart",
+      "summary": "Dart 源文件，承载 route_observer.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "route-observer"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/services/android_serial_port_service.dart",
+      "type": "file",
+      "name": "android_serial_port_service.dart",
+      "filePath": "lib/services/android_serial_port_service.dart",
+      "summary": "Dart 源文件，承载 android_serial_port_service.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "service",
+        "internal",
+        "android-serial-port-service"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:lib/services/android_serial_port_service.dart:AndroidSerialPortService",
+      "type": "class",
+      "name": "AndroidSerialPortService",
+      "filePath": "lib/services/android_serial_port_service.dart",
+      "lineRange": [
+        13,
+        172
+      ],
+      "summary": "类型 AndroidSerialPortService 位于 android_serial_port_service.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/services/android_serial_port_service.dart:AndroidSerialPortEvent",
+      "type": "class",
+      "name": "AndroidSerialPortEvent",
+      "filePath": "lib/services/android_serial_port_service.dart",
+      "lineRange": [
+        176,
+        210
+      ],
+      "summary": "类型 AndroidSerialPortEvent 位于 android_serial_port_service.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/stores/app_header_clock_store.dart",
+      "type": "file",
+      "name": "app_header_clock_store.dart",
+      "filePath": "lib/stores/app_header_clock_store.dart",
+      "summary": "Dart 源文件，承载 app_header_clock_store.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "app-header-clock-store"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/stores/app_header_clock_store.dart:AppHeaderClockController",
+      "type": "class",
+      "name": "AppHeaderClockController",
+      "filePath": "lib/stores/app_header_clock_store.dart",
+      "lineRange": [
+        11,
+        105
+      ],
+      "summary": "类型 AppHeaderClockController 位于 app_header_clock_store.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/stores/fragrance_setting_store.dart",
+      "type": "file",
+      "name": "fragrance_setting_store.dart",
+      "filePath": "lib/stores/fragrance_setting_store.dart",
+      "summary": "Dart 源文件，承载 fragrance_setting_store.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "fragrance-setting-store"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/stores/fragrance_setting_store.dart:FragranceSettingController",
+      "type": "class",
+      "name": "FragranceSettingController",
+      "filePath": "lib/stores/fragrance_setting_store.dart",
+      "lineRange": [
+        6,
+        25
+      ],
+      "summary": "类型 FragranceSettingController 位于 fragrance_setting_store.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/stores/hifem_setting_store.dart",
+      "type": "file",
+      "name": "hifem_setting_store.dart",
+      "filePath": "lib/stores/hifem_setting_store.dart",
+      "summary": "Dart 源文件，承载 hifem_setting_store.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "hifem-setting-store"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/stores/hifem_setting_store.dart:HifemRegionSetting",
+      "type": "class",
+      "name": "HifemRegionSetting",
+      "filePath": "lib/stores/hifem_setting_store.dart",
+      "lineRange": [
+        9,
+        23
+      ],
+      "summary": "类型 HifemRegionSetting 位于 hifem_setting_store.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/stores/hifem_setting_store.dart:HifemSettingController",
+      "type": "class",
+      "name": "HifemSettingController",
+      "filePath": "lib/stores/hifem_setting_store.dart",
+      "lineRange": [
+        35,
+        82
+      ],
+      "summary": "类型 HifemSettingController 位于 hifem_setting_store.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/stores/index.dart",
+      "type": "file",
+      "name": "index.dart",
+      "filePath": "lib/stores/index.dart",
+      "summary": "Dart 源文件，承载 index.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "index"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:lib/pages/settingpage/ui.dart",
+      "target": "class:lib/pages/settingpage/ui.dart:SettingWidget",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/settingpage/ui.dart",
+      "target": "class:lib/pages/settingpage/ui.dart:_SettingWidgetState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/start/logic.dart",
+      "target": "class:lib/pages/start/logic.dart:StartLogic",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/start/logic.dart",
+      "target": "class:lib/pages/start/logic.dart:RedLightPhaseSetting",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/start/logic.dart",
+      "target": "class:lib/pages/start/logic.dart:PemfPhaseSetting",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/start/logic.dart",
+      "target": "class:lib/pages/start/logic.dart:HydrogenPhaseSetting",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/start/logic.dart",
+      "target": "class:lib/pages/start/logic.dart:VatPhaseSetting",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/start/logic.dart",
+      "target": "class:lib/pages/start/logic.dart:ChakraPhaseSetting",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/start/logic.dart",
+      "target": "class:lib/pages/start/logic.dart:TerahertzPhaseSetting",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/start/logic.dart",
+      "target": "class:lib/pages/start/logic.dart:HifemPhaseSetting",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/start/logic.dart",
+      "target": "class:lib/pages/start/logic.dart:FragrancePhaseSetting",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/start/ui.dart",
+      "target": "class:lib/pages/start/ui.dart:StartPage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/start/ui.dart",
+      "target": "class:lib/pages/start/ui.dart:_StartPageState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/start/ui.dart",
+      "target": "class:lib/pages/start/ui.dart:_CountdownProgressClipper",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/start/ui.dart",
+      "target": "class:lib/pages/start/ui.dart:_StartArguments",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/summary/logic.dart",
+      "target": "class:lib/pages/summary/logic.dart:SummaryLogic",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/summary/summary.dart",
+      "target": "function:lib/pages/summary/summary.dart:_buildSummary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/summary/summary.dart",
+      "target": "function:lib/pages/summary/summary.dart:_buildSummaryTitle1",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/summary/summary.dart",
+      "target": "function:lib/pages/summary/summary.dart:_buildrunDuration",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/summary/summary.dart",
+      "target": "function:lib/pages/summary/summary.dart:_buildSummaryTitle2",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/summary/summary.dart",
+      "target": "function:lib/pages/summary/summary.dart:_buildHealthEffectCards",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/summary/summary.dart",
+      "target": "function:lib/pages/summary/summary.dart:_buildEnergyCard",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/summary/summary.dart",
+      "target": "function:lib/pages/summary/summary.dart:_buildCellCard",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/summary/summary.dart",
+      "target": "function:lib/pages/summary/summary.dart:_buildRelaxCard",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/summary/summary.dart",
+      "target": "function:lib/pages/summary/summary.dart:_buildImmuneCard",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/summary/summary.dart",
+      "target": "function:lib/pages/summary/summary.dart:_getGradientColor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/summary/summary.dart",
+      "target": "function:lib/pages/summary/summary.dart:_buildButton",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/summary/summary.dart",
+      "target": "function:lib/pages/summary/summary.dart:_buildFeelingBox",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/summary/summary.dart",
+      "target": "class:lib/pages/summary/summary.dart:SummaryPage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/summary/summary.dart",
+      "target": "class:lib/pages/summary/summary.dart:_SummaryPageState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/summary/summary.dart",
+      "target": "class:lib/pages/summary/summary.dart:_CircleScorePainter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/summary/summary.dart",
+      "target": "class:lib/pages/summary/summary.dart:_BarChartPainter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/summary/summary.dart",
+      "target": "class:lib/pages/summary/summary.dart:_RelaxSliderPainter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/summary/summary.dart",
+      "target": "class:lib/pages/summary/summary.dart:_GaugePainter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/routes/index.dart",
+      "target": "function:lib/routes/index.dart:getRoutes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/services/android_serial_port_service.dart",
+      "target": "class:lib/services/android_serial_port_service.dart:AndroidSerialPortService",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/services/android_serial_port_service.dart",
+      "target": "class:lib/services/android_serial_port_service.dart:AndroidSerialPortEvent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/stores/app_header_clock_store.dart",
+      "target": "class:lib/stores/app_header_clock_store.dart:AppHeaderClockController",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/stores/fragrance_setting_store.dart",
+      "target": "class:lib/stores/fragrance_setting_store.dart:FragranceSettingController",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/stores/hifem_setting_store.dart",
+      "target": "class:lib/stores/hifem_setting_store.dart:HifemRegionSetting",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/stores/hifem_setting_store.dart",
+      "target": "class:lib/stores/hifem_setting_store.dart:HifemSettingController",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

@@ -364,7 +364,7 @@ class _StartPageState extends State<StartPage>
         : 'continuous'.tr;
 
     final String modeAsset = setting?.mode == RedLightWorkMode.pulse
-        ? Assets.redLightPulseWave
+        ? Assets.maichong
         : Assets.startExpandContinuous;
     //背景板文字位置
     return Positioned(
@@ -555,11 +555,23 @@ class _StartPageState extends State<StartPage>
             ),
             const SizedBox(height: 16),
             if (waveformAsset.isNotEmpty)
-              Image.asset(
-                waveformAsset,
-                width: 170,
-                height: 24,
-                fit: BoxFit.contain,
+              Row(
+                children: [
+                  Text(
+                    'waveform'.tr,
+                    style: const TextStyle(
+                      color: Color(0xFFE4E7EE),
+                      fontSize: 13,
+                    ),
+                  ),
+                  const SizedBox(width: 5),
+                  Image.asset(
+                    waveformAsset,
+                    width: 170,
+                    height: 24,
+                    fit: BoxFit.contain,
+                  ),
+                ],
               ),
           ],
         ),
@@ -1445,6 +1457,8 @@ class _StartPageState extends State<StartPage>
             strength660: setting.strength660,
             strength850: setting.strength850,
             mode: setting.modbusMode,
+            pulseFrequencyHz: setting.pulseFrequencyHz,
+            dutyCyclePercent: setting.dutyCyclePercent,
           ),
         );
       }
@@ -1466,6 +1480,7 @@ class _StartPageState extends State<StartPage>
             frequencyHz: setting.frequency,
             intensity: setting.intensity,
             waveform: waveformNum,
+            burstFrequencyHz: setting.burstFrequencyHz,
           ),
         );
       }
@@ -1493,10 +1508,14 @@ class _StartPageState extends State<StartPage>
       final VatPhaseSetting? setting = _logic.activeVatSetting;
       if (setting != null) {
         final int musicIndex = _resolveVatMusicIndex(setting);
+        final int runtimeIntensity = _currentVatIntensity(setting);
         final List<ModbusWriteCommand> vatCommands = modbusService
             .buildVatCommands(
               frequency: setting.frequency,
-              intensity: _currentVatIntensity(setting),
+              intensity: _logic.isPresetPlan
+                  ? setting.intensity
+                  : runtimeIntensity,
+              volume: _logic.isPresetPlan ? setting.volume : runtimeIntensity,
               musicIndex: musicIndex,
             );
         addModuleCommands('vat', vatCommands);
@@ -1812,6 +1831,8 @@ class _StartPageState extends State<StartPage>
       );
       return idx >= 0 ? idx : 0;
     }
+    final int? presetMusicIndex = planSetting?.musicIndex;
+    if (presetMusicIndex != null) return presetMusicIndex;
     if (planSetting?.songId != null) {
       final int idx = allSongs.indexWhere((s) => s.id == planSetting!.songId);
       return idx >= 0 ? idx : 0;
