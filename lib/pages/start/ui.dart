@@ -1119,7 +1119,40 @@ class _StartPageState extends State<StartPage>
 
       await _turnoffAmbientLight();
       final List<ModbusWriteCommand> commands = _buildPhaseCommands();
+      print('启动按钮 commands.length = ${commands.length}');
+      for (final command in commands) {
+        print(
+          '启动按钮 command 0x${command.address.toRadixString(16).padLeft(4, '0').toUpperCase()} = ${command.value}',
+        );
+      }
       if (_hasPreloadedPhaseParams) {
+        print('是否已经预加载 _hasPreloadedPhaseParams = $_hasPreloadedPhaseParams');
+
+        //防止_hasPreloadedPhaseParams 为 true 时，点击启动按钮，完整下发参数，而不是预加载参数
+        if (_hasPreloadedPhaseParams && !_logic.isPresetPlan) {
+          final List<ModbusWriteCommand> onlyStartCommands =
+              _onlyApplyAndCommand(commands);
+
+          print('onlyApplyAndCommand length = ${onlyStartCommands.length}');
+          for (final command in onlyStartCommands) {
+            print(
+              'onlyApplyAndCommand 0x${command.address.toRadixString(16).padLeft(4, '0').toUpperCase()} = ${command.value}',
+            );
+          }
+
+          final List<ModbusWriteCommand> startCommands = <ModbusWriteCommand>[
+            ...onlyStartCommands,
+            const ModbusWriteCommand(
+              address: ModbusRtuService.systemCommandAddress,
+              value: 1,
+            ),
+          ];
+
+          await modbusService.sendCommandQueue(startCommands);
+        } else {
+          print('没有预加载，走 startWithCommands');
+          await modbusService.startWithCommands(commands);
+        }
         final List<ModbusWriteCommand> startCommands = <ModbusWriteCommand>[
           ..._onlyApplyAndCommand(commands),
           const ModbusWriteCommand(
@@ -1219,6 +1252,10 @@ class _StartPageState extends State<StartPage>
   // 预加载参数
   Future<void> _preloadPhaseParamsIfNeeded() async {
     if (!_logic.isCustomizedPlan) return;
+
+    //预设模式下，不预加载参数，点击启动按钮，完整下发参数
+    if (_logic.isPresetPlan) return;
+
     if (_logic.isRunning) return;
     if (_isCommanding || _isSwitchingPhase) return;
     if (_isPreloadingPhaseParams || _hasPreloadedPhaseParams) return;
