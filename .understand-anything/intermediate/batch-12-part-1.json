@@ -1,0 +1,897 @@
+{
+  "nodes": [
+    {
+      "id": "file:lib/pages/debug/serial_test_page.dart",
+      "type": "file",
+      "name": "serial_test_page.dart",
+      "filePath": "lib/pages/debug/serial_test_page.dart",
+      "summary": "Dart 源文件，承载 serial_test_page.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "screen",
+        "internal",
+        "serial-test-page"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:lib/pages/debug/serial_test_page.dart:SerialTestPage",
+      "type": "class",
+      "name": "SerialTestPage",
+      "filePath": "lib/pages/debug/serial_test_page.dart",
+      "lineRange": [
+        14,
+        19
+      ],
+      "summary": "类型 SerialTestPage 位于 serial_test_page.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/debug/serial_test_page.dart:_SerialTestPageState",
+      "type": "class",
+      "name": "_SerialTestPageState",
+      "filePath": "lib/pages/debug/serial_test_page.dart",
+      "lineRange": [
+        21,
+        297
+      ],
+      "summary": "类型 _SerialTestPageState 位于 serial_test_page.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:lib/pages/debug/serial_test_page.dart:_ActionButton",
+      "type": "class",
+      "name": "_ActionButton",
+      "filePath": "lib/pages/debug/serial_test_page.dart",
+      "lineRange": [
+        299,
+        328
+      ],
+      "summary": "类型 _ActionButton 位于 serial_test_page.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/pages/joystick/ui.dart",
+      "type": "file",
+      "name": "ui.dart",
+      "filePath": "lib/pages/joystick/ui.dart",
+      "summary": "Dart 源文件，承载 ui.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "screen",
+        "internal",
+        "ui"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:lib/pages/joystick/ui.dart:JoystickCommandBus",
+      "type": "class",
+      "name": "JoystickCommandBus",
+      "filePath": "lib/pages/joystick/ui.dart",
+      "lineRange": [
+        19,
+        44
+      ],
+      "summary": "类型 JoystickCommandBus 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/joystick/ui.dart:JoystickControl",
+      "type": "class",
+      "name": "JoystickControl",
+      "filePath": "lib/pages/joystick/ui.dart",
+      "lineRange": [
+        46,
+        53
+      ],
+      "summary": "类型 JoystickControl 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/joystick/ui.dart:_JoystickControlState",
+      "type": "class",
+      "name": "_JoystickControlState",
+      "filePath": "lib/pages/joystick/ui.dart",
+      "lineRange": [
+        55,
+        466
+      ],
+      "summary": "类型 _JoystickControlState 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:lib/pages/login/forgetpassword/forget.dart",
+      "type": "file",
+      "name": "forget.dart",
+      "filePath": "lib/pages/login/forgetpassword/forget.dart",
+      "summary": "Dart 源文件，承载 forget.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "screen",
+        "internal",
+        "forget"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:lib/pages/login/forgetpassword/forget.dart:ForgetPage",
+      "type": "class",
+      "name": "ForgetPage",
+      "filePath": "lib/pages/login/forgetpassword/forget.dart",
+      "lineRange": [
+        15,
+        21
+      ],
+      "summary": "类型 ForgetPage 位于 forget.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/login/forgetpassword/forget.dart:_ForgetPageState",
+      "type": "class",
+      "name": "_ForgetPageState",
+      "filePath": "lib/pages/login/forgetpassword/forget.dart",
+      "lineRange": [
+        24,
+        700
+      ],
+      "summary": "类型 _ForgetPageState 位于 forget.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:lib/pages/login/forgetpassword/forget.dart:ExpandBackButton",
+      "type": "class",
+      "name": "ExpandBackButton",
+      "filePath": "lib/pages/login/forgetpassword/forget.dart",
+      "lineRange": [
+        703,
+        741
+      ],
+      "summary": "类型 ExpandBackButton 位于 forget.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/pages/login/login/logic.dart",
+      "type": "file",
+      "name": "logic.dart",
+      "filePath": "lib/pages/login/login/logic.dart",
+      "summary": "Dart 源文件，承载 logic.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "screen",
+        "state-management",
+        "logic"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/pages/login/login/ui.dart",
+      "type": "file",
+      "name": "ui.dart",
+      "filePath": "lib/pages/login/login/ui.dart",
+      "summary": "Dart 源文件，承载 ui.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "screen",
+        "internal",
+        "ui"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:lib/pages/login/login/ui.dart:LoginPage",
+      "type": "class",
+      "name": "LoginPage",
+      "filePath": "lib/pages/login/login/ui.dart",
+      "lineRange": [
+        22,
+        27
+      ],
+      "summary": "类型 LoginPage 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/login/login/ui.dart:_LoginPageState",
+      "type": "class",
+      "name": "_LoginPageState",
+      "filePath": "lib/pages/login/login/ui.dart",
+      "lineRange": [
+        30,
+        711
+      ],
+      "summary": "类型 _LoginPageState 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:lib/pages/login/register/register.dart",
+      "type": "file",
+      "name": "register.dart",
+      "filePath": "lib/pages/login/register/register.dart",
+      "summary": "Dart 源文件，承载 register.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "screen",
+        "internal",
+        "register"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:lib/pages/login/register/register.dart:RegisterPage",
+      "type": "class",
+      "name": "RegisterPage",
+      "filePath": "lib/pages/login/register/register.dart",
+      "lineRange": [
+        19,
+        25
+      ],
+      "summary": "类型 RegisterPage 位于 register.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/login/register/register.dart:_RegisterPageState",
+      "type": "class",
+      "name": "_RegisterPageState",
+      "filePath": "lib/pages/login/register/register.dart",
+      "lineRange": [
+        28,
+        896
+      ],
+      "summary": "类型 _RegisterPageState 位于 register.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:lib/pages/main/logic.dart",
+      "type": "file",
+      "name": "logic.dart",
+      "filePath": "lib/pages/main/logic.dart",
+      "summary": "Dart 源文件，承载 logic.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "screen",
+        "state-management",
+        "logic"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/main/logic.dart:MainLogic",
+      "type": "class",
+      "name": "MainLogic",
+      "filePath": "lib/pages/main/logic.dart",
+      "lineRange": [
+        9,
+        29
+      ],
+      "summary": "类型 MainLogic 位于 logic.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/pages/main/ui.dart",
+      "type": "file",
+      "name": "ui.dart",
+      "filePath": "lib/pages/main/ui.dart",
+      "summary": "Dart 源文件，承载 ui.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "screen",
+        "internal",
+        "ui"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:lib/pages/main/ui.dart:MainPage",
+      "type": "class",
+      "name": "MainPage",
+      "filePath": "lib/pages/main/ui.dart",
+      "lineRange": [
+        17,
+        22
+      ],
+      "summary": "类型 MainPage 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/main/ui.dart:_MainPageState",
+      "type": "class",
+      "name": "_MainPageState",
+      "filePath": "lib/pages/main/ui.dart",
+      "lineRange": [
+        25,
+        513
+      ],
+      "summary": "类型 _MainPageState 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:lib/pages/main/ui.dart:_ModeCard",
+      "type": "class",
+      "name": "_ModeCard",
+      "filePath": "lib/pages/main/ui.dart",
+      "lineRange": [
+        516,
+        527
+      ],
+      "summary": "类型 _ModeCard 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/main/ui.dart:_ModeCardState",
+      "type": "class",
+      "name": "_ModeCardState",
+      "filePath": "lib/pages/main/ui.dart",
+      "lineRange": [
+        530,
+        582
+      ],
+      "summary": "类型 _ModeCardState 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/pages/main/ui.dart:ModeDetailPage",
+      "type": "class",
+      "name": "ModeDetailPage",
+      "filePath": "lib/pages/main/ui.dart",
+      "lineRange": [
+        585,
+        613
+      ],
+      "summary": "类型 ModeDetailPage 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/main/ui.dart:_ModeCardData",
+      "type": "class",
+      "name": "_ModeCardData",
+      "filePath": "lib/pages/main/ui.dart",
+      "lineRange": [
+        616,
+        651
+      ],
+      "summary": "类型 _ModeCardData 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/pages/music/logic.dart",
+      "type": "file",
+      "name": "logic.dart",
+      "filePath": "lib/pages/music/logic.dart",
+      "summary": "Dart 源文件，承载 logic.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "screen",
+        "state-management",
+        "logic"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/pages/music/player.dart",
+      "type": "file",
+      "name": "player.dart",
+      "filePath": "lib/pages/music/player.dart",
+      "summary": "Dart 源文件，承载 player.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "screen",
+        "internal",
+        "player"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/pages/music/player.dart:VatMusicPlayer",
+      "type": "class",
+      "name": "VatMusicPlayer",
+      "filePath": "lib/pages/music/player.dart",
+      "lineRange": [
+        27,
+        155
+      ],
+      "summary": "类型 VatMusicPlayer 位于 player.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/pages/music/ui.dart",
+      "type": "file",
+      "name": "ui.dart",
+      "filePath": "lib/pages/music/ui.dart",
+      "summary": "Dart 源文件，承载 ui.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "screen",
+        "internal",
+        "ui"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:lib/pages/music/ui.dart:MusicSelectPage",
+      "type": "class",
+      "name": "MusicSelectPage",
+      "filePath": "lib/pages/music/ui.dart",
+      "lineRange": [
+        15,
+        20
+      ],
+      "summary": "类型 MusicSelectPage 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/music/ui.dart:_MusicSelectPageState",
+      "type": "class",
+      "name": "_MusicSelectPageState",
+      "filePath": "lib/pages/music/ui.dart",
+      "lineRange": [
+        22,
+        537
+      ],
+      "summary": "类型 _MusicSelectPageState 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:lib/pages/settingpage/history_detail.dart",
+      "type": "file",
+      "name": "history_detail.dart",
+      "filePath": "lib/pages/settingpage/history_detail.dart",
+      "summary": "Dart 源文件，承载 history_detail.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "screen",
+        "internal",
+        "history-detail"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:lib/pages/settingpage/history_detail.dart:HistoryDetailPage",
+      "type": "class",
+      "name": "HistoryDetailPage",
+      "filePath": "lib/pages/settingpage/history_detail.dart",
+      "lineRange": [
+        13,
+        18
+      ],
+      "summary": "类型 HistoryDetailPage 位于 history_detail.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/settingpage/history_detail.dart:_HistoryDetailPageState",
+      "type": "class",
+      "name": "_HistoryDetailPageState",
+      "filePath": "lib/pages/settingpage/history_detail.dart",
+      "lineRange": [
+        20,
+        672
+      ],
+      "summary": "类型 _HistoryDetailPageState 位于 history_detail.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:lib/pages/settingpage/logic.dart",
+      "type": "file",
+      "name": "logic.dart",
+      "filePath": "lib/pages/settingpage/logic.dart",
+      "summary": "Dart 源文件，承载 logic.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "screen",
+        "state-management",
+        "logic"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/pages/settingpage/logic.dart:HistoryRecordRepository",
+      "type": "class",
+      "name": "HistoryRecordRepository",
+      "filePath": "lib/pages/settingpage/logic.dart",
+      "lineRange": [
+        9,
+        23
+      ],
+      "summary": "类型 HistoryRecordRepository 位于 logic.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/settingpage/logic.dart:BackendHistoryRecordRepository",
+      "type": "class",
+      "name": "BackendHistoryRecordRepository",
+      "filePath": "lib/pages/settingpage/logic.dart",
+      "lineRange": [
+        26,
+        68
+      ],
+      "summary": "类型 BackendHistoryRecordRepository 位于 logic.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/settingpage/logic.dart:HistoryRecordLogic",
+      "type": "class",
+      "name": "HistoryRecordLogic",
+      "filePath": "lib/pages/settingpage/logic.dart",
+      "lineRange": [
+        70,
+        142
+      ],
+      "summary": "类型 HistoryRecordLogic 位于 logic.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/pages/settingpage/logic.dart:HistoryRecordException",
+      "type": "class",
+      "name": "HistoryRecordException",
+      "filePath": "lib/pages/settingpage/logic.dart",
+      "lineRange": [
+        144,
+        151
+      ],
+      "summary": "类型 HistoryRecordException 位于 logic.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:lib/pages/debug/serial_test_page.dart",
+      "target": "class:lib/pages/debug/serial_test_page.dart:SerialTestPage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/debug/serial_test_page.dart",
+      "target": "class:lib/pages/debug/serial_test_page.dart:_SerialTestPageState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/debug/serial_test_page.dart",
+      "target": "class:lib/pages/debug/serial_test_page.dart:_ActionButton",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/joystick/ui.dart",
+      "target": "class:lib/pages/joystick/ui.dart:JoystickCommandBus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/joystick/ui.dart",
+      "target": "class:lib/pages/joystick/ui.dart:JoystickControl",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/joystick/ui.dart",
+      "target": "class:lib/pages/joystick/ui.dart:_JoystickControlState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/login/forgetpassword/forget.dart",
+      "target": "class:lib/pages/login/forgetpassword/forget.dart:ForgetPage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/login/forgetpassword/forget.dart",
+      "target": "class:lib/pages/login/forgetpassword/forget.dart:_ForgetPageState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/login/forgetpassword/forget.dart",
+      "target": "class:lib/pages/login/forgetpassword/forget.dart:ExpandBackButton",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/login/login/ui.dart",
+      "target": "class:lib/pages/login/login/ui.dart:LoginPage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/login/login/ui.dart",
+      "target": "class:lib/pages/login/login/ui.dart:_LoginPageState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/login/register/register.dart",
+      "target": "class:lib/pages/login/register/register.dart:RegisterPage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/login/register/register.dart",
+      "target": "class:lib/pages/login/register/register.dart:_RegisterPageState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/main/logic.dart",
+      "target": "class:lib/pages/main/logic.dart:MainLogic",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/main/ui.dart",
+      "target": "class:lib/pages/main/ui.dart:MainPage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/main/ui.dart",
+      "target": "class:lib/pages/main/ui.dart:_MainPageState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/main/ui.dart",
+      "target": "class:lib/pages/main/ui.dart:_ModeCard",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/main/ui.dart",
+      "target": "class:lib/pages/main/ui.dart:_ModeCardState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/main/ui.dart",
+      "target": "class:lib/pages/main/ui.dart:ModeDetailPage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/main/ui.dart",
+      "target": "class:lib/pages/main/ui.dart:_ModeCardData",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/music/player.dart",
+      "target": "class:lib/pages/music/player.dart:VatMusicPlayer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/music/ui.dart",
+      "target": "class:lib/pages/music/ui.dart:MusicSelectPage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/music/ui.dart",
+      "target": "class:lib/pages/music/ui.dart:_MusicSelectPageState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/settingpage/history_detail.dart",
+      "target": "class:lib/pages/settingpage/history_detail.dart:HistoryDetailPage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/settingpage/history_detail.dart",
+      "target": "class:lib/pages/settingpage/history_detail.dart:_HistoryDetailPageState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/settingpage/logic.dart",
+      "target": "class:lib/pages/settingpage/logic.dart:HistoryRecordRepository",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/settingpage/logic.dart",
+      "target": "class:lib/pages/settingpage/logic.dart:BackendHistoryRecordRepository",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/settingpage/logic.dart",
+      "target": "class:lib/pages/settingpage/logic.dart:HistoryRecordLogic",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/settingpage/logic.dart",
+      "target": "class:lib/pages/settingpage/logic.dart:HistoryRecordException",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

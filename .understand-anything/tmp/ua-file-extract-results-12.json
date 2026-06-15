@@ -1,0 +1,207 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 25,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "lib/pages/debug/serial_test_page.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 328,
+      "nonEmptyLines": 300,
+      "metrics": {}
+    },
+    {
+      "path": "lib/pages/joystick/ui.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 466,
+      "nonEmptyLines": 423,
+      "metrics": {}
+    },
+    {
+      "path": "lib/pages/login/forgetpassword/forget.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 741,
+      "nonEmptyLines": 650,
+      "metrics": {}
+    },
+    {
+      "path": "lib/pages/login/login/logic.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 10,
+      "nonEmptyLines": 9,
+      "metrics": {}
+    },
+    {
+      "path": "lib/pages/login/login/ui.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 871,
+      "nonEmptyLines": 795,
+      "metrics": {}
+    },
+    {
+      "path": "lib/pages/login/register/register.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 949,
+      "nonEmptyLines": 837,
+      "metrics": {}
+    },
+    {
+      "path": "lib/pages/main/logic.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 29,
+      "nonEmptyLines": 26,
+      "metrics": {}
+    },
+    {
+      "path": "lib/pages/main/ui.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 651,
+      "nonEmptyLines": 601,
+      "metrics": {}
+    },
+    {
+      "path": "lib/pages/music/logic.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 117,
+      "nonEmptyLines": 107,
+      "metrics": {}
+    },
+    {
+      "path": "lib/pages/music/player.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 155,
+      "nonEmptyLines": 130,
+      "metrics": {}
+    },
+    {
+      "path": "lib/pages/music/ui.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 537,
+      "nonEmptyLines": 502,
+      "metrics": {}
+    },
+    {
+      "path": "lib/pages/settingpage/history_detail.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 672,
+      "nonEmptyLines": 622,
+      "metrics": {}
+    },
+    {
+      "path": "lib/pages/settingpage/logic.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 151,
+      "nonEmptyLines": 125,
+      "metrics": {}
+    },
+    {
+      "path": "lib/pages/settingpage/ui.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 1229,
+      "nonEmptyLines": 1129,
+      "metrics": {}
+    },
+    {
+      "path": "lib/pages/start/logic.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 985,
+      "nonEmptyLines": 863,
+      "metrics": {}
+    },
+    {
+      "path": "lib/pages/start/ui.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 2466,
+      "nonEmptyLines": 2299,
+      "metrics": {}
+    },
+    {
+      "path": "lib/pages/summary/logic.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 168,
+      "nonEmptyLines": 147,
+      "metrics": {}
+    },
+    {
+      "path": "lib/pages/summary/summary.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 1279,
+      "nonEmptyLines": 1123,
+      "metrics": {}
+    },
+    {
+      "path": "lib/routes/index.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 83,
+      "nonEmptyLines": 80,
+      "metrics": {}
+    },
+    {
+      "path": "lib/routes/route_observer.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 7,
+      "nonEmptyLines": 6,
+      "metrics": {}
+    },
+    {
+      "path": "lib/services/android_serial_port_service.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 210,
+      "nonEmptyLines": 187,
+      "metrics": {}
+    },
+    {
+      "path": "lib/stores/app_header_clock_store.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 105,
+      "nonEmptyLines": 82,
+      "metrics": {}
+    },
+    {
+      "path": "lib/stores/fragrance_setting_store.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 25,
+      "nonEmptyLines": 20,
+      "metrics": {}
+    },
+    {
+      "path": "lib/stores/hifem_setting_store.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 82,
+      "nonEmptyLines": 68,
+      "metrics": {}
+    },
+    {
+      "path": "lib/stores/index.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 8,
+      "nonEmptyLines": 8,
+      "metrics": {}
+    }
+  ]
+}

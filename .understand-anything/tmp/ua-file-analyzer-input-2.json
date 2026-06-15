@@ -1,0 +1,49 @@
+{
+  "projectRoot": "D:/FlutterProject/infibo_app",
+  "batchFiles": [
+    {
+      "path": "windows/runner/flutter_window.cpp",
+      "language": "cpp",
+      "sizeLines": 71,
+      "fileCategory": "code"
+    },
+    {
+      "path": "windows/runner/flutter_window.h",
+      "language": "c",
+      "sizeLines": 33,
+      "fileCategory": "code"
+    },
+    {
+      "path": "windows/runner/main.cpp",
+      "language": "cpp",
+      "sizeLines": 43,
+      "fileCategory": "code"
+    },
+    {
+      "path": "windows/runner/utils.cpp",
+      "language": "cpp",
+      "sizeLines": 65,
+      "fileCategory": "code"
+    },
+    {
+      "path": "windows/runner/utils.h",
+      "language": "c",
+      "sizeLines": 19,
+      "fileCategory": "code"
+    }
+  ],
+  "batchImportData": {
+    "windows/runner/flutter_window.cpp": [
+      "windows/runner/flutter_window.h"
+    ],
+    "windows/runner/flutter_window.h": [],
+    "windows/runner/main.cpp": [
+      "windows/runner/flutter_window.h",
+      "windows/runner/utils.h"
+    ],
+    "windows/runner/utils.cpp": [
+      "windows/runner/utils.h"
+    ],
+    "windows/runner/utils.h": []
+  }
+}

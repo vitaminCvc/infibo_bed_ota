@@ -1,0 +1,182 @@
+{
+  "projectRoot": "D:/FlutterProject/infibo_app",
+  "batchFiles": [
+    {
+      "path": "macos/Runner.xcworkspace/contents.xcworkspacedata",
+      "language": "xcworkspacedata",
+      "sizeLines": 7,
+      "fileCategory": "code"
+    },
+    {
+      "path": "macos/Runner.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist",
+      "language": "xml",
+      "sizeLines": 8,
+      "fileCategory": "config"
+    },
+    {
+      "path": "macos/Runner/AppDelegate.swift",
+      "language": "swift",
+      "sizeLines": 13,
+      "fileCategory": "code"
+    },
+    {
+      "path": "macos/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json",
+      "language": "json",
+      "sizeLines": 68,
+      "fileCategory": "config"
+    },
+    {
+      "path": "macos/Runner/Base.lproj/MainMenu.xib",
+      "language": "xib",
+      "sizeLines": 343,
+      "fileCategory": "code"
+    },
+    {
+      "path": "macos/Runner/Configs/AppInfo.xcconfig",
+      "language": "xcconfig",
+      "sizeLines": 14,
+      "fileCategory": "code"
+    },
+    {
+      "path": "macos/Runner/Configs/Debug.xcconfig",
+      "language": "xcconfig",
+      "sizeLines": 2,
+      "fileCategory": "code"
+    },
+    {
+      "path": "macos/Runner/Configs/Release.xcconfig",
+      "language": "xcconfig",
+      "sizeLines": 2,
+      "fileCategory": "code"
+    },
+    {
+      "path": "macos/Runner/Configs/Warnings.xcconfig",
+      "language": "xcconfig",
+      "sizeLines": 13,
+      "fileCategory": "code"
+    },
+    {
+      "path": "macos/Runner/DebugProfile.entitlements",
+      "language": "entitlements",
+      "sizeLines": 12,
+      "fileCategory": "code"
+    },
+    {
+      "path": "macos/Runner/Info.plist",
+      "language": "xml",
+      "sizeLines": 32,
+      "fileCategory": "config"
+    },
+    {
+      "path": "macos/Runner/MainFlutterWindow.swift",
+      "language": "swift",
+      "sizeLines": 15,
+      "fileCategory": "code"
+    },
+    {
+      "path": "macos/Runner/Release.entitlements",
+      "language": "entitlements",
+      "sizeLines": 8,
+      "fileCategory": "code"
+    },
+    {
+      "path": "macos/RunnerTests/RunnerTests.swift",
+      "language": "swift",
+      "sizeLines": 12,
+      "fileCategory": "code"
+    },
+    {
+      "path": "test/choseusers_logic_test.dart",
+      "language": "dart",
+      "sizeLines": 98,
+      "fileCategory": "code"
+    },
+    {
+      "path": "test/pemf_modbus_test.dart",
+      "language": "dart",
+      "sizeLines": 17,
+      "fileCategory": "code"
+    },
+    {
+      "path": "test/preset_configs_test.dart",
+      "language": "dart",
+      "sizeLines": 42,
+      "fileCategory": "code"
+    },
+    {
+      "path": "test/preset_registry_test.dart",
+      "language": "dart",
+      "sizeLines": 28,
+      "fileCategory": "code"
+    },
+    {
+      "path": "test/preset_start_logic_test.dart",
+      "language": "dart",
+      "sizeLines": 26,
+      "fileCategory": "code"
+    },
+    {
+      "path": "test/therapy_modbus_mapping_test.dart",
+      "language": "dart",
+      "sizeLines": 32,
+      "fileCategory": "code"
+    },
+    {
+      "path": "test/widget_test.dart",
+      "language": "dart",
+      "sizeLines": 410,
+      "fileCategory": "code"
+    },
+    {
+      "path": "web/index.html",
+      "language": "html",
+      "sizeLines": 46,
+      "fileCategory": "markup"
+    },
+    {
+      "path": "web/manifest.json",
+      "language": "json",
+      "sizeLines": 35,
+      "fileCategory": "config"
+    },
+    {
+      "path": "windows/CMakeLists.txt",
+      "language": "txt",
+      "sizeLines": 108,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "windows/flutter/CMakeLists.txt",
+      "language": "txt",
+      "sizeLines": 109,
+      "fileCategory": "docs"
+    }
+  ],
+  "batchImportData": {
+    "macos/Runner.xcworkspace/contents.xcworkspacedata": [],
+    "macos/Runner.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist": [],
+    "macos/Runner/AppDelegate.swift": [],
+    "macos/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json": [],
+    "macos/Runner/Base.lproj/MainMenu.xib": [],
+    "macos/Runner/Configs/AppInfo.xcconfig": [],
+    "macos/Runner/Configs/Debug.xcconfig": [],
+    "macos/Runner/Configs/Release.xcconfig": [],
+    "macos/Runner/Configs/Warnings.xcconfig": [],
+    "macos/Runner/DebugProfile.entitlements": [],
+    "macos/Runner/Info.plist": [],
+    "macos/Runner/MainFlutterWindow.swift": [],
+    "macos/Runner/Release.entitlements": [],
+    "macos/RunnerTests/RunnerTests.swift": [],
+    "test/choseusers_logic_test.dart": [],
+    "test/pemf_modbus_test.dart": [],
+    "test/preset_configs_test.dart": [],
+    "test/preset_registry_test.dart": [],
+    "test/preset_start_logic_test.dart": [],
+    "test/therapy_modbus_mapping_test.dart": [],
+    "test/widget_test.dart": [],
+    "web/index.html": [],
+    "web/manifest.json": [],
+    "windows/CMakeLists.txt": [],
+    "windows/flutter/CMakeLists.txt": []
+  }
+}

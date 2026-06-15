@@ -1,0 +1,1506 @@
+{
+  "nodes": [
+    {
+      "id": "file:lib/pages/customized/customizedPage/expand_setting_page.dart",
+      "type": "file",
+      "name": "expand_setting_page.dart",
+      "filePath": "lib/pages/customized/customizedPage/expand_setting_page.dart",
+      "summary": "Dart 源文件，承载 expand_setting_page.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "screen",
+        "internal",
+        "expand-setting-page"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/pages/customized/customizedPage/expand_setting_page.dart:ExpandSettingPage",
+      "type": "class",
+      "name": "ExpandSettingPage",
+      "filePath": "lib/pages/customized/customizedPage/expand_setting_page.dart",
+      "lineRange": [
+        10,
+        118
+      ],
+      "summary": "类型 ExpandSettingPage 位于 expand_setting_page.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/pages/customized/customizedPage/hifem/ui.dart",
+      "type": "file",
+      "name": "ui.dart",
+      "filePath": "lib/pages/customized/customizedPage/hifem/ui.dart",
+      "summary": "Dart 源文件，承载 ui.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "screen",
+        "internal",
+        "ui"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:lib/pages/customized/customizedPage/hifem/ui.dart:HifemExpandPage",
+      "type": "class",
+      "name": "HifemExpandPage",
+      "filePath": "lib/pages/customized/customizedPage/hifem/ui.dart",
+      "lineRange": [
+        24,
+        31
+      ],
+      "summary": "类型 HifemExpandPage 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/customized/customizedPage/hifem/ui.dart:_HifemExpandPageState",
+      "type": "class",
+      "name": "_HifemExpandPageState",
+      "filePath": "lib/pages/customized/customizedPage/hifem/ui.dart",
+      "lineRange": [
+        33,
+        296
+      ],
+      "summary": "类型 _HifemExpandPageState 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:lib/pages/customized/customizedPage/hifem/ui.dart:_HifemRegionPatch",
+      "type": "class",
+      "name": "_HifemRegionPatch",
+      "filePath": "lib/pages/customized/customizedPage/hifem/ui.dart",
+      "lineRange": [
+        298,
+        340
+      ],
+      "summary": "类型 _HifemRegionPatch 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/customized/customizedPage/hifem/ui.dart:_HifemProgressRow",
+      "type": "class",
+      "name": "_HifemProgressRow",
+      "filePath": "lib/pages/customized/customizedPage/hifem/ui.dart",
+      "lineRange": [
+        342,
+        472
+      ],
+      "summary": "类型 _HifemProgressRow 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/pages/customized/customizedPage/hifem/ui.dart:_HifemConfirmButton",
+      "type": "class",
+      "name": "_HifemConfirmButton",
+      "filePath": "lib/pages/customized/customizedPage/hifem/ui.dart",
+      "lineRange": [
+        474,
+        526
+      ],
+      "summary": "类型 _HifemConfirmButton 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/pages/customized/customizedPage/logic.dart",
+      "type": "file",
+      "name": "logic.dart",
+      "filePath": "lib/pages/customized/customizedPage/logic.dart",
+      "summary": "Dart 源文件，承载 logic.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "screen",
+        "state-management",
+        "logic"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/customized/customizedPage/logic.dart:CustomizedEditLogic",
+      "type": "class",
+      "name": "CustomizedEditLogic",
+      "filePath": "lib/pages/customized/customizedPage/logic.dart",
+      "lineRange": [
+        9,
+        48
+      ],
+      "summary": "类型 CustomizedEditLogic 位于 logic.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/pages/customized/customizedPage/mailun/logic.dart",
+      "type": "file",
+      "name": "logic.dart",
+      "filePath": "lib/pages/customized/customizedPage/mailun/logic.dart",
+      "summary": "Dart 源文件，承载 logic.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "screen",
+        "state-management",
+        "logic"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/pages/customized/customizedPage/mailun/ui.dart",
+      "type": "file",
+      "name": "ui.dart",
+      "filePath": "lib/pages/customized/customizedPage/mailun/ui.dart",
+      "summary": "Dart 源文件，承载 ui.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "screen",
+        "internal",
+        "ui"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:lib/pages/customized/customizedPage/mailun/ui.dart:ChakraExpandPage",
+      "type": "class",
+      "name": "ChakraExpandPage",
+      "filePath": "lib/pages/customized/customizedPage/mailun/ui.dart",
+      "lineRange": [
+        26,
+        41
+      ],
+      "summary": "类型 ChakraExpandPage 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/customized/customizedPage/mailun/ui.dart:_ChakraExpandPageState",
+      "type": "class",
+      "name": "_ChakraExpandPageState",
+      "filePath": "lib/pages/customized/customizedPage/mailun/ui.dart",
+      "lineRange": [
+        43,
+        343
+      ],
+      "summary": "类型 _ChakraExpandPageState 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:lib/pages/customized/customizedPage/mailun/ui.dart:_ChakraLine",
+      "type": "class",
+      "name": "_ChakraLine",
+      "filePath": "lib/pages/customized/customizedPage/mailun/ui.dart",
+      "lineRange": [
+        345,
+        492
+      ],
+      "summary": "类型 _ChakraLine 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/pages/customized/customizedPage/mailun/ui.dart:_ChakraData",
+      "type": "class",
+      "name": "_ChakraData",
+      "filePath": "lib/pages/customized/customizedPage/mailun/ui.dart",
+      "lineRange": [
+        494,
+        517
+      ],
+      "summary": "类型 _ChakraData 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/pages/customized/customizedPage/setting_page_helpers.dart",
+      "type": "file",
+      "name": "setting_page_helpers.dart",
+      "filePath": "lib/pages/customized/customizedPage/setting_page_helpers.dart",
+      "summary": "Dart 源文件，承载 setting_page_helpers.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "screen",
+        "internal",
+        "setting-page-helpers"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:lib/pages/customized/customizedPage/setting_page_helpers.dart:popExpandPage",
+      "type": "function",
+      "name": "popExpandPage",
+      "filePath": "lib/pages/customized/customizedPage/setting_page_helpers.dart",
+      "lineRange": [
+        150,
+        175
+      ],
+      "summary": "函数 popExpandPage 位于 setting_page_helpers.dart 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/customized/customizedPage/setting_page_helpers.dart:ExpandBackButton",
+      "type": "class",
+      "name": "ExpandBackButton",
+      "filePath": "lib/pages/customized/customizedPage/setting_page_helpers.dart",
+      "lineRange": [
+        9,
+        48
+      ],
+      "summary": "类型 ExpandBackButton 位于 setting_page_helpers.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/customized/customizedPage/setting_page_helpers.dart:AssetConfirmButton",
+      "type": "class",
+      "name": "AssetConfirmButton",
+      "filePath": "lib/pages/customized/customizedPage/setting_page_helpers.dart",
+      "lineRange": [
+        50,
+        92
+      ],
+      "summary": "类型 AssetConfirmButton 位于 setting_page_helpers.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/customized/customizedPage/setting_page_helpers.dart:ExpandBackHitLayer",
+      "type": "class",
+      "name": "ExpandBackHitLayer",
+      "filePath": "lib/pages/customized/customizedPage/setting_page_helpers.dart",
+      "lineRange": [
+        94,
+        148
+      ],
+      "summary": "类型 ExpandBackHitLayer 位于 setting_page_helpers.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/pages/customized/customizedPage/setting_page_helpers.dart:SnapshotSettingPage",
+      "type": "class",
+      "name": "SnapshotSettingPage",
+      "filePath": "lib/pages/customized/customizedPage/setting_page_helpers.dart",
+      "lineRange": [
+        184,
+        198
+      ],
+      "summary": "类型 SnapshotSettingPage 位于 setting_page_helpers.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/customized/customizedPage/setting_page_helpers.dart:_SnapshotSettingPageState",
+      "type": "class",
+      "name": "_SnapshotSettingPageState",
+      "filePath": "lib/pages/customized/customizedPage/setting_page_helpers.dart",
+      "lineRange": [
+        200,
+        291
+      ],
+      "summary": "类型 _SnapshotSettingPageState 位于 setting_page_helpers.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/pages/customized/customizedPage/setting_page_helpers.dart:_TapArea",
+      "type": "class",
+      "name": "_TapArea",
+      "filePath": "lib/pages/customized/customizedPage/setting_page_helpers.dart",
+      "lineRange": [
+        293,
+        302
+      ],
+      "summary": "类型 _TapArea 位于 setting_page_helpers.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/pages/customized/customizedPage/taihezi/ui.dart",
+      "type": "file",
+      "name": "ui.dart",
+      "filePath": "lib/pages/customized/customizedPage/taihezi/ui.dart",
+      "summary": "Dart 源文件，承载 ui.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "screen",
+        "internal",
+        "ui"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:lib/pages/customized/customizedPage/taihezi/ui.dart:TerahertzExpandPage",
+      "type": "class",
+      "name": "TerahertzExpandPage",
+      "filePath": "lib/pages/customized/customizedPage/taihezi/ui.dart",
+      "lineRange": [
+        29,
+        36
+      ],
+      "summary": "类型 TerahertzExpandPage 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/customized/customizedPage/taihezi/ui.dart:_TerahertzExpandPageState",
+      "type": "class",
+      "name": "_TerahertzExpandPageState",
+      "filePath": "lib/pages/customized/customizedPage/taihezi/ui.dart",
+      "lineRange": [
+        38,
+        260
+      ],
+      "summary": "类型 _TerahertzExpandPageState 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:lib/pages/customized/customizedPage/taihezi/ui.dart:_DraggableProgressRow",
+      "type": "class",
+      "name": "_DraggableProgressRow",
+      "filePath": "lib/pages/customized/customizedPage/taihezi/ui.dart",
+      "lineRange": [
+        262,
+        361
+      ],
+      "summary": "类型 _DraggableProgressRow 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/pages/customized/customizedPage/taihezi/ui.dart:_OptionDot",
+      "type": "class",
+      "name": "_OptionDot",
+      "filePath": "lib/pages/customized/customizedPage/taihezi/ui.dart",
+      "lineRange": [
+        363,
+        394
+      ],
+      "summary": "类型 _OptionDot 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/pages/customized/customizedPage/ui.dart",
+      "type": "file",
+      "name": "ui.dart",
+      "filePath": "lib/pages/customized/customizedPage/ui.dart",
+      "summary": "Dart 源文件，承载 ui.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "screen",
+        "internal",
+        "ui"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:lib/pages/customized/customizedPage/ui.dart:_hifemRegionId",
+      "type": "function",
+      "name": "_hifemRegionId",
+      "filePath": "lib/pages/customized/customizedPage/ui.dart",
+      "lineRange": [
+        2547,
+        2558
+      ],
+      "summary": "函数 _hifemRegionId 位于 ui.dart 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/pages/customized/customizedPage/ui.dart:_hifemRegionFromId",
+      "type": "function",
+      "name": "_hifemRegionFromId",
+      "filePath": "lib/pages/customized/customizedPage/ui.dart",
+      "lineRange": [
+        2560,
+        2575
+      ],
+      "summary": "函数 _hifemRegionFromId 位于 ui.dart 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/customized/customizedPage/ui.dart:CustomizedEditPage",
+      "type": "class",
+      "name": "CustomizedEditPage",
+      "filePath": "lib/pages/customized/customizedPage/ui.dart",
+      "lineRange": [
+        27,
+        32
+      ],
+      "summary": "类型 CustomizedEditPage 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/customized/customizedPage/ui.dart:_CustomizedEditPageState",
+      "type": "class",
+      "name": "_CustomizedEditPageState",
+      "filePath": "lib/pages/customized/customizedPage/ui.dart",
+      "lineRange": [
+        34,
+        2440
+      ],
+      "summary": "类型 _CustomizedEditPageState 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:lib/pages/customized/customizedPage/ui.dart:_PageTitle",
+      "type": "class",
+      "name": "_PageTitle",
+      "filePath": "lib/pages/customized/customizedPage/ui.dart",
+      "lineRange": [
+        2577,
+        2591
+      ],
+      "summary": "类型 _PageTitle 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/customized/customizedPage/ui.dart:_ModuleItem",
+      "type": "class",
+      "name": "_ModuleItem",
+      "filePath": "lib/pages/customized/customizedPage/ui.dart",
+      "lineRange": [
+        2593,
+        2613
+      ],
+      "summary": "类型 _ModuleItem 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/customized/customizedPage/ui.dart:_ModuleRow",
+      "type": "class",
+      "name": "_ModuleRow",
+      "filePath": "lib/pages/customized/customizedPage/ui.dart",
+      "lineRange": [
+        2615,
+        2685
+      ],
+      "summary": "类型 _ModuleRow 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/pages/customized/customizedPage/ui.dart:_PanelTitle",
+      "type": "class",
+      "name": "_PanelTitle",
+      "filePath": "lib/pages/customized/customizedPage/ui.dart",
+      "lineRange": [
+        2687,
+        2712
+      ],
+      "summary": "类型 _PanelTitle 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/customized/customizedPage/ui.dart:_InputBox",
+      "type": "class",
+      "name": "_InputBox",
+      "filePath": "lib/pages/customized/customizedPage/ui.dart",
+      "lineRange": [
+        2714,
+        2785
+      ],
+      "summary": "类型 _InputBox 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/pages/customized/customizedPage/ui.dart:_InputHitArea",
+      "type": "class",
+      "name": "_InputHitArea",
+      "filePath": "lib/pages/customized/customizedPage/ui.dart",
+      "lineRange": [
+        2787,
+        2830
+      ],
+      "summary": "类型 _InputHitArea 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/customized/customizedPage/ui.dart:_InputBoxMetrics",
+      "type": "class",
+      "name": "_InputBoxMetrics",
+      "filePath": "lib/pages/customized/customizedPage/ui.dart",
+      "lineRange": [
+        2832,
+        2841
+      ],
+      "summary": "类型 _InputBoxMetrics 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/customized/customizedPage/ui.dart:_PemfWaveSelector",
+      "type": "class",
+      "name": "_PemfWaveSelector",
+      "filePath": "lib/pages/customized/customizedPage/ui.dart",
+      "lineRange": [
+        2843,
+        2883
+      ],
+      "summary": "类型 _PemfWaveSelector 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/customized/customizedPage/ui.dart:_PemfWavePopup",
+      "type": "class",
+      "name": "_PemfWavePopup",
+      "filePath": "lib/pages/customized/customizedPage/ui.dart",
+      "lineRange": [
+        2885,
+        2900
+      ],
+      "summary": "类型 _PemfWavePopup 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/customized/customizedPage/ui.dart:_PemfWavePopupState",
+      "type": "class",
+      "name": "_PemfWavePopupState",
+      "filePath": "lib/pages/customized/customizedPage/ui.dart",
+      "lineRange": [
+        2902,
+        3096
+      ],
+      "summary": "类型 _PemfWavePopupState 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/pages/customized/customizedPage/ui.dart:_RadioDot",
+      "type": "class",
+      "name": "_RadioDot",
+      "filePath": "lib/pages/customized/customizedPage/ui.dart",
+      "lineRange": [
+        3133,
+        3158
+      ],
+      "summary": "类型 _RadioDot 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/customized/customizedPage/ui.dart:_TimelineAddButton",
+      "type": "class",
+      "name": "_TimelineAddButton",
+      "filePath": "lib/pages/customized/customizedPage/ui.dart",
+      "lineRange": [
+        3160,
+        3210
+      ],
+      "summary": "类型 _TimelineAddButton 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/pages/customized/customizedPage/ui.dart:_NotchedPanel",
+      "type": "class",
+      "name": "_NotchedPanel",
+      "filePath": "lib/pages/customized/customizedPage/ui.dart",
+      "lineRange": [
+        3214,
+        3242
+      ],
+      "summary": "类型 _NotchedPanel 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/customized/customizedPage/ui.dart:_NotchedPanelPainter",
+      "type": "class",
+      "name": "_NotchedPanelPainter",
+      "filePath": "lib/pages/customized/customizedPage/ui.dart",
+      "lineRange": [
+        3244,
+        3333
+      ],
+      "summary": "类型 _NotchedPanelPainter 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/pages/customized/customizedPage/ui.dart:_PlanNameDialog",
+      "type": "class",
+      "name": "_PlanNameDialog",
+      "filePath": "lib/pages/customized/customizedPage/ui.dart",
+      "lineRange": [
+        3336,
+        3450
+      ],
+      "summary": "类型 _PlanNameDialog 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/pages/customized/customizedPage/ui.dart:_PlanNameDialogButton",
+      "type": "class",
+      "name": "_PlanNameDialogButton",
+      "filePath": "lib/pages/customized/customizedPage/ui.dart",
+      "lineRange": [
+        3453,
+        3490
+      ],
+      "summary": "类型 _PlanNameDialogButton 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/pages/customized/customizedPage/xiangfen/ui.dart",
+      "type": "file",
+      "name": "ui.dart",
+      "filePath": "lib/pages/customized/customizedPage/xiangfen/ui.dart",
+      "summary": "Dart 源文件，承载 ui.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "screen",
+        "internal",
+        "ui"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:lib/pages/customized/customizedPage/xiangfen/ui.dart:FragranceExpandPage",
+      "type": "class",
+      "name": "FragranceExpandPage",
+      "filePath": "lib/pages/customized/customizedPage/xiangfen/ui.dart",
+      "lineRange": [
+        20,
+        27
+      ],
+      "summary": "类型 FragranceExpandPage 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/customized/customizedPage/xiangfen/ui.dart:_FragranceExpandPageState",
+      "type": "class",
+      "name": "_FragranceExpandPageState",
+      "filePath": "lib/pages/customized/customizedPage/xiangfen/ui.dart",
+      "lineRange": [
+        29,
+        205
+      ],
+      "summary": "类型 _FragranceExpandPageState 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/pages/customized/customizedPage/xiangfen/ui.dart:_FragranceChoice",
+      "type": "class",
+      "name": "_FragranceChoice",
+      "filePath": "lib/pages/customized/customizedPage/xiangfen/ui.dart",
+      "lineRange": [
+        207,
+        249
+      ],
+      "summary": "类型 _FragranceChoice 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/pages/customized/logic.dart",
+      "type": "file",
+      "name": "logic.dart",
+      "filePath": "lib/pages/customized/logic.dart",
+      "summary": "Dart 源文件，承载 logic.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "screen",
+        "state-management",
+        "logic"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:lib/pages/customized/logic.dart:CustomizedLogic",
+      "type": "class",
+      "name": "CustomizedLogic",
+      "filePath": "lib/pages/customized/logic.dart",
+      "lineRange": [
+        14,
+        236
+      ],
+      "summary": "类型 CustomizedLogic 位于 logic.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:lib/pages/customized/logic.dart:CustomizedPlanNameException",
+      "type": "class",
+      "name": "CustomizedPlanNameException",
+      "filePath": "lib/pages/customized/logic.dart",
+      "lineRange": [
+        238,
+        245
+      ],
+      "summary": "类型 CustomizedPlanNameException 位于 logic.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/customized/logic.dart:CustomizedPlanData",
+      "type": "class",
+      "name": "CustomizedPlanData",
+      "filePath": "lib/pages/customized/logic.dart",
+      "lineRange": [
+        247,
+        318
+      ],
+      "summary": "类型 CustomizedPlanData 位于 logic.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/pages/customized/plan_features.dart",
+      "type": "file",
+      "name": "plan_features.dart",
+      "filePath": "lib/pages/customized/plan_features.dart",
+      "summary": "Dart 源文件，承载 plan_features.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "screen",
+        "internal",
+        "plan-features"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/pages/customized/plan_features.dart:PlanFeatureDot",
+      "type": "class",
+      "name": "PlanFeatureDot",
+      "filePath": "lib/pages/customized/plan_features.dart",
+      "lineRange": [
+        70,
+        84
+      ],
+      "summary": "类型 PlanFeatureDot 位于 plan_features.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/pages/customized/ui.dart",
+      "type": "file",
+      "name": "ui.dart",
+      "filePath": "lib/pages/customized/ui.dart",
+      "summary": "Dart 源文件，承载 ui.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "screen",
+        "internal",
+        "ui"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:lib/pages/customized/ui.dart:CustomizedPage",
+      "type": "class",
+      "name": "CustomizedPage",
+      "filePath": "lib/pages/customized/ui.dart",
+      "lineRange": [
+        14,
+        19
+      ],
+      "summary": "类型 CustomizedPage 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/customized/ui.dart:_CustomizedPageState",
+      "type": "class",
+      "name": "_CustomizedPageState",
+      "filePath": "lib/pages/customized/ui.dart",
+      "lineRange": [
+        21,
+        383
+      ],
+      "summary": "类型 _CustomizedPageState 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:lib/pages/customized/ui.dart:_PlanCard",
+      "type": "class",
+      "name": "_PlanCard",
+      "filePath": "lib/pages/customized/ui.dart",
+      "lineRange": [
+        386,
+        503
+      ],
+      "summary": "类型 _PlanCard 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/pages/customized/ui.dart:_RenameButton",
+      "type": "class",
+      "name": "_RenameButton",
+      "filePath": "lib/pages/customized/ui.dart",
+      "lineRange": [
+        506,
+        538
+      ],
+      "summary": "类型 _RenameButton 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/customized/ui.dart:_SelectButton",
+      "type": "class",
+      "name": "_SelectButton",
+      "filePath": "lib/pages/customized/ui.dart",
+      "lineRange": [
+        541,
+        572
+      ],
+      "summary": "类型 _SelectButton 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/customized/ui.dart:_PlanNameDialog",
+      "type": "class",
+      "name": "_PlanNameDialog",
+      "filePath": "lib/pages/customized/ui.dart",
+      "lineRange": [
+        575,
+        623
+      ],
+      "summary": "类型 _PlanNameDialog 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:lib/pages/customized/customizedPage/expand_setting_page.dart",
+      "target": "class:lib/pages/customized/customizedPage/expand_setting_page.dart:ExpandSettingPage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/customizedPage/hifem/ui.dart",
+      "target": "class:lib/pages/customized/customizedPage/hifem/ui.dart:HifemExpandPage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/customizedPage/hifem/ui.dart",
+      "target": "class:lib/pages/customized/customizedPage/hifem/ui.dart:_HifemExpandPageState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/customizedPage/hifem/ui.dart",
+      "target": "class:lib/pages/customized/customizedPage/hifem/ui.dart:_HifemRegionPatch",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/customizedPage/hifem/ui.dart",
+      "target": "class:lib/pages/customized/customizedPage/hifem/ui.dart:_HifemProgressRow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/customizedPage/hifem/ui.dart",
+      "target": "class:lib/pages/customized/customizedPage/hifem/ui.dart:_HifemConfirmButton",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/customizedPage/logic.dart",
+      "target": "class:lib/pages/customized/customizedPage/logic.dart:CustomizedEditLogic",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/customizedPage/mailun/ui.dart",
+      "target": "class:lib/pages/customized/customizedPage/mailun/ui.dart:ChakraExpandPage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/customizedPage/mailun/ui.dart",
+      "target": "class:lib/pages/customized/customizedPage/mailun/ui.dart:_ChakraExpandPageState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/customizedPage/mailun/ui.dart",
+      "target": "class:lib/pages/customized/customizedPage/mailun/ui.dart:_ChakraLine",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/customizedPage/mailun/ui.dart",
+      "target": "class:lib/pages/customized/customizedPage/mailun/ui.dart:_ChakraData",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/customizedPage/setting_page_helpers.dart",
+      "target": "function:lib/pages/customized/customizedPage/setting_page_helpers.dart:popExpandPage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/customizedPage/setting_page_helpers.dart",
+      "target": "class:lib/pages/customized/customizedPage/setting_page_helpers.dart:ExpandBackButton",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/customizedPage/setting_page_helpers.dart",
+      "target": "class:lib/pages/customized/customizedPage/setting_page_helpers.dart:AssetConfirmButton",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/customizedPage/setting_page_helpers.dart",
+      "target": "class:lib/pages/customized/customizedPage/setting_page_helpers.dart:ExpandBackHitLayer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/customizedPage/setting_page_helpers.dart",
+      "target": "class:lib/pages/customized/customizedPage/setting_page_helpers.dart:SnapshotSettingPage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/customizedPage/setting_page_helpers.dart",
+      "target": "class:lib/pages/customized/customizedPage/setting_page_helpers.dart:_SnapshotSettingPageState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/customizedPage/setting_page_helpers.dart",
+      "target": "class:lib/pages/customized/customizedPage/setting_page_helpers.dart:_TapArea",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/customizedPage/taihezi/ui.dart",
+      "target": "class:lib/pages/customized/customizedPage/taihezi/ui.dart:TerahertzExpandPage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/customizedPage/taihezi/ui.dart",
+      "target": "class:lib/pages/customized/customizedPage/taihezi/ui.dart:_TerahertzExpandPageState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/customizedPage/taihezi/ui.dart",
+      "target": "class:lib/pages/customized/customizedPage/taihezi/ui.dart:_DraggableProgressRow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/customizedPage/taihezi/ui.dart",
+      "target": "class:lib/pages/customized/customizedPage/taihezi/ui.dart:_OptionDot",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/customizedPage/ui.dart",
+      "target": "function:lib/pages/customized/customizedPage/ui.dart:_hifemRegionId",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/customizedPage/ui.dart",
+      "target": "function:lib/pages/customized/customizedPage/ui.dart:_hifemRegionFromId",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/customizedPage/ui.dart",
+      "target": "class:lib/pages/customized/customizedPage/ui.dart:CustomizedEditPage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/customizedPage/ui.dart",
+      "target": "class:lib/pages/customized/customizedPage/ui.dart:_CustomizedEditPageState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/customizedPage/ui.dart",
+      "target": "class:lib/pages/customized/customizedPage/ui.dart:_PageTitle",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/customizedPage/ui.dart",
+      "target": "class:lib/pages/customized/customizedPage/ui.dart:_ModuleItem",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/customizedPage/ui.dart",
+      "target": "class:lib/pages/customized/customizedPage/ui.dart:_ModuleRow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/customizedPage/ui.dart",
+      "target": "class:lib/pages/customized/customizedPage/ui.dart:_PanelTitle",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/customizedPage/ui.dart",
+      "target": "class:lib/pages/customized/customizedPage/ui.dart:_InputBox",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/customizedPage/ui.dart",
+      "target": "class:lib/pages/customized/customizedPage/ui.dart:_InputHitArea",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/customizedPage/ui.dart",
+      "target": "class:lib/pages/customized/customizedPage/ui.dart:_InputBoxMetrics",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/customizedPage/ui.dart",
+      "target": "class:lib/pages/customized/customizedPage/ui.dart:_PemfWaveSelector",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/customizedPage/ui.dart",
+      "target": "class:lib/pages/customized/customizedPage/ui.dart:_PemfWavePopup",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/customizedPage/ui.dart",
+      "target": "class:lib/pages/customized/customizedPage/ui.dart:_PemfWavePopupState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/customizedPage/ui.dart",
+      "target": "class:lib/pages/customized/customizedPage/ui.dart:_RadioDot",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/customizedPage/ui.dart",
+      "target": "class:lib/pages/customized/customizedPage/ui.dart:_TimelineAddButton",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/customizedPage/ui.dart",
+      "target": "class:lib/pages/customized/customizedPage/ui.dart:_NotchedPanel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/customizedPage/ui.dart",
+      "target": "class:lib/pages/customized/customizedPage/ui.dart:_NotchedPanelPainter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/customizedPage/ui.dart",
+      "target": "class:lib/pages/customized/customizedPage/ui.dart:_PlanNameDialog",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/customizedPage/ui.dart",
+      "target": "class:lib/pages/customized/customizedPage/ui.dart:_PlanNameDialogButton",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/customizedPage/xiangfen/ui.dart",
+      "target": "class:lib/pages/customized/customizedPage/xiangfen/ui.dart:FragranceExpandPage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/customizedPage/xiangfen/ui.dart",
+      "target": "class:lib/pages/customized/customizedPage/xiangfen/ui.dart:_FragranceExpandPageState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/customizedPage/xiangfen/ui.dart",
+      "target": "class:lib/pages/customized/customizedPage/xiangfen/ui.dart:_FragranceChoice",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/logic.dart",
+      "target": "class:lib/pages/customized/logic.dart:CustomizedLogic",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/logic.dart",
+      "target": "class:lib/pages/customized/logic.dart:CustomizedPlanNameException",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/logic.dart",
+      "target": "class:lib/pages/customized/logic.dart:CustomizedPlanData",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/plan_features.dart",
+      "target": "class:lib/pages/customized/plan_features.dart:PlanFeatureDot",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/ui.dart",
+      "target": "class:lib/pages/customized/ui.dart:CustomizedPage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/ui.dart",
+      "target": "class:lib/pages/customized/ui.dart:_CustomizedPageState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/ui.dart",
+      "target": "class:lib/pages/customized/ui.dart:_PlanCard",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/ui.dart",
+      "target": "class:lib/pages/customized/ui.dart:_RenameButton",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/ui.dart",
+      "target": "class:lib/pages/customized/ui.dart:_SelectButton",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/customized/ui.dart",
+      "target": "class:lib/pages/customized/ui.dart:_PlanNameDialog",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

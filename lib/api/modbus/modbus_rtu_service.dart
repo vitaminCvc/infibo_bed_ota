@@ -69,7 +69,7 @@ class ModbusRtuService {
   static const int pemfTotalModeAddress = 0x00C7;
 
   ///PEMF总频率地址。
-  static const int pemfTotalFrequencyAddress = 0x00C3;
+  static const int pemfTotalFrequencyAddress = 0x00C2;
 
   /// PEMF输出强度地址。
   static const int pemfTotalIntensityAddress = 0x00C5;
@@ -384,11 +384,15 @@ class ModbusRtuService {
     required int strength660,
     required int strength850,
     required int mode,
+    int pulseFrequencyHz = 0,
+    int dutyCyclePercent = 100,
   }) {
     final RedLightBatchPayload payload = RedLightModbus.buildPayload(
       strength660: strength660,
       strength850: strength850,
       mode: mode,
+      pulseFrequencyHz: pulseFrequencyHz,
+      dutyCyclePercent: dutyCyclePercent,
     );
     return [
       for (int i = 0; i < payload.values.length; i++)
@@ -411,6 +415,7 @@ class ModbusRtuService {
     required int frequencyHz,
     required int intensity,
     required int waveform,
+    int burstFrequencyHz = 0,
     int dutyCycle = 100,
     int polarityMode = 0,
     int riseTime = 0,
@@ -420,6 +425,7 @@ class ModbusRtuService {
       frequencyHz: frequencyHz,
       intensity: intensity,
       waveform: waveform,
+      burstFrequencyHz: burstFrequencyHz,
       dutyCycle: dutyCycle,
       polarityMode: polarityMode,
       riseTime: riseTime,
@@ -868,11 +874,13 @@ class ModbusRtuService {
   List<ModbusWriteCommand> buildVatCommands({
     required int frequency,
     required int intensity,
+    int? volume,
     required int musicIndex,
   }) {
     final VatBatchPayload payload = VatModbus.buildPayload(
       frequencyHz: frequency,
-      intensity: intensity,
+      energyPercent: intensity,
+      volumePercent: volume ?? intensity,
       musicIndex: musicIndex,
     );
     debugPrint(

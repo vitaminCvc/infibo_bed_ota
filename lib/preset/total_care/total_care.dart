@@ -1,0 +1,136 @@
+import '../a_cankao/preset_models.dart';
+
+const PresetMode totalCarePreset = PresetMode(
+  code: 'P09',
+  titleKey: 'full_care',
+  goalKey: 'preset_p09_goal',
+  durationMinutes: 25,
+  phases: <PresetPhase>[
+    //阶段1
+    PresetPhase(
+      startMinute: 0,
+      endMinute: 5,
+      pemf: PresetPemfConfig(
+        frequencyHz: 10,
+        intensityPercent: 20,
+        waveform: pemfModels.sine,
+        burstFrequencyHz: 0,
+      ),
+      redLight: PresetRedLightConfig(
+        power660Percent: 80,
+        power850Percent: 80,
+        mode: redModels.continuous,
+        pulseFrequencyHz: 0,
+        dutyCyclePercent: 100,
+      ),
+      vat: PresetVatConfig(
+        frequencyHz: 10,
+        energyPercent: 30,
+        volumePercent: 30,
+        trackId: 9,
+      ),
+      hydrogen: PresetHydrogenConfig(outputPercent: 50),
+      descriptionKey: 'preset_p09_phase_1',
+    ),
+    PresetPhase(
+      startMinute: 5,
+      endMinute: 10,
+      pemf: PresetPemfConfig(
+        frequencyHz: 15,
+        intensityPercent: 30,
+        waveform: pemfModels.infibo,
+        burstFrequencyHz: 0,
+      ),
+      redLight: PresetRedLightConfig(
+        power660Percent: 80,
+        power850Percent: 80,
+        mode: redModels.pulse,
+        pulseFrequencyHz: 10,
+        dutyCyclePercent: 70,
+      ),
+      vat: PresetVatConfig(
+        frequencyHz: 15,
+        energyPercent: 40,
+        volumePercent: 40,
+        trackId: 9,
+      ),
+      hydrogen: PresetHydrogenConfig(outputPercent: 70),
+      descriptionKey: 'preset_p09_phase_2',
+    ),
+    PresetPhase(
+      startMinute: 10,
+      endMinute: 15,
+      pemf: PresetPemfConfig(
+        frequencyHz: 20,
+        intensityPercent: 40,
+        waveform: pemfModels.infibo,
+        burstFrequencyHz: 1,
+      ),
+      redLight: PresetRedLightConfig(
+        power660Percent: 80,
+        power850Percent: 80,
+        mode: redModels.pulse,
+        pulseFrequencyHz: 15,
+        dutyCyclePercent: 70,
+      ),
+      vat: PresetVatConfig(
+        frequencyHz: 20,
+        energyPercent: 50,
+        volumePercent: 50,
+        trackId: 9,
+      ),
+      hydrogen: PresetHydrogenConfig(outputPercent: 100),
+      descriptionKey: 'preset_p09_phase_3',
+    ),
+    PresetPhase(
+      startMinute: 15,
+      endMinute: 20,
+      pemf: PresetPemfConfig(
+        frequencyHz: 15,
+        intensityPercent: 30,
+        waveform: pemfModels.infibo,
+        burstFrequencyHz: 0,
+      ),
+      redLight: PresetRedLightConfig(
+        power660Percent: 80,
+        power850Percent: 80,
+        mode: redModels.continuous,
+        pulseFrequencyHz: 0,
+        dutyCyclePercent: 100,
+      ),
+      vat: PresetVatConfig(
+        frequencyHz: 15,
+        energyPercent: 40,
+        volumePercent: 40,
+        trackId: 9,
+      ),
+      hydrogen: PresetHydrogenConfig(outputPercent: 70),
+      descriptionKey: 'preset_p09_phase_4',
+    ),
+    PresetPhase(
+      startMinute: 20,
+      endMinute: 25,
+      pemf: PresetPemfConfig(
+        frequencyHz: 10,
+        intensityPercent: 20,
+        waveform: pemfModels.sine,
+        burstFrequencyHz: 0,
+      ),
+      redLight: PresetRedLightConfig(
+        power660Percent: 80,
+        power850Percent: 80,
+        mode: redModels.continuous,
+        pulseFrequencyHz: 0,
+        dutyCyclePercent: 100,
+      ),
+      vat: PresetVatConfig(
+        frequencyHz: 10,
+        energyPercent: 30,
+        volumePercent: 30,
+        trackId: 9,
+      ),
+      hydrogen: PresetHydrogenConfig(outputPercent: 50),
+      descriptionKey: 'preset_p09_phase_5',
+    ),
+  ],
+);

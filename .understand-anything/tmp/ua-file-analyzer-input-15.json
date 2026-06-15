@@ -1,0 +1,51 @@
+{
+  "projectRoot": "D:/FlutterProject/infibo_app",
+  "batchFiles": [
+    {
+      "path": "windows/flutter/generated_plugin_registrant.cc",
+      "language": "cpp",
+      "sizeLines": 14,
+      "fileCategory": "code"
+    },
+    {
+      "path": "windows/flutter/generated_plugin_registrant.h",
+      "language": "c",
+      "sizeLines": 15,
+      "fileCategory": "code"
+    },
+    {
+      "path": "windows/flutter/generated_plugins.cmake",
+      "language": "cmake",
+      "sizeLines": 25,
+      "fileCategory": "code"
+    },
+    {
+      "path": "windows/runner/CMakeLists.txt",
+      "language": "txt",
+      "sizeLines": 40,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "windows/runner/runner.exe.manifest",
+      "language": "manifest",
+      "sizeLines": 14,
+      "fileCategory": "code"
+    },
+    {
+      "path": "windows/runner/Runner.rc",
+      "language": "rc",
+      "sizeLines": 121,
+      "fileCategory": "code"
+    }
+  ],
+  "batchImportData": {
+    "windows/flutter/generated_plugin_registrant.cc": [
+      "windows/flutter/generated_plugin_registrant.h"
+    ],
+    "windows/flutter/generated_plugin_registrant.h": [],
+    "windows/flutter/generated_plugins.cmake": [],
+    "windows/runner/CMakeLists.txt": [],
+    "windows/runner/runner.exe.manifest": [],
+    "windows/runner/Runner.rc": []
+  }
+}

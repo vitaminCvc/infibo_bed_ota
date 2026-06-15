@@ -1,0 +1,69 @@
+{
+  "nodes": [
+    {
+      "id": "config:infibo/analysis_options.yaml",
+      "type": "config",
+      "name": "analysis_options.yaml",
+      "filePath": "infibo/analysis_options.yaml",
+      "summary": "配置文件，定义 analysis_options.yaml 对构建、分析或运行行为的约束。",
+      "tags": [
+        "configuration",
+        "project-file",
+        "internal",
+        "analysis-options"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:infibo/pubspec.yaml",
+      "type": "config",
+      "name": "pubspec.yaml",
+      "filePath": "infibo/pubspec.yaml",
+      "summary": "配置文件，定义 pubspec.yaml 对构建、分析或运行行为的约束。",
+      "tags": [
+        "configuration",
+        "project-file",
+        "internal",
+        "pubspec"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:infibo/README.md",
+      "type": "document",
+      "name": "README.md",
+      "filePath": "infibo/README.md",
+      "summary": "文档文件，说明 README.md 相关的项目背景、使用方式或开发信息。",
+      "tags": [
+        "documentation",
+        "project-file",
+        "internal",
+        "readme"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "document:infibo/README.md",
+      "target": "file:lib/main.dart",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "config:infibo/analysis_options.yaml",
+      "target": "file:lib/main.dart",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:infibo/pubspec.yaml",
+      "target": "file:lib/main.dart",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}

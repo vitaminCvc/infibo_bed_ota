@@ -1,0 +1,283 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 25,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "macos/Runner.xcworkspace/contents.xcworkspacedata",
+      "language": "xcworkspacedata",
+      "fileCategory": "code",
+      "totalLines": 7,
+      "nonEmptyLines": 7,
+      "metrics": {}
+    },
+    {
+      "path": "macos/Runner.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist",
+      "language": "xml",
+      "fileCategory": "config",
+      "totalLines": 8,
+      "nonEmptyLines": 8,
+      "metrics": {}
+    },
+    {
+      "path": "macos/Runner/AppDelegate.swift",
+      "language": "swift",
+      "fileCategory": "code",
+      "totalLines": 13,
+      "nonEmptyLines": 11,
+      "metrics": {}
+    },
+    {
+      "path": "macos/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 68,
+      "nonEmptyLines": 68,
+      "sections": [
+        {
+          "heading": "images",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "info",
+          "level": 1,
+          "line": 64
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 2
+      }
+    },
+    {
+      "path": "macos/Runner/Base.lproj/MainMenu.xib",
+      "language": "xib",
+      "fileCategory": "code",
+      "totalLines": 343,
+      "nonEmptyLines": 343,
+      "metrics": {}
+    },
+    {
+      "path": "macos/Runner/Configs/AppInfo.xcconfig",
+      "language": "xcconfig",
+      "fileCategory": "code",
+      "totalLines": 14,
+      "nonEmptyLines": 11,
+      "metrics": {}
+    },
+    {
+      "path": "macos/Runner/Configs/Debug.xcconfig",
+      "language": "xcconfig",
+      "fileCategory": "code",
+      "totalLines": 2,
+      "nonEmptyLines": 2,
+      "metrics": {}
+    },
+    {
+      "path": "macos/Runner/Configs/Release.xcconfig",
+      "language": "xcconfig",
+      "fileCategory": "code",
+      "totalLines": 2,
+      "nonEmptyLines": 2,
+      "metrics": {}
+    },
+    {
+      "path": "macos/Runner/Configs/Warnings.xcconfig",
+      "language": "xcconfig",
+      "fileCategory": "code",
+      "totalLines": 13,
+      "nonEmptyLines": 13,
+      "metrics": {}
+    },
+    {
+      "path": "macos/Runner/DebugProfile.entitlements",
+      "language": "entitlements",
+      "fileCategory": "code",
+      "totalLines": 12,
+      "nonEmptyLines": 12,
+      "metrics": {}
+    },
+    {
+      "path": "macos/Runner/Info.plist",
+      "language": "xml",
+      "fileCategory": "config",
+      "totalLines": 32,
+      "nonEmptyLines": 32,
+      "metrics": {}
+    },
+    {
+      "path": "macos/Runner/MainFlutterWindow.swift",
+      "language": "swift",
+      "fileCategory": "code",
+      "totalLines": 15,
+      "nonEmptyLines": 12,
+      "metrics": {}
+    },
+    {
+      "path": "macos/Runner/Release.entitlements",
+      "language": "entitlements",
+      "fileCategory": "code",
+      "totalLines": 8,
+      "nonEmptyLines": 8,
+      "metrics": {}
+    },
+    {
+      "path": "macos/RunnerTests/RunnerTests.swift",
+      "language": "swift",
+      "fileCategory": "code",
+      "totalLines": 12,
+      "nonEmptyLines": 9,
+      "metrics": {}
+    },
+    {
+      "path": "test/choseusers_logic_test.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 98,
+      "nonEmptyLines": 83,
+      "metrics": {}
+    },
+    {
+      "path": "test/pemf_modbus_test.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 17,
+      "nonEmptyLines": 15,
+      "metrics": {}
+    },
+    {
+      "path": "test/preset_configs_test.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 42,
+      "nonEmptyLines": 36,
+      "metrics": {}
+    },
+    {
+      "path": "test/preset_registry_test.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 28,
+      "nonEmptyLines": 26,
+      "metrics": {}
+    },
+    {
+      "path": "test/preset_start_logic_test.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 26,
+      "nonEmptyLines": 23,
+      "metrics": {}
+    },
+    {
+      "path": "test/therapy_modbus_mapping_test.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 32,
+      "nonEmptyLines": 28,
+      "metrics": {}
+    },
+    {
+      "path": "test/widget_test.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 410,
+      "nonEmptyLines": 368,
+      "metrics": {}
+    },
+    {
+      "path": "web/index.html",
+      "language": "html",
+      "fileCategory": "markup",
+      "totalLines": 46,
+      "nonEmptyLines": 38,
+      "metrics": {}
+    },
+    {
+      "path": "web/manifest.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 35,
+      "nonEmptyLines": 35,
+      "sections": [
+        {
+          "heading": "name",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "short_name",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "start_url",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "display",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "background_color",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "theme_color",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "orientation",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "prefer_related_applications",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "icons",
+          "level": 1,
+          "line": 11
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 10
+      }
+    },
+    {
+      "path": "windows/CMakeLists.txt",
+      "language": "txt",
+      "fileCategory": "docs",
+      "totalLines": 108,
+      "nonEmptyLines": 89,
+      "metrics": {}
+    },
+    {
+      "path": "windows/flutter/CMakeLists.txt",
+      "language": "txt",
+      "fileCategory": "docs",
+      "totalLines": 109,
+      "nonEmptyLines": 98,
+      "metrics": {}
+    }
+  ]
+}

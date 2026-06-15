@@ -540,7 +540,7 @@ class _ModeCardState extends State<_ModeCard> {
       onTapDown: (_) => setState(() => _pressed = true),
       onTapCancel: () => setState(() => _pressed = false),
       onTapUp: (_) => setState(() => _pressed = false),
-      onTap: () => widget.onTap(item.titleKey.tr),
+      onTap: () => widget.onTap(item.titleKey),
       child: AnimatedScale(
         scale: _pressed ? 0.96 : 1,
         duration: const Duration(milliseconds: 110),

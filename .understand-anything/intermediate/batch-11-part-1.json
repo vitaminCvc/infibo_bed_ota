@@ -1,0 +1,760 @@
+{
+  "nodes": [
+    {
+      "id": "file:lib/api/modbus/red_light_modbus.dart",
+      "type": "file",
+      "name": "red_light_modbus.dart",
+      "filePath": "lib/api/modbus/red_light_modbus.dart",
+      "summary": "Dart 源文件，承载 red_light_modbus.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "red-light-modbus"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/api/modbus/red_light_modbus.dart:RedLightModbus",
+      "type": "class",
+      "name": "RedLightModbus",
+      "filePath": "lib/api/modbus/red_light_modbus.dart",
+      "lineRange": [
+        26,
+        100
+      ],
+      "summary": "类型 RedLightModbus 位于 red_light_modbus.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/api/modbus/terahertz_modbus.dart",
+      "type": "file",
+      "name": "terahertz_modbus.dart",
+      "filePath": "lib/api/modbus/terahertz_modbus.dart",
+      "summary": "Dart 源文件，承载 terahertz_modbus.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "terahertz-modbus"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/api/modbus/terahertz_modbus.dart:TerahertzBatchPayload",
+      "type": "class",
+      "name": "TerahertzBatchPayload",
+      "filePath": "lib/api/modbus/terahertz_modbus.dart",
+      "lineRange": [
+        6,
+        32
+      ],
+      "summary": "类型 TerahertzBatchPayload 位于 terahertz_modbus.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/api/modbus/terahertz_modbus.dart:TerahertzModbus",
+      "type": "class",
+      "name": "TerahertzModbus",
+      "filePath": "lib/api/modbus/terahertz_modbus.dart",
+      "lineRange": [
+        34,
+        86
+      ],
+      "summary": "类型 TerahertzModbus 位于 terahertz_modbus.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/api/modbus/vat_modbus.dart",
+      "type": "file",
+      "name": "vat_modbus.dart",
+      "filePath": "lib/api/modbus/vat_modbus.dart",
+      "summary": "Dart 源文件，承载 vat_modbus.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "vat-modbus"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/api/modbus/vat_modbus.dart:VatBatchPayload",
+      "type": "class",
+      "name": "VatBatchPayload",
+      "filePath": "lib/api/modbus/vat_modbus.dart",
+      "lineRange": [
+        6,
+        28
+      ],
+      "summary": "类型 VatBatchPayload 位于 vat_modbus.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/api/modbus/vat_modbus.dart:VatModbus",
+      "type": "class",
+      "name": "VatModbus",
+      "filePath": "lib/api/modbus/vat_modbus.dart",
+      "lineRange": [
+        30,
+        79
+      ],
+      "summary": "类型 VatModbus 位于 vat_modbus.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/components/index.dart",
+      "type": "file",
+      "name": "index.dart",
+      "filePath": "lib/components/index.dart",
+      "summary": "Dart 源文件，承载 index.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "index"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:lib/components/index.dart:AppHeaderPage",
+      "type": "class",
+      "name": "AppHeaderPage",
+      "filePath": "lib/components/index.dart",
+      "lineRange": [
+        12,
+        58
+      ],
+      "summary": "类型 AppHeaderPage 位于 index.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/components/index.dart:AppTopHeader",
+      "type": "class",
+      "name": "AppTopHeader",
+      "filePath": "lib/components/index.dart",
+      "lineRange": [
+        60,
+        262
+      ],
+      "summary": "类型 AppTopHeader 位于 index.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:lib/components/logic.dart",
+      "type": "file",
+      "name": "logic.dart",
+      "filePath": "lib/components/logic.dart",
+      "summary": "Dart 源文件，承载 logic.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "state-management",
+        "internal",
+        "logic"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/components/logic.dart:AppComponentLogic",
+      "type": "class",
+      "name": "AppComponentLogic",
+      "filePath": "lib/components/logic.dart",
+      "lineRange": [
+        8,
+        31
+      ],
+      "summary": "类型 AppComponentLogic 位于 logic.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/components/logout_menu.dart",
+      "type": "file",
+      "name": "logout_menu.dart",
+      "filePath": "lib/components/logout_menu.dart",
+      "summary": "Dart 源文件，承载 logout_menu.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "logout-menu"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/components/logout_menu.dart:LogoutMenu",
+      "type": "class",
+      "name": "LogoutMenu",
+      "filePath": "lib/components/logout_menu.dart",
+      "lineRange": [
+        9,
+        18
+      ],
+      "summary": "类型 LogoutMenu 位于 logout_menu.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/components/logout_menu.dart:_LogoutMenuState",
+      "type": "class",
+      "name": "_LogoutMenuState",
+      "filePath": "lib/components/logout_menu.dart",
+      "lineRange": [
+        20,
+        145
+      ],
+      "summary": "类型 _LogoutMenuState 位于 logout_menu.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/components/settingindex.dart",
+      "type": "file",
+      "name": "settingindex.dart",
+      "filePath": "lib/components/settingindex.dart",
+      "summary": "Dart 源文件，承载 settingindex.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "settingindex"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:lib/components/settingindex.dart:AppSettingHeaderPage",
+      "type": "class",
+      "name": "AppSettingHeaderPage",
+      "filePath": "lib/components/settingindex.dart",
+      "lineRange": [
+        15,
+        65
+      ],
+      "summary": "类型 AppSettingHeaderPage 位于 settingindex.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/components/settingindex.dart:AppTopHeader",
+      "type": "class",
+      "name": "AppTopHeader",
+      "filePath": "lib/components/settingindex.dart",
+      "lineRange": [
+        68,
+        237
+      ],
+      "summary": "类型 AppTopHeader 位于 settingindex.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/components/userindex.dart",
+      "type": "file",
+      "name": "userindex.dart",
+      "filePath": "lib/components/userindex.dart",
+      "summary": "Dart 源文件，承载 userindex.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "userindex"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:lib/components/userindex.dart:AppUsersHeaderPage",
+      "type": "class",
+      "name": "AppUsersHeaderPage",
+      "filePath": "lib/components/userindex.dart",
+      "lineRange": [
+        13,
+        62
+      ],
+      "summary": "类型 AppUsersHeaderPage 位于 userindex.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/components/userindex.dart:AppTopHeader",
+      "type": "class",
+      "name": "AppTopHeader",
+      "filePath": "lib/components/userindex.dart",
+      "lineRange": [
+        64,
+        270
+      ],
+      "summary": "类型 AppTopHeader 位于 userindex.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:lib/constants/assets.dart",
+      "type": "file",
+      "name": "assets.dart",
+      "filePath": "lib/constants/assets.dart",
+      "summary": "Dart 源文件，承载 assets.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "assets"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:lib/constants/assets.dart:Assets",
+      "type": "class",
+      "name": "Assets",
+      "filePath": "lib/constants/assets.dart",
+      "lineRange": [
+        7,
+        777
+      ],
+      "summary": "类型 Assets 位于 assets.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:lib/constants/color.dart",
+      "type": "file",
+      "name": "color.dart",
+      "filePath": "lib/constants/color.dart",
+      "summary": "Dart 源文件，承载 color.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "project-file",
+        "internal",
+        "color"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/main.dart",
+      "type": "file",
+      "name": "main.dart",
+      "filePath": "lib/main.dart",
+      "summary": "应用入口文件，负责启动 Flutter 应用并连接主要页面或状态流程。",
+      "tags": [
+        "entry-point",
+        "dart",
+        "application",
+        "internal",
+        "main"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/main.dart:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "lib/main.dart",
+      "lineRange": [
+        12,
+        43
+      ],
+      "summary": "函数 main 位于 main.dart 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/pages/choseusers/logic.dart",
+      "type": "file",
+      "name": "logic.dart",
+      "filePath": "lib/pages/choseusers/logic.dart",
+      "summary": "Dart 源文件，承载 logic.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "screen",
+        "state-management",
+        "logic"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:lib/pages/choseusers/logic.dart:ChoseUsersRepository",
+      "type": "class",
+      "name": "ChoseUsersRepository",
+      "filePath": "lib/pages/choseusers/logic.dart",
+      "lineRange": [
+        7,
+        15
+      ],
+      "summary": "类型 ChoseUsersRepository 位于 logic.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/choseusers/logic.dart:BackendChoseUsersRepository",
+      "type": "class",
+      "name": "BackendChoseUsersRepository",
+      "filePath": "lib/pages/choseusers/logic.dart",
+      "lineRange": [
+        17,
+        76
+      ],
+      "summary": "类型 BackendChoseUsersRepository 位于 logic.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/pages/choseusers/logic.dart:ChoseUsersRepositoryException",
+      "type": "class",
+      "name": "ChoseUsersRepositoryException",
+      "filePath": "lib/pages/choseusers/logic.dart",
+      "lineRange": [
+        78,
+        85
+      ],
+      "summary": "类型 ChoseUsersRepositoryException 位于 logic.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/choseusers/logic.dart:ChoseUsersLogic",
+      "type": "class",
+      "name": "ChoseUsersLogic",
+      "filePath": "lib/pages/choseusers/logic.dart",
+      "lineRange": [
+        87,
+        202
+      ],
+      "summary": "类型 ChoseUsersLogic 位于 logic.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:lib/pages/choseusers/logic.dart:UserItemData",
+      "type": "class",
+      "name": "UserItemData",
+      "filePath": "lib/pages/choseusers/logic.dart",
+      "lineRange": [
+        204,
+        238
+      ],
+      "summary": "类型 UserItemData 位于 logic.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/pages/choseusers/ui.dart",
+      "type": "file",
+      "name": "ui.dart",
+      "filePath": "lib/pages/choseusers/ui.dart",
+      "summary": "Dart 源文件，承载 ui.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "dart",
+        "application",
+        "screen",
+        "internal",
+        "ui"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:lib/pages/choseusers/ui.dart:ChoseUsersPage",
+      "type": "class",
+      "name": "ChoseUsersPage",
+      "filePath": "lib/pages/choseusers/ui.dart",
+      "lineRange": [
+        18,
+        23
+      ],
+      "summary": "类型 ChoseUsersPage 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:lib/pages/choseusers/ui.dart:_ChoseUsersPageState",
+      "type": "class",
+      "name": "_ChoseUsersPageState",
+      "filePath": "lib/pages/choseusers/ui.dart",
+      "lineRange": [
+        25,
+        694
+      ],
+      "summary": "类型 _ChoseUsersPageState 位于 ui.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:lib/api/modbus/red_light_modbus.dart",
+      "target": "class:lib/api/modbus/red_light_modbus.dart:RedLightModbus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/api/modbus/terahertz_modbus.dart",
+      "target": "class:lib/api/modbus/terahertz_modbus.dart:TerahertzBatchPayload",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/api/modbus/terahertz_modbus.dart",
+      "target": "class:lib/api/modbus/terahertz_modbus.dart:TerahertzModbus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/api/modbus/vat_modbus.dart",
+      "target": "class:lib/api/modbus/vat_modbus.dart:VatBatchPayload",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/api/modbus/vat_modbus.dart",
+      "target": "class:lib/api/modbus/vat_modbus.dart:VatModbus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/components/index.dart",
+      "target": "class:lib/components/index.dart:AppHeaderPage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/components/index.dart",
+      "target": "class:lib/components/index.dart:AppTopHeader",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/components/logic.dart",
+      "target": "class:lib/components/logic.dart:AppComponentLogic",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/components/logout_menu.dart",
+      "target": "class:lib/components/logout_menu.dart:LogoutMenu",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/components/logout_menu.dart",
+      "target": "class:lib/components/logout_menu.dart:_LogoutMenuState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/components/settingindex.dart",
+      "target": "class:lib/components/settingindex.dart:AppSettingHeaderPage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/components/settingindex.dart",
+      "target": "class:lib/components/settingindex.dart:AppTopHeader",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/components/userindex.dart",
+      "target": "class:lib/components/userindex.dart:AppUsersHeaderPage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/components/userindex.dart",
+      "target": "class:lib/components/userindex.dart:AppTopHeader",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/constants/assets.dart",
+      "target": "class:lib/constants/assets.dart:Assets",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/main.dart",
+      "target": "function:lib/main.dart:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/main.dart",
+      "target": "function:lib/main.dart:main",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/pages/choseusers/logic.dart",
+      "target": "class:lib/pages/choseusers/logic.dart:ChoseUsersRepository",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/choseusers/logic.dart",
+      "target": "class:lib/pages/choseusers/logic.dart:BackendChoseUsersRepository",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/choseusers/logic.dart",
+      "target": "class:lib/pages/choseusers/logic.dart:ChoseUsersRepositoryException",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/choseusers/logic.dart",
+      "target": "class:lib/pages/choseusers/logic.dart:ChoseUsersLogic",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/choseusers/logic.dart",
+      "target": "class:lib/pages/choseusers/logic.dart:UserItemData",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/choseusers/ui.dart",
+      "target": "class:lib/pages/choseusers/ui.dart:ChoseUsersPage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pages/choseusers/ui.dart",
+      "target": "class:lib/pages/choseusers/ui.dart:_ChoseUsersPageState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

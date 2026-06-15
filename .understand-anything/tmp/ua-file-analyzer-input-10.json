@@ -1,0 +1,182 @@
+{
+  "projectRoot": "D:/FlutterProject/infibo_app",
+  "batchFiles": [
+    {
+      "path": "ios/Runner/GeneratedPluginRegistrant.h",
+      "language": "c",
+      "sizeLines": 19,
+      "fileCategory": "code"
+    },
+    {
+      "path": "ios/Runner/GeneratedPluginRegistrant.m",
+      "language": "m",
+      "sizeLines": 42,
+      "fileCategory": "code"
+    },
+    {
+      "path": "ios/Runner/Info.plist",
+      "language": "xml",
+      "sizeLines": 70,
+      "fileCategory": "config"
+    },
+    {
+      "path": "ios/Runner/Runner-Bridging-Header.h",
+      "language": "c",
+      "sizeLines": 1,
+      "fileCategory": "code"
+    },
+    {
+      "path": "ios/Runner/SceneDelegate.swift",
+      "language": "swift",
+      "sizeLines": 6,
+      "fileCategory": "code"
+    },
+    {
+      "path": "ios/RunnerTests/RunnerTests.swift",
+      "language": "swift",
+      "sizeLines": 12,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/api/dio/api/api_client.dart",
+      "language": "dart",
+      "sizeLines": 118,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/api/dio/api/api_response.dart",
+      "language": "dart",
+      "sizeLines": 25,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/api/dio/login/login_api.dart",
+      "language": "dart",
+      "sizeLines": 25,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/api/dio/login/login_models.dart",
+      "language": "dart",
+      "sizeLines": 20,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/api/dio/register/register_api.dart",
+      "language": "dart",
+      "sizeLines": 37,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/api/dio/register/register_models.dart",
+      "language": "dart",
+      "sizeLines": 16,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/api/dio/reset_password/reset_password_api.dart",
+      "language": "dart",
+      "sizeLines": 25,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/api/dio/therapy_client/therapy_client_api.dart",
+      "language": "dart",
+      "sizeLines": 49,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/api/dio/therapy_client/therapy_client_models.dart",
+      "language": "dart",
+      "sizeLines": 54,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/api/dio/therapy_plan/therapy_plan_api.dart",
+      "language": "dart",
+      "sizeLines": 117,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/api/dio/therapy_plan/therapy_plan_models.dart",
+      "language": "dart",
+      "sizeLines": 150,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/api/dio/therapy_report/therapy_report_api.dart",
+      "language": "dart",
+      "sizeLines": 91,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/api/dio/therapy_report/therapy_report_models.dart",
+      "language": "dart",
+      "sizeLines": 340,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/api/modbus/chakra_modbus.dart",
+      "language": "dart",
+      "sizeLines": 115,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/api/modbus/fragrance_modbus.dart",
+      "language": "dart",
+      "sizeLines": 65,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/api/modbus/hifem_modbus.dart",
+      "language": "dart",
+      "sizeLines": 109,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/api/modbus/hydrogen_modbus.dart",
+      "language": "dart",
+      "sizeLines": 61,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/api/modbus/modbus_rtu_service.dart",
+      "language": "dart",
+      "sizeLines": 2636,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/api/modbus/pemf_modbus.dart",
+      "language": "dart",
+      "sizeLines": 78,
+      "fileCategory": "code"
+    }
+  ],
+  "batchImportData": {
+    "ios/Runner/GeneratedPluginRegistrant.h": [],
+    "ios/Runner/GeneratedPluginRegistrant.m": [],
+    "ios/Runner/Info.plist": [],
+    "ios/Runner/Runner-Bridging-Header.h": [],
+    "ios/Runner/SceneDelegate.swift": [],
+    "ios/RunnerTests/RunnerTests.swift": [],
+    "lib/api/dio/api/api_client.dart": [],
+    "lib/api/dio/api/api_response.dart": [],
+    "lib/api/dio/login/login_api.dart": [],
+    "lib/api/dio/login/login_models.dart": [],
+    "lib/api/dio/register/register_api.dart": [],
+    "lib/api/dio/register/register_models.dart": [],
+    "lib/api/dio/reset_password/reset_password_api.dart": [],
+    "lib/api/dio/therapy_client/therapy_client_api.dart": [],
+    "lib/api/dio/therapy_client/therapy_client_models.dart": [],
+    "lib/api/dio/therapy_plan/therapy_plan_api.dart": [],
+    "lib/api/dio/therapy_plan/therapy_plan_models.dart": [],
+    "lib/api/dio/therapy_report/therapy_report_api.dart": [],
+    "lib/api/dio/therapy_report/therapy_report_models.dart": [],
+    "lib/api/modbus/chakra_modbus.dart": [],
+    "lib/api/modbus/fragrance_modbus.dart": [],
+    "lib/api/modbus/hifem_modbus.dart": [],
+    "lib/api/modbus/hydrogen_modbus.dart": [],
+    "lib/api/modbus/modbus_rtu_service.dart": [],
+    "lib/api/modbus/pemf_modbus.dart": []
+  }
+}

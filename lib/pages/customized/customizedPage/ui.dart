@@ -4,6 +4,7 @@
 // 红光、PEMF、VAT、分子氢以及拓展功能（脉轮、太赫兹、HIFEM、香氛）。
 // 用户在这里选择每个节点启用哪些功能，点击“保存参数”固化当前节点，
 // 最后点击“保存方案”把节点配置保存到本地方案数据里。
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -316,6 +317,8 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
           child: RepaintBoundary(child: _buildTimeline()),
         ),
         ..._buildSavedNodeFeatureDots(),
+        //添加复制上一个节点参数图标
+        ..._buildCopyPreviousNodeButton(),
         if (showModulePanel)
           Positioned(left: 45, top: 102, child: _buildAddModulePanel()),
         if (showModulePanel && activeFeatures.contains('expand'))
@@ -445,25 +448,144 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     return [
       for (final int index in _savedNodeIndexes)
         Positioned(
-          left: 245,
-          top: 118 + index * 75,
-          child: Row(
-            children: [
-              for (final String id in _orderedFeatureIds(
-                _nodeFeatureIds[index],
-              ))
-                Padding(
-                  padding: const EdgeInsets.only(right: 5),
-                  child: Image.asset(
-                    _moduleById(id).iconOn,
-                    width: 24,
-                    height: 24,
+          left: 228,
+          top: 134 + index * 75,
+          child: SizedBox(
+            width: 150,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              textDirection: TextDirection.ltr,
+              children: [
+                for (final String id in _orderedFeatureIds(
+                  _nodeFeatureIds[index],
+                ))
+                  Padding(
+                    padding: const EdgeInsets.only(left: 5),
+                    child: Image.asset(
+                      _moduleById(id).iconOn,
+                      width: 24,
+                      height: 24,
+                    ),
                   ),
-                ),
-            ],
+              ],
+            ),
           ),
         ),
     ];
+  }
+
+  // 构建复制上一个节点参数图标。
+  List<Widget> _buildCopyPreviousNodeButton() {
+    /// 获取下一个可复制的节点索引。
+    final int? nextIndex = _nextCopyTargetIndex();
+
+    /// 如果没有下一个可复制的节点，或者当前节点不是可复制的节点，返回空列表。
+    if (nextIndex == null || _activeNodeIndex != null) return <Widget>[];
+
+    return [
+      Positioned(
+        left: 344,
+        top: nextIndex * 75 + 126,
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: _copyPreviousNodeToNext,
+          child: SizedBox(
+            width: 46,
+            height: 46,
+            child: Center(
+              child: Image.asset(
+                Assets.customizedCopyIcon,
+                width: 24,
+                height: 24,
+              ),
+            ),
+          ),
+        ),
+      ),
+    ];
+  }
+
+  //添加下一个可复制节点判断
+  int? _nextCopyTargetIndex() {
+    if (_savedNodeIndexes.isEmpty) return null;
+
+    for (int index = 0; index < 12; index++) {
+      // 如果当前节点不是已保存节点，且前一个节点是已保存节点，返回当前节点索引。
+      if (!_savedNodeIndexes.contains(index)) {
+        // 如果当前节点是第一个节点，返回 null。
+        if (index == 0) return null;
+        // 如果前一个节点是已保存节点，返回当前节点索引。
+        return _savedNodeIndexes.contains(index - 1) ? index : null;
+      }
+    }
+    return null;
+  }
+
+  //添加复制逻辑
+  void _copyPreviousNodeToNext() {
+    /// 复制目标节点索引。
+    final int? toIndex = _nextCopyTargetIndex();
+    if (toIndex == null) return;
+
+    /// 复制源节点索引。
+    final int fromIndex = toIndex - 1;
+
+    setState(() {
+      /// 复制功能图标。
+      _nodeFeatureIds[toIndex]
+        ..clear()
+        ..addAll(_nodeFeatureIds[fromIndex]);
+
+      /// 复制展开图标。
+      _nodeExpandIds[toIndex]
+        ..clear()
+        ..addAll(_nodeExpandIds[fromIndex]);
+
+      /// 复制Chakra强度。
+      _nodeChakraStrengths[toIndex]
+        ..clear()
+        ..addAll(_nodeChakraStrengths[fromIndex]);
+
+      /// 复制Chakra模式。复制Chakra模式时，需要复制所有相关参数。
+      /// 例如：复制Chakra模式时，需要复制Chakra强度、Chakra模式、ChakraTerahertz设置、ChakraHifem设置、ChakraFragrance设置。
+      /// 这里只复制Chakra模式，其他参数需要根据需要复制。
+      _nodeChakraModes[toIndex] = _nodeChakraModes[fromIndex];
+      _nodeTerahertzSettings[toIndex] = _nodeTerahertzSettings[fromIndex];
+      _nodeHifemSettings[toIndex] = _nodeHifemSettings[fromIndex];
+      _nodeFragranceSettings[toIndex] = _nodeFragranceSettings[fromIndex];
+
+      /// 复制红灯参数。
+      _redLight660Controllers[toIndex].text =
+          _redLight660Controllers[fromIndex].text;
+      _redLight850Controllers[toIndex].text =
+          _redLight850Controllers[fromIndex].text;
+
+      /// 复制Pemf参数。
+      _pemfFrequencyControllers[toIndex].text =
+          _pemfFrequencyControllers[fromIndex].text;
+      _pemfIntensityControllers[toIndex].text =
+          _pemfIntensityControllers[fromIndex].text;
+      _nodePemfWaves[toIndex] = _nodePemfWaves[fromIndex];
+
+      ///复制VAT参数
+      _vatFrequencyControllers[toIndex].text =
+          _vatFrequencyControllers[fromIndex].text;
+
+      ///复制分子氢模块参数
+      _hydrogenConcentrationControllers[toIndex].text =
+          _hydrogenConcentrationControllers[fromIndex].text;
+
+      ///复制红灯模式
+      _nodeRedLightModes[toIndex] = _nodeRedLightModes[fromIndex];
+
+      ///复制已保存节点索引
+      _savedNodeIndexes.add(toIndex);
+      _activeNodeIndex = null;
+    });
+
+    _showMessage(
+      '${'node_copied_prefix'.tr}${(toIndex + 1) * 5}${'node_copied_suffix'.tr}',
+    );
   }
 
   Widget _buildAddModulePanel() {
@@ -2799,13 +2921,141 @@ class _PemfWavePopupState extends State<_PemfWavePopup> {
 
   @override
   Widget build(BuildContext context) {
+    return SizedBox(
+      width: _width,
+      height: _height,
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.asset(widget.dialogAsset, fit: BoxFit.fill),
+          ),
+          Positioned(
+            top: 18,
+            left: 0,
+            right: 0,
+            //顶部标题
+            child: Center(
+              child: Text(
+                'select_waveform'.tr,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ),
+          if (_selected != null)
+            Positioned(
+              left: 20,
+              right: 20,
+              top: _selectedRowTop(_selected!),
+              child: Container(
+                height: _rowHeight,
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ),
+          //底部确认与取消按钮
+          Positioned(
+            left: _cancelLeft,
+            top: _buttonTop,
+            child: _buildWaveActionButton(
+              text: 'cancel'.tr,
+              active: false,
+              onTap: widget.onCancel,
+            ),
+          ),
+          Positioned(
+            left: _confirmLeft,
+            top: _buttonTop,
+            child: _buildWaveActionButton(
+              text: 'confirm'.tr,
+              active: true,
+              onTap: () {
+                final selected = _selected;
+                if (selected != null) {
+                  widget.onConfirm(selected);
+                }
+              },
+            ),
+          ),
+          Positioned.fill(
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTapUp: (details) => _handleTap(details.localPosition),
+              child: const SizedBox.expand(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  double _selectedRowTop(_PemfWave wave) {
+    final int index = _pemfWaves.indexWhere((item) => item.id == wave.id);
+    return _listTop + index * (_rowHeight + _rowGap);
+  }
+
+  Widget _buildWaveRow(_PemfWave wave) {
+    final bool isSelected = _selected?.id == wave.id;
+
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTapUp: (details) => _handleTap(details.localPosition),
-      child: SizedBox(
-        width: _width,
-        height: _height,
-        child: Image.asset(widget.dialogAsset, fit: BoxFit.fill),
+      onTap: () {
+        setState(() {
+          _selected = wave;
+        });
+      },
+      child: Container(
+        width: double.infinity,
+        height: _rowHeight,
+        decoration: BoxDecoration(
+          color: isSelected
+              ? const Color(0xFF727D88).withValues(alpha: 0.45)
+              : const Color(0xFF4A515B).withValues(alpha: 0.18),
+          borderRadius: BorderRadius.circular(2),
+        ),
+        alignment: Alignment.center,
+        child: Image.asset(
+          wave.asset,
+          height: 24,
+          fit: BoxFit.contain,
+          color: isSelected
+              ? Colors.white
+              : Colors.white.withValues(alpha: 0.35),
+          colorBlendMode: BlendMode.srcIn,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWaveActionButton({
+    required String text,
+    required bool active,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap,
+      child: Container(
+        width: 72,
+        height: 32,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: active ? const Color(0xFF1F74E8) : const Color(0xFF5E6570),
+          borderRadius: BorderRadius.circular(18),
+        ),
+        child: Text(
+          text,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
       ),
     );
   }
@@ -2835,7 +3085,6 @@ class _PemfWavePopupState extends State<_PemfWavePopup> {
 
     final _PemfWave tappedWave = _pemfWaves[rowIndex];
     setState(() => _selected = tappedWave);
-    widget.onConfirm(tappedWave);
   }
 
   bool _isInsideButton(Offset position, double left) {
@@ -3083,6 +3332,7 @@ class _NotchedPanelPainter extends CustomPainter {
   }
 }
 
+//创建方案命名弹窗
 class _PlanNameDialog extends StatelessWidget {
   const _PlanNameDialog({required this.controller});
 
@@ -3090,47 +3340,151 @@ class _PlanNameDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      backgroundColor: const Color(0xFF202127),
-      title: Text(
-        'plan_naming'.tr,
-        style: const TextStyle(color: Colors.white),
-      ),
-      content: TextField(
-        controller: controller,
-        autofocus: true,
-        cursorColor: Colors.white,
-        style: const TextStyle(color: Colors.white),
-        decoration: InputDecoration(
-          hintText: 'plan_search_hint'.tr,
-          hintStyle: const TextStyle(color: Color(0xFF737782)),
-          enabledBorder: const UnderlineInputBorder(
-            borderSide: BorderSide(color: Color(0xFF4A4D57)),
-          ),
-          focusedBorder: const UnderlineInputBorder(
-            borderSide: BorderSide(color: Color(0xFF1F74E8)),
-          ),
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      insetPadding: EdgeInsets.zero,
+      child: SizedBox(
+        width: 390,
+        height: 222,
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: Image.asset(
+                Assets.customizedPlanNameDialog,
+                fit: BoxFit.fill,
+              ),
+            ),
+            Positioned(
+              left: 29,
+              top: 28,
+              child: Row(
+                children: [
+                  const SizedBox(width: 30),
+                  Text(
+                    'plan_naming'.tr,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Positioned(
+              left: 25,
+              top: 84,
+              child: SizedBox(
+                width: 340,
+                height: 58,
+                child: TextField(
+                  controller: controller,
+                  autofocus: true,
+                  cursorColor: Colors.white,
+                  style: const TextStyle(color: Colors.white, fontSize: 17),
+                  decoration: InputDecoration(
+                    isDense: true,
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 18,
+                    ),
+                    hintText: 'plan_search_hint'.tr,
+                    hintStyle: const TextStyle(
+                      color: Color(0xFF8B8E98),
+                      fontSize: 17,
+                    ),
+                    filled: true,
+                    fillColor: Colors.transparent,
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(9),
+                      borderSide: const BorderSide(
+                        color: Color(0xFF6A707C),
+                        width: 1,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(9),
+                      borderSide: const BorderSide(
+                        color: Color(0xFF8A93A3),
+                        width: 1,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              left: 182,
+              top: 160,
+              child: _PlanNameDialogButton(
+                text: 'cancel'.tr,
+                width: 88,
+                backgroundColor: const Color(0xFF6C737D),
+                onTap: () => Navigator.of(context).pop(),
+              ),
+            ),
+            Positioned(
+              left: 282,
+              top: 160,
+              child: _PlanNameDialogButton(
+                text: 'confirm'.tr,
+                width: 88,
+                backgroundColor: const Color(0xFF1F74E8),
+                onTap: () {
+                  final String name = controller.text.trim();
+                  if (name.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('plan_name_empty'.tr)),
+                    );
+                    return;
+                  }
+                  Navigator.of(context).pop(name);
+                },
+              ),
+            ),
+          ],
         ),
       ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: Text('cancel'.tr),
+    );
+  }
+}
+
+//创建按钮组件
+class _PlanNameDialogButton extends StatelessWidget {
+  const _PlanNameDialogButton({
+    required this.text,
+    required this.width,
+    required this.backgroundColor,
+    required this.onTap,
+  });
+
+  final String text;
+  final double width;
+  final Color backgroundColor;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap,
+      child: Container(
+        width: width,
+        height: 40,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(22),
         ),
-        TextButton(
-          onPressed: () {
-            final String name = controller.text.trim();
-            if (name.isEmpty) {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text('plan_name_empty'.tr)));
-              return;
-            }
-            Navigator.of(context).pop(name);
-          },
-          child: Text('save'.tr),
+        child: Text(
+          text,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
         ),
-      ],
+      ),
     );
   }
 }

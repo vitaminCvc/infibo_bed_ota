@@ -1,0 +1,658 @@
+{
+  "nodes": [
+    {
+      "id": "file:macos/Runner.xcworkspace/contents.xcworkspacedata",
+      "type": "file",
+      "name": "contents.xcworkspacedata",
+      "filePath": "macos/Runner.xcworkspace/contents.xcworkspacedata",
+      "summary": "项目文件，承担 contents.xcworkspacedata 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "contents"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:macos/Runner.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist",
+      "type": "config",
+      "name": "IDEWorkspaceChecks.plist",
+      "filePath": "macos/Runner.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist",
+      "summary": "配置文件，定义 IDEWorkspaceChecks.plist 对构建、分析或运行行为的约束。",
+      "tags": [
+        "configuration",
+        "project-file",
+        "internal",
+        "ideworkspace-checks"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:macos/Runner/AppDelegate.swift",
+      "type": "file",
+      "name": "AppDelegate.swift",
+      "filePath": "macos/Runner/AppDelegate.swift",
+      "summary": "项目文件，承担 AppDelegate.swift 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "app-delegate"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:macos/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json",
+      "type": "config",
+      "name": "Contents.json",
+      "filePath": "macos/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json",
+      "summary": "配置文件，定义 Contents.json 对构建、分析或运行行为的约束。",
+      "tags": [
+        "configuration",
+        "project-file",
+        "internal",
+        "contents"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:macos/Runner/Base.lproj/MainMenu.xib",
+      "type": "file",
+      "name": "MainMenu.xib",
+      "filePath": "macos/Runner/Base.lproj/MainMenu.xib",
+      "summary": "项目文件，承担 MainMenu.xib 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "main-menu"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:macos/Runner/Configs/AppInfo.xcconfig",
+      "type": "file",
+      "name": "AppInfo.xcconfig",
+      "filePath": "macos/Runner/Configs/AppInfo.xcconfig",
+      "summary": "项目文件，承担 AppInfo.xcconfig 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "app-info"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:macos/Runner/Configs/Debug.xcconfig",
+      "type": "file",
+      "name": "Debug.xcconfig",
+      "filePath": "macos/Runner/Configs/Debug.xcconfig",
+      "summary": "项目文件，承担 Debug.xcconfig 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "debug"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:macos/Runner/Configs/Release.xcconfig",
+      "type": "file",
+      "name": "Release.xcconfig",
+      "filePath": "macos/Runner/Configs/Release.xcconfig",
+      "summary": "项目文件，承担 Release.xcconfig 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "release"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:macos/Runner/Configs/Warnings.xcconfig",
+      "type": "file",
+      "name": "Warnings.xcconfig",
+      "filePath": "macos/Runner/Configs/Warnings.xcconfig",
+      "summary": "项目文件，承担 Warnings.xcconfig 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "warnings"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:macos/Runner/DebugProfile.entitlements",
+      "type": "file",
+      "name": "DebugProfile.entitlements",
+      "filePath": "macos/Runner/DebugProfile.entitlements",
+      "summary": "项目文件，承担 DebugProfile.entitlements 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "debug-profile"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:macos/Runner/Info.plist",
+      "type": "config",
+      "name": "Info.plist",
+      "filePath": "macos/Runner/Info.plist",
+      "summary": "配置文件，定义 Info.plist 对构建、分析或运行行为的约束。",
+      "tags": [
+        "configuration",
+        "project-file",
+        "internal",
+        "info"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:macos/Runner/MainFlutterWindow.swift",
+      "type": "file",
+      "name": "MainFlutterWindow.swift",
+      "filePath": "macos/Runner/MainFlutterWindow.swift",
+      "summary": "项目文件，承担 MainFlutterWindow.swift 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "main-flutter-window"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:macos/Runner/Release.entitlements",
+      "type": "file",
+      "name": "Release.entitlements",
+      "filePath": "macos/Runner/Release.entitlements",
+      "summary": "项目文件，承担 Release.entitlements 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "release"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:macos/RunnerTests/RunnerTests.swift",
+      "type": "file",
+      "name": "RunnerTests.swift",
+      "filePath": "macos/RunnerTests/RunnerTests.swift",
+      "summary": "项目文件，承担 RunnerTests.swift 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "runner-tests"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:test/choseusers_logic_test.dart",
+      "type": "file",
+      "name": "choseusers_logic_test.dart",
+      "filePath": "test/choseusers_logic_test.dart",
+      "summary": "Dart 源文件，承载 choseusers_logic_test.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "test",
+        "dart",
+        "project-file",
+        "internal",
+        "choseusers-logic-test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:test/choseusers_logic_test.dart:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "test/choseusers_logic_test.dart",
+      "lineRange": [
+        4,
+        64
+      ],
+      "summary": "函数 main 位于 choseusers_logic_test.dart 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:test/choseusers_logic_test.dart:FakeChoseUsersRepository",
+      "type": "class",
+      "name": "FakeChoseUsersRepository",
+      "filePath": "test/choseusers_logic_test.dart",
+      "lineRange": [
+        66,
+        98
+      ],
+      "summary": "类型 FakeChoseUsersRepository 位于 choseusers_logic_test.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:test/pemf_modbus_test.dart",
+      "type": "file",
+      "name": "pemf_modbus_test.dart",
+      "filePath": "test/pemf_modbus_test.dart",
+      "summary": "Dart 源文件，承载 pemf_modbus_test.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "test",
+        "dart",
+        "project-file",
+        "internal",
+        "pemf-modbus-test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:test/pemf_modbus_test.dart:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "test/pemf_modbus_test.dart",
+      "lineRange": [
+        4,
+        17
+      ],
+      "summary": "函数 main 位于 pemf_modbus_test.dart 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:test/preset_configs_test.dart",
+      "type": "file",
+      "name": "preset_configs_test.dart",
+      "filePath": "test/preset_configs_test.dart",
+      "summary": "Dart 源文件，承载 preset_configs_test.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "test",
+        "dart",
+        "project-file",
+        "internal",
+        "preset-configs-test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:test/preset_configs_test.dart:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "test/preset_configs_test.dart",
+      "lineRange": [
+        11,
+        42
+      ],
+      "summary": "函数 main 位于 preset_configs_test.dart 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:test/preset_registry_test.dart",
+      "type": "file",
+      "name": "preset_registry_test.dart",
+      "filePath": "test/preset_registry_test.dart",
+      "summary": "Dart 源文件，承载 preset_registry_test.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "test",
+        "dart",
+        "project-file",
+        "internal",
+        "preset-registry-test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:test/preset_registry_test.dart:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "test/preset_registry_test.dart",
+      "lineRange": [
+        4,
+        28
+      ],
+      "summary": "函数 main 位于 preset_registry_test.dart 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:test/preset_start_logic_test.dart",
+      "type": "file",
+      "name": "preset_start_logic_test.dart",
+      "filePath": "test/preset_start_logic_test.dart",
+      "summary": "Dart 源文件，承载 preset_start_logic_test.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "test",
+        "dart",
+        "project-file",
+        "internal",
+        "preset-start-logic-test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:test/preset_start_logic_test.dart:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "test/preset_start_logic_test.dart",
+      "lineRange": [
+        4,
+        26
+      ],
+      "summary": "函数 main 位于 preset_start_logic_test.dart 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:test/therapy_modbus_mapping_test.dart",
+      "type": "file",
+      "name": "therapy_modbus_mapping_test.dart",
+      "filePath": "test/therapy_modbus_mapping_test.dart",
+      "summary": "Dart 源文件，承载 therapy_modbus_mapping_test.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "test",
+        "dart",
+        "project-file",
+        "internal",
+        "therapy-modbus-mapping-test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:test/therapy_modbus_mapping_test.dart:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "test/therapy_modbus_mapping_test.dart",
+      "lineRange": [
+        5,
+        32
+      ],
+      "summary": "函数 main 位于 therapy_modbus_mapping_test.dart 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:test/widget_test.dart",
+      "type": "file",
+      "name": "widget_test.dart",
+      "filePath": "test/widget_test.dart",
+      "summary": "Dart 源文件，承载 widget_test.dart 对应的页面、组件、状态或业务辅助逻辑。",
+      "tags": [
+        "test",
+        "dart",
+        "component",
+        "internal",
+        "widget-test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:test/widget_test.dart:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "test/widget_test.dart",
+      "lineRange": [
+        16,
+        349
+      ],
+      "summary": "函数 main 位于 widget_test.dart 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:test/widget_test.dart:FakeHistoryRecordRepository",
+      "type": "class",
+      "name": "FakeHistoryRecordRepository",
+      "filePath": "test/widget_test.dart",
+      "lineRange": [
+        351,
+        410
+      ],
+      "summary": "类型 FakeHistoryRecordRepository 位于 widget_test.dart 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:web/index.html",
+      "type": "file",
+      "name": "index.html",
+      "filePath": "web/index.html",
+      "summary": "项目文件，承担 index.html 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "index"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:web/manifest.json",
+      "type": "config",
+      "name": "manifest.json",
+      "filePath": "web/manifest.json",
+      "summary": "配置文件，定义 manifest.json 对构建、分析或运行行为的约束。",
+      "tags": [
+        "configuration",
+        "project-file",
+        "internal",
+        "manifest"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:windows/CMakeLists.txt",
+      "type": "document",
+      "name": "CMakeLists.txt",
+      "filePath": "windows/CMakeLists.txt",
+      "summary": "文档文件，说明 CMakeLists.txt 相关的项目背景、使用方式或开发信息。",
+      "tags": [
+        "documentation",
+        "project-file",
+        "internal",
+        "cmake-lists"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:windows/flutter/CMakeLists.txt",
+      "type": "document",
+      "name": "CMakeLists.txt",
+      "filePath": "windows/flutter/CMakeLists.txt",
+      "summary": "文档文件，说明 CMakeLists.txt 相关的项目背景、使用方式或开发信息。",
+      "tags": [
+        "documentation",
+        "project-file",
+        "internal",
+        "cmake-lists"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "config:macos/Runner.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist",
+      "target": "file:lib/main.dart",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:macos/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json",
+      "target": "file:lib/main.dart",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:macos/Runner/Info.plist",
+      "target": "file:lib/main.dart",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:test/choseusers_logic_test.dart",
+      "target": "function:test/choseusers_logic_test.dart:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:test/choseusers_logic_test.dart",
+      "target": "function:test/choseusers_logic_test.dart:main",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:test/choseusers_logic_test.dart",
+      "target": "class:test/choseusers_logic_test.dart:FakeChoseUsersRepository",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:test/pemf_modbus_test.dart",
+      "target": "function:test/pemf_modbus_test.dart:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:test/pemf_modbus_test.dart",
+      "target": "function:test/pemf_modbus_test.dart:main",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:test/preset_configs_test.dart",
+      "target": "function:test/preset_configs_test.dart:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:test/preset_configs_test.dart",
+      "target": "function:test/preset_configs_test.dart:main",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:test/preset_registry_test.dart",
+      "target": "function:test/preset_registry_test.dart:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:test/preset_registry_test.dart",
+      "target": "function:test/preset_registry_test.dart:main",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:test/preset_start_logic_test.dart",
+      "target": "function:test/preset_start_logic_test.dart:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:test/preset_start_logic_test.dart",
+      "target": "function:test/preset_start_logic_test.dart:main",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:test/therapy_modbus_mapping_test.dart",
+      "target": "function:test/therapy_modbus_mapping_test.dart:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:test/therapy_modbus_mapping_test.dart",
+      "target": "function:test/therapy_modbus_mapping_test.dart:main",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:test/widget_test.dart",
+      "target": "function:test/widget_test.dart:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:test/widget_test.dart",
+      "target": "function:test/widget_test.dart:main",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:test/widget_test.dart",
+      "target": "class:test/widget_test.dart:FakeHistoryRecordRepository",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "config:web/manifest.json",
+      "target": "file:lib/main.dart",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "document:windows/CMakeLists.txt",
+      "target": "file:lib/main.dart",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:windows/flutter/CMakeLists.txt",
+      "target": "file:lib/main.dart",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

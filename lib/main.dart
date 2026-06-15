@@ -34,10 +34,10 @@ Future<void> main(List<String> args) async {
 
   runApp(
     //登录的持久化
-    getRootWidget(
-      initialRoute: userStore.isLoggedIn ? '/main' : '/login',
-      locale: initialLocale,
-    ),
-    // getRootWidget(initialRoute: '/summary'),
+    // getRootWidget(
+    //   initialRoute: userStore.isLoggedIn ? '/main' : '/login',
+    //   locale: initialLocale,
+    // ),
+    getRootWidget(initialRoute: '/summary', locale: initialLocale),
   );
 }

@@ -29,9 +29,9 @@ class PemfBatchPayload {
 
 class PemfModbus {
   static const int enableAddress = 0x00C0;
-  static const int startAddress = 0x00C3;
+  static const int startAddress = 0x00C2;
   static const int endAddress = 0x00C9;
-  static const int quantity = 7;
+  static const int quantity = 8;
   static const int applyAddress = 0x00D0;
   static const int commandAddress = 0x00D1;
 
@@ -39,6 +39,7 @@ class PemfModbus {
     required int frequencyHz,
     required int intensity,
     required int waveform,
+    int burstFrequencyHz = 0,
     int dutyCycle = 100,
     int polarityMode = 0,
     int riseTime = 0,
@@ -46,8 +47,10 @@ class PemfModbus {
   }) {
     final int safeIntensity = clampPercentage(intensity);
     final int enableValue = safeIntensity > 0 ? 1 : 0;
-    final int burstFrequency = (frequencyHz.clamp(0, 6553) * 10).toInt();
+    final int carrierFrequency = frequencyHz.clamp(0, 65535).toInt();
+    final int burstFrequency = (burstFrequencyHz.clamp(0, 6553) * 10).toInt();
     final List<int> values = <int>[
+      carrierFrequency, // 0x00C2 carrier frequency (Hz)
       burstFrequency, // 0x00C3
       clampPercentage(dutyCycle), // 0x00C4
       safeIntensity, // 0x00C5

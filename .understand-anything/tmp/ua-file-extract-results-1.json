@@ -1,0 +1,103 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 12,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "lib/preset/a_cankao/preset_models.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 135,
+      "nonEmptyLines": 112,
+      "metrics": {}
+    },
+    {
+      "path": "lib/preset/a_cankao/preset_registry.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 38,
+      "nonEmptyLines": 35,
+      "metrics": {}
+    },
+    {
+      "path": "lib/preset/anti_aging/anti_aging.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 161,
+      "nonEmptyLines": 160,
+      "metrics": {}
+    },
+    {
+      "path": "lib/preset/deep_relax/deep_relax.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 161,
+      "nonEmptyLines": 160,
+      "metrics": {}
+    },
+    {
+      "path": "lib/preset/emo_healing/emo_healing.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 136,
+      "nonEmptyLines": 135,
+      "metrics": {}
+    },
+    {
+      "path": "lib/preset/energy_boost/energy_boost.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 111,
+      "nonEmptyLines": 110,
+      "metrics": {}
+    },
+    {
+      "path": "lib/preset/immune_boost/immune_boost.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 161,
+      "nonEmptyLines": 160,
+      "metrics": {}
+    },
+    {
+      "path": "lib/preset/pain_relief/pain_relief.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 161,
+      "nonEmptyLines": 160,
+      "metrics": {}
+    },
+    {
+      "path": "lib/preset/sleep_imp/sleep_imp.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 161,
+      "nonEmptyLines": 160,
+      "metrics": {}
+    },
+    {
+      "path": "lib/preset/sports_rec/sports_rec.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 136,
+      "nonEmptyLines": 135,
+      "metrics": {}
+    },
+    {
+      "path": "lib/preset/stress_relief/stress_relief.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 136,
+      "nonEmptyLines": 135,
+      "metrics": {}
+    },
+    {
+      "path": "lib/preset/total_care/total_care.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 136,
+      "nonEmptyLines": 135,
+      "metrics": {}
+    }
+  ]
+}

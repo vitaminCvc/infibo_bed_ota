@@ -1,0 +1,251 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 25,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "lib/stores/terahertz_setting_store.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 55,
+      "nonEmptyLines": 49,
+      "metrics": {}
+    },
+    {
+      "path": "lib/stores/user_store.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 96,
+      "nonEmptyLines": 80,
+      "metrics": {}
+    },
+    {
+      "path": "lib/translation/app_translations.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 2396,
+      "nonEmptyLines": 2384,
+      "metrics": {}
+    },
+    {
+      "path": "lib/utils/age_utils.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 22,
+      "nonEmptyLines": 19,
+      "metrics": {}
+    },
+    {
+      "path": "lib/utils/byte_utils.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 11,
+      "nonEmptyLines": 10,
+      "metrics": {}
+    },
+    {
+      "path": "lib/utils/date_time_utils.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 39,
+      "nonEmptyLines": 33,
+      "metrics": {}
+    },
+    {
+      "path": "lib/utils/duration_utils.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 20,
+      "nonEmptyLines": 18,
+      "metrics": {}
+    },
+    {
+      "path": "lib/utils/email_utils.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 12,
+      "nonEmptyLines": 10,
+      "metrics": {}
+    },
+    {
+      "path": "lib/utils/gender_utils.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 22,
+      "nonEmptyLines": 20,
+      "metrics": {}
+    },
+    {
+      "path": "lib/utils/index.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 10,
+      "nonEmptyLines": 10,
+      "metrics": {}
+    },
+    {
+      "path": "lib/utils/localized_api_message.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 18,
+      "nonEmptyLines": 15,
+      "metrics": {}
+    },
+    {
+      "path": "lib/utils/number_utils.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 26,
+      "nonEmptyLines": 23,
+      "metrics": {}
+    },
+    {
+      "path": "lib/utils/phone_utils.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 19,
+      "nonEmptyLines": 17,
+      "metrics": {}
+    },
+    {
+      "path": "linux/CMakeLists.txt",
+      "language": "txt",
+      "fileCategory": "docs",
+      "totalLines": 128,
+      "nonEmptyLines": 104,
+      "metrics": {}
+    },
+    {
+      "path": "linux/flutter/CMakeLists.txt",
+      "language": "txt",
+      "fileCategory": "docs",
+      "totalLines": 88,
+      "nonEmptyLines": 79,
+      "metrics": {}
+    },
+    {
+      "path": "linux/flutter/generated_plugin_registrant.cc",
+      "language": "cpp",
+      "fileCategory": "code",
+      "totalLines": 15,
+      "nonEmptyLines": 11,
+      "functions": [
+        {
+          "name": "fl_register_plugins",
+          "startLine": 11,
+          "endLine": 15,
+          "params": [
+            "registry"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "fl_register_plugins",
+          "line": 11,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "fl_register_plugins",
+          "callee": "g_autoptr",
+          "lineNumber": 12
+        },
+        {
+          "caller": "fl_register_plugins",
+          "callee": "fl_plugin_registry_get_registrar_for_plugin",
+          "lineNumber": 13
+        },
+        {
+          "caller": "fl_register_plugins",
+          "callee": "flutter_libserialport_plugin_register_with_registrar",
+          "lineNumber": 14
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "linux/flutter/generated_plugin_registrant.h",
+      "language": "c",
+      "fileCategory": "code",
+      "totalLines": 15,
+      "nonEmptyLines": 10,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "linux/flutter/generated_plugins.cmake",
+      "language": "cmake",
+      "fileCategory": "code",
+      "totalLines": 25,
+      "nonEmptyLines": 20,
+      "metrics": {}
+    },
+    {
+      "path": "linux/runner/CMakeLists.txt",
+      "language": "txt",
+      "fileCategory": "docs",
+      "totalLines": 26,
+      "nonEmptyLines": 21,
+      "metrics": {}
+    },
+    {
+      "path": "macos/Flutter/Flutter-Debug.xcconfig",
+      "language": "xcconfig",
+      "fileCategory": "code",
+      "totalLines": 1,
+      "nonEmptyLines": 1,
+      "metrics": {}
+    },
+    {
+      "path": "macos/Flutter/Flutter-Release.xcconfig",
+      "language": "xcconfig",
+      "fileCategory": "code",
+      "totalLines": 1,
+      "nonEmptyLines": 1,
+      "metrics": {}
+    },
+    {
+      "path": "macos/Flutter/GeneratedPluginRegistrant.swift",
+      "language": "swift",
+      "fileCategory": "code",
+      "totalLines": 20,
+      "nonEmptyLines": 17,
+      "metrics": {}
+    },
+    {
+      "path": "macos/Runner.xcodeproj/project.pbxproj",
+      "language": "pbxproj",
+      "fileCategory": "code",
+      "totalLines": 705,
+      "nonEmptyLines": 689,
+      "metrics": {}
+    },
+    {
+      "path": "macos/Runner.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist",
+      "language": "xml",
+      "fileCategory": "config",
+      "totalLines": 8,
+      "nonEmptyLines": 8,
+      "metrics": {}
+    },
+    {
+      "path": "macos/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme",
+      "language": "xcscheme",
+      "fileCategory": "code",
+      "totalLines": 99,
+      "nonEmptyLines": 99,
+      "metrics": {}
+    }
+  ]
+}

@@ -1,0 +1,679 @@
+{
+  "nodes": [
+    {
+      "id": "file:windows/runner/resource.h",
+      "type": "file",
+      "name": "resource.h",
+      "filePath": "windows/runner/resource.h",
+      "summary": "项目文件，承担 resource.h 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "resource"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:windows/runner/win32_window.cpp",
+      "type": "file",
+      "name": "win32_window.cpp",
+      "filePath": "windows/runner/win32_window.cpp",
+      "summary": "项目文件，承担 win32_window.cpp 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "win32-window"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:windows/runner/win32_window.cpp:Scale",
+      "type": "function",
+      "name": "Scale",
+      "filePath": "windows/runner/win32_window.cpp",
+      "lineRange": [
+        36,
+        38
+      ],
+      "summary": "函数 Scale 位于 win32_window.cpp 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:windows/runner/win32_window.cpp:EnableFullDpiSupportIfAvailable",
+      "type": "function",
+      "name": "EnableFullDpiSupportIfAvailable",
+      "filePath": "windows/runner/win32_window.cpp",
+      "lineRange": [
+        42,
+        54
+      ],
+      "summary": "函数 EnableFullDpiSupportIfAvailable 位于 win32_window.cpp 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:windows/runner/win32_window.cpp:~WindowClassRegistrar",
+      "type": "function",
+      "name": "~WindowClassRegistrar",
+      "filePath": "windows/runner/win32_window.cpp",
+      "lineRange": [
+        61,
+        61
+      ],
+      "summary": "函数 ~WindowClassRegistrar 位于 win32_window.cpp 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:windows/runner/win32_window.cpp:WindowClassRegistrar",
+      "type": "function",
+      "name": "WindowClassRegistrar",
+      "filePath": "windows/runner/win32_window.cpp",
+      "lineRange": [
+        80,
+        80
+      ],
+      "summary": "函数 WindowClassRegistrar 位于 win32_window.cpp 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:windows/runner/win32_window.cpp:UnregisterWindowClass",
+      "type": "function",
+      "name": "UnregisterWindowClass",
+      "filePath": "windows/runner/win32_window.cpp",
+      "lineRange": [
+        109,
+        112
+      ],
+      "summary": "函数 UnregisterWindowClass 位于 win32_window.cpp 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:windows/runner/win32_window.cpp:Win32Window",
+      "type": "function",
+      "name": "Win32Window",
+      "filePath": "windows/runner/win32_window.cpp",
+      "lineRange": [
+        114,
+        116
+      ],
+      "summary": "函数 Win32Window 位于 win32_window.cpp 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:windows/runner/win32_window.cpp:~Win32Window",
+      "type": "function",
+      "name": "~Win32Window",
+      "filePath": "windows/runner/win32_window.cpp",
+      "lineRange": [
+        118,
+        121
+      ],
+      "summary": "函数 ~Win32Window 位于 win32_window.cpp 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:windows/runner/win32_window.cpp:Create",
+      "type": "function",
+      "name": "Create",
+      "filePath": "windows/runner/win32_window.cpp",
+      "lineRange": [
+        123,
+        150
+      ],
+      "summary": "函数 Create 位于 win32_window.cpp 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:windows/runner/win32_window.cpp:Show",
+      "type": "function",
+      "name": "Show",
+      "filePath": "windows/runner/win32_window.cpp",
+      "lineRange": [
+        152,
+        154
+      ],
+      "summary": "函数 Show 位于 win32_window.cpp 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:windows/runner/win32_window.cpp:Win32Window::WndProc",
+      "type": "function",
+      "name": "Win32Window::WndProc",
+      "filePath": "windows/runner/win32_window.cpp",
+      "lineRange": [
+        157,
+        174
+      ],
+      "summary": "函数 Win32Window::WndProc 位于 win32_window.cpp 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:windows/runner/win32_window.cpp:MessageHandler",
+      "type": "function",
+      "name": "MessageHandler",
+      "filePath": "windows/runner/win32_window.cpp",
+      "lineRange": [
+        176,
+        222
+      ],
+      "summary": "函数 MessageHandler 位于 win32_window.cpp 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:windows/runner/win32_window.cpp:Destroy",
+      "type": "function",
+      "name": "Destroy",
+      "filePath": "windows/runner/win32_window.cpp",
+      "lineRange": [
+        224,
+        234
+      ],
+      "summary": "函数 Destroy 位于 win32_window.cpp 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:windows/runner/win32_window.cpp:SetChildContent",
+      "type": "function",
+      "name": "SetChildContent",
+      "filePath": "windows/runner/win32_window.cpp",
+      "lineRange": [
+        241,
+        250
+      ],
+      "summary": "函数 SetChildContent 位于 win32_window.cpp 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:windows/runner/win32_window.cpp:GetClientArea",
+      "type": "function",
+      "name": "GetClientArea",
+      "filePath": "windows/runner/win32_window.cpp",
+      "lineRange": [
+        252,
+        256
+      ],
+      "summary": "函数 GetClientArea 位于 win32_window.cpp 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:windows/runner/win32_window.cpp:GetHandle",
+      "type": "function",
+      "name": "GetHandle",
+      "filePath": "windows/runner/win32_window.cpp",
+      "lineRange": [
+        258,
+        260
+      ],
+      "summary": "函数 GetHandle 位于 win32_window.cpp 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:windows/runner/win32_window.cpp:SetQuitOnClose",
+      "type": "function",
+      "name": "SetQuitOnClose",
+      "filePath": "windows/runner/win32_window.cpp",
+      "lineRange": [
+        262,
+        264
+      ],
+      "summary": "函数 SetQuitOnClose 位于 win32_window.cpp 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:windows/runner/win32_window.cpp:OnCreate",
+      "type": "function",
+      "name": "OnCreate",
+      "filePath": "windows/runner/win32_window.cpp",
+      "lineRange": [
+        266,
+        269
+      ],
+      "summary": "函数 OnCreate 位于 win32_window.cpp 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:windows/runner/win32_window.cpp:OnDestroy",
+      "type": "function",
+      "name": "OnDestroy",
+      "filePath": "windows/runner/win32_window.cpp",
+      "lineRange": [
+        271,
+        273
+      ],
+      "summary": "函数 OnDestroy 位于 win32_window.cpp 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:windows/runner/win32_window.cpp:UpdateTheme",
+      "type": "function",
+      "name": "UpdateTheme",
+      "filePath": "windows/runner/win32_window.cpp",
+      "lineRange": [
+        275,
+        288
+      ],
+      "summary": "函数 UpdateTheme 位于 win32_window.cpp 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:windows/runner/win32_window.cpp:WindowClassRegistrar",
+      "type": "class",
+      "name": "WindowClassRegistrar",
+      "filePath": "windows/runner/win32_window.cpp",
+      "lineRange": [
+        59,
+        85
+      ],
+      "summary": "类型 WindowClassRegistrar 位于 win32_window.cpp 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:windows/runner/win32_window.h",
+      "type": "file",
+      "name": "win32_window.h",
+      "filePath": "windows/runner/win32_window.h",
+      "summary": "项目文件，承担 win32_window.h 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "win32-window"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:windows/runner/win32_window.cpp",
+      "target": "function:windows/runner/win32_window.cpp:Scale",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:windows/runner/win32_window.cpp",
+      "target": "function:windows/runner/win32_window.cpp:Scale",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:windows/runner/win32_window.cpp",
+      "target": "function:windows/runner/win32_window.cpp:EnableFullDpiSupportIfAvailable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:windows/runner/win32_window.cpp",
+      "target": "function:windows/runner/win32_window.cpp:EnableFullDpiSupportIfAvailable",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:windows/runner/win32_window.cpp",
+      "target": "function:windows/runner/win32_window.cpp:~WindowClassRegistrar",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:windows/runner/win32_window.cpp",
+      "target": "function:windows/runner/win32_window.cpp:~WindowClassRegistrar",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:windows/runner/win32_window.cpp",
+      "target": "function:windows/runner/win32_window.cpp:WindowClassRegistrar",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:windows/runner/win32_window.cpp",
+      "target": "function:windows/runner/win32_window.cpp:WindowClassRegistrar",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:windows/runner/win32_window.cpp",
+      "target": "function:windows/runner/win32_window.cpp:UnregisterWindowClass",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:windows/runner/win32_window.cpp",
+      "target": "function:windows/runner/win32_window.cpp:UnregisterWindowClass",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:windows/runner/win32_window.cpp",
+      "target": "function:windows/runner/win32_window.cpp:Win32Window",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:windows/runner/win32_window.cpp",
+      "target": "function:windows/runner/win32_window.cpp:Win32Window",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:windows/runner/win32_window.cpp",
+      "target": "function:windows/runner/win32_window.cpp:~Win32Window",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:windows/runner/win32_window.cpp",
+      "target": "function:windows/runner/win32_window.cpp:~Win32Window",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:windows/runner/win32_window.cpp",
+      "target": "function:windows/runner/win32_window.cpp:Create",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:windows/runner/win32_window.cpp",
+      "target": "function:windows/runner/win32_window.cpp:Create",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:windows/runner/win32_window.cpp",
+      "target": "function:windows/runner/win32_window.cpp:Show",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:windows/runner/win32_window.cpp",
+      "target": "function:windows/runner/win32_window.cpp:Show",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:windows/runner/win32_window.cpp",
+      "target": "function:windows/runner/win32_window.cpp:Win32Window::WndProc",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:windows/runner/win32_window.cpp",
+      "target": "function:windows/runner/win32_window.cpp:Win32Window::WndProc",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:windows/runner/win32_window.cpp",
+      "target": "function:windows/runner/win32_window.cpp:MessageHandler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:windows/runner/win32_window.cpp",
+      "target": "function:windows/runner/win32_window.cpp:MessageHandler",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:windows/runner/win32_window.cpp",
+      "target": "function:windows/runner/win32_window.cpp:Destroy",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:windows/runner/win32_window.cpp",
+      "target": "function:windows/runner/win32_window.cpp:Destroy",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:windows/runner/win32_window.cpp",
+      "target": "function:windows/runner/win32_window.cpp:SetChildContent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:windows/runner/win32_window.cpp",
+      "target": "function:windows/runner/win32_window.cpp:SetChildContent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:windows/runner/win32_window.cpp",
+      "target": "function:windows/runner/win32_window.cpp:GetClientArea",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:windows/runner/win32_window.cpp",
+      "target": "function:windows/runner/win32_window.cpp:GetClientArea",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:windows/runner/win32_window.cpp",
+      "target": "function:windows/runner/win32_window.cpp:GetHandle",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:windows/runner/win32_window.cpp",
+      "target": "function:windows/runner/win32_window.cpp:GetHandle",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:windows/runner/win32_window.cpp",
+      "target": "function:windows/runner/win32_window.cpp:SetQuitOnClose",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:windows/runner/win32_window.cpp",
+      "target": "function:windows/runner/win32_window.cpp:SetQuitOnClose",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:windows/runner/win32_window.cpp",
+      "target": "function:windows/runner/win32_window.cpp:OnCreate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:windows/runner/win32_window.cpp",
+      "target": "function:windows/runner/win32_window.cpp:OnCreate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:windows/runner/win32_window.cpp",
+      "target": "function:windows/runner/win32_window.cpp:OnDestroy",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:windows/runner/win32_window.cpp",
+      "target": "function:windows/runner/win32_window.cpp:OnDestroy",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:windows/runner/win32_window.cpp",
+      "target": "function:windows/runner/win32_window.cpp:UpdateTheme",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:windows/runner/win32_window.cpp",
+      "target": "function:windows/runner/win32_window.cpp:UpdateTheme",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:windows/runner/win32_window.cpp",
+      "target": "class:windows/runner/win32_window.cpp:WindowClassRegistrar",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:windows/runner/win32_window.cpp",
+      "target": "class:windows/runner/win32_window.cpp:WindowClassRegistrar",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:windows/runner/win32_window.cpp",
+      "target": "file:windows/runner/resource.h",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:windows/runner/win32_window.cpp",
+      "target": "file:windows/runner/win32_window.h",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

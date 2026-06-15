@@ -1,0 +1,471 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 3,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "linux/runner/main.cc",
+      "language": "cpp",
+      "fileCategory": "code",
+      "totalLines": 6,
+      "nonEmptyLines": 5,
+      "functions": [
+        {
+          "name": "main",
+          "startLine": 3,
+          "endLine": 6,
+          "params": [
+            "argc",
+            "argv"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "main",
+          "line": 3,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "main",
+          "callee": "g_autoptr",
+          "lineNumber": 4
+        },
+        {
+          "caller": "main",
+          "callee": "my_application_new",
+          "lineNumber": 4
+        },
+        {
+          "caller": "main",
+          "callee": "g_application_run",
+          "lineNumber": 5
+        },
+        {
+          "caller": "main",
+          "callee": "G_APPLICATION",
+          "lineNumber": 5
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "linux/runner/my_application.cc",
+      "language": "cpp",
+      "fileCategory": "code",
+      "totalLines": 148,
+      "nonEmptyLines": 120,
+      "functions": [
+        {
+          "name": "first_frame_cb",
+          "startLine": 18,
+          "endLine": 20,
+          "params": [
+            "self",
+            "view"
+          ]
+        },
+        {
+          "name": "my_application_activate",
+          "startLine": 23,
+          "endLine": 79,
+          "params": [
+            "application"
+          ]
+        },
+        {
+          "name": "my_application_local_command_line",
+          "startLine": 82,
+          "endLine": 100,
+          "params": [
+            "application",
+            "arguments",
+            "exit_status"
+          ]
+        },
+        {
+          "name": "my_application_startup",
+          "startLine": 103,
+          "endLine": 109,
+          "params": [
+            "application"
+          ]
+        },
+        {
+          "name": "my_application_shutdown",
+          "startLine": 112,
+          "endLine": 118,
+          "params": [
+            "application"
+          ]
+        },
+        {
+          "name": "my_application_dispose",
+          "startLine": 121,
+          "endLine": 125,
+          "params": [
+            "object"
+          ]
+        },
+        {
+          "name": "my_application_class_init",
+          "startLine": 127,
+          "endLine": 134,
+          "params": [
+            "klass"
+          ]
+        },
+        {
+          "name": "my_application_init",
+          "startLine": 136,
+          "endLine": 136,
+          "params": [
+            "self"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "_MyApplication",
+          "startLine": 10,
+          "endLine": 13,
+          "methods": [],
+          "properties": [
+            "parent_instance",
+            "dart_entrypoint_arguments"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "_MyApplication",
+          "line": 10,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "first_frame_cb",
+          "callee": "gtk_widget_show",
+          "lineNumber": 19
+        },
+        {
+          "caller": "first_frame_cb",
+          "callee": "gtk_widget_get_toplevel",
+          "lineNumber": 19
+        },
+        {
+          "caller": "first_frame_cb",
+          "callee": "GTK_WIDGET",
+          "lineNumber": 19
+        },
+        {
+          "caller": "my_application_activate",
+          "callee": "MY_APPLICATION",
+          "lineNumber": 24
+        },
+        {
+          "caller": "my_application_activate",
+          "callee": "GTK_WINDOW",
+          "lineNumber": 26
+        },
+        {
+          "caller": "my_application_activate",
+          "callee": "gtk_application_window_new",
+          "lineNumber": 26
+        },
+        {
+          "caller": "my_application_activate",
+          "callee": "GTK_APPLICATION",
+          "lineNumber": 26
+        },
+        {
+          "caller": "my_application_activate",
+          "callee": "gtk_window_get_screen",
+          "lineNumber": 37
+        },
+        {
+          "caller": "my_application_activate",
+          "callee": "GDK_IS_X11_SCREEN",
+          "lineNumber": 38
+        },
+        {
+          "caller": "my_application_activate",
+          "callee": "gdk_x11_screen_get_window_manager_name",
+          "lineNumber": 39
+        },
+        {
+          "caller": "my_application_activate",
+          "callee": "g_strcmp0",
+          "lineNumber": 40
+        },
+        {
+          "caller": "my_application_activate",
+          "callee": "GTK_HEADER_BAR",
+          "lineNumber": 46
+        },
+        {
+          "caller": "my_application_activate",
+          "callee": "gtk_header_bar_new",
+          "lineNumber": 46
+        },
+        {
+          "caller": "my_application_activate",
+          "callee": "gtk_widget_show",
+          "lineNumber": 47
+        },
+        {
+          "caller": "my_application_activate",
+          "callee": "GTK_WIDGET",
+          "lineNumber": 47
+        },
+        {
+          "caller": "my_application_activate",
+          "callee": "gtk_header_bar_set_title",
+          "lineNumber": 48
+        },
+        {
+          "caller": "my_application_activate",
+          "callee": "gtk_header_bar_set_show_close_button",
+          "lineNumber": 49
+        },
+        {
+          "caller": "my_application_activate",
+          "callee": "gtk_window_set_titlebar",
+          "lineNumber": 50
+        },
+        {
+          "caller": "my_application_activate",
+          "callee": "GTK_WIDGET",
+          "lineNumber": 50
+        },
+        {
+          "caller": "my_application_activate",
+          "callee": "gtk_window_set_title",
+          "lineNumber": 52
+        },
+        {
+          "caller": "my_application_activate",
+          "callee": "gtk_window_set_default_size",
+          "lineNumber": 55
+        },
+        {
+          "caller": "my_application_activate",
+          "callee": "g_autoptr",
+          "lineNumber": 57
+        },
+        {
+          "caller": "my_application_activate",
+          "callee": "fl_dart_project_new",
+          "lineNumber": 57
+        },
+        {
+          "caller": "my_application_activate",
+          "callee": "fl_dart_project_set_dart_entrypoint_arguments",
+          "lineNumber": 58
+        },
+        {
+          "caller": "my_application_activate",
+          "callee": "fl_view_new",
+          "lineNumber": 61
+        },
+        {
+          "caller": "my_application_activate",
+          "callee": "gdk_rgba_parse",
+          "lineNumber": 65
+        },
+        {
+          "caller": "my_application_activate",
+          "callee": "fl_view_set_background_color",
+          "lineNumber": 66
+        },
+        {
+          "caller": "my_application_activate",
+          "callee": "gtk_widget_show",
+          "lineNumber": 67
+        },
+        {
+          "caller": "my_application_activate",
+          "callee": "GTK_WIDGET",
+          "lineNumber": 67
+        },
+        {
+          "caller": "my_application_activate",
+          "callee": "gtk_container_add",
+          "lineNumber": 68
+        },
+        {
+          "caller": "my_application_activate",
+          "callee": "GTK_CONTAINER",
+          "lineNumber": 68
+        },
+        {
+          "caller": "my_application_activate",
+          "callee": "GTK_WIDGET",
+          "lineNumber": 68
+        },
+        {
+          "caller": "my_application_activate",
+          "callee": "g_signal_connect_swapped",
+          "lineNumber": 72
+        },
+        {
+          "caller": "my_application_activate",
+          "callee": "G_CALLBACK",
+          "lineNumber": 72
+        },
+        {
+          "caller": "my_application_activate",
+          "callee": "gtk_widget_realize",
+          "lineNumber": 74
+        },
+        {
+          "caller": "my_application_activate",
+          "callee": "GTK_WIDGET",
+          "lineNumber": 74
+        },
+        {
+          "caller": "my_application_activate",
+          "callee": "fl_register_plugins",
+          "lineNumber": 76
+        },
+        {
+          "caller": "my_application_activate",
+          "callee": "FL_PLUGIN_REGISTRY",
+          "lineNumber": 76
+        },
+        {
+          "caller": "my_application_activate",
+          "callee": "gtk_widget_grab_focus",
+          "lineNumber": 78
+        },
+        {
+          "caller": "my_application_activate",
+          "callee": "GTK_WIDGET",
+          "lineNumber": 78
+        },
+        {
+          "caller": "my_application_local_command_line",
+          "callee": "MY_APPLICATION",
+          "lineNumber": 85
+        },
+        {
+          "caller": "my_application_local_command_line",
+          "callee": "g_strdupv",
+          "lineNumber": 87
+        },
+        {
+          "caller": "my_application_local_command_line",
+          "callee": "g_autoptr",
+          "lineNumber": 89
+        },
+        {
+          "caller": "my_application_local_command_line",
+          "callee": "g_application_register",
+          "lineNumber": 90
+        },
+        {
+          "caller": "my_application_local_command_line",
+          "callee": "g_warning",
+          "lineNumber": 91
+        },
+        {
+          "caller": "my_application_local_command_line",
+          "callee": "g_application_activate",
+          "lineNumber": 96
+        },
+        {
+          "caller": "my_application_startup",
+          "callee": "startup",
+          "lineNumber": 108
+        },
+        {
+          "caller": "my_application_startup",
+          "callee": "G_APPLICATION_CLASS",
+          "lineNumber": 108
+        },
+        {
+          "caller": "my_application_shutdown",
+          "callee": "shutdown",
+          "lineNumber": 117
+        },
+        {
+          "caller": "my_application_shutdown",
+          "callee": "G_APPLICATION_CLASS",
+          "lineNumber": 117
+        },
+        {
+          "caller": "my_application_dispose",
+          "callee": "MY_APPLICATION",
+          "lineNumber": 122
+        },
+        {
+          "caller": "my_application_dispose",
+          "callee": "g_clear_pointer",
+          "lineNumber": 123
+        },
+        {
+          "caller": "my_application_dispose",
+          "callee": "dispose",
+          "lineNumber": 124
+        },
+        {
+          "caller": "my_application_dispose",
+          "callee": "G_OBJECT_CLASS",
+          "lineNumber": 124
+        },
+        {
+          "caller": "my_application_class_init",
+          "callee": "G_APPLICATION_CLASS",
+          "lineNumber": 128
+        },
+        {
+          "caller": "my_application_class_init",
+          "callee": "G_APPLICATION_CLASS",
+          "lineNumber": 129
+        },
+        {
+          "caller": "my_application_class_init",
+          "callee": "G_APPLICATION_CLASS",
+          "lineNumber": 131
+        },
+        {
+          "caller": "my_application_class_init",
+          "callee": "G_APPLICATION_CLASS",
+          "lineNumber": 132
+        },
+        {
+          "caller": "my_application_class_init",
+          "callee": "G_OBJECT_CLASS",
+          "lineNumber": 133
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 8,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "linux/runner/my_application.h",
+      "language": "c",
+      "fileCategory": "code",
+      "totalLines": 21,
+      "nonEmptyLines": 17,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    }
+  ]
+}

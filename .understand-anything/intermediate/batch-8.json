@@ -1,0 +1,1043 @@
+{
+  "nodes": [
+    {
+      "id": "file:.flutter-plugins-dependencies",
+      "type": "file",
+      "name": ".flutter-plugins-dependencies",
+      "filePath": ".flutter-plugins-dependencies",
+      "summary": "项目文件，承担 .flutter-plugins-dependencies 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "flutter-plugins-dependencies"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:.metadata",
+      "type": "file",
+      "name": ".metadata",
+      "filePath": ".metadata",
+      "summary": "项目文件，承担 .metadata 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "metadata"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:.understand-anything/.understandignore",
+      "type": "file",
+      "name": ".understandignore",
+      "filePath": ".understand-anything/.understandignore",
+      "summary": "项目文件，承担 .understandignore 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "understandignore"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:.understand-anything/config.json",
+      "type": "config",
+      "name": "config.json",
+      "filePath": ".understand-anything/config.json",
+      "summary": "配置文件，定义 config.json 对构建、分析或运行行为的约束。",
+      "tags": [
+        "configuration",
+        "project-file",
+        "internal",
+        "config"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:android/app/build.gradle.kts",
+      "type": "file",
+      "name": "build.gradle.kts",
+      "filePath": "android/app/build.gradle.kts",
+      "summary": "项目文件，承担 build.gradle.kts 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "build-gradle"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:android/app/libs/mcSerialPort.aar",
+      "type": "file",
+      "name": "mcSerialPort.aar",
+      "filePath": "android/app/libs/mcSerialPort.aar",
+      "summary": "项目文件，承担 mcSerialPort.aar 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "mc-serial-port"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:android/app/src/debug/AndroidManifest.xml",
+      "type": "config",
+      "name": "AndroidManifest.xml",
+      "filePath": "android/app/src/debug/AndroidManifest.xml",
+      "summary": "配置文件，定义 AndroidManifest.xml 对构建、分析或运行行为的约束。",
+      "tags": [
+        "configuration",
+        "project-file",
+        "internal",
+        "android-manifest"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:android/app/src/main/AndroidManifest.xml",
+      "type": "config",
+      "name": "AndroidManifest.xml",
+      "filePath": "android/app/src/main/AndroidManifest.xml",
+      "summary": "配置文件，定义 AndroidManifest.xml 对构建、分析或运行行为的约束。",
+      "tags": [
+        "configuration",
+        "project-file",
+        "internal",
+        "android-manifest"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java",
+      "type": "file",
+      "name": "GeneratedPluginRegistrant.java",
+      "filePath": "android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java",
+      "summary": "项目文件，承担 GeneratedPluginRegistrant.java 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "generated-plugin-registrant"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java:registerWith",
+      "type": "function",
+      "name": "registerWith",
+      "filePath": "android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java",
+      "lineRange": [
+        17,
+        53
+      ],
+      "summary": "函数 registerWith 位于 GeneratedPluginRegistrant.java 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java:GeneratedPluginRegistrant",
+      "type": "class",
+      "name": "GeneratedPluginRegistrant",
+      "filePath": "android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java",
+      "lineRange": [
+        14,
+        54
+      ],
+      "summary": "类型 GeneratedPluginRegistrant 位于 GeneratedPluginRegistrant.java 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt",
+      "type": "file",
+      "name": "AndroidSerialPortBridge.kt",
+      "filePath": "android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt",
+      "summary": "项目文件，承担 AndroidSerialPortBridge.kt 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "android-serial-port-bridge"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt:onMethodCall",
+      "type": "function",
+      "name": "onMethodCall",
+      "filePath": "android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt",
+      "lineRange": [
+        28,
+        119
+      ],
+      "summary": "函数 onMethodCall 位于 AndroidSerialPortBridge.kt 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt:dispose",
+      "type": "function",
+      "name": "dispose",
+      "filePath": "android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt",
+      "lineRange": [
+        121,
+        124
+      ],
+      "summary": "函数 dispose 位于 AndroidSerialPortBridge.kt 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt:openSerialPort",
+      "type": "function",
+      "name": "openSerialPort",
+      "filePath": "android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt",
+      "lineRange": [
+        126,
+        145
+      ],
+      "summary": "函数 openSerialPort 位于 AndroidSerialPortBridge.kt 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt:closeSerialPort",
+      "type": "function",
+      "name": "closeSerialPort",
+      "filePath": "android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt",
+      "lineRange": [
+        152,
+        163
+      ],
+      "summary": "函数 closeSerialPort 位于 AndroidSerialPortBridge.kt 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt:transceiveBytes",
+      "type": "function",
+      "name": "transceiveBytes",
+      "filePath": "android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt",
+      "lineRange": [
+        165,
+        186
+      ],
+      "summary": "函数 transceiveBytes 位于 AndroidSerialPortBridge.kt 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt:writeBytesOnce",
+      "type": "function",
+      "name": "writeBytesOnce",
+      "filePath": "android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt",
+      "lineRange": [
+        188,
+        198
+      ],
+      "summary": "函数 writeBytesOnce 位于 AndroidSerialPortBridge.kt 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt:writeModbusQueue",
+      "type": "function",
+      "name": "writeModbusQueue",
+      "filePath": "android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt",
+      "lineRange": [
+        200,
+        240
+      ],
+      "summary": "函数 writeModbusQueue 位于 AndroidSerialPortBridge.kt 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt:writeModbusQueueNoResponse",
+      "type": "function",
+      "name": "writeModbusQueueNoResponse",
+      "filePath": "android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt",
+      "lineRange": [
+        242,
+        279
+      ],
+      "summary": "函数 writeModbusQueueNoResponse 位于 AndroidSerialPortBridge.kt 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt:writeModbusFrameWithRetry",
+      "type": "function",
+      "name": "writeModbusFrameWithRetry",
+      "filePath": "android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt",
+      "lineRange": [
+        281,
+        340
+      ],
+      "summary": "函数 writeModbusFrameWithRetry 位于 AndroidSerialPortBridge.kt 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt:drainInput",
+      "type": "function",
+      "name": "drainInput",
+      "filePath": "android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt",
+      "lineRange": [
+        342,
+        352
+      ],
+      "summary": "函数 drainInput 位于 AndroidSerialPortBridge.kt 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt:readModbusResponse",
+      "type": "function",
+      "name": "readModbusResponse",
+      "filePath": "android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt",
+      "lineRange": [
+        354,
+        399
+      ],
+      "summary": "函数 readModbusResponse 位于 AndroidSerialPortBridge.kt 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt:readModbusResponseByPacket",
+      "type": "function",
+      "name": "readModbusResponseByPacket",
+      "filePath": "android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt",
+      "lineRange": [
+        401,
+        447
+      ],
+      "summary": "函数 readModbusResponseByPacket 位于 AndroidSerialPortBridge.kt 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt:expectedModbusResponseLength",
+      "type": "function",
+      "name": "expectedModbusResponseLength",
+      "filePath": "android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt",
+      "lineRange": [
+        449,
+        459
+      ],
+      "summary": "函数 expectedModbusResponseLength 位于 AndroidSerialPortBridge.kt 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt:validateWriteSingleRegisterResponse",
+      "type": "function",
+      "name": "validateWriteSingleRegisterResponse",
+      "filePath": "android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt",
+      "lineRange": [
+        461,
+        479
+      ],
+      "summary": "函数 validateWriteSingleRegisterResponse 位于 AndroidSerialPortBridge.kt 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt:validateCrc",
+      "type": "function",
+      "name": "validateCrc",
+      "filePath": "android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt",
+      "lineRange": [
+        481,
+        491
+      ],
+      "summary": "函数 validateCrc 位于 AndroidSerialPortBridge.kt 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt:crc16",
+      "type": "function",
+      "name": "crc16",
+      "filePath": "android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt",
+      "lineRange": [
+        493,
+        504
+      ],
+      "summary": "函数 crc16 位于 AndroidSerialPortBridge.kt 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt:startReadLoop",
+      "type": "function",
+      "name": "startReadLoop",
+      "filePath": "android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt",
+      "lineRange": [
+        517,
+        546
+      ],
+      "summary": "函数 startReadLoop 位于 AndroidSerialPortBridge.kt 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt:extractBytes",
+      "type": "function",
+      "name": "extractBytes",
+      "filePath": "android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt",
+      "lineRange": [
+        561,
+        574
+      ],
+      "summary": "函数 extractBytes 位于 AndroidSerialPortBridge.kt 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt:AndroidSerialPortBridge",
+      "type": "class",
+      "name": "AndroidSerialPortBridge",
+      "filePath": "android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt",
+      "lineRange": [
+        14,
+        595
+      ],
+      "summary": "类型 AndroidSerialPortBridge 位于 AndroidSerialPortBridge.kt 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:android/app/src/main/kotlin/com/example/infibo_app/MainActivity.kt",
+      "type": "file",
+      "name": "MainActivity.kt",
+      "filePath": "android/app/src/main/kotlin/com/example/infibo_app/MainActivity.kt",
+      "summary": "项目文件，承担 MainActivity.kt 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "main-activity"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:android/app/src/main/kotlin/com/example/infibo_app/MainActivity.kt:configureFlutterEngine",
+      "type": "function",
+      "name": "configureFlutterEngine",
+      "filePath": "android/app/src/main/kotlin/com/example/infibo_app/MainActivity.kt",
+      "lineRange": [
+        9,
+        12
+      ],
+      "summary": "函数 configureFlutterEngine 位于 MainActivity.kt 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:android/app/src/main/kotlin/com/example/infibo_app/MainActivity.kt:onDestroy",
+      "type": "function",
+      "name": "onDestroy",
+      "filePath": "android/app/src/main/kotlin/com/example/infibo_app/MainActivity.kt",
+      "lineRange": [
+        14,
+        18
+      ],
+      "summary": "函数 onDestroy 位于 MainActivity.kt 中，用于完成该文件承担的局部逻辑或流程拼装。",
+      "tags": [
+        "function",
+        "internal-logic",
+        "code-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:android/app/src/main/kotlin/com/example/infibo_app/MainActivity.kt:MainActivity",
+      "type": "class",
+      "name": "MainActivity",
+      "filePath": "android/app/src/main/kotlin/com/example/infibo_app/MainActivity.kt",
+      "lineRange": [
+        6,
+        19
+      ],
+      "summary": "类型 MainActivity 位于 MainActivity.kt 中，封装该文件的核心结构、界面或状态职责。",
+      "tags": [
+        "class",
+        "code-structure",
+        "internal-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:android/app/src/main/res/drawable-v21/launch_background.xml",
+      "type": "config",
+      "name": "launch_background.xml",
+      "filePath": "android/app/src/main/res/drawable-v21/launch_background.xml",
+      "summary": "配置文件，定义 launch_background.xml 对构建、分析或运行行为的约束。",
+      "tags": [
+        "configuration",
+        "project-file",
+        "internal",
+        "launch-background"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:android/app/src/main/res/drawable/launch_background.xml",
+      "type": "config",
+      "name": "launch_background.xml",
+      "filePath": "android/app/src/main/res/drawable/launch_background.xml",
+      "summary": "配置文件，定义 launch_background.xml 对构建、分析或运行行为的约束。",
+      "tags": [
+        "configuration",
+        "project-file",
+        "internal",
+        "launch-background"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:android/app/src/main/res/values-night/styles.xml",
+      "type": "config",
+      "name": "styles.xml",
+      "filePath": "android/app/src/main/res/values-night/styles.xml",
+      "summary": "配置文件，定义 styles.xml 对构建、分析或运行行为的约束。",
+      "tags": [
+        "configuration",
+        "project-file",
+        "internal",
+        "styles"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:android/app/src/main/res/values/styles.xml",
+      "type": "config",
+      "name": "styles.xml",
+      "filePath": "android/app/src/main/res/values/styles.xml",
+      "summary": "配置文件，定义 styles.xml 对构建、分析或运行行为的约束。",
+      "tags": [
+        "configuration",
+        "project-file",
+        "internal",
+        "styles"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:android/app/src/profile/AndroidManifest.xml",
+      "type": "config",
+      "name": "AndroidManifest.xml",
+      "filePath": "android/app/src/profile/AndroidManifest.xml",
+      "summary": "配置文件，定义 AndroidManifest.xml 对构建、分析或运行行为的约束。",
+      "tags": [
+        "configuration",
+        "project-file",
+        "internal",
+        "android-manifest"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:android/build.gradle.kts",
+      "type": "file",
+      "name": "build.gradle.kts",
+      "filePath": "android/build.gradle.kts",
+      "summary": "项目文件，承担 build.gradle.kts 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "build-gradle"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:android/gradle/wrapper/gradle-wrapper.jar",
+      "type": "file",
+      "name": "gradle-wrapper.jar",
+      "filePath": "android/gradle/wrapper/gradle-wrapper.jar",
+      "summary": "项目文件，承担 gradle-wrapper.jar 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "gradle-wrapper"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:android/gradle/wrapper/gradle-wrapper.properties",
+      "type": "config",
+      "name": "gradle-wrapper.properties",
+      "filePath": "android/gradle/wrapper/gradle-wrapper.properties",
+      "summary": "配置文件，定义 gradle-wrapper.properties 对构建、分析或运行行为的约束。",
+      "tags": [
+        "configuration",
+        "project-file",
+        "internal",
+        "gradle-wrapper"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:android/gradlew",
+      "type": "file",
+      "name": "gradlew",
+      "filePath": "android/gradlew",
+      "summary": "项目文件，承担 gradlew 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "gradlew"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:android/gradlew.bat",
+      "type": "file",
+      "name": "gradlew.bat",
+      "filePath": "android/gradlew.bat",
+      "summary": "项目文件，承担 gradlew.bat 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "gradlew"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:android/infibo_app_android.iml",
+      "type": "file",
+      "name": "infibo_app_android.iml",
+      "filePath": "android/infibo_app_android.iml",
+      "summary": "项目文件，承担 infibo_app_android.iml 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "infibo-app-android"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:android/local.properties",
+      "type": "config",
+      "name": "local.properties",
+      "filePath": "android/local.properties",
+      "summary": "配置文件，定义 local.properties 对构建、分析或运行行为的约束。",
+      "tags": [
+        "configuration",
+        "project-file",
+        "internal",
+        "local"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:android/settings.gradle.kts",
+      "type": "file",
+      "name": "settings.gradle.kts",
+      "filePath": "android/settings.gradle.kts",
+      "summary": "项目文件，承担 settings.gradle.kts 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "settings-gradle"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:infibo_app.iml",
+      "type": "file",
+      "name": "infibo_app.iml",
+      "filePath": "infibo_app.iml",
+      "summary": "项目文件，承担 infibo_app.iml 在当前代码库中的实现或支撑职责。",
+      "tags": [
+        "project-file",
+        "internal",
+        "infibo-app"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "config:.understand-anything/config.json",
+      "target": "file:lib/main.dart",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:android/app/src/debug/AndroidManifest.xml",
+      "target": "file:lib/main.dart",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:android/app/src/main/AndroidManifest.xml",
+      "target": "file:lib/main.dart",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java",
+      "target": "function:android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java:registerWith",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java",
+      "target": "function:android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java:registerWith",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java",
+      "target": "class:android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java:GeneratedPluginRegistrant",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java",
+      "target": "class:android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java:GeneratedPluginRegistrant",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt",
+      "target": "function:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt:onMethodCall",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt",
+      "target": "function:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt:onMethodCall",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt",
+      "target": "function:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt:dispose",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt",
+      "target": "function:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt:dispose",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt",
+      "target": "function:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt:openSerialPort",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt",
+      "target": "function:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt:closeSerialPort",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt",
+      "target": "function:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt:transceiveBytes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt",
+      "target": "function:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt:writeBytesOnce",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt",
+      "target": "function:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt:writeModbusQueue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt",
+      "target": "function:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt:writeModbusQueueNoResponse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt",
+      "target": "function:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt:writeModbusFrameWithRetry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt",
+      "target": "function:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt:drainInput",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt",
+      "target": "function:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt:readModbusResponse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt",
+      "target": "function:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt:readModbusResponseByPacket",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt",
+      "target": "function:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt:expectedModbusResponseLength",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt",
+      "target": "function:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt:validateWriteSingleRegisterResponse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt",
+      "target": "function:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt:validateCrc",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt",
+      "target": "function:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt:crc16",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt",
+      "target": "function:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt:startReadLoop",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt",
+      "target": "function:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt:extractBytes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt",
+      "target": "class:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt:AndroidSerialPortBridge",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt",
+      "target": "class:android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt:AndroidSerialPortBridge",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:android/app/src/main/kotlin/com/example/infibo_app/MainActivity.kt",
+      "target": "function:android/app/src/main/kotlin/com/example/infibo_app/MainActivity.kt:configureFlutterEngine",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:android/app/src/main/kotlin/com/example/infibo_app/MainActivity.kt",
+      "target": "function:android/app/src/main/kotlin/com/example/infibo_app/MainActivity.kt:configureFlutterEngine",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:android/app/src/main/kotlin/com/example/infibo_app/MainActivity.kt",
+      "target": "function:android/app/src/main/kotlin/com/example/infibo_app/MainActivity.kt:onDestroy",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:android/app/src/main/kotlin/com/example/infibo_app/MainActivity.kt",
+      "target": "function:android/app/src/main/kotlin/com/example/infibo_app/MainActivity.kt:onDestroy",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:android/app/src/main/kotlin/com/example/infibo_app/MainActivity.kt",
+      "target": "class:android/app/src/main/kotlin/com/example/infibo_app/MainActivity.kt:MainActivity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:android/app/src/main/kotlin/com/example/infibo_app/MainActivity.kt",
+      "target": "class:android/app/src/main/kotlin/com/example/infibo_app/MainActivity.kt:MainActivity",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "config:android/app/src/main/res/drawable-v21/launch_background.xml",
+      "target": "file:lib/main.dart",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:android/app/src/main/res/drawable/launch_background.xml",
+      "target": "file:lib/main.dart",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:android/app/src/main/res/values-night/styles.xml",
+      "target": "file:lib/main.dart",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:android/app/src/main/res/values/styles.xml",
+      "target": "file:lib/main.dart",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:android/app/src/profile/AndroidManifest.xml",
+      "target": "file:lib/main.dart",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:android/gradle/wrapper/gradle-wrapper.properties",
+      "target": "file:lib/main.dart",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:android/local.properties",
+      "target": "file:lib/main.dart",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}

@@ -1,0 +1,122 @@
+{
+  "projectRoot": "D:/FlutterProject/infibo_app",
+  "batchFiles": [
+    {
+      "path": "lib/preset/a_cankao/preset_models.dart",
+      "language": "dart",
+      "sizeLines": 135,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/preset/a_cankao/preset_registry.dart",
+      "language": "dart",
+      "sizeLines": 38,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/preset/anti_aging/anti_aging.dart",
+      "language": "dart",
+      "sizeLines": 161,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/preset/deep_relax/deep_relax.dart",
+      "language": "dart",
+      "sizeLines": 161,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/preset/emo_healing/emo_healing.dart",
+      "language": "dart",
+      "sizeLines": 136,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/preset/energy_boost/energy_boost.dart",
+      "language": "dart",
+      "sizeLines": 111,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/preset/immune_boost/immune_boost.dart",
+      "language": "dart",
+      "sizeLines": 161,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/preset/pain_relief/pain_relief.dart",
+      "language": "dart",
+      "sizeLines": 161,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/preset/sleep_imp/sleep_imp.dart",
+      "language": "dart",
+      "sizeLines": 161,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/preset/sports_rec/sports_rec.dart",
+      "language": "dart",
+      "sizeLines": 136,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/preset/stress_relief/stress_relief.dart",
+      "language": "dart",
+      "sizeLines": 136,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/preset/total_care/total_care.dart",
+      "language": "dart",
+      "sizeLines": 136,
+      "fileCategory": "code"
+    }
+  ],
+  "batchImportData": {
+    "lib/preset/a_cankao/preset_models.dart": [],
+    "lib/preset/a_cankao/preset_registry.dart": [
+      "lib/preset/anti_aging/anti_aging.dart",
+      "lib/preset/deep_relax/deep_relax.dart",
+      "lib/preset/emo_healing/emo_healing.dart",
+      "lib/preset/energy_boost/energy_boost.dart",
+      "lib/preset/immune_boost/immune_boost.dart",
+      "lib/preset/pain_relief/pain_relief.dart",
+      "lib/preset/sleep_imp/sleep_imp.dart",
+      "lib/preset/sports_rec/sports_rec.dart",
+      "lib/preset/stress_relief/stress_relief.dart",
+      "lib/preset/total_care/total_care.dart"
+    ],
+    "lib/preset/anti_aging/anti_aging.dart": [
+      "lib/preset/a_cankao/preset_models.dart"
+    ],
+    "lib/preset/deep_relax/deep_relax.dart": [
+      "lib/preset/a_cankao/preset_models.dart"
+    ],
+    "lib/preset/emo_healing/emo_healing.dart": [
+      "lib/preset/a_cankao/preset_models.dart"
+    ],
+    "lib/preset/energy_boost/energy_boost.dart": [
+      "lib/preset/a_cankao/preset_models.dart"
+    ],
+    "lib/preset/immune_boost/immune_boost.dart": [
+      "lib/preset/a_cankao/preset_models.dart"
+    ],
+    "lib/preset/pain_relief/pain_relief.dart": [
+      "lib/preset/a_cankao/preset_models.dart"
+    ],
+    "lib/preset/sleep_imp/sleep_imp.dart": [
+      "lib/preset/a_cankao/preset_models.dart"
+    ],
+    "lib/preset/sports_rec/sports_rec.dart": [
+      "lib/preset/a_cankao/preset_models.dart"
+    ],
+    "lib/preset/stress_relief/stress_relief.dart": [
+      "lib/preset/a_cankao/preset_models.dart"
+    ],
+    "lib/preset/total_care/total_care.dart": [
+      "lib/preset/a_cankao/preset_models.dart"
+    ]
+  }
+}

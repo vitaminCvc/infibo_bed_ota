@@ -1,0 +1,1635 @@
+{
+  "projectName": "infibo_app",
+  "projectDescription": "Flutter mobile application project",
+  "languages": [
+    "dart",
+    "yaml"
+  ],
+  "frameworks": [
+    "flutter"
+  ],
+  "files": [
+    {
+      "path": ".flutter-plugins-dependencies",
+      "language": "unknown",
+      "sizeLines": 0,
+      "fileCategory": "code"
+    },
+    {
+      "path": ".metadata",
+      "language": "unknown",
+      "sizeLines": 30,
+      "fileCategory": "code"
+    },
+    {
+      "path": ".understand-anything/.understandignore",
+      "language": "unknown",
+      "sizeLines": 32,
+      "fileCategory": "code"
+    },
+    {
+      "path": ".understand-anything/config.json",
+      "language": "json",
+      "sizeLines": 3,
+      "fileCategory": "config"
+    },
+    {
+      "path": "analysis_options.yaml",
+      "language": "yaml",
+      "sizeLines": 28,
+      "fileCategory": "config"
+    },
+    {
+      "path": "android/app/build.gradle.kts",
+      "language": "kotlin",
+      "sizeLines": 48,
+      "fileCategory": "code"
+    },
+    {
+      "path": "android/app/libs/mcSerialPort.aar",
+      "language": "aar",
+      "sizeLines": 180,
+      "fileCategory": "code"
+    },
+    {
+      "path": "android/app/src/debug/AndroidManifest.xml",
+      "language": "xml",
+      "sizeLines": 7,
+      "fileCategory": "config"
+    },
+    {
+      "path": "android/app/src/main/AndroidManifest.xml",
+      "language": "xml",
+      "sizeLines": 47,
+      "fileCategory": "config"
+    },
+    {
+      "path": "android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java",
+      "language": "java",
+      "sizeLines": 54,
+      "fileCategory": "code"
+    },
+    {
+      "path": "android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt",
+      "language": "kotlin",
+      "sizeLines": 595,
+      "fileCategory": "code"
+    },
+    {
+      "path": "android/app/src/main/kotlin/com/example/infibo_app/MainActivity.kt",
+      "language": "kotlin",
+      "sizeLines": 19,
+      "fileCategory": "code"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-v21/launch_background.xml",
+      "language": "xml",
+      "sizeLines": 12,
+      "fileCategory": "config"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/launch_background.xml",
+      "language": "xml",
+      "sizeLines": 12,
+      "fileCategory": "config"
+    },
+    {
+      "path": "android/app/src/main/res/values-night/styles.xml",
+      "language": "xml",
+      "sizeLines": 18,
+      "fileCategory": "config"
+    },
+    {
+      "path": "android/app/src/main/res/values/styles.xml",
+      "language": "xml",
+      "sizeLines": 18,
+      "fileCategory": "config"
+    },
+    {
+      "path": "android/app/src/profile/AndroidManifest.xml",
+      "language": "xml",
+      "sizeLines": 7,
+      "fileCategory": "config"
+    },
+    {
+      "path": "android/build.gradle.kts",
+      "language": "kotlin",
+      "sizeLines": 24,
+      "fileCategory": "code"
+    },
+    {
+      "path": "android/gradle/wrapper/gradle-wrapper.jar",
+      "language": "jar",
+      "sizeLines": 359,
+      "fileCategory": "code"
+    },
+    {
+      "path": "android/gradle/wrapper/gradle-wrapper.properties",
+      "language": "properties",
+      "sizeLines": 7,
+      "fileCategory": "config"
+    },
+    {
+      "path": "android/gradlew",
+      "language": "unknown",
+      "sizeLines": 160,
+      "fileCategory": "code"
+    },
+    {
+      "path": "android/gradlew.bat",
+      "language": "batch",
+      "sizeLines": 90,
+      "fileCategory": "script"
+    },
+    {
+      "path": "android/infibo_app_android.iml",
+      "language": "iml",
+      "sizeLines": 29,
+      "fileCategory": "code"
+    },
+    {
+      "path": "android/local.properties",
+      "language": "properties",
+      "sizeLines": 4,
+      "fileCategory": "config"
+    },
+    {
+      "path": "android/settings.gradle.kts",
+      "language": "kotlin",
+      "sizeLines": 27,
+      "fileCategory": "code"
+    },
+    {
+      "path": "assets/lottie/aroma.json",
+      "language": "json",
+      "sizeLines": 0,
+      "fileCategory": "config"
+    },
+    {
+      "path": "assets/lottie/hydrogen.json",
+      "language": "json",
+      "sizeLines": 0,
+      "fileCategory": "config"
+    },
+    {
+      "path": "assets/lottie/music.json",
+      "language": "json",
+      "sizeLines": 0,
+      "fileCategory": "config"
+    },
+    {
+      "path": "assets/lottie/pemf.json",
+      "language": "json",
+      "sizeLines": 0,
+      "fileCategory": "config"
+    },
+    {
+      "path": "assets/lottie/redlight.json",
+      "language": "json",
+      "sizeLines": 0,
+      "fileCategory": "config"
+    },
+    {
+      "path": "assets/lottie/taihez.json",
+      "language": "json",
+      "sizeLines": 0,
+      "fileCategory": "config"
+    },
+    {
+      "path": "assets/lottie/vat.json",
+      "language": "json",
+      "sizeLines": 0,
+      "fileCategory": "config"
+    },
+    {
+      "path": "devtools_options.yaml",
+      "language": "yaml",
+      "sizeLines": 3,
+      "fileCategory": "config"
+    },
+    {
+      "path": "infibo_app.iml",
+      "language": "iml",
+      "sizeLines": 17,
+      "fileCategory": "code"
+    },
+    {
+      "path": "infibo/.metadata",
+      "language": "unknown",
+      "sizeLines": 30,
+      "fileCategory": "code"
+    },
+    {
+      "path": "infibo/analysis_options.yaml",
+      "language": "yaml",
+      "sizeLines": 28,
+      "fileCategory": "config"
+    },
+    {
+      "path": "infibo/lib/main.dart",
+      "language": "dart",
+      "sizeLines": 6,
+      "fileCategory": "code"
+    },
+    {
+      "path": "infibo/lib/pages/login/index.dart",
+      "language": "dart",
+      "sizeLines": 20,
+      "fileCategory": "code"
+    },
+    {
+      "path": "infibo/lib/pages/main/index.dart",
+      "language": "dart",
+      "sizeLines": 19,
+      "fileCategory": "code"
+    },
+    {
+      "path": "infibo/lib/routes/index.dart",
+      "language": "dart",
+      "sizeLines": 18,
+      "fileCategory": "code"
+    },
+    {
+      "path": "infibo/pubspec.yaml",
+      "language": "yaml",
+      "sizeLines": 89,
+      "fileCategory": "config"
+    },
+    {
+      "path": "infibo/README.md",
+      "language": "markdown",
+      "sizeLines": 17,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "infibo/test/widget_test.dart",
+      "language": "dart",
+      "sizeLines": 30,
+      "fileCategory": "code"
+    },
+    {
+      "path": "infibo/web/index.html",
+      "language": "html",
+      "sizeLines": 46,
+      "fileCategory": "markup"
+    },
+    {
+      "path": "infibo/web/manifest.json",
+      "language": "json",
+      "sizeLines": 35,
+      "fileCategory": "config"
+    },
+    {
+      "path": "ios/Flutter/AppFrameworkInfo.plist",
+      "language": "xml",
+      "sizeLines": 24,
+      "fileCategory": "config"
+    },
+    {
+      "path": "ios/Flutter/Debug.xcconfig",
+      "language": "xcconfig",
+      "sizeLines": 1,
+      "fileCategory": "code"
+    },
+    {
+      "path": "ios/Flutter/Release.xcconfig",
+      "language": "xcconfig",
+      "sizeLines": 1,
+      "fileCategory": "code"
+    },
+    {
+      "path": "ios/Runner.xcodeproj/project.pbxproj",
+      "language": "pbxproj",
+      "sizeLines": 620,
+      "fileCategory": "code"
+    },
+    {
+      "path": "ios/Runner.xcodeproj/project.xcworkspace/contents.xcworkspacedata",
+      "language": "xcworkspacedata",
+      "sizeLines": 7,
+      "fileCategory": "code"
+    },
+    {
+      "path": "ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist",
+      "language": "xml",
+      "sizeLines": 8,
+      "fileCategory": "config"
+    },
+    {
+      "path": "ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings",
+      "language": "xcsettings",
+      "sizeLines": 8,
+      "fileCategory": "code"
+    },
+    {
+      "path": "ios/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme",
+      "language": "xcscheme",
+      "sizeLines": 101,
+      "fileCategory": "code"
+    },
+    {
+      "path": "ios/Runner.xcworkspace/contents.xcworkspacedata",
+      "language": "xcworkspacedata",
+      "sizeLines": 7,
+      "fileCategory": "code"
+    },
+    {
+      "path": "ios/Runner.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist",
+      "language": "xml",
+      "sizeLines": 8,
+      "fileCategory": "config"
+    },
+    {
+      "path": "ios/Runner.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings",
+      "language": "xcsettings",
+      "sizeLines": 8,
+      "fileCategory": "code"
+    },
+    {
+      "path": "ios/Runner/AppDelegate.swift",
+      "language": "swift",
+      "sizeLines": 16,
+      "fileCategory": "code"
+    },
+    {
+      "path": "ios/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json",
+      "language": "json",
+      "sizeLines": 122,
+      "fileCategory": "config"
+    },
+    {
+      "path": "ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json",
+      "language": "json",
+      "sizeLines": 23,
+      "fileCategory": "config"
+    },
+    {
+      "path": "ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md",
+      "language": "markdown",
+      "sizeLines": 4,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "ios/Runner/Base.lproj/LaunchScreen.storyboard",
+      "language": "storyboard",
+      "sizeLines": 37,
+      "fileCategory": "code"
+    },
+    {
+      "path": "ios/Runner/Base.lproj/Main.storyboard",
+      "language": "storyboard",
+      "sizeLines": 26,
+      "fileCategory": "code"
+    },
+    {
+      "path": "ios/Runner/GeneratedPluginRegistrant.h",
+      "language": "c",
+      "sizeLines": 19,
+      "fileCategory": "code"
+    },
+    {
+      "path": "ios/Runner/GeneratedPluginRegistrant.m",
+      "language": "m",
+      "sizeLines": 42,
+      "fileCategory": "code"
+    },
+    {
+      "path": "ios/Runner/Info.plist",
+      "language": "xml",
+      "sizeLines": 70,
+      "fileCategory": "config"
+    },
+    {
+      "path": "ios/Runner/Runner-Bridging-Header.h",
+      "language": "c",
+      "sizeLines": 1,
+      "fileCategory": "code"
+    },
+    {
+      "path": "ios/Runner/SceneDelegate.swift",
+      "language": "swift",
+      "sizeLines": 6,
+      "fileCategory": "code"
+    },
+    {
+      "path": "ios/RunnerTests/RunnerTests.swift",
+      "language": "swift",
+      "sizeLines": 12,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/api/dio/api/api_client.dart",
+      "language": "dart",
+      "sizeLines": 118,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/api/dio/api/api_response.dart",
+      "language": "dart",
+      "sizeLines": 25,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/api/dio/login/login_api.dart",
+      "language": "dart",
+      "sizeLines": 25,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/api/dio/login/login_models.dart",
+      "language": "dart",
+      "sizeLines": 20,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/api/dio/register/register_api.dart",
+      "language": "dart",
+      "sizeLines": 37,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/api/dio/register/register_models.dart",
+      "language": "dart",
+      "sizeLines": 16,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/api/dio/reset_password/reset_password_api.dart",
+      "language": "dart",
+      "sizeLines": 25,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/api/dio/therapy_client/therapy_client_api.dart",
+      "language": "dart",
+      "sizeLines": 49,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/api/dio/therapy_client/therapy_client_models.dart",
+      "language": "dart",
+      "sizeLines": 54,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/api/dio/therapy_plan/therapy_plan_api.dart",
+      "language": "dart",
+      "sizeLines": 117,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/api/dio/therapy_plan/therapy_plan_models.dart",
+      "language": "dart",
+      "sizeLines": 150,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/api/dio/therapy_report/therapy_report_api.dart",
+      "language": "dart",
+      "sizeLines": 91,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/api/dio/therapy_report/therapy_report_models.dart",
+      "language": "dart",
+      "sizeLines": 340,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/api/modbus/chakra_modbus.dart",
+      "language": "dart",
+      "sizeLines": 115,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/api/modbus/fragrance_modbus.dart",
+      "language": "dart",
+      "sizeLines": 65,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/api/modbus/hifem_modbus.dart",
+      "language": "dart",
+      "sizeLines": 109,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/api/modbus/hydrogen_modbus.dart",
+      "language": "dart",
+      "sizeLines": 61,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/api/modbus/modbus_rtu_service.dart",
+      "language": "dart",
+      "sizeLines": 2636,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/api/modbus/pemf_modbus.dart",
+      "language": "dart",
+      "sizeLines": 78,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/api/modbus/red_light_modbus.dart",
+      "language": "dart",
+      "sizeLines": 100,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/api/modbus/terahertz_modbus.dart",
+      "language": "dart",
+      "sizeLines": 86,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/api/modbus/vat_modbus.dart",
+      "language": "dart",
+      "sizeLines": 79,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/components/index.dart",
+      "language": "dart",
+      "sizeLines": 262,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/components/logic.dart",
+      "language": "dart",
+      "sizeLines": 31,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/components/logout_menu.dart",
+      "language": "dart",
+      "sizeLines": 145,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/components/settingindex.dart",
+      "language": "dart",
+      "sizeLines": 237,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/components/userindex.dart",
+      "language": "dart",
+      "sizeLines": 270,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/constants/assets.dart",
+      "language": "dart",
+      "sizeLines": 777,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/constants/color.dart",
+      "language": "dart",
+      "sizeLines": 10,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/main.dart",
+      "language": "dart",
+      "sizeLines": 43,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/choseusers/logic.dart",
+      "language": "dart",
+      "sizeLines": 238,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/choseusers/ui.dart",
+      "language": "dart",
+      "sizeLines": 694,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/customized/customizedPage/expand_setting_page.dart",
+      "language": "dart",
+      "sizeLines": 118,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/customized/customizedPage/hifem/ui.dart",
+      "language": "dart",
+      "sizeLines": 588,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/customized/customizedPage/logic.dart",
+      "language": "dart",
+      "sizeLines": 48,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/customized/customizedPage/mailun/logic.dart",
+      "language": "dart",
+      "sizeLines": 4,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/customized/customizedPage/mailun/ui.dart",
+      "language": "dart",
+      "sizeLines": 569,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/customized/customizedPage/setting_page_helpers.dart",
+      "language": "dart",
+      "sizeLines": 302,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/customized/customizedPage/taihezi/ui.dart",
+      "language": "dart",
+      "sizeLines": 412,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/customized/customizedPage/ui.dart",
+      "language": "dart",
+      "sizeLines": 3490,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/customized/customizedPage/xiangfen/ui.dart",
+      "language": "dart",
+      "sizeLines": 296,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/customized/logic.dart",
+      "language": "dart",
+      "sizeLines": 318,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/customized/plan_features.dart",
+      "language": "dart",
+      "sizeLines": 84,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/customized/ui.dart",
+      "language": "dart",
+      "sizeLines": 623,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/debug/serial_test_page.dart",
+      "language": "dart",
+      "sizeLines": 328,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/joystick/ui.dart",
+      "language": "dart",
+      "sizeLines": 466,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/login/forgetpassword/forget.dart",
+      "language": "dart",
+      "sizeLines": 741,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/login/login/logic.dart",
+      "language": "dart",
+      "sizeLines": 10,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/login/login/ui.dart",
+      "language": "dart",
+      "sizeLines": 871,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/login/register/register.dart",
+      "language": "dart",
+      "sizeLines": 949,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/main/logic.dart",
+      "language": "dart",
+      "sizeLines": 29,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/main/ui.dart",
+      "language": "dart",
+      "sizeLines": 651,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/music/logic.dart",
+      "language": "dart",
+      "sizeLines": 117,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/music/player.dart",
+      "language": "dart",
+      "sizeLines": 155,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/music/ui.dart",
+      "language": "dart",
+      "sizeLines": 537,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/settingpage/history_detail.dart",
+      "language": "dart",
+      "sizeLines": 672,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/settingpage/logic.dart",
+      "language": "dart",
+      "sizeLines": 151,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/settingpage/ui.dart",
+      "language": "dart",
+      "sizeLines": 1229,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/start/logic.dart",
+      "language": "dart",
+      "sizeLines": 985,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/start/ui.dart",
+      "language": "dart",
+      "sizeLines": 2466,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/summary/logic.dart",
+      "language": "dart",
+      "sizeLines": 168,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/pages/summary/summary.dart",
+      "language": "dart",
+      "sizeLines": 1279,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/preset/a_cankao/preset_models.dart",
+      "language": "dart",
+      "sizeLines": 135,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/preset/a_cankao/preset_registry.dart",
+      "language": "dart",
+      "sizeLines": 38,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/preset/anti_aging/anti_aging.dart",
+      "language": "dart",
+      "sizeLines": 161,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/preset/deep_relax/deep_relax.dart",
+      "language": "dart",
+      "sizeLines": 161,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/preset/emo_healing/emo_healing.dart",
+      "language": "dart",
+      "sizeLines": 136,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/preset/energy_boost/energy_boost.dart",
+      "language": "dart",
+      "sizeLines": 111,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/preset/immune_boost/immune_boost.dart",
+      "language": "dart",
+      "sizeLines": 161,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/preset/pain_relief/pain_relief.dart",
+      "language": "dart",
+      "sizeLines": 161,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/preset/sleep_imp/sleep_imp.dart",
+      "language": "dart",
+      "sizeLines": 161,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/preset/sports_rec/sports_rec.dart",
+      "language": "dart",
+      "sizeLines": 136,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/preset/stress_relief/stress_relief.dart",
+      "language": "dart",
+      "sizeLines": 136,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/preset/total_care/total_care.dart",
+      "language": "dart",
+      "sizeLines": 136,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/routes/index.dart",
+      "language": "dart",
+      "sizeLines": 83,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/routes/route_observer.dart",
+      "language": "dart",
+      "sizeLines": 7,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/services/android_serial_port_service.dart",
+      "language": "dart",
+      "sizeLines": 210,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/stores/app_header_clock_store.dart",
+      "language": "dart",
+      "sizeLines": 105,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/stores/fragrance_setting_store.dart",
+      "language": "dart",
+      "sizeLines": 25,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/stores/hifem_setting_store.dart",
+      "language": "dart",
+      "sizeLines": 82,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/stores/index.dart",
+      "language": "dart",
+      "sizeLines": 8,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/stores/terahertz_setting_store.dart",
+      "language": "dart",
+      "sizeLines": 55,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/stores/user_store.dart",
+      "language": "dart",
+      "sizeLines": 96,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/translation/app_translations.dart",
+      "language": "dart",
+      "sizeLines": 2396,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/utils/age_utils.dart",
+      "language": "dart",
+      "sizeLines": 22,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/utils/byte_utils.dart",
+      "language": "dart",
+      "sizeLines": 11,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/utils/date_time_utils.dart",
+      "language": "dart",
+      "sizeLines": 39,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/utils/duration_utils.dart",
+      "language": "dart",
+      "sizeLines": 20,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/utils/email_utils.dart",
+      "language": "dart",
+      "sizeLines": 12,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/utils/gender_utils.dart",
+      "language": "dart",
+      "sizeLines": 22,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/utils/index.dart",
+      "language": "dart",
+      "sizeLines": 10,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/utils/localized_api_message.dart",
+      "language": "dart",
+      "sizeLines": 18,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/utils/number_utils.dart",
+      "language": "dart",
+      "sizeLines": 26,
+      "fileCategory": "code"
+    },
+    {
+      "path": "lib/utils/phone_utils.dart",
+      "language": "dart",
+      "sizeLines": 19,
+      "fileCategory": "code"
+    },
+    {
+      "path": "linux/CMakeLists.txt",
+      "language": "txt",
+      "sizeLines": 128,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "linux/flutter/CMakeLists.txt",
+      "language": "txt",
+      "sizeLines": 88,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "linux/flutter/generated_plugin_registrant.cc",
+      "language": "cpp",
+      "sizeLines": 15,
+      "fileCategory": "code"
+    },
+    {
+      "path": "linux/flutter/generated_plugin_registrant.h",
+      "language": "c",
+      "sizeLines": 15,
+      "fileCategory": "code"
+    },
+    {
+      "path": "linux/flutter/generated_plugins.cmake",
+      "language": "cmake",
+      "sizeLines": 25,
+      "fileCategory": "code"
+    },
+    {
+      "path": "linux/runner/CMakeLists.txt",
+      "language": "txt",
+      "sizeLines": 26,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "linux/runner/main.cc",
+      "language": "cpp",
+      "sizeLines": 6,
+      "fileCategory": "code"
+    },
+    {
+      "path": "linux/runner/my_application.cc",
+      "language": "cpp",
+      "sizeLines": 148,
+      "fileCategory": "code"
+    },
+    {
+      "path": "linux/runner/my_application.h",
+      "language": "c",
+      "sizeLines": 21,
+      "fileCategory": "code"
+    },
+    {
+      "path": "macos/Flutter/Flutter-Debug.xcconfig",
+      "language": "xcconfig",
+      "sizeLines": 1,
+      "fileCategory": "code"
+    },
+    {
+      "path": "macos/Flutter/Flutter-Release.xcconfig",
+      "language": "xcconfig",
+      "sizeLines": 1,
+      "fileCategory": "code"
+    },
+    {
+      "path": "macos/Flutter/GeneratedPluginRegistrant.swift",
+      "language": "swift",
+      "sizeLines": 20,
+      "fileCategory": "code"
+    },
+    {
+      "path": "macos/Runner.xcodeproj/project.pbxproj",
+      "language": "pbxproj",
+      "sizeLines": 705,
+      "fileCategory": "code"
+    },
+    {
+      "path": "macos/Runner.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist",
+      "language": "xml",
+      "sizeLines": 8,
+      "fileCategory": "config"
+    },
+    {
+      "path": "macos/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme",
+      "language": "xcscheme",
+      "sizeLines": 99,
+      "fileCategory": "code"
+    },
+    {
+      "path": "macos/Runner.xcworkspace/contents.xcworkspacedata",
+      "language": "xcworkspacedata",
+      "sizeLines": 7,
+      "fileCategory": "code"
+    },
+    {
+      "path": "macos/Runner.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist",
+      "language": "xml",
+      "sizeLines": 8,
+      "fileCategory": "config"
+    },
+    {
+      "path": "macos/Runner/AppDelegate.swift",
+      "language": "swift",
+      "sizeLines": 13,
+      "fileCategory": "code"
+    },
+    {
+      "path": "macos/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json",
+      "language": "json",
+      "sizeLines": 68,
+      "fileCategory": "config"
+    },
+    {
+      "path": "macos/Runner/Base.lproj/MainMenu.xib",
+      "language": "xib",
+      "sizeLines": 343,
+      "fileCategory": "code"
+    },
+    {
+      "path": "macos/Runner/Configs/AppInfo.xcconfig",
+      "language": "xcconfig",
+      "sizeLines": 14,
+      "fileCategory": "code"
+    },
+    {
+      "path": "macos/Runner/Configs/Debug.xcconfig",
+      "language": "xcconfig",
+      "sizeLines": 2,
+      "fileCategory": "code"
+    },
+    {
+      "path": "macos/Runner/Configs/Release.xcconfig",
+      "language": "xcconfig",
+      "sizeLines": 2,
+      "fileCategory": "code"
+    },
+    {
+      "path": "macos/Runner/Configs/Warnings.xcconfig",
+      "language": "xcconfig",
+      "sizeLines": 13,
+      "fileCategory": "code"
+    },
+    {
+      "path": "macos/Runner/DebugProfile.entitlements",
+      "language": "entitlements",
+      "sizeLines": 12,
+      "fileCategory": "code"
+    },
+    {
+      "path": "macos/Runner/Info.plist",
+      "language": "xml",
+      "sizeLines": 32,
+      "fileCategory": "config"
+    },
+    {
+      "path": "macos/Runner/MainFlutterWindow.swift",
+      "language": "swift",
+      "sizeLines": 15,
+      "fileCategory": "code"
+    },
+    {
+      "path": "macos/Runner/Release.entitlements",
+      "language": "entitlements",
+      "sizeLines": 8,
+      "fileCategory": "code"
+    },
+    {
+      "path": "macos/RunnerTests/RunnerTests.swift",
+      "language": "swift",
+      "sizeLines": 12,
+      "fileCategory": "code"
+    },
+    {
+      "path": "pubspec.yaml",
+      "language": "yaml",
+      "sizeLines": 131,
+      "fileCategory": "config"
+    },
+    {
+      "path": "README.md",
+      "language": "markdown",
+      "sizeLines": 17,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "test/choseusers_logic_test.dart",
+      "language": "dart",
+      "sizeLines": 98,
+      "fileCategory": "code"
+    },
+    {
+      "path": "test/pemf_modbus_test.dart",
+      "language": "dart",
+      "sizeLines": 17,
+      "fileCategory": "code"
+    },
+    {
+      "path": "test/preset_configs_test.dart",
+      "language": "dart",
+      "sizeLines": 42,
+      "fileCategory": "code"
+    },
+    {
+      "path": "test/preset_registry_test.dart",
+      "language": "dart",
+      "sizeLines": 28,
+      "fileCategory": "code"
+    },
+    {
+      "path": "test/preset_start_logic_test.dart",
+      "language": "dart",
+      "sizeLines": 26,
+      "fileCategory": "code"
+    },
+    {
+      "path": "test/therapy_modbus_mapping_test.dart",
+      "language": "dart",
+      "sizeLines": 32,
+      "fileCategory": "code"
+    },
+    {
+      "path": "test/widget_test.dart",
+      "language": "dart",
+      "sizeLines": 410,
+      "fileCategory": "code"
+    },
+    {
+      "path": "web/index.html",
+      "language": "html",
+      "sizeLines": 46,
+      "fileCategory": "markup"
+    },
+    {
+      "path": "web/manifest.json",
+      "language": "json",
+      "sizeLines": 35,
+      "fileCategory": "config"
+    },
+    {
+      "path": "windows/CMakeLists.txt",
+      "language": "txt",
+      "sizeLines": 108,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "windows/flutter/CMakeLists.txt",
+      "language": "txt",
+      "sizeLines": 109,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "windows/flutter/generated_plugin_registrant.cc",
+      "language": "cpp",
+      "sizeLines": 14,
+      "fileCategory": "code"
+    },
+    {
+      "path": "windows/flutter/generated_plugin_registrant.h",
+      "language": "c",
+      "sizeLines": 15,
+      "fileCategory": "code"
+    },
+    {
+      "path": "windows/flutter/generated_plugins.cmake",
+      "language": "cmake",
+      "sizeLines": 25,
+      "fileCategory": "code"
+    },
+    {
+      "path": "windows/runner/CMakeLists.txt",
+      "language": "txt",
+      "sizeLines": 40,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "windows/runner/flutter_window.cpp",
+      "language": "cpp",
+      "sizeLines": 71,
+      "fileCategory": "code"
+    },
+    {
+      "path": "windows/runner/flutter_window.h",
+      "language": "c",
+      "sizeLines": 33,
+      "fileCategory": "code"
+    },
+    {
+      "path": "windows/runner/main.cpp",
+      "language": "cpp",
+      "sizeLines": 43,
+      "fileCategory": "code"
+    },
+    {
+      "path": "windows/runner/resource.h",
+      "language": "c",
+      "sizeLines": 16,
+      "fileCategory": "code"
+    },
+    {
+      "path": "windows/runner/runner.exe.manifest",
+      "language": "manifest",
+      "sizeLines": 14,
+      "fileCategory": "code"
+    },
+    {
+      "path": "windows/runner/Runner.rc",
+      "language": "rc",
+      "sizeLines": 121,
+      "fileCategory": "code"
+    },
+    {
+      "path": "windows/runner/utils.cpp",
+      "language": "cpp",
+      "sizeLines": 65,
+      "fileCategory": "code"
+    },
+    {
+      "path": "windows/runner/utils.h",
+      "language": "c",
+      "sizeLines": 19,
+      "fileCategory": "code"
+    },
+    {
+      "path": "windows/runner/win32_window.cpp",
+      "language": "cpp",
+      "sizeLines": 288,
+      "fileCategory": "code"
+    },
+    {
+      "path": "windows/runner/win32_window.h",
+      "language": "c",
+      "sizeLines": 102,
+      "fileCategory": "code"
+    }
+  ],
+  "totalFiles": 218,
+  "filteredByIgnore": 0,
+  "estimatedComplexity": "large",
+  "stats": {
+    "filesScanned": 218,
+    "byCategory": {
+      "code": 172,
+      "config": 34,
+      "script": 1,
+      "docs": 9,
+      "markup": 2
+    },
+    "byLanguage": {
+      "unknown": 5,
+      "json": 13,
+      "yaml": 5,
+      "kotlin": 5,
+      "aar": 1,
+      "xml": 14,
+      "java": 1,
+      "jar": 1,
+      "properties": 2,
+      "batch": 1,
+      "iml": 2,
+      "dart": 106,
+      "markdown": 3,
+      "html": 2,
+      "xcconfig": 8,
+      "pbxproj": 2,
+      "xcworkspacedata": 3,
+      "xcsettings": 2,
+      "xcscheme": 2,
+      "swift": 7,
+      "storyboard": 2,
+      "c": 9,
+      "m": 1,
+      "txt": 6,
+      "cpp": 8,
+      "cmake": 2,
+      "xib": 1,
+      "entitlements": 2,
+      "manifest": 1,
+      "rc": 1
+    }
+  },
+  "importMap": {
+    ".flutter-plugins-dependencies": [],
+    ".metadata": [],
+    ".understand-anything/.understandignore": [],
+    ".understand-anything/config.json": [],
+    "analysis_options.yaml": [],
+    "android/app/build.gradle.kts": [],
+    "android/app/libs/mcSerialPort.aar": [],
+    "android/app/src/debug/AndroidManifest.xml": [],
+    "android/app/src/main/AndroidManifest.xml": [],
+    "android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java": [],
+    "android/app/src/main/kotlin/com/example/infibo_app/AndroidSerialPortBridge.kt": [],
+    "android/app/src/main/kotlin/com/example/infibo_app/MainActivity.kt": [],
+    "android/app/src/main/res/drawable-v21/launch_background.xml": [],
+    "android/app/src/main/res/drawable/launch_background.xml": [],
+    "android/app/src/main/res/values-night/styles.xml": [],
+    "android/app/src/main/res/values/styles.xml": [],
+    "android/app/src/profile/AndroidManifest.xml": [],
+    "android/build.gradle.kts": [],
+    "android/gradle/wrapper/gradle-wrapper.jar": [],
+    "android/gradle/wrapper/gradle-wrapper.properties": [],
+    "android/gradlew": [],
+    "android/gradlew.bat": [],
+    "android/infibo_app_android.iml": [],
+    "android/local.properties": [],
+    "android/settings.gradle.kts": [],
+    "assets/lottie/aroma.json": [],
+    "assets/lottie/hydrogen.json": [],
+    "assets/lottie/music.json": [],
+    "assets/lottie/pemf.json": [],
+    "assets/lottie/redlight.json": [],
+    "assets/lottie/taihez.json": [],
+    "assets/lottie/vat.json": [],
+    "devtools_options.yaml": [],
+    "infibo_app.iml": [],
+    "infibo/.metadata": [],
+    "infibo/analysis_options.yaml": [],
+    "infibo/lib/main.dart": [],
+    "infibo/lib/pages/login/index.dart": [],
+    "infibo/lib/pages/main/index.dart": [],
+    "infibo/lib/routes/index.dart": [],
+    "infibo/pubspec.yaml": [],
+    "infibo/README.md": [],
+    "infibo/test/widget_test.dart": [],
+    "infibo/web/index.html": [],
+    "infibo/web/manifest.json": [],
+    "ios/Flutter/AppFrameworkInfo.plist": [],
+    "ios/Flutter/Debug.xcconfig": [],
+    "ios/Flutter/Release.xcconfig": [],
+    "ios/Runner.xcodeproj/project.pbxproj": [],
+    "ios/Runner.xcodeproj/project.xcworkspace/contents.xcworkspacedata": [],
+    "ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist": [],
+    "ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings": [],
+    "ios/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme": [],
+    "ios/Runner.xcworkspace/contents.xcworkspacedata": [],
+    "ios/Runner.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist": [],
+    "ios/Runner.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings": [],
+    "ios/Runner/AppDelegate.swift": [],
+    "ios/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json": [],
+    "ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json": [],
+    "ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md": [],
+    "ios/Runner/Base.lproj/LaunchScreen.storyboard": [],
+    "ios/Runner/Base.lproj/Main.storyboard": [],
+    "ios/Runner/GeneratedPluginRegistrant.h": [],
+    "ios/Runner/GeneratedPluginRegistrant.m": [],
+    "ios/Runner/Info.plist": [],
+    "ios/Runner/Runner-Bridging-Header.h": [],
+    "ios/Runner/SceneDelegate.swift": [],
+    "ios/RunnerTests/RunnerTests.swift": [],
+    "lib/api/dio/api/api_client.dart": [],
+    "lib/api/dio/api/api_response.dart": [],
+    "lib/api/dio/login/login_api.dart": [],
+    "lib/api/dio/login/login_models.dart": [],
+    "lib/api/dio/register/register_api.dart": [],
+    "lib/api/dio/register/register_models.dart": [],
+    "lib/api/dio/reset_password/reset_password_api.dart": [],
+    "lib/api/dio/therapy_client/therapy_client_api.dart": [],
+    "lib/api/dio/therapy_client/therapy_client_models.dart": [],
+    "lib/api/dio/therapy_plan/therapy_plan_api.dart": [],
+    "lib/api/dio/therapy_plan/therapy_plan_models.dart": [],
+    "lib/api/dio/therapy_report/therapy_report_api.dart": [],
+    "lib/api/dio/therapy_report/therapy_report_models.dart": [],
+    "lib/api/modbus/chakra_modbus.dart": [],
+    "lib/api/modbus/fragrance_modbus.dart": [],
+    "lib/api/modbus/hifem_modbus.dart": [],
+    "lib/api/modbus/hydrogen_modbus.dart": [],
+    "lib/api/modbus/modbus_rtu_service.dart": [],
+    "lib/api/modbus/pemf_modbus.dart": [],
+    "lib/api/modbus/red_light_modbus.dart": [],
+    "lib/api/modbus/terahertz_modbus.dart": [],
+    "lib/api/modbus/vat_modbus.dart": [],
+    "lib/components/index.dart": [],
+    "lib/components/logic.dart": [],
+    "lib/components/logout_menu.dart": [],
+    "lib/components/settingindex.dart": [],
+    "lib/components/userindex.dart": [],
+    "lib/constants/assets.dart": [],
+    "lib/constants/color.dart": [],
+    "lib/main.dart": [],
+    "lib/pages/choseusers/logic.dart": [],
+    "lib/pages/choseusers/ui.dart": [],
+    "lib/pages/customized/customizedPage/expand_setting_page.dart": [],
+    "lib/pages/customized/customizedPage/hifem/ui.dart": [],
+    "lib/pages/customized/customizedPage/logic.dart": [],
+    "lib/pages/customized/customizedPage/mailun/logic.dart": [],
+    "lib/pages/customized/customizedPage/mailun/ui.dart": [],
+    "lib/pages/customized/customizedPage/setting_page_helpers.dart": [],
+    "lib/pages/customized/customizedPage/taihezi/ui.dart": [],
+    "lib/pages/customized/customizedPage/ui.dart": [],
+    "lib/pages/customized/customizedPage/xiangfen/ui.dart": [],
+    "lib/pages/customized/logic.dart": [],
+    "lib/pages/customized/plan_features.dart": [],
+    "lib/pages/customized/ui.dart": [],
+    "lib/pages/debug/serial_test_page.dart": [],
+    "lib/pages/joystick/ui.dart": [],
+    "lib/pages/login/forgetpassword/forget.dart": [],
+    "lib/pages/login/login/logic.dart": [],
+    "lib/pages/login/login/ui.dart": [],
+    "lib/pages/login/register/register.dart": [],
+    "lib/pages/main/logic.dart": [],
+    "lib/pages/main/ui.dart": [],
+    "lib/pages/music/logic.dart": [],
+    "lib/pages/music/player.dart": [],
+    "lib/pages/music/ui.dart": [],
+    "lib/pages/settingpage/history_detail.dart": [],
+    "lib/pages/settingpage/logic.dart": [],
+    "lib/pages/settingpage/ui.dart": [],
+    "lib/pages/start/logic.dart": [],
+    "lib/pages/start/ui.dart": [],
+    "lib/pages/summary/logic.dart": [],
+    "lib/pages/summary/summary.dart": [],
+    "lib/preset/a_cankao/preset_models.dart": [],
+    "lib/preset/a_cankao/preset_registry.dart": [
+      "lib/preset/anti_aging/anti_aging.dart",
+      "lib/preset/deep_relax/deep_relax.dart",
+      "lib/preset/emo_healing/emo_healing.dart",
+      "lib/preset/energy_boost/energy_boost.dart",
+      "lib/preset/immune_boost/immune_boost.dart",
+      "lib/preset/pain_relief/pain_relief.dart",
+      "lib/preset/sleep_imp/sleep_imp.dart",
+      "lib/preset/sports_rec/sports_rec.dart",
+      "lib/preset/stress_relief/stress_relief.dart",
+      "lib/preset/total_care/total_care.dart"
+    ],
+    "lib/preset/anti_aging/anti_aging.dart": [
+      "lib/preset/a_cankao/preset_models.dart"
+    ],
+    "lib/preset/deep_relax/deep_relax.dart": [
+      "lib/preset/a_cankao/preset_models.dart"
+    ],
+    "lib/preset/emo_healing/emo_healing.dart": [
+      "lib/preset/a_cankao/preset_models.dart"
+    ],
+    "lib/preset/energy_boost/energy_boost.dart": [
+      "lib/preset/a_cankao/preset_models.dart"
+    ],
+    "lib/preset/immune_boost/immune_boost.dart": [
+      "lib/preset/a_cankao/preset_models.dart"
+    ],
+    "lib/preset/pain_relief/pain_relief.dart": [
+      "lib/preset/a_cankao/preset_models.dart"
+    ],
+    "lib/preset/sleep_imp/sleep_imp.dart": [
+      "lib/preset/a_cankao/preset_models.dart"
+    ],
+    "lib/preset/sports_rec/sports_rec.dart": [
+      "lib/preset/a_cankao/preset_models.dart"
+    ],
+    "lib/preset/stress_relief/stress_relief.dart": [
+      "lib/preset/a_cankao/preset_models.dart"
+    ],
+    "lib/preset/total_care/total_care.dart": [
+      "lib/preset/a_cankao/preset_models.dart"
+    ],
+    "lib/routes/index.dart": [],
+    "lib/routes/route_observer.dart": [],
+    "lib/services/android_serial_port_service.dart": [],
+    "lib/stores/app_header_clock_store.dart": [],
+    "lib/stores/fragrance_setting_store.dart": [],
+    "lib/stores/hifem_setting_store.dart": [],
+    "lib/stores/index.dart": [],
+    "lib/stores/terahertz_setting_store.dart": [],
+    "lib/stores/user_store.dart": [],
+    "lib/translation/app_translations.dart": [],
+    "lib/utils/age_utils.dart": [],
+    "lib/utils/byte_utils.dart": [],
+    "lib/utils/date_time_utils.dart": [],
+    "lib/utils/duration_utils.dart": [],
+    "lib/utils/email_utils.dart": [],
+    "lib/utils/gender_utils.dart": [],
+    "lib/utils/index.dart": [],
+    "lib/utils/localized_api_message.dart": [],
+    "lib/utils/number_utils.dart": [],
+    "lib/utils/phone_utils.dart": [],
+    "linux/CMakeLists.txt": [],
+    "linux/flutter/CMakeLists.txt": [],
+    "linux/flutter/generated_plugin_registrant.cc": [
+      "linux/flutter/generated_plugin_registrant.h"
+    ],
+    "linux/flutter/generated_plugin_registrant.h": [],
+    "linux/flutter/generated_plugins.cmake": [],
+    "linux/runner/CMakeLists.txt": [],
+    "linux/runner/main.cc": [
+      "linux/runner/my_application.h"
+    ],
+    "linux/runner/my_application.cc": [
+      "linux/runner/my_application.h"
+    ],
+    "linux/runner/my_application.h": [],
+    "macos/Flutter/Flutter-Debug.xcconfig": [],
+    "macos/Flutter/Flutter-Release.xcconfig": [],
+    "macos/Flutter/GeneratedPluginRegistrant.swift": [],
+    "macos/Runner.xcodeproj/project.pbxproj": [],
+    "macos/Runner.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist": [],
+    "macos/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme": [],
+    "macos/Runner.xcworkspace/contents.xcworkspacedata": [],
+    "macos/Runner.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist": [],
+    "macos/Runner/AppDelegate.swift": [],
+    "macos/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json": [],
+    "macos/Runner/Base.lproj/MainMenu.xib": [],
+    "macos/Runner/Configs/AppInfo.xcconfig": [],
+    "macos/Runner/Configs/Debug.xcconfig": [],
+    "macos/Runner/Configs/Release.xcconfig": [],
+    "macos/Runner/Configs/Warnings.xcconfig": [],
+    "macos/Runner/DebugProfile.entitlements": [],
+    "macos/Runner/Info.plist": [],
+    "macos/Runner/MainFlutterWindow.swift": [],
+    "macos/Runner/Release.entitlements": [],
+    "macos/RunnerTests/RunnerTests.swift": [],
+    "pubspec.yaml": [],
+    "README.md": [],
+    "test/choseusers_logic_test.dart": [],
+    "test/pemf_modbus_test.dart": [],
+    "test/preset_configs_test.dart": [],
+    "test/preset_registry_test.dart": [],
+    "test/preset_start_logic_test.dart": [],
+    "test/therapy_modbus_mapping_test.dart": [],
+    "test/widget_test.dart": [],
+    "web/index.html": [],
+    "web/manifest.json": [],
+    "windows/CMakeLists.txt": [],
+    "windows/flutter/CMakeLists.txt": [],
+    "windows/flutter/generated_plugin_registrant.cc": [
+      "windows/flutter/generated_plugin_registrant.h"
+    ],
+    "windows/flutter/generated_plugin_registrant.h": [],
+    "windows/flutter/generated_plugins.cmake": [],
+    "windows/runner/CMakeLists.txt": [],
+    "windows/runner/flutter_window.cpp": [
+      "windows/runner/flutter_window.h"
+    ],
+    "windows/runner/flutter_window.h": [],
+    "windows/runner/main.cpp": [
+      "windows/runner/flutter_window.h",
+      "windows/runner/utils.h"
+    ],
+    "windows/runner/resource.h": [],
+    "windows/runner/runner.exe.manifest": [],
+    "windows/runner/Runner.rc": [],
+    "windows/runner/utils.cpp": [
+      "windows/runner/utils.h"
+    ],
+    "windows/runner/utils.h": [],
+    "windows/runner/win32_window.cpp": [
+      "windows/runner/resource.h",
+      "windows/runner/win32_window.h"
+    ],
+    "windows/runner/win32_window.h": []
+  }
+}

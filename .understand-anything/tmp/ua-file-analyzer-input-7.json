@@ -1,0 +1,28 @@
+{
+  "projectRoot": "D:/FlutterProject/infibo_app",
+  "batchFiles": [
+    {
+      "path": "infibo/README.md",
+      "language": "markdown",
+      "sizeLines": 17,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "infibo/analysis_options.yaml",
+      "language": "yaml",
+      "sizeLines": 28,
+      "fileCategory": "config"
+    },
+    {
+      "path": "infibo/pubspec.yaml",
+      "language": "yaml",
+      "sizeLines": 89,
+      "fileCategory": "config"
+    }
+  ],
+  "batchImportData": {
+    "infibo/README.md": [],
+    "infibo/analysis_options.yaml": [],
+    "infibo/pubspec.yaml": []
+  }
+}

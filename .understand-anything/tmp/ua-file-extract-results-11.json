@@ -1,0 +1,207 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 25,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "lib/api/modbus/red_light_modbus.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 100,
+      "nonEmptyLines": 90,
+      "metrics": {}
+    },
+    {
+      "path": "lib/api/modbus/terahertz_modbus.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 86,
+      "nonEmptyLines": 78,
+      "metrics": {}
+    },
+    {
+      "path": "lib/api/modbus/vat_modbus.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 79,
+      "nonEmptyLines": 73,
+      "metrics": {}
+    },
+    {
+      "path": "lib/components/index.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 262,
+      "nonEmptyLines": 248,
+      "metrics": {}
+    },
+    {
+      "path": "lib/components/logic.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 31,
+      "nonEmptyLines": 27,
+      "metrics": {}
+    },
+    {
+      "path": "lib/components/logout_menu.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 145,
+      "nonEmptyLines": 136,
+      "metrics": {}
+    },
+    {
+      "path": "lib/components/settingindex.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 237,
+      "nonEmptyLines": 216,
+      "metrics": {}
+    },
+    {
+      "path": "lib/components/userindex.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 270,
+      "nonEmptyLines": 257,
+      "metrics": {}
+    },
+    {
+      "path": "lib/constants/assets.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 777,
+      "nonEmptyLines": 592,
+      "metrics": {}
+    },
+    {
+      "path": "lib/constants/color.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 10,
+      "nonEmptyLines": 9,
+      "metrics": {}
+    },
+    {
+      "path": "lib/main.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 43,
+      "nonEmptyLines": 39,
+      "metrics": {}
+    },
+    {
+      "path": "lib/pages/choseusers/logic.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 238,
+      "nonEmptyLines": 201,
+      "metrics": {}
+    },
+    {
+      "path": "lib/pages/choseusers/ui.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 694,
+      "nonEmptyLines": 648,
+      "metrics": {}
+    },
+    {
+      "path": "lib/pages/customized/customizedPage/expand_setting_page.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 118,
+      "nonEmptyLines": 112,
+      "metrics": {}
+    },
+    {
+      "path": "lib/pages/customized/customizedPage/hifem/ui.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 588,
+      "nonEmptyLines": 543,
+      "metrics": {}
+    },
+    {
+      "path": "lib/pages/customized/customizedPage/logic.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 48,
+      "nonEmptyLines": 44,
+      "metrics": {}
+    },
+    {
+      "path": "lib/pages/customized/customizedPage/mailun/logic.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 4,
+      "nonEmptyLines": 4,
+      "metrics": {}
+    },
+    {
+      "path": "lib/pages/customized/customizedPage/mailun/ui.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 569,
+      "nonEmptyLines": 528,
+      "metrics": {}
+    },
+    {
+      "path": "lib/pages/customized/customizedPage/setting_page_helpers.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 302,
+      "nonEmptyLines": 274,
+      "metrics": {}
+    },
+    {
+      "path": "lib/pages/customized/customizedPage/taihezi/ui.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 412,
+      "nonEmptyLines": 380,
+      "metrics": {}
+    },
+    {
+      "path": "lib/pages/customized/customizedPage/ui.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 3490,
+      "nonEmptyLines": 3169,
+      "metrics": {}
+    },
+    {
+      "path": "lib/pages/customized/customizedPage/xiangfen/ui.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 296,
+      "nonEmptyLines": 276,
+      "metrics": {}
+    },
+    {
+      "path": "lib/pages/customized/logic.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 318,
+      "nonEmptyLines": 260,
+      "metrics": {}
+    },
+    {
+      "path": "lib/pages/customized/plan_features.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 84,
+      "nonEmptyLines": 76,
+      "metrics": {}
+    },
+    {
+      "path": "lib/pages/customized/ui.dart",
+      "language": "dart",
+      "fileCategory": "code",
+      "totalLines": 623,
+      "nonEmptyLines": 575,
+      "metrics": {}
+    }
+  ]
+}

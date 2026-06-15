@@ -1,0 +1,92 @@
+{
+  "nodes": [
+    {
+      "id": "config:analysis_options.yaml",
+      "type": "config",
+      "name": "analysis_options.yaml",
+      "filePath": "analysis_options.yaml",
+      "summary": "配置文件，定义 analysis_options.yaml 对构建、分析或运行行为的约束。",
+      "tags": [
+        "configuration",
+        "project-file",
+        "internal",
+        "analysis-options"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:devtools_options.yaml",
+      "type": "config",
+      "name": "devtools_options.yaml",
+      "filePath": "devtools_options.yaml",
+      "summary": "配置文件，定义 devtools_options.yaml 对构建、分析或运行行为的约束。",
+      "tags": [
+        "configuration",
+        "project-file",
+        "internal",
+        "devtools-options"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:pubspec.yaml",
+      "type": "config",
+      "name": "pubspec.yaml",
+      "filePath": "pubspec.yaml",
+      "summary": "配置文件，定义 pubspec.yaml 对构建、分析或运行行为的约束。",
+      "tags": [
+        "configuration",
+        "build-system",
+        "project-file",
+        "internal",
+        "pubspec"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:README.md",
+      "type": "document",
+      "name": "README.md",
+      "filePath": "README.md",
+      "summary": "文档文件，说明 README.md 相关的项目背景、使用方式或开发信息。",
+      "tags": [
+        "documentation",
+        "overview",
+        "project-file",
+        "internal",
+        "readme"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "document:README.md",
+      "target": "file:lib/main.dart",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "config:analysis_options.yaml",
+      "target": "file:lib/main.dart",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:devtools_options.yaml",
+      "target": "file:lib/main.dart",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:pubspec.yaml",
+      "target": "file:lib/main.dart",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}

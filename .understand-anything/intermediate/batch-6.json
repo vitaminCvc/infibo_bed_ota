@@ -1,0 +1,153 @@
+{
+  "nodes": [
+    {
+      "id": "config:assets/lottie/aroma.json",
+      "type": "config",
+      "name": "aroma.json",
+      "filePath": "assets/lottie/aroma.json",
+      "summary": "配置文件，定义 aroma.json 对构建、分析或运行行为的约束。",
+      "tags": [
+        "configuration",
+        "project-file",
+        "internal",
+        "aroma"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:assets/lottie/hydrogen.json",
+      "type": "config",
+      "name": "hydrogen.json",
+      "filePath": "assets/lottie/hydrogen.json",
+      "summary": "配置文件，定义 hydrogen.json 对构建、分析或运行行为的约束。",
+      "tags": [
+        "configuration",
+        "project-file",
+        "internal",
+        "hydrogen"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:assets/lottie/music.json",
+      "type": "config",
+      "name": "music.json",
+      "filePath": "assets/lottie/music.json",
+      "summary": "配置文件，定义 music.json 对构建、分析或运行行为的约束。",
+      "tags": [
+        "configuration",
+        "project-file",
+        "internal",
+        "music"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:assets/lottie/pemf.json",
+      "type": "config",
+      "name": "pemf.json",
+      "filePath": "assets/lottie/pemf.json",
+      "summary": "配置文件，定义 pemf.json 对构建、分析或运行行为的约束。",
+      "tags": [
+        "configuration",
+        "project-file",
+        "internal",
+        "pemf"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:assets/lottie/redlight.json",
+      "type": "config",
+      "name": "redlight.json",
+      "filePath": "assets/lottie/redlight.json",
+      "summary": "配置文件，定义 redlight.json 对构建、分析或运行行为的约束。",
+      "tags": [
+        "configuration",
+        "project-file",
+        "internal",
+        "redlight"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:assets/lottie/taihez.json",
+      "type": "config",
+      "name": "taihez.json",
+      "filePath": "assets/lottie/taihez.json",
+      "summary": "配置文件，定义 taihez.json 对构建、分析或运行行为的约束。",
+      "tags": [
+        "configuration",
+        "project-file",
+        "internal",
+        "taihez"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:assets/lottie/vat.json",
+      "type": "config",
+      "name": "vat.json",
+      "filePath": "assets/lottie/vat.json",
+      "summary": "配置文件，定义 vat.json 对构建、分析或运行行为的约束。",
+      "tags": [
+        "configuration",
+        "project-file",
+        "internal",
+        "vat"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "config:assets/lottie/aroma.json",
+      "target": "file:lib/main.dart",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:assets/lottie/hydrogen.json",
+      "target": "file:lib/main.dart",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:assets/lottie/music.json",
+      "target": "file:lib/main.dart",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:assets/lottie/pemf.json",
+      "target": "file:lib/main.dart",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:assets/lottie/redlight.json",
+      "target": "file:lib/main.dart",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:assets/lottie/taihez.json",
+      "target": "file:lib/main.dart",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:assets/lottie/vat.json",
+      "target": "file:lib/main.dart",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}
