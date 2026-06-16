@@ -184,6 +184,11 @@ class ChoseUsersLogic {
   }
 
   void selectUser(UserItemData user) {
+    print('进入启动页 modeTitle = $selectedModeTitle');
+    print('进入启动页 presetCode = $selectedPresetCode');
+    print('进入启动页 presetTitleKey = $selectedPresetTitleKey');
+    print('进入启动页 customizedPlan = $selectedCustomizedPlan');
+
     Get.toNamed(
       startRoute,
       arguments: {
