@@ -26,6 +26,11 @@ class _StartPageState extends State<StartPage>
         //加入一个动画节拍器
         with
         SingleTickerProviderStateMixin {
+  //不要重复同步VAT音乐播放状态
+  String? _lastVatMusicSongId;
+  int? _lastVatMusicVolume;
+  bool? _lastVatMusicSingleLoop;
+  bool _isSyncingVatMusic = false;
   // 这里使用 AndroidSerialPortService，默认路径为 /dev/ttyS0
   final ModbusRtuService modbusService = const ModbusRtuService();
   static const Duration _phaseSwitchCommandDelay = Duration(milliseconds: 40);
@@ -1094,65 +1099,43 @@ class _StartPageState extends State<StartPage>
   }
 
   // 启动治疗
+  // 启动治疗
   Future<void> _handleStartPressed() async {
     if (_isCommanding || !_logic.canStart) return;
 
     setState(() {
-      // 发送命令后，等待升降杆到达底部
       _isCommanding = true;
-      // 已经发送一键下降，没有收到 0x0011=0；等待升降杆到达底部
       _isWaitingLiftBottom = true;
     });
+
     _waitingLiftBreathController.repeat(reverse: true);
 
     try {
-      // 等待下发参数
+      // 1. 先发送升降杆下降
       await _runStartButtonDeviceActions();
-      // 等待升降杆到达底部
+
+      // 2. 等待升降杆到底
       await _waitForLiftReachBottom();
 
       if (mounted) {
         setState(() => _isWaitingLiftBottom = false);
       }
+
       _waitingLiftBreathController.stop();
       _waitingLiftBreathController.reset();
 
+      // 3. 关闭氛围灯
       await _turnoffAmbientLight();
+
+      // 4. 构建当前 5 分钟节点的模块命令
       final List<ModbusWriteCommand> commands = _buildPhaseCommands();
-      print('启动按钮 commands.length = ${commands.length}');
-      for (final command in commands) {
-        print(
-          '启动按钮 command 0x${command.address.toRadixString(16).padLeft(4, '0').toUpperCase()} = ${command.value}',
-        );
-      }
-      if (_hasPreloadedPhaseParams) {
-        print('是否已经预加载 _hasPreloadedPhaseParams = $_hasPreloadedPhaseParams');
 
-        //防止_hasPreloadedPhaseParams 为 true 时，点击启动按钮，完整下发参数，而不是预加载参数
-        if (_hasPreloadedPhaseParams && !_logic.isPresetPlan) {
-          final List<ModbusWriteCommand> onlyStartCommands =
-              _onlyApplyAndCommand(commands);
+      // 预设模式不使用预加载。
+      // 自定义方案如果已经预加载，则只发 APPLY / COMMAND + 系统启动。
+      final bool usePreloadedParams =
+          _hasPreloadedPhaseParams && !_logic.isPresetPlan;
 
-          print('onlyApplyAndCommand length = ${onlyStartCommands.length}');
-          for (final command in onlyStartCommands) {
-            print(
-              'onlyApplyAndCommand 0x${command.address.toRadixString(16).padLeft(4, '0').toUpperCase()} = ${command.value}',
-            );
-          }
-
-          final List<ModbusWriteCommand> startCommands = <ModbusWriteCommand>[
-            ...onlyStartCommands,
-            const ModbusWriteCommand(
-              address: ModbusRtuService.systemCommandAddress,
-              value: 1,
-            ),
-          ];
-
-          await modbusService.sendCommandQueue(startCommands);
-        } else {
-          print('没有预加载，走 startWithCommands');
-          await modbusService.startWithCommands(commands);
-        }
+      if (usePreloadedParams) {
         final List<ModbusWriteCommand> startCommands = <ModbusWriteCommand>[
           ..._onlyApplyAndCommand(commands),
           const ModbusWriteCommand(
@@ -1160,11 +1143,15 @@ class _StartPageState extends State<StartPage>
             value: 1,
           ),
         ];
+
         await modbusService.sendCommandQueue(startCommands);
       } else {
+        // 预设模式走这里：完整下发参数 + APPLY + COMMAND + 0x0004
         await modbusService.startWithCommands(commands);
       }
+
       if (!mounted) return;
+
       setState(() {
         _logic.play();
         _runningModules.addAll(_modulesForPhase());
@@ -1174,9 +1161,15 @@ class _StartPageState extends State<StartPage>
         _runningModuleParamValues
           ..clear()
           ..addAll(_currentModuleParamValues(_runningModules));
+
+        // 启动命令已经发完，这里先恢复状态。
+        _isCommanding = false;
       });
+
+      // 5. 启动成功后，再开始氢气流量轮询和软件音乐播放
       _syncHydrogenFlowPolling();
       unawaited(_syncVatMusicPlayback());
+
       debugPrint('start command sent successfully');
     } catch (e) {
       debugPrint('start command failed: $e');
@@ -1185,6 +1178,7 @@ class _StartPageState extends State<StartPage>
     } finally {
       _waitingLiftBreathController.stop();
       _waitingLiftBreathController.reset();
+
       if (mounted) {
         setState(() {
           _isCommanding = false;
@@ -1877,8 +1871,30 @@ class _StartPageState extends State<StartPage>
     return 0;
   }
 
+  //获取当前播放的乐曲Id号
   String _currentVatMusicSongId(VatPhaseSetting? setting) {
-    return _vatMusicSelection?.songId ?? setting?.songId ?? defaultSongId;
+    //如果当前有选中的歌曲，就返回选中歌曲的Id号
+    final String? runtimeSongId = _vatMusicSelection?.songId;
+    //如果当前没有选中的歌曲，就返回默认的歌曲Id号
+    if (runtimeSongId != null && runtimeSongId.isNotEmpty) {
+      return runtimeSongId;
+    }
+    //如果当前没有选中的歌曲，就返回默认的歌曲Id号
+    final String? planSongId = setting?.songId;
+    if (planSongId != null && planSongId.isNotEmpty) {
+      final int? trackNumber = int.tryParse(planSongId);
+
+      //因为预设的歌曲Id号是数字
+      //软件音乐列表allSongs从0开始，所以需要减1
+      if (trackNumber != null && allSongs.isNotEmpty) {
+        final int index = (trackNumber - 1)
+            .clamp(0, allSongs.length - 1)
+            .toInt();
+        return allSongs[index].id;
+      }
+      return planSongId;
+    }
+    return defaultSongId;
   }
 
   int _currentVatIntensity(VatPhaseSetting? setting) {
@@ -1890,23 +1906,63 @@ class _StartPageState extends State<StartPage>
         VatMusicPlayer.instance.volume;
   }
 
+  /***歌曲没变 → 不重新播放
+    *******音量没变 → 不重复设置
+        *********循环模式没变 → 不重复设置**********/
+  /// 同步 VAT 音乐播放。预设模式单曲循环
   Future<void> _syncVatMusicPlayback() async {
-    final bool shouldPlay =
-        _logic.isRunning && _modulesForPhase().contains('vat');
-    if (!shouldPlay) {
+    //如果当前正在同步VAT音乐播放状态，就直接返回
+    if (_isSyncingVatMusic) return;
+
+    //如果当前没有启用VAT模块，就直接返回
+    final Set<String> modules = _modulesForPhase();
+    final VatPhaseSetting? setting = _logic.activeVatSetting;
+
+    //如果当前没有选中的歌曲，就直接返回
+    final bool shouldPlayVat =
+        _logic.isRunning && modules.contains('vat') && setting != null;
+
+    if (!shouldPlayVat) {
+      _lastVatMusicSongId = null;
+      _lastVatMusicVolume = null;
+      _lastVatMusicSingleLoop = null;
       await VatMusicPlayer.instance.pause();
       return;
     }
 
-    final VatPhaseSetting? setting = _logic.activeVatSetting;
     final String songId = _currentVatMusicSongId(setting);
-    final int intensity = _currentVatIntensity(setting);
-    await VatMusicPlayer.instance.applySelection(
-      songId,
-      volume: intensity,
-      playNow: true,
-      restart: VatMusicPlayer.instance.selectedSongId != songId,
-    );
+    final int volume = _currentVatIntensity(setting).clamp(0, 100).toInt();
+    final bool singleLoop = _logic.isPresetPlan;
+
+    final bool songChanged = _lastVatMusicSongId != songId;
+    final bool volumeChanged = _lastVatMusicVolume != volume;
+    final bool loopChanged = _lastVatMusicSingleLoop != singleLoop;
+
+    // 歌曲没变、循环模式没变、正在播放时，不要反复 applySelection。
+    if (!songChanged && !loopChanged && VatMusicPlayer.instance.isPlaying) {
+      if (volumeChanged) {
+        _lastVatMusicVolume = volume;
+        await VatMusicPlayer.instance.setVolume(volume);
+      }
+      return;
+    }
+
+    _isSyncingVatMusic = true;
+    try {
+      await VatMusicPlayer.instance.applySelection(
+        songId,
+        volume: volume,
+        playNow: true,
+        restart: songChanged,
+        singleLoop: singleLoop,
+      );
+
+      _lastVatMusicSongId = songId;
+      _lastVatMusicVolume = volume;
+      _lastVatMusicSingleLoop = singleLoop;
+    } finally {
+      _isSyncingVatMusic = false;
+    }
   }
 
   /// 获取当前阶段启用的模块列表。
@@ -1944,7 +2000,7 @@ class _StartPageState extends State<StartPage>
     final VatMusicSelection? current = _vatMusicSelection;
 
     final String currentSongId =
-        current?.songId ?? setting?.songId ?? defaultSongId;
+        current?.songId ?? _currentVatMusicSongId(setting);
 
     final Object? result = await Get.toNamed(
       '/music',
@@ -1974,6 +2030,7 @@ class _StartPageState extends State<StartPage>
       volume: int.tryParse(result.intensity) ?? VatMusicPlayer.instance.volume,
       playNow: isVatRunning,
       restart: true,
+      singleLoop: _logic.isPresetPlan,
     );
     if (isVatRunning) {
       final Map<String, Map<int, int>> currentParamValues =
@@ -2343,7 +2400,8 @@ class _StartPageState extends State<StartPage>
   void _startHydrogenFlowPolling() {
     if (_hydrogenFlowTimer != null && _hydrogenFlowTimer!.isActive) return;
     _readHydrogenFlowOnce();
-    _hydrogenFlowTimer = Timer.periodic(const Duration(seconds: 5), (_) {
+    //氢气流量轮询频率,8s轮询一次
+    _hydrogenFlowTimer = Timer.periodic(const Duration(seconds: 8), (_) {
       if (!_logic.isRunning) return;
       _readHydrogenFlowOnce();
     });

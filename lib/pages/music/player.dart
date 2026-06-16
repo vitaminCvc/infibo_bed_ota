@@ -63,15 +63,19 @@ class VatMusicPlayer {
     return true;
   }
 
+  // 应用选中的歌曲
   Future<void> applySelection(
     String songId, {
     required int volume,
     required bool playNow,
     bool restart = false,
+    bool singleLoop = false,
   }) async {
     _selectedSongId = songId;
+    //设置音量
     await setVolume(volume);
 
+    //如果需要重新开始播放，就重新设置播放列表
     if (restart) {
       final int index = _playableIndexForSongId(songId);
       if (index >= 0) {
@@ -80,18 +84,21 @@ class VatMusicPlayer {
       }
     }
 
+    //进行单曲循环播放
     if (playNow) {
-      await playForVatPhase();
+      await playForVatPhase(singleLoop: singleLoop);
     } else {
       await _player.pause();
     }
   }
 
-  Future<void> playForVatPhase() async {
+  //播放单曲循环
+  Future<void> playForVatPhase({bool singleLoop = false}) async {
     final int index = _playableIndexForSongId(_selectedSongId);
     if (index < 0) return;
 
     await _ensurePlaylist(initialIndex: index);
+    await _player.setLoopMode(singleLoop ? LoopMode.one : LoopMode.all);
     await _player.setVolume(_volume / 100);
     await _player.play();
   }
