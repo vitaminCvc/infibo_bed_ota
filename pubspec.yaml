@@ -103,6 +103,7 @@ flutter:
     - assets/music/
     - assets/Summary/
     - assets/History/
+    - assets/customized/PEMF/Waveform/selected/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

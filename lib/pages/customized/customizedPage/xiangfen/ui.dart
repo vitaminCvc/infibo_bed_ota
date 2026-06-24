@@ -37,11 +37,7 @@ class _FragranceExpandPageState extends State<FragranceExpandPage> {
   void initState() {
     super.initState();
     _controller = FragranceSettingController.instance;
-    _selectedId =
-        widget.initialSetting?.fragranceId ??
-        (_controller.selectedFragranceId.trim().isEmpty
-            ? null
-            : _controller.selectedFragranceId);
+    _selectedId = widget.initialSetting?.fragranceId;
   }
 
   @override

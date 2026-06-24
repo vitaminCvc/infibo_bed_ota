@@ -60,11 +60,7 @@ class _TerahertzExpandPageState extends State<TerahertzExpandPage> {
       return;
     }
 
-    final TerahertzSettingSnapshot snapshot = _controller.snapshot();
-    _frequency = snapshot.frequency;
-    _power = snapshot.power;
-    _mode = snapshot.mode;
-    _wave = snapshot.wave;
+    // 新节点：初始化为默认零值，与脉轮、HIFEM 行为保持一致，不从全局 controller 读取旧节点数据
   }
 
   @override

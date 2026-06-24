@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:get/get.dart' hide Response;
 import 'package:infibo_app/api/dio/api/api_response.dart';
 
 class ApiClient {
@@ -11,9 +12,9 @@ class ApiClient {
       baseUrl: const String.fromEnvironment(
         'API_BASE_URL',
         // WIFI 环境
-        defaultValue: 'http://192.168.1.80:8080',
+        // defaultValue: 'http://192.168.1.80:8080',
         // 安卓模拟器环境
-        // defaultValue: 'http://127.0.0.1:8080',
+        defaultValue: 'http://127.0.0.1:8080',
       ),
       connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(seconds: 10),
@@ -39,9 +40,9 @@ class ApiClient {
         fromJsonT: fromJsonT,
       );
     } on DioException {
-      return ApiResponse<T>(code: -1, message: '网络连接失败，请检查网络或服务器');
+      return ApiResponse<T>(code: -1, message: 'network_error'.tr);
     } catch (e) {
-      return ApiResponse<T>(code: -1, message: '未知错误: $e');
+      return ApiResponse<T>(code: -1, message: '${'unknown_error'.tr}: $e');
     }
   }
 
@@ -62,9 +63,9 @@ class ApiClient {
         fromJsonT: fromJsonT,
       );
     } on DioException {
-      return ApiResponse<T>(code: -1, message: '网络连接失败，请检查网络或服务器');
+      return ApiResponse<T>(code: -1, message: 'network_error'.tr);
     } catch (e) {
-      return ApiResponse<T>(code: -1, message: '未知错误: $e');
+      return ApiResponse<T>(code: -1, message: '${'unknown_error'.tr}: $e');
     }
   }
 
@@ -83,9 +84,9 @@ class ApiClient {
         fromJsonT: fromJsonT,
       );
     } on DioException {
-      return ApiResponse<T>(code: -1, message: '网络连接失败，请检查网络或服务器');
+      return ApiResponse<T>(code: -1, message: 'network_error'.tr);
     } catch (e) {
-      return ApiResponse<T>(code: -1, message: '未知错误: $e');
+      return ApiResponse<T>(code: -1, message: '${'unknown_error'.tr}: $e');
     }
   }
 
@@ -106,9 +107,9 @@ class ApiClient {
         fromJsonT: fromJsonT,
       );
     } on DioException {
-      return ApiResponse<T>(code: -1, message: '网络连接失败，请检查网络或服务器');
+      return ApiResponse<T>(code: -1, message: 'network_error'.tr);
     } catch (e) {
-      return ApiResponse<T>(code: -1, message: '未知错误: $e');
+      return ApiResponse<T>(code: -1, message: '${'unknown_error'.tr}: $e');
     }
   }
 

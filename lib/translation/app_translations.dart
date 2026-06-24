@@ -1,4 +1,4 @@
-﻿// App 多语言文案表。
+// App 多语言文案表。
 //
 // 所有页面展示文案按语言代码集中维护在这里。
 import 'package:get/get.dart';
@@ -102,6 +102,8 @@ class AppTranslations extends Translations {
       'full_care': '全面养护',
       'mental_healing': '情绪疗愈',
       'device_fault': '设备故障',
+      'water_level_warning_title': '设备缺水提醒',
+      'water_level_warning_message': '水箱水量不足，请及时加水后继续使用设备',
 
       // 登录页面
       'login_email_hint': '输入邮箱',
@@ -136,6 +138,8 @@ class AppTranslations extends Translations {
       'login_success': '登录成功',
       'login_failed': '登录失败',
       'error': '错误',
+      'network_error': '网络连接失败，请检查网络或服务器',
+      'unknown_error': '未知错误',
       'login_request_failed': '登录请求失败：',
       'new_password_hint': '输入新密码',
       'confirm_new_password_hint': '确认新密码',
@@ -208,6 +212,7 @@ class AppTranslations extends Translations {
       'pemf_params_required': 'PEMF频率和强度都不能为0',
       'vat_params_required': 'VAT频率和强度都不能为0',
       'hydrogen_concentration_required': '分子氢浓度不能为0',
+      'expand_params_required': '请至少选择一个拓展功能',
       'node_copied_prefix': '已复制到',
       'node_copied_suffix': '分钟节点',
 
@@ -302,23 +307,22 @@ class AppTranslations extends Translations {
       'feedback_label': 'Feedback: ', // 感受：
       'no_feedback': 'No feedback', // 暂无反馈
       'treatment_modules': 'Treatment Modules', // 治疗模块
-      'energy_score': 'Energy Score', // 能量指数
-      'cell_score': 'Cell Activation', // 细胞活化
-      'relaxation_score': 'Relaxation Score', // 放松指数
-      'immune_score': 'Immune Boost', // 免疫提升
-      'compared_to_last': 'Compared to last', // 较上次
+      'energy_score': 'Energy Idx.', // 能量指数
+      'cell_score': 'Cell Act.', // 细胞活化
+      'relaxation_score': 'Relax Idx.', // 放松指数
+      'immune_score': 'Imm. Boost', // 免疫提升
+      'compared_to_last': 'vs last', // 较上次
       'session_once_1': '1st', // 1次
       'session_once_2': '2nd', // 2次
       'session_once_3': '3rd', // 3次
       'current_session': 'Current', // 本次
-      'health_effect_assessment': 'Health Effect Assessment', // 健康效果评估
+      'health_effect_assessment': 'Health Eval.', // 健康效果评估
       'status_good': 'Good', // 良好
       'overall_score': 'Overall Score', // 综合得分
       'level_low': 'Low', // 低
       'level_medium': 'Medium', // 中
       'level_high': 'High', // 高
-      'therapy_feedback_hint':
-          'Enter your feelings and body response for this session', // 请输入本次疗程的感受、身体反应等
+      'therapy_feedback_hint': 'Session notes', // 请输入本次疗程的感受、身体反应等
       'score_unit': 'pts', // 分
       'minutes_unit': 'min', // 分
       'seconds_unit': 's', // 秒
@@ -340,6 +344,9 @@ class AppTranslations extends Translations {
       'full_care': 'Total Care', // 全面养护
       'mental_healing': 'Emo. Healing', // 情绪疗愈
       'device_fault': 'Device Fault', // 设备故障
+      'water_level_warning_title': 'Low Water Alert',
+      'water_level_warning_message':
+          'Water tank level is low. Please refill before continuing.',
       // 登录页面
       'login_email_hint': 'Enter email address', // 输入邮箱
       'login_password_hint': 'Enter password', // 输入密码
@@ -373,6 +380,9 @@ class AppTranslations extends Translations {
       'login_success': 'Login successful', // 登录成功
       'login_failed': 'Login failed', // 登录失败
       'error': 'Error', // 错误
+      'network_error':
+          'Network connection failed, please check network or server',
+      'unknown_error': 'Unknown error',
       'login_request_failed': 'Login request failed: ', // 登录请求失败：
       'new_password_hint': 'Enter new password', // 输入新密码
       'confirm_new_password_hint': 'Confirm new password', // 确认新密码
@@ -395,7 +405,7 @@ class AppTranslations extends Translations {
       'music_resource_missing':
           'No audio resource for this music', // 当前音乐暂无音频资源
       // 启动页面
-      'red_light': 'RED THERAPY', // 红光
+      'red_light': 'Red Ther.', // 红光
       'wavelength': 'Wavelength', // 波长
       'hydrogen_molecule': 'H₂', // 分子氢
       'hydrogen_concentration': 'H₂ Conc.', // 氢气浓度
@@ -448,6 +458,7 @@ class AppTranslations extends Translations {
           'VAT frequency and intensity cannot both be 0', // VAT频率和强度都不能为0
       'hydrogen_concentration_required':
           'H₂ concentration cannot be 0', // 分子氢浓度不能为0
+      'expand_params_required': 'Please select at least one expand feature',
       'node_copied_prefix': 'Copied to ',
       'node_copied_suffix': ' min node',
       // 拓展页面
@@ -541,22 +552,21 @@ class AppTranslations extends Translations {
       'no_feedback': 'Sin comentarios', // 暂无反馈
       'treatment_modules': 'Módulos de terapia', // 治疗模块
       'energy_score': 'Energía', // 能量指数
-      'cell_score': 'Activación celular', // 细胞活化
+      'cell_score': 'Act. cel.', // 细胞活化
       'relaxation_score': 'Relajación', // 放松指数
       'immune_score': 'Inmunidad', // 免疫提升
-      'compared_to_last': 'Frente a la anterior', // 较上次
+      'compared_to_last': 'vs ant.', // 较上次
       'session_once_1': '1ª', // 1次
       'session_once_2': '2ª', // 2次
       'session_once_3': '3ª', // 3次
       'current_session': 'Actual', // 本次
-      'health_effect_assessment': 'Evaluación de salud', // 健康效果评估
+      'health_effect_assessment': 'Eval. salud', // 健康效果评估
       'status_good': 'Bueno', // 良好
       'overall_score': 'Puntuación general', // 综合得分
       'level_low': 'Bajo', // 低
       'level_medium': 'Medio', // 中
       'level_high': 'Alto', // 高
-      'therapy_feedback_hint':
-          'Ingrese sensaciones y reacciones de esta sesión', // 请输入本次疗程的感受、身体反应等
+      'therapy_feedback_hint': 'Notas de sesión', // 请输入本次疗程的感受、身体反应等
       'score_unit': 'pts', // 分
       'minutes_unit': 'min', // 分
       'seconds_unit': 's', // 秒
@@ -578,6 +588,9 @@ class AppTranslations extends Translations {
       'full_care': 'Cuidado total', // 全面养护
       'mental_healing': 'Emoción', // 情绪疗愈
       'device_fault': 'Fallo de dispositivo', // 设备故障
+      'water_level_warning_title': 'Aviso de agua insuficiente',
+      'water_level_warning_message':
+          'El nivel del tanque de agua es bajo. Rellénelo para continuar.',
       // 登录页面
       'login_email_hint': 'Ingrese correo electrónico', // 输入邮箱
       'login_password_hint': 'Ingrese contraseña', // 输入密码
@@ -612,8 +625,8 @@ class AppTranslations extends Translations {
       'login_success': 'Inicio de sesión correcto', // 登录成功
       'login_failed': 'Error al iniciar sesión', // 登录失败
       'error': 'Error', // 错误
-      'login_request_failed':
-          'Error en la solicitud de inicio de sesión: ', // 登录请求失败：
+      'network_error': 'Error de conexión, compruebe la red o el servidor',
+      'unknown_error': 'Error desconocido',
       'new_password_hint': 'Ingrese la nueva contraseña', // 输入新密码
       'confirm_new_password_hint': 'Confirme la nueva contraseña', // 确认新密码
       'resetting_password': 'Restableciendo...', // 重置中...
@@ -637,7 +650,7 @@ class AppTranslations extends Translations {
       'music_resource_missing':
           'Esta música no tiene audio disponible', // 当前音乐暂无音频资源
       // 启动页面
-      'red_light': 'TERAPIA ROJA', // 红光
+      'red_light': 'Ter. roja', // 红光
       'wavelength': 'Long. onda', // 波长
       'hydrogen_molecule': 'H₂', // 分子氢
       'hydrogen_concentration': 'Conc. H₂', // 氢气浓度
@@ -691,6 +704,7 @@ class AppTranslations extends Translations {
           'La frecuencia e intensidad de VAT no pueden ser 0', // VAT频率和强度都不能为0
       'hydrogen_concentration_required':
           'La concentración de H₂ no puede ser 0', // 分子氢浓度不能为0
+      'expand_params_required': 'Seleccione al menos una función extra',
       'node_copied_prefix': 'Copiado al nodo de ', // 已复制到
       'node_copied_suffix': ' min', // 分钟节点
       // 拓展页面
@@ -784,22 +798,21 @@ class AppTranslations extends Translations {
       'no_feedback': 'Sem feedback', // 暂无反馈
       'treatment_modules': 'Módulos de terapia', // 治疗模块
       'energy_score': 'Energia', // 能量指数
-      'cell_score': 'Ativação celular', // 细胞活化
-      'relaxation_score': 'Relaxamento', // 放松指数
+      'cell_score': 'Ativ. cel.', // 细胞活化
+      'relaxation_score': 'Índ. relax.', // 放松指数
       'immune_score': 'Imunidade', // 免疫提升
-      'compared_to_last': 'Comparado ao anterior', // 较上次
+      'compared_to_last': 'vs ant.', // 较上次
       'session_once_1': '1.ª', // 1次
       'session_once_2': '2.ª', // 2次
       'session_once_3': '3.ª', // 3次
       'current_session': 'Atual', // 本次
-      'health_effect_assessment': 'Avaliação de saúde', // 健康效果评估
+      'health_effect_assessment': 'Aval. saúde', // 健康效果评估
       'status_good': 'Bom', // 良好
       'overall_score': 'Pontuação geral', // 综合得分
       'level_low': 'Baixo', // 低
       'level_medium': 'Médio', // 中
       'level_high': 'Alto', // 高
-      'therapy_feedback_hint':
-          'Introduza sensações e reações desta sessão', // 请输入本次疗程的感受、身体反应等
+      'therapy_feedback_hint': 'Notas da sessão', // 请输入本次疗程的感受、身体反应等
       'score_unit': 'pts', // 分
       'minutes_unit': 'min', // 分
       'seconds_unit': 's', // 秒
@@ -821,6 +834,9 @@ class AppTranslations extends Translations {
       'full_care': 'Cura Emociona.', // 全面养护
       'mental_healing': 'Eq. emocional', // 情绪疗愈
       'device_fault': 'Falha do dispositivo', // 设备故障
+      'water_level_warning_title': 'Aviso de falta de água',
+      'water_level_warning_message':
+          'O nível do reservatório está baixo. Reabasteça antes de continuar.',
       // 登录页面
       'login_email_hint': 'Introduza o e-mail', // 输入邮箱
       'login_password_hint': 'Introduza a palavra-passe', // 输入密码
@@ -854,6 +870,9 @@ class AppTranslations extends Translations {
       'login_success': 'Sessão iniciada com sucesso', // 登录成功
       'login_failed': 'Falha ao iniciar sessão', // 登录失败
       'error': 'Erro', // 错误
+      'network_error':
+          'Falha na conexão de rede, verifique a rede ou o servidor',
+      'unknown_error': 'Erro desconhecido',
       'login_request_failed':
           'Falha no pedido de início de sessão: ', // 登录请求失败：
       'new_password_hint': 'Introduza a nova palavra-passe', // 输入新密码
@@ -878,7 +897,7 @@ class AppTranslations extends Translations {
       'music_resource_missing':
           'Esta música não tem áudio disponível', // 当前音乐暂无音频资源
       // 启动页面
-      'red_light': 'Luz Vermelha', // 红光
+      'red_light': 'Ter. verm.', // 红光
       'wavelength': 'Onda', // 波长
       'hydrogen_molecule': 'H₂', // 分子氢
       'hydrogen_concentration': 'Conc. de H₂', // 氢气浓度
@@ -932,6 +951,7 @@ class AppTranslations extends Translations {
           'A frequência e intensidade VAT não podem ser 0', // VAT频率和强度都不能为0
       'hydrogen_concentration_required':
           'A concentração de H₂ não pode ser 0', // 分子氢浓度不能为0
+      'expand_params_required': 'Selecione pelo menos uma função extra',
       'node_copied_prefix': 'Copiado para o nó de ', // 已复制到
       'node_copied_suffix': ' min', // 分钟节点
       // 拓展页面
@@ -1025,10 +1045,10 @@ class AppTranslations extends Translations {
       'no_feedback': 'Нет отзыва', // 暂无反馈
       'treatment_modules': 'Модули терапии', // 治疗模块
       'energy_score': 'Энергия', // 能量指数
-      'cell_score': 'Клеточная активация', // 细胞活化
-      'relaxation_score': 'Расслабление', // 放松指数
+      'cell_score': 'Акт. клет.', // 细胞活化
+      'relaxation_score': 'Инд. рел.', // 放松指数
       'immune_score': 'Иммунитет', // 免疫提升
-      'compared_to_last': 'По сравнению с прошлым', // 较上次
+      'compared_to_last': 'к прошл.', // 较上次
       'session_once_1': '1-й', // 1次
       'session_once_2': '2-й', // 2次
       'session_once_3': '3-й', // 3次
@@ -1039,8 +1059,7 @@ class AppTranslations extends Translations {
       'level_low': 'Низк.', // 低
       'level_medium': 'Сред.', // 中
       'level_high': 'Выс.', // 高
-      'therapy_feedback_hint':
-          'Введите ощущения и реакцию тела после сеанса', // 请输入本次疗程的感受、身体反应等
+      'therapy_feedback_hint': 'Заметки сеанса', // 请输入本次疗程的感受、身体反应等
       'score_unit': 'б', // 分
       'minutes_unit': 'мин', // 分
       'seconds_unit': 'с', // 秒
@@ -1062,6 +1081,9 @@ class AppTranslations extends Translations {
       'full_care': 'Общий уход', // 全面养护
       'mental_healing': 'Эмо-Баланс', // 情绪疗愈
       'device_fault': 'Ошибка устройства', // 设备故障
+      'water_level_warning_title': 'Предупреждение о нехватке воды',
+      'water_level_warning_message':
+          'Низкий уровень воды. Долейте перед продолжением.',
       // 登录页面
       'login_email_hint': 'Введите адрес электронной почты', // 输入邮箱
       'login_password_hint': 'Введите пароль', // 输入密码
@@ -1095,6 +1117,8 @@ class AppTranslations extends Translations {
       'login_success': 'Вход выполнен', // 登录成功
       'login_failed': 'Не удалось войти', // 登录失败
       'error': 'Ошибка', // 错误
+      'network_error': 'Ошибка подключения к сети, проверьте сеть или сервер',
+      'unknown_error': 'Неизвестная ошибка',
       'login_request_failed': 'Ошибка запроса входа: ', // 登录请求失败：
       'new_password_hint': 'Введите новый пароль', // 输入新密码
       'confirm_new_password_hint': 'Подтвердите новый пароль', // 确认新密码
@@ -1115,7 +1139,7 @@ class AppTranslations extends Translations {
       'confirm_music_selection': 'Подтвердить выбор', // 确认选择
       'music_resource_missing': 'Для этой музыки нет аудио', // 当前音乐暂无音频资源
       // 启动页面
-      'red_light': 'Красный свет', // 红光
+      'red_light': 'Красн. тер.', // 红光
       'wavelength': 'Волна', // 波长
       'hydrogen_molecule': 'H₂', // 分子氢
       'hydrogen_concentration': 'Конц. H₂', // 氢气浓度
@@ -1168,6 +1192,7 @@ class AppTranslations extends Translations {
           'Частота и интенсивность VAT не могут быть 0', // VAT频率和强度都不能为0
       'hydrogen_concentration_required':
           'Концентрация H₂ не может быть 0', // 分子氢浓度不能为0
+      'expand_params_required': 'Выберите хотя бы одну доп. функцию',
       'node_copied_prefix': 'Скопировано в узел ', // 已复制到
       'node_copied_suffix': ' мин', // 分钟节点
       // 拓展页面
@@ -1261,10 +1286,10 @@ class AppTranslations extends Translations {
       'no_feedback': 'Aucun retour', // 暂无反馈
       'treatment_modules': 'Modules de thérapie', // 治疗模块
       'energy_score': 'Énergie', // 能量指数
-      'cell_score': 'Activation cellulaire', // 细胞活化
+      'cell_score': 'Act. cell.', // 细胞活化
       'relaxation_score': 'Relaxation', // 放松指数
       'immune_score': 'Immunité', // 免疫提升
-      'compared_to_last': 'Par rapport au précédent', // 较上次
+      'compared_to_last': 'vs préc.', // 较上次
       'session_once_1': '1re', // 1次
       'session_once_2': '2e', // 2次
       'session_once_3': '3e', // 3次
@@ -1275,8 +1300,7 @@ class AppTranslations extends Translations {
       'level_low': 'Bas', // 低
       'level_medium': 'Moyen', // 中
       'level_high': 'Haut', // 高
-      'therapy_feedback_hint':
-          'Saisir le ressenti et les réactions de cette séance', // 请输入本次疗程的感受、身体反应等
+      'therapy_feedback_hint': 'Notes séance', // 请输入本次疗程的感受、身体反应等
       'score_unit': 'pts', // 分
       'minutes_unit': 'min', // 分
       'seconds_unit': 's', // 秒
@@ -1298,6 +1322,9 @@ class AppTranslations extends Translations {
       'full_care': 'Soin complet', // 全面养护
       'mental_healing': 'Soin émotionnel', // 情绪疗愈
       'device_fault': 'Défaut de l’appareil', // 设备故障
+      'water_level_warning_title': 'Alerte niveau d’eau faible',
+      'water_level_warning_message':
+          'Le niveau du réservoir d’eau est bas. Ajoutez de l’eau pour continuer.',
       // 登录页面
       'login_email_hint': 'Saisir l’adresse e-mail', // 输入邮箱
       'login_password_hint': 'Saisir le mot de passe', // 输入密码
@@ -1331,6 +1358,9 @@ class AppTranslations extends Translations {
       'login_success': 'Connexion réussie', // 登录成功
       'login_failed': 'Échec de la connexion', // 登录失败
       'error': 'Erreur', // 错误
+      'network_error':
+          'Échec de la connexion réseau, vérifiez le réseau ou le serveur',
+      'unknown_error': 'Erreur inconnue',
       'login_request_failed': 'Échec de la demande de connexion : ', // 登录请求失败：
       'new_password_hint': 'Saisir le nouveau mot de passe', // 输入新密码
       'confirm_new_password_hint': 'Confirmer le nouveau mot de passe', // 确认新密码
@@ -1359,7 +1389,7 @@ class AppTranslations extends Translations {
       'music_resource_missing':
           'Aucune ressource audio pour cette musique', // 当前音乐暂无音频资源
       // 启动页面
-      'red_light': 'Thérapie rouge', // 红光
+      'red_light': 'Thér. rouge', // 红光
       'wavelength': 'Thér. rouge', // 波长
       'hydrogen_molecule': 'H₂', // 分子氢
       'hydrogen_concentration': 'Conc. H₂', // 氢气浓度
@@ -1416,6 +1446,7 @@ class AppTranslations extends Translations {
           'La fréquence et l’intensité VAT ne peuvent pas être à 0', // VAT频率和强度都不能为0
       'hydrogen_concentration_required':
           'La concentration H₂ ne peut pas être 0', // 分子氢浓度不能为0
+      'expand_params_required': 'Sélectionnez au moins une fonction extra',
       'node_copied_prefix': 'Copié vers le nœud de ', // 已复制到
       'node_copied_suffix': ' min', // 分钟节点
       // 拓展页面
@@ -1507,7 +1538,7 @@ class AppTranslations extends Translations {
       'no_feedback': '피드백 없음', // 暂无反馈
       'treatment_modules': '치료 모듈', // 治疗模块
       'energy_score': '에너지 지수', // 能量指数
-      'cell_score': '세포 활성화', // 细胞活化
+      'cell_score': '세포 활성', // 细胞活化
       'relaxation_score': '이완 지수', // 放松指数
       'immune_score': '면역 향상', // 免疫提升
       'compared_to_last': '지난번 대비', // 较上次
@@ -1515,13 +1546,13 @@ class AppTranslations extends Translations {
       'session_once_2': '2회', // 2次
       'session_once_3': '3회', // 3次
       'current_session': '이번', // 本次
-      'health_effect_assessment': '건강 효과 평가', // 健康效果评估
+      'health_effect_assessment': '건강 요약', // 健康效果评估
       'status_good': '양호', // 良好
       'overall_score': '종합 점수', // 综合得分
       'level_low': '낮음', // 低
       'level_medium': '중간', // 中
       'level_high': '높음', // 高
-      'therapy_feedback_hint': '이번 치료의 느낌과 신체 반응을 입력하세요', // 请输入本次疗程的感受、身体反应等
+      'therapy_feedback_hint': '세션 메모', // 请输入本次疗程的感受、身体反应等
       'score_unit': '점', // 分
       'minutes_unit': '분', // 分
       'seconds_unit': '초', // 秒
@@ -1543,6 +1574,8 @@ class AppTranslations extends Translations {
       'full_care': '토탈 케어', // 全面养护
       'mental_healing': '정서 치유', // 情绪疗愈
       'device_fault': '장치 고장', // 设备故障
+      'water_level_warning_title': '물 부족 알림',
+      'water_level_warning_message': '물탱크 수위가 낮습니다. 계속 사용하려면 물을 보충하세요.',
       // 登录页面
       'login_email_hint': '이메일을 입력하세요', // 输入邮箱
       'login_password_hint': '비밀번호를 입력하세요', // 输入密码
@@ -1575,6 +1608,8 @@ class AppTranslations extends Translations {
       'login_success': '로그인 성공', // 登录成功
       'login_failed': '로그인 실패', // 登录失败
       'error': '오류', // 错误
+      'network_error': '네트워크 연결 실패, 네트워크 또는 서버를 확인하세요',
+      'unknown_error': '알 수 없는 오류',
       'login_request_failed': '로그인 요청 실패: ', // 登录请求失败：
       'new_password_hint': '새 비밀번호를 입력하세요', // 输入新密码
       'confirm_new_password_hint': '새 비밀번호를 확인하세요', // 确认新密码
@@ -1595,7 +1630,7 @@ class AppTranslations extends Translations {
       'confirm_music_selection': '선택 확인', // 确认选择
       'music_resource_missing': '현재 음악에 오디오 리소스가 없습니다', // 当前音乐暂无音频资源
       // 启动页面
-      'red_light': '레드 테라피', // 红光
+      'red_light': '레드 테라.', // 红光
       'wavelength': '파장', // 波长
       'hydrogen_molecule': '수소', // 分子氢
       'hydrogen_concentration': '수소 농도', // 氢气浓度
@@ -1643,6 +1678,7 @@ class AppTranslations extends Translations {
       'pemf_params_required': 'PEMF 주파수와 강도는 모두 0일 수 없습니다', // PEMF频率和强度都不能为0
       'vat_params_required': 'VAT 주파수와 강도는 모두 0일 수 없습니다', // VAT频率和强度都不能为0
       'hydrogen_concentration_required': '수소 농도는 0일 수 없습니다', // 分子氢浓度不能为0
+      'expand_params_required': '최소 하나의 확장 기능을 선택하세요',
       'node_copied_prefix': '', // 已复制到
       'node_copied_suffix': '분 노드에 복사됨', // 分钟节点
       // 拓展页面
@@ -1738,19 +1774,18 @@ class AppTranslations extends Translations {
       'cell_score': 'تنشيط الخلايا', // 细胞活化
       'relaxation_score': 'مؤشر الاسترخاء', // 放松指数
       'immune_score': 'تعزيز المناعة', // 免疫提升
-      'compared_to_last': 'مقارنة بالسابق', // 较上次
+      'compared_to_last': 'مقابل السابق', // 较上次
       'session_once_1': '1', // 1次
       'session_once_2': '2', // 2次
       'session_once_3': '3', // 3次
       'current_session': 'الحالية', // 本次
-      'health_effect_assessment': 'تقييم التأثير الصحي', // 健康效果评估
+      'health_effect_assessment': 'ملخص الصحة', // 健康效果评估
       'status_good': 'جيد', // 良好
       'overall_score': 'النتيجة الإجمالية', // 综合得分
       'level_low': 'منخفض', // 低
       'level_medium': 'متوسط', // 中
       'level_high': 'مرتفع', // 高
-      'therapy_feedback_hint':
-          'أدخل شعورك واستجابة الجسم لهذه الجلسة', // 请输入本次疗程的感受、身体反应等
+      'therapy_feedback_hint': 'ملاحظات الجلسة', // 请输入本次疗程的感受、身体反应等
       'score_unit': 'نقطة', // 分
       'minutes_unit': 'د', // 分
       'seconds_unit': 'ث', // 秒
@@ -1772,6 +1807,9 @@ class AppTranslations extends Translations {
       'full_care': 'رعاية شاملة', // 全面养护
       'mental_healing': 'شفاء عاطفي', // 情绪疗愈
       'device_fault': 'عطل الجهاز', // 设备故障
+      'water_level_warning_title': 'تنبيه نقص الماء',
+      'water_level_warning_message':
+          'مستوى الماء في الخزان منخفض. يرجى تعبئته قبل المتابعة.',
       // 登录页面
       'login_email_hint': 'أدخل البريد الإلكتروني', // 输入邮箱
       'login_password_hint': 'أدخل كلمة المرور', // 输入密码
@@ -1805,6 +1843,8 @@ class AppTranslations extends Translations {
       'login_success': 'تم تسجيل الدخول بنجاح', // 登录成功
       'login_failed': 'فشل تسجيل الدخول', // 登录失败
       'error': 'خطأ', // 错误
+      'network_error': 'فشل الاتصال بالشبكة، يرجى التحقق من الشبكة أو الخادم',
+      'unknown_error': 'خطأ غير معروف',
       'login_request_failed': 'فشل طلب تسجيل الدخول: ', // 登录请求失败：
       'new_password_hint': 'أدخل كلمة المرور الجديدة', // 输入新密码
       'confirm_new_password_hint': 'أكد كلمة المرور الجديدة', // 确认新密码
@@ -1879,6 +1919,7 @@ class AppTranslations extends Translations {
           'لا يمكن أن يكون تردد وشدة VAT صفرًا', // VAT频率和强度都不能为0
       'hydrogen_concentration_required':
           'لا يمكن أن يكون تركيز H₂ صفرًا', // 分子氢浓度不能为0
+      'expand_params_required': 'يرجى تحديد ميزة إضافية واحدة على الأقل',
       'node_copied_prefix': 'تم النسخ إلى عقدة ', // 已复制到
       'node_copied_suffix': ' دقيقة', // 分钟节点
       // 拓展页面
@@ -1972,22 +2013,21 @@ class AppTranslations extends Translations {
       'no_feedback': 'Kein Feedback', // 暂无反馈
       'treatment_modules': 'Therapiemodule', // 治疗模块
       'energy_score': 'Energie', // 能量指数
-      'cell_score': 'Zellaktivierung', // 细胞活化
+      'cell_score': 'Zellakt.', // 细胞活化
       'relaxation_score': 'Entspannung', // 放松指数
-      'immune_score': 'Immunstärkung', // 免疫提升
-      'compared_to_last': 'Im Vergleich zur letzten', // 较上次
+      'immune_score': 'Immun+', // 免疫提升
+      'compared_to_last': 'vs letzte', // 较上次
       'session_once_1': '1.', // 1次
       'session_once_2': '2.', // 2次
       'session_once_3': '3.', // 3次
       'current_session': 'Aktuell', // 本次
-      'health_effect_assessment': 'Gesundheitsbewertung', // 健康效果评估
+      'health_effect_assessment': 'Gesundheit', // 健康效果评估
       'status_good': 'Gut', // 良好
       'overall_score': 'Gesamtpunktzahl', // 综合得分
       'level_low': 'Niedrig', // 低
       'level_medium': 'Mittel', // 中
       'level_high': 'Hoch', // 高
-      'therapy_feedback_hint':
-          'Empfinden und Körperreaktion dieser Sitzung eingeben', // 请输入本次疗程的感受、身体反应等
+      'therapy_feedback_hint': 'Sitzungsnotizen', // 请输入本次疗程的感受、身体反应等
       'score_unit': 'Pkt', // 分
       'minutes_unit': 'min', // 分
       'seconds_unit': 's', // 秒
@@ -2010,6 +2050,9 @@ class AppTranslations extends Translations {
       'full_care': 'Rundum-Pflege', // 全面养护
       'mental_healing': 'Emo-Heilung', // 情绪疗愈
       'device_fault': 'Gerätefehler', // 设备故障
+      'water_level_warning_title': 'Wasserstand zu niedrig',
+      'water_level_warning_message':
+          'Der Wasserstand im Tank ist niedrig. Bitte vor der Nutzung auffüllen.',
       // 登录页面
       'login_email_hint': 'E-Mail-Adresse eingeben', // 输入邮箱
       'login_password_hint': 'Passwort eingeben', // 输入密码
@@ -2044,6 +2087,9 @@ class AppTranslations extends Translations {
       'login_success': 'Anmeldung erfolgreich', // 登录成功
       'login_failed': 'Anmeldung fehlgeschlagen', // 登录失败
       'error': 'Fehler', // 错误
+      'network_error':
+          'Netzwerkverbindung fehlgeschlagen, bitte Netzwerk oder Server prüfen',
+      'unknown_error': 'Unbekannter Fehler',
       'login_request_failed': 'Anmeldeanfrage fehlgeschlagen: ', // 登录请求失败：
       'new_password_hint': 'Neues Passwort eingeben', // 输入新密码
       'confirm_new_password_hint': 'Neues Passwort bestätigen', // 确认新密码
@@ -2068,7 +2114,7 @@ class AppTranslations extends Translations {
       'music_resource_missing':
           'Für diese Musik ist kein Audio verfügbar', // 当前音乐暂无音频资源
       // 启动页面
-      'red_light': 'Rotlicht', // 红光
+      'red_light': 'Rot-Ther.', // 红光
       'wavelength': 'Wellenlänge', // 波长
       'hydrogen_molecule': 'H₂', // 分子氢
       'hydrogen_concentration': 'H₂-Konz.', // 氢气浓度
@@ -2123,6 +2169,8 @@ class AppTranslations extends Translations {
           'VAT-Frequenz und Intensität dürfen nicht 0 sein', // VAT频率和强度都不能为0
       'hydrogen_concentration_required':
           'H₂-Konzentration darf nicht 0 sein', // 分子氢浓度不能为0
+      'expand_params_required':
+          'Bitte mindestens eine Erweiterungsfunktion auswählen',
       'node_copied_prefix': 'Kopiert zum ', // 已复制到
       'node_copied_suffix': '-Min.-Knoten', // 分钟节点
       // 拓展页面
@@ -2215,22 +2263,21 @@ class AppTranslations extends Translations {
       'no_feedback': 'Geri bildirim yok', // 暂无反馈
       'treatment_modules': 'Terapi Modülleri', // 治疗模块
       'energy_score': 'Enerji', // 能量指数
-      'cell_score': 'Hücre Aktivasyonu', // 细胞活化
+      'cell_score': 'Hücre Akt.', // 细胞活化
       'relaxation_score': 'Rahatlama', // 放松指数
       'immune_score': 'Bağışıklık', // 免疫提升
-      'compared_to_last': 'Öncekine göre', // 较上次
+      'compared_to_last': 'son vs', // 较上次
       'session_once_1': '1.', // 1次
       'session_once_2': '2.', // 2次
       'session_once_3': '3.', // 3次
       'current_session': 'Güncel', // 本次
-      'health_effect_assessment': 'Sağlık Etkisi Değerlendirmesi', // 健康效果评估
+      'health_effect_assessment': 'Sağlık Özeti', // 健康效果评估
       'status_good': 'İyi', // 良好
       'overall_score': 'Genel Puan', // 综合得分
       'level_low': 'Düşük', // 低
       'level_medium': 'Orta', // 中
       'level_high': 'Yüksek', // 高
-      'therapy_feedback_hint':
-          'Bu seans için hislerinizi ve vücut tepkisini girin', // 请输入本次疗程的感受、身体反应等
+      'therapy_feedback_hint': 'Seans notu', // 请输入本次疗程的感受、身体反应等
       'score_unit': 'puan', // 分
       'minutes_unit': 'dk', // 分
       'seconds_unit': 'sn', // 秒
@@ -2252,6 +2299,9 @@ class AppTranslations extends Translations {
       'full_care': 'Tam Bakım', // 全面养护
       'mental_healing': 'Duygusal İyil.', // 情绪疗愈
       'device_fault': 'Cihaz Arızası', // 设备故障
+      'water_level_warning_title': 'Su seviyesi düşük',
+      'water_level_warning_message':
+          'Su tankı seviyesi düşük. Devam etmeden önce lütfen su ekleyin.',
       // 登录页面
       'login_email_hint': 'E-posta adresini girin', // 输入邮箱
       'login_password_hint': 'Şifreyi girin', // 输入密码
@@ -2285,6 +2335,9 @@ class AppTranslations extends Translations {
       'login_success': 'Giriş başarılı', // 登录成功
       'login_failed': 'Giriş başarısız', // 登录失败
       'error': 'Hata', // 错误
+      'network_error':
+          'Ağ bağlantısı başarısız, lütfen ağı veya sunucuyu kontrol edin',
+      'unknown_error': 'Bilinmeyen hata',
       'login_request_failed': 'Giriş isteği başarısız: ', // 登录请求失败：
       'new_password_hint': 'Yeni şifreyi girin', // 输入新密码
       'confirm_new_password_hint': 'Yeni şifreyi doğrulayın', // 确认新密码
@@ -2306,7 +2359,7 @@ class AppTranslations extends Translations {
       'confirm_music_selection': 'Seçimi Onayla', // 确认选择
       'music_resource_missing': 'Bu müzik için ses kaynağı yok', // 当前音乐暂无音频资源
       // 启动页面
-      'red_light': 'Kırmızı Işık', // 红光
+      'red_light': 'Kır. Ter.', // 红光
       'wavelength': 'Dalga Boyu', // 波长
       'hydrogen_molecule': 'H₂', // 分子氢
       'hydrogen_concentration': 'H₂ Kons.', // 氢气浓度
@@ -2359,6 +2412,7 @@ class AppTranslations extends Translations {
           'VAT frekansı ve yoğunluğu 0 olamaz', // VAT频率和强度都不能为0
       'hydrogen_concentration_required':
           'H₂ konsantrasyonu 0 olamaz', // 分子氢浓度不能为0
+      'expand_params_required': 'En az bir genişletme işlevi seçin',
       'node_copied_prefix': '', // 已复制到
       'node_copied_suffix': ' dk düğümüne kopyalandı', // 分钟节点
       // 拓展页面

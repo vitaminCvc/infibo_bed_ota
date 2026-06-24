@@ -626,7 +626,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
   Widget _buildExpandPanel() {
     return _NotchedPanel(
       width: 250,
-      height: 255,
+      height: 322,
       notchSide: _NotchSide.right,
       gradient: const LinearGradient(
         begin: Alignment.topLeft,
@@ -650,26 +650,33 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
                 Image.asset(Assets.expandIcon, width: 43, height: 43),
               ],
             ),
-            const SizedBox(height: 15),
+            const SizedBox(height: 20),
             _buildExpandLine(
               id: 'chakra',
               text: 'chakra'.tr,
-              icon: Icons.bubble_chart_outlined,
+              selectedImage: Assets.startExpandIconOn,
+              unselectedImage: Assets.startExpandIconOff,
             ),
+            const SizedBox(height: 18),
             _buildExpandLine(
               id: 'terahertz',
               text: 'terahertz'.tr,
-              icon: Icons.sensors_outlined,
+              selectedImage: Assets.startTerahertzIconOn,
+              unselectedImage: Assets.startTerahertzIconOff,
             ),
+            const SizedBox(height: 18),
             _buildExpandLine(
               id: 'hifem',
               text: 'HIFEM',
-              icon: Icons.monitor_heart_outlined,
+              selectedImage: Assets.startHifemIconOn,
+              unselectedImage: Assets.startHifemIconOff,
             ),
+            const SizedBox(height: 18),
             _buildExpandLine(
               id: 'fragrance',
               text: 'fragrance'.tr,
-              icon: Icons.waves_outlined,
+              selectedImage: Assets.startFragranceIconOn,
+              unselectedImage: Assets.startFragranceIconOff,
             ),
           ],
         ),
@@ -680,13 +687,28 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
   Widget _buildExpandLine({
     required String id,
     required String text,
-    required IconData icon,
+
+    required String selectedImage, // 选中状态图片路径
+    required String unselectedImage, // 未选中状态图片路径
   }) {
     final bool isSelected = _activeExpandFeatures.contains(id);
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTap: () => _openExpandPage(id),
+      // 短按：未选中 → 进入选择页；已选中 → 取消该功能
+      onTap: () {
+        if (isSelected) {
+          _removeExpandFeature(id);
+        } else {
+          _openExpandPage(id);
+        }
+      },
+      // 长按：已选中 → 进入编辑页重设参数
+      onLongPress: () {
+        if (isSelected) {
+          _openExpandPage(id);
+        }
+      },
       child: Padding(
         padding: const EdgeInsets.only(bottom: 11),
         child: Row(
@@ -694,13 +716,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
             SizedBox(
               width: 24,
               height: 24,
-              child: Icon(
-                icon,
-                color: isSelected
-                    ? const Color(0xFF38C78D)
-                    : const Color(0xFF9EAEA6),
-                size: 18,
-              ),
+              child: Image.asset(isSelected ? selectedImage : unselectedImage),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -716,12 +732,12 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
             CircleAvatar(
               radius: 12,
               backgroundColor: isSelected
-                  ? const Color(0xFF38C78D)
-                  : const Color(0x334B6F61),
-              child: const Icon(
-                Icons.chevron_right,
-                color: Color(0xFFB7C7BE),
-                size: 20,
+                  ? const Color(0xFF0E9250)
+                  : const Color(0xff415149),
+              child: Icon(
+                isSelected ? Icons.check : Icons.chevron_right,
+                color: Color(0xFFFFFFFF),
+                size: 22,
               ),
             ),
           ],
@@ -893,7 +909,8 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
   void _setRedLightMode(int index, _RedLightMode mode) {
     setState(() {
       _nodeRedLightModes[index] = mode;
-      _savedNodeIndexes.removeWhere((item) => item >= index);
+      // 只移除当前节点的保存标记，不影响后面已保存的节点。
+      _savedNodeIndexes.remove(index);
     });
   }
 
@@ -1075,10 +1092,17 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
                       ],
                     ),
                     const SizedBox(width: 30),
-                    _InputBox(
-                      width: 88,
-                      controller: _vatIntensityController,
-                      enabled: false,
+                    GestureDetector(
+                      onTap: () => _openVatMusicPage(index),
+                      child: AbsorbPointer(
+                        // 吸收指针事件，防止内部输入框抢夺点击
+                        child: _InputBox(
+                          // 移除内部的 onTap，因为现在由外层 GestureDetector 处理
+                          width: 88,
+                          controller: _vatIntensityController,
+                          enabled: false, // 保持禁用状态，仅作为展示或数据绑定
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -1150,7 +1174,8 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
         songId: result.songId,
         songName: result.songName,
       );
-      _savedNodeIndexes.removeWhere((item) => item >= index);
+      // 只移除当前节点的保存标记，不影响后面已保存的节点。
+      _savedNodeIndexes.remove(index);
     });
   }
 
@@ -1341,16 +1366,44 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
 
     setState(() {
       if (_nodeFeatureIds[index].contains(id)) {
+        // 取消功能：移除功能标记 + 重置该功能所有参数。
         _nodeFeatureIds[index].remove(id);
-        if (id == 'expand') _nodeExpandIds[index].clear();
+        _resetFeatureParams(index, id);
       } else {
+        // 添加功能：初始化必要的默认值。
         _nodeFeatureIds[index].add(id);
         if (id == 'pemf' && _nodePemfWaves[index] == null) {
           _nodePemfWaves[index] = _defaultPemfWave;
         }
       }
-      _savedNodeIndexes.removeWhere((item) => item >= index);
+      // 只清除当前节点的保存标记，不影响后面已保存的节点。
+      _savedNodeIndexes.remove(index);
     });
+  }
+
+  /// 取消某个功能时，将该功能的参数全部重置为初始值。
+  void _resetFeatureParams(int index, String id) {
+    switch (id) {
+      case 'redlight':
+        _redLight660Controllers[index].clear();
+        _redLight850Controllers[index].clear();
+        _nodeRedLightModes[index] = _RedLightMode.continuous;
+      case 'pemf':
+        _pemfFrequencyControllers[index].clear();
+        _pemfIntensityControllers[index].clear();
+        _nodePemfWaves[index] = _defaultPemfWave;
+      case 'vat':
+        _vatFrequencyControllers[index].clear();
+      case 'hydrogen':
+        _hydrogenConcentrationControllers[index].clear();
+      case 'expand':
+        _nodeExpandIds[index].clear();
+        _nodeChakraStrengths[index].clear();
+        _nodeChakraModes[index] = 'rotation';
+        _nodeTerahertzSettings[index] = null;
+        _nodeHifemSettings[index] = null;
+        _nodeFragranceSettings[index] = null;
+    }
   }
 
   // 选择一个 5 分钟节点。
@@ -1367,6 +1420,37 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
 
     setState(() {
       _activeNodeIndex = index;
+    });
+  }
+
+  // 取消某个已选中的拓展功能。
+  void _removeExpandFeature(String id) {
+    final int? index = _activeNodeIndex;
+    if (index == null) return;
+
+    setState(() {
+      _nodeExpandIds[index].remove(id);
+
+      // 重置该拓展功能的参数
+      switch (id) {
+        case 'chakra':
+          _nodeChakraStrengths[index].clear();
+          _nodeChakraModes[index] = 'rotation';
+        case 'terahertz':
+          _nodeTerahertzSettings[index] = null;
+        case 'hifem':
+          _nodeHifemSettings[index] = null;
+        case 'fragrance':
+          _nodeFragranceSettings[index] = null;
+      }
+
+      // 如果所有拓展功能都被移除，则取消 expand 模块标记
+      if (_nodeExpandIds[index].isEmpty) {
+        _nodeFeatureIds[index].remove('expand');
+      }
+
+      // 只移除当前节点的保存标记
+      _savedNodeIndexes.remove(index);
     });
   }
 
@@ -1402,7 +1486,8 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
           ..clear()
           ..addAll(result.strengths);
         _nodeChakraModes[index] = result.mode;
-        _savedNodeIndexes.removeWhere((item) => item >= index);
+        // 只移除当前节点的保存标记，不影响后面已保存的节点。
+        _savedNodeIndexes.remove(index);
       });
       return;
     }
@@ -1414,7 +1499,8 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
         _nodeFeatureIds[index].add('expand');
         _nodeExpandIds[index].add(id);
         _nodeTerahertzSettings[index] = result;
-        _savedNodeIndexes.removeWhere((item) => item >= index);
+        // 只移除当前节点的保存标记，不影响后面已保存的节点。
+        _savedNodeIndexes.remove(index);
       });
       return;
     }
@@ -1426,7 +1512,9 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
         _nodeFeatureIds[index].add('expand');
         _nodeExpandIds[index].add(id);
         _nodeHifemSettings[index] = result;
-        _savedNodeIndexes.removeWhere((item) => item >= index);
+        // 只移除当前节点的保存标记（需要重新点"保存参数"），
+        // 不触碰后面已保存的节点，因为 HIFEM 各节点相互独立。
+        _savedNodeIndexes.remove(index);
       });
       return;
     }
@@ -1438,7 +1526,8 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
         _nodeFeatureIds[index].add('expand');
         _nodeExpandIds[index].add(id);
         _nodeFragranceSettings[index] = result;
-        _savedNodeIndexes.removeWhere((item) => item >= index);
+        // 只移除当前节点的保存标记，不影响后面已保存的节点。
+        _savedNodeIndexes.remove(index);
       });
       return;
     }
@@ -1448,7 +1537,8 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     setState(() {
       _nodeFeatureIds[index].add('expand');
       _nodeExpandIds[index].add(id);
-      _savedNodeIndexes.removeWhere((item) => item >= index);
+      // 只移除当前节点的保存标记，不影响后面已保存的节点。
+      _savedNodeIndexes.remove(index);
     });
   }
 
@@ -1614,6 +1704,12 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
         return;
       }
     }
+    if (_nodeFeatureIds[index].contains('expand')) {
+      if (_nodeExpandIds[index].isEmpty) {
+        _showMessage('expand_params_required'.tr);
+        return;
+      }
+    }
 
     if (_nodeFeatureIds[index].contains('redlight')) {
       _normalizeRedLightPercent(_redLight660Controllers[index]);
@@ -1686,7 +1782,8 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     setState(() {
       _nodePemfWaves[index] = wave;
       _pemfWavePickerNodeIndex = null;
-      _savedNodeIndexes.removeWhere((item) => item >= index);
+      // 只移除当前节点的保存标记，不影响后面已保存的节点。
+      _savedNodeIndexes.remove(index);
     });
   }
 
@@ -2493,48 +2590,80 @@ class _PemfSetting {
 }
 
 class _PemfWave {
-  const _PemfWave({required this.id, required this.label, required this.asset});
+  const _PemfWave({
+    required this.id,
+    required this.label,
+    required this.asset,
+    required this.selectedAsset,
+  });
 
   final String id;
   final String label;
   final String asset;
+  final String selectedAsset;
 }
 
 const List<_PemfWave> _pemfWaves = [
-  _PemfWave(id: 'sine', label: 'sine', asset: Assets.customizedPemfWaveSine),
+  _PemfWave(
+    id: 'sine',
+    label: 'sine',
+    asset: Assets.customizedPemfWaveSine,
+    selectedAsset: Assets.customizedPemfWaveSineSelected,
+  ),
   _PemfWave(
     id: 'halfSine',
     label: 'halfSine',
     asset: Assets.customizedPemfWaveHalfSine,
+    selectedAsset: Assets.customizedPemfWaveHalfSineSelected,
   ),
   _PemfWave(
     id: 'trapezoid',
     label: 'trapezoid',
     asset: Assets.customizedPemfWaveTrapezoid,
+    selectedAsset: Assets.customizedPemfWaveTrapezoidSelected,
   ),
   _PemfWave(
     id: 'standardSine',
     label: 'standardSine',
     asset: Assets.customizedPemfWaveStandardSine,
+    selectedAsset: Assets.customizedPemfWaveStandardSineSelected,
   ),
-  _PemfWave(id: 'saw', label: 'saw', asset: Assets.customizedPemfWaveSaw),
+  _PemfWave(
+    id: 'saw',
+    label: 'saw',
+    asset: Assets.customizedPemfWaveSaw,
+    selectedAsset: Assets.customizedPemfWaveSawSelected,
+  ),
   _PemfWave(
     id: 'triangle',
     label: 'triangle',
     asset: Assets.customizedPemfWaveTriangle,
+    selectedAsset: Assets.customizedPemfWaveTriangleSelected,
   ),
-  _PemfWave(id: 'pulse', label: 'pulse', asset: Assets.customizedPemfWavePulse),
+  _PemfWave(
+    id: 'pulse',
+    label: 'pulse',
+    asset: Assets.customizedPemfWavePulse,
+    selectedAsset: Assets.customizedPemfWavePulseSelected,
+  ),
   _PemfWave(
     id: 'fastRise',
     label: 'fastRise',
     asset: Assets.customizedPemfWaveFastRise,
+    selectedAsset: Assets.customizedPemfWaveFastRiseSelected,
   ),
   _PemfWave(
     id: 'dualFrequency',
     label: 'dualFrequency',
     asset: Assets.customizedPemfWaveDualFrequency,
+    selectedAsset: Assets.customizedPemfWaveDualFrequencySelected,
   ),
-  _PemfWave(id: 'cubic', label: 'cubic', asset: Assets.customizedPemfWaveCubic),
+  _PemfWave(
+    id: 'cubic',
+    label: 'cubic',
+    asset: Assets.customizedPemfWaveCubic,
+    selectedAsset: Assets.customizedPemfWaveCubicSelected,
+  ),
 ];
 
 _PemfWave? _pemfWaveFromId(String id) {
@@ -2950,12 +3079,10 @@ class _PemfWavePopupState extends State<_PemfWavePopup> {
               left: 20,
               right: 20,
               top: _selectedRowTop(_selected!),
-              child: Container(
+              child: Image.asset(
+                _selected!.selectedAsset,
                 height: _rowHeight,
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(2),
-                ),
+                fit: BoxFit.fill,
               ),
             ),
           //底部确认与取消按钮

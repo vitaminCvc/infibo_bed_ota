@@ -1,13 +1,19 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:infibo_app/api/dio/therapy_report/therapy_report_models.dart';
 import 'package:infibo_app/api/dio/login/login_models.dart';
+import 'package:infibo_app/api/modbus/modbus_rtu_service.dart';
+import 'package:infibo_app/components/water_level_warning_dialog.dart';
 import 'package:infibo_app/pages/customized/logic.dart';
 import 'package:infibo_app/pages/music/logic.dart';
+import 'package:infibo_app/pages/main/ui.dart';
 import 'package:infibo_app/pages/settingpage/logic.dart';
 import 'package:infibo_app/pages/start/logic.dart';
+import 'package:infibo_app/routes/route_observer.dart';
+import 'package:infibo_app/stores/app_header_clock_store.dart';
 import 'package:infibo_app/stores/hifem_setting_store.dart';
+import 'package:infibo_app/stores/user_store.dart';
 import 'package:infibo_app/translation/app_translations.dart';
 import 'package:infibo_app/utils/email_utils.dart';
 import 'package:infibo_app/utils/gender_utils.dart';
@@ -115,6 +121,82 @@ void main() {
           reason: '${locale.key} has not translated $key',
         );
       }
+    }
+  });
+
+  test('water level warning translations exist in every locale', () {
+    final Map<String, Map<String, String>> translations =
+        AppTranslations().keys;
+
+    for (final MapEntry<String, Map<String, String>> locale
+        in translations.entries) {
+      expect(
+        locale.value['water_level_warning_title'],
+        isNotNull,
+        reason: '${locale.key} needs a water level warning title',
+      );
+      expect(
+        locale.value['water_level_warning_message'],
+        isNotNull,
+        reason: '${locale.key} needs a water level warning message',
+      );
+    }
+  });
+
+  testWidgets('water level warning dialog renders localized text', (
+    WidgetTester tester,
+  ) async {
+    Get.addTranslations(AppTranslations().keys);
+    Get.updateLocale(const Locale('zh', 'CN'));
+
+    await tester.pumpWidget(
+      const GetMaterialApp(
+        home: Scaffold(body: Center(child: WaterLevelWarningDialog())),
+      ),
+    );
+
+    expect(find.text('设备缺水提醒'), findsOneWidget);
+    expect(find.text('水箱水量不足，请及时加水后继续使用设备'), findsOneWidget);
+  });
+
+  testWidgets('water level dialog closes when 0x01E5 recovers', (
+    WidgetTester tester,
+  ) async {
+    Get.testMode = true;
+    Get.addTranslations(AppTranslations().keys);
+    Get.updateLocale(const Locale('zh', 'CN'));
+    Get.put(UserStore());
+    addTearDown(() {
+      if (Get.isRegistered<AppHeaderClockController>()) {
+        Get.delete<AppHeaderClockController>(force: true);
+      }
+      Get.reset();
+    });
+
+    final _FakeWaterLevelModbusService modbusService =
+        _FakeWaterLevelModbusService();
+
+    await tester.pumpWidget(
+      GetMaterialApp(
+        navigatorObservers: [appRouteObserver],
+        home: MainPage(modbusService: modbusService),
+      ),
+    );
+
+    await tester.pump(const Duration(milliseconds: 250));
+    expect(find.text('设备缺水提醒'), findsOneWidget);
+
+    await tester.pump(const Duration(seconds: 3));
+    await tester.pump(const Duration(milliseconds: 250));
+
+    expect(find.text('设备缺水提醒'), findsNothing);
+    expect(modbusService.waterLevelReads, greaterThanOrEqualTo(2));
+
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
+    if (Get.isRegistered<AppHeaderClockController>()) {
+      Get.find<AppHeaderClockController>().onClose();
+      Get.delete<AppHeaderClockController>(force: true);
     }
   });
 
@@ -346,6 +428,26 @@ void main() {
   test('VAT default song exists in the playlist', () {
     expect(findSongById(defaultSongId), isNotNull);
   });
+}
+
+class _FakeWaterLevelModbusService extends ModbusRtuService {
+  _FakeWaterLevelModbusService() : super();
+
+  int waterLevelReads = 0;
+
+  @override
+  Future<int> readHoldingRegister(int address) async {
+    if (address == 0x01E5) {
+      waterLevelReads++;
+      return waterLevelReads == 1 ? 0 : 1;
+    }
+    if (address == 0x0012) return 1;
+    if (address == 0x0006) return 0;
+    return 1;
+  }
+
+  @override
+  Future<void> sendCommandQueue(List<ModbusWriteCommand> commands) async {}
 }
 
 class FakeHistoryRecordRepository implements HistoryRecordRepository {

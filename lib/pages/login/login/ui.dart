@@ -1,8 +1,6 @@
 // 登录页。
 //
 // 用户在这里输入账号密码并勾选协议；当前版本点击登录后进入主页面。
-import 'dart:ui';
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -10,6 +8,7 @@ import 'package:infibo_app/api/dio/api/api_response.dart';
 import 'package:infibo_app/api/dio/login/login_api.dart';
 import 'package:infibo_app/api/dio/login/login_models.dart';
 import 'package:infibo_app/constants/assets.dart';
+import 'package:infibo_app/components/glass_card.dart';
 import 'package:infibo_app/pages/login/login/logic.dart';
 import 'package:infibo_app/constants/color.dart';
 import 'package:infibo_app/stores/user_store.dart';
@@ -650,7 +649,7 @@ To exercise these rights, please contact our privacy compliance team at: [info@i
         return Center(
           child: Material(
             color: Colors.transparent,
-            child: _buildGlassCard(
+            child: buildGlassCard(
               width: 400,
               height: 720,
               radius: 18,
@@ -708,66 +707,6 @@ To exercise these rights, please contact our privacy compliance team at: [info@i
     if (_canLoginNotifier.value == nextValue) return;
     _canLoginNotifier.value = nextValue;
   }
-}
-
-// 通用毛玻璃方法
-// 通用毛玻璃卡片
-Widget _buildGlassCard({
-  required Widget child,
-  //卡片宽度
-  //卡片高度
-  double width = 400,
-  double height = 720,
-  //更改毛玻璃边框圆角
-  double radius = 18,
-  EdgeInsets padding = const EdgeInsets.all(22),
-  List<Color>? gradientColors,
-}) {
-  return ClipRRect(
-    borderRadius: BorderRadius.circular(radius),
-    child: BackdropFilter(
-      //控制毛玻璃模糊度，数值越大，模糊度越高
-      filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-      child: Container(
-        width: width,
-        height: height,
-        padding: const EdgeInsets.all(1),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(radius),
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            stops: const [0.0, 0.59, 0.99],
-            //
-            colors: [
-              const Color(0xFFF1F5FF).withValues(alpha: 0.12),
-              const Color(0xFFDBE6FF).withValues(alpha: 0.28),
-              const Color(0xFFF1F5FF).withValues(alpha: 0.12),
-            ],
-          ),
-        ),
-        child: Container(
-          padding: padding,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(radius - 1),
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              stops: const [0.0, 0.48, 1.0],
-              colors:
-                  gradientColors ??
-                  [
-                    const Color(0xFF202634).withValues(alpha: 0.78),
-                    const Color(0xFF151A24).withValues(alpha: 0.74),
-                    const Color(0xFF0B0E15).withValues(alpha: 0.70),
-                  ],
-            ),
-          ),
-          child: child,
-        ),
-      ),
-    ),
-  );
 }
 
 //   ///构建角色选择器

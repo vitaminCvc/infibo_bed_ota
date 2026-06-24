@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:infibo_app/api/modbus/modbus_rtu_service.dart';
 import 'package:infibo_app/components/index.dart';
+import 'package:infibo_app/components/water_level_warning_dialog.dart';
 import 'package:infibo_app/constants/assets.dart';
 import 'package:infibo_app/constants/color.dart';
 import 'package:infibo_app/pages/joystick/ui.dart';
@@ -15,7 +16,9 @@ import 'package:infibo_app/routes/route_observer.dart';
 
 // 主页面UI
 class MainPage extends StatefulWidget {
-  const MainPage({super.key});
+  const MainPage({super.key, this.modbusService = const ModbusRtuService()});
+
+  final ModbusRtuService modbusService;
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -30,9 +33,12 @@ class _MainPageState extends State<MainPage> with RouteAware {
   bool _hasPendingLight = false;
   bool _deviceFault = false; //true:设备故障(红色),false:设备正常(绿色)
   Timer? _deviceStatusTimer; //设备状态轮询定时器
+  Timer? _waterLevelTimer; //水位状态轮询定时器
   bool _isDeviceStatusPolling = false;
+  bool _isWaterLevelPolling = false;
+  bool _isWaterLevelReading = false;
+  bool _isWaterLevelDialogVisible = false;
   bool _isRouteSubscribed = false;
-  final ModbusRtuService _modbusService = const ModbusRtuService();
   // 主页面逻辑控制器
   final MainLogic _logic = MainLogic();
 
@@ -60,20 +66,36 @@ class _MainPageState extends State<MainPage> with RouteAware {
       _isRouteSubscribed = false;
     }
     _stopDeviceStatusPolling();
+    _stopWaterLevelPolling();
     super.dispose();
   }
 
   @override
-  void didPush() => _startDeviceStatusPolling();
+  void didPush() {
+    _startDeviceStatusPolling();
+    _startWaterLevelPolling();
+  }
 
   @override
-  void didPopNext() => _startDeviceStatusPolling();
+  void didPopNext() {
+    _startDeviceStatusPolling();
+    _startWaterLevelPolling();
+  }
 
   @override
-  void didPushNext() => _stopDeviceStatusPolling();
+  void didPushNext() {
+    _stopDeviceStatusPolling();
+    // Keep polling while the blocking water warning dialog is on top.
+    if (!_isWaterLevelDialogVisible) {
+      _stopWaterLevelPolling();
+    }
+  }
 
   @override
-  void didPop() => _stopDeviceStatusPolling();
+  void didPop() {
+    _stopDeviceStatusPolling();
+    _stopWaterLevelPolling();
+  }
 
   void _startDeviceStatusPolling() {
     if (_isDeviceStatusPolling) return;
@@ -91,10 +113,26 @@ class _MainPageState extends State<MainPage> with RouteAware {
     _isDeviceStatusPolling = false;
   }
 
+  void _startWaterLevelPolling() {
+    if (_isWaterLevelPolling) return;
+    _isWaterLevelPolling = true;
+    _readWaterLevelStatus01E5();
+    _waterLevelTimer = Timer.periodic(
+      const Duration(seconds: 3),
+      (_) => _readWaterLevelStatus01E5(),
+    );
+  }
+
+  void _stopWaterLevelPolling() {
+    _waterLevelTimer?.cancel();
+    _waterLevelTimer = null;
+    _isWaterLevelPolling = false;
+  }
+
   //进入页面，从下位机读取0x0012寄存器状态，同步界面环境灯光开关状态
   Future<void> _syncAmbientLightStateFromDevice() async {
     try {
-      final int state = await _modbusService.readHoldingRegister(0x0012);
+      final int state = await widget.modbusService.readHoldingRegister(0x0012);
       if (!mounted) return;
       setState(() => _isLightOn = state == 1);
       debugPrint('Ambient light sync RX 0x0012=$state');
@@ -106,7 +144,7 @@ class _MainPageState extends State<MainPage> with RouteAware {
   // 5s读取一次0x0006寄存器状态，同步界面设备状态
   Future<void> _readDeviceStatus0006() async {
     try {
-      final int state = await _modbusService.readHoldingRegister(
+      final int state = await widget.modbusService.readHoldingRegister(
         0x0006,
       ); //读取0x0006寄存器状态，判断设备是否故障
       final bool fault = state == 3 || state == 5; //判断是否为设备故障状态
@@ -123,6 +161,54 @@ class _MainPageState extends State<MainPage> with RouteAware {
     } catch (e) {
       debugPrint('Device status sync failed: $e');
     }
+  }
+
+  Future<void> _readWaterLevelStatus01E5() async {
+    if (_isWaterLevelReading) return;
+    _isWaterLevelReading = true;
+    try {
+      final int state = await widget.modbusService.readHoldingRegister(0x01E5);
+      if (!mounted) return;
+      if (state == 0) {
+        _showWaterLevelWarningDialog();
+      } else {
+        _hideWaterLevelWarningDialog();
+      }
+      debugPrint('Water level sync RX 0x01E5=$state');
+    } catch (e) {
+      debugPrint('Water level sync failed: $e');
+    } finally {
+      _isWaterLevelReading = false;
+    }
+  }
+
+  void _showWaterLevelWarningDialog() {
+    if (_isWaterLevelDialogVisible || !mounted) return;
+    _isWaterLevelDialogVisible = true;
+    unawaited(
+      showGeneralDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        barrierLabel: 'water_level_warning_title'.tr,
+        barrierColor: Colors.black.withValues(alpha: 0.35),
+        transitionDuration: const Duration(milliseconds: 180),
+        pageBuilder: (context, animation, secondaryAnimation) {
+          return const Center(
+            child: Material(
+              color: Colors.transparent,
+              child: PopScope(canPop: false, child: WaterLevelWarningDialog()),
+            ),
+          );
+        },
+      ).whenComplete(() {
+        _isWaterLevelDialogVisible = false;
+      }),
+    );
+  }
+
+  void _hideWaterLevelWarningDialog() {
+    if (!_isWaterLevelDialogVisible || !mounted) return;
+    Navigator.of(context, rootNavigator: true).pop();
   }
 
   ///////////////////////////////////////////////模式卡片数据////////////////////////////////////////////////
@@ -492,7 +578,7 @@ class _MainPageState extends State<MainPage> with RouteAware {
   Future<void> _sendLightCommand(bool state) async {
     _isLightCommanding = true;
     try {
-      await _modbusService.sendCommandQueue([
+      await widget.modbusService.sendCommandQueue([
         ModbusWriteCommand(address: 0x0012, value: state ? 1 : 0),
       ]);
       debugPrint(

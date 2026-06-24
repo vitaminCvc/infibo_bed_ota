@@ -325,7 +325,7 @@ class Assets {
   // 自定义方案编辑页：PEMF 右侧参数面板背景。
   static const String customizedPemfPanelBg =
       "assets/customized/editor/panels/pemf_panel_bg.png";
-
+  // 自定义方案编辑页：PEMF 模块波形弹窗背景图。
   static const String customizedPemfWaveDialog =
       "assets/customized/PEMF/Waveform/dialogBox.png";
   static const String customizedPemfWaveSine =
@@ -348,6 +348,27 @@ class Assets {
       "assets/customized/PEMF/Waveform/triangle.png";
   static const String customizedPemfWaveTrapezoid =
       "assets/customized/PEMF/Waveform/trapezoid.png";
+  ///////////////////////pemf选择素材/////////////////////////////////////
+  static const String customizedPemfWaveSineSelected =
+      "assets/customized/PEMF/Waveform/selected/sineselected.png";
+  static const String customizedPemfWaveStandardSineSelected =
+      "assets/customized/PEMF/Waveform/selected/standardSineselected.png";
+  static const String customizedPemfWaveHalfSineSelected =
+      "assets/customized/PEMF/Waveform/selected/halfSineselected.png";
+  static const String customizedPemfWavePulseSelected =
+      "assets/customized/PEMF/Waveform/selected/pulseselected.png";
+  static const String customizedPemfWaveCubicSelected =
+      "assets/customized/PEMF/Waveform/selected/cubicselected.png";
+  static const String customizedPemfWaveDualFrequencySelected =
+      "assets/customized/PEMF/Waveform/selected/dualFrequencyselected.png";
+  static const String customizedPemfWaveFastRiseSelected =
+      "assets/customized/PEMF/Waveform/selected/fastRiseselected.png";
+  static const String customizedPemfWaveSawSelected =
+      "assets/customized/PEMF/Waveform/selected/Sawselected.png";
+  static const String customizedPemfWaveTriangleSelected =
+      "assets/customized/PEMF/Waveform/selected/triangleselected.png";
+  static const String customizedPemfWaveTrapezoidSelected =
+      "assets/customized/PEMF/Waveform/selected/trapezoidselected.png";
 
   // 自定义方案编辑页：VAT 右侧参数面板背景。
   static const String customizedVatPanelBg =
