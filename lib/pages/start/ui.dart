@@ -63,6 +63,7 @@ class _StartPageState extends State<StartPage>
 
   // 每秒推进一次倒计时
   Timer? _timer;
+  final ValueNotifier<int> _timerTick = ValueNotifier<int>(0);
   // 是否正在下发命令
   bool _isCommanding = false;
   int _lastPhaseIndex = 0;
@@ -76,9 +77,10 @@ class _StartPageState extends State<StartPage>
   bool _isCompletingSession = false;
   bool _isPreloadingPhaseParams = false;
   bool _hasPreloadedPhaseParams = false;
+  Future<void>? _preloadPhaseParamsFuture;
   Timer? _hydrogenFlowTimer;
   bool _isReadingHydrogenFlow = false;
-  int? _hydrogenFlowValue;
+  final ValueNotifier<int?> _hydrogenFlowTick = ValueNotifier<int?>(null);
   VatMusicSelection? _vatMusicSelection;
 
   @override
@@ -86,7 +88,7 @@ class _StartPageState extends State<StartPage>
     super.initState();
     // 初始化时预加载阶段参数
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _preloadPhaseParamsIfNeeded();
+      _preloadPhaseParamsFuture = _preloadPhaseParamsIfNeeded();
     });
     _logic.configure(Get.arguments);
     _lastPhaseIndex = _logic.activePhaseIndex;
@@ -117,6 +119,8 @@ class _StartPageState extends State<StartPage>
   void dispose() {
     _timer?.cancel();
     _hydrogenFlowTimer?.cancel();
+    _timerTick.dispose();
+    _hydrogenFlowTick.dispose();
     unawaited(VatMusicPlayer.instance.pause());
     _waitingLiftBreathController.dispose();
     super.dispose();
@@ -254,7 +258,14 @@ class _StartPageState extends State<StartPage>
         ),
 
         // 底部倒计时与暂停/启动按钮
-        Positioned(left: 278, top: 850, child: _buildTimer()),
+        Positioned(
+          left: 278,
+          top: 850,
+          child: ValueListenableBuilder<int>(
+            valueListenable: _timerTick,
+            builder: (context, _, child) => _buildTimer(),
+          ),
+        ),
         Positioned(left: 126, top: 995, child: _buildPauseButton()),
         Positioned(left: 508, top: 995, child: _buildPlayButton()),
         Positioned(
@@ -347,8 +358,14 @@ class _StartPageState extends State<StartPage>
   }) {
     //增加一个参数，控制是否播放动画
     if (asset.toLowerCase().endsWith('.json')) {
-      return SizedBox(
-        child: Lottie.asset(asset, fit: fit, animate: animate, repeat: animate),
+      return RepaintBoundary(
+        child: Lottie.asset(
+          asset,
+          fit: fit,
+          animate: animate,
+          repeat: animate,
+          renderCache: RenderCache.drawingCommands,
+        ),
       );
     }
     return Image.asset(asset, fit: fit);
@@ -657,10 +674,6 @@ class _StartPageState extends State<StartPage>
     final HydrogenPhaseSetting? setting = _logic.activeHydrogenSetting;
 
     final String concentrationText = setting?.concentration.toString() ?? '';
-    final String flowDisplay = _hydrogenFlowValue == null
-        ? '--'
-        : '$_hydrogenFlowValue';
-
     return Positioned(
       //调节分子氢功能框内文字整体位置
       left: 40,
@@ -708,13 +721,18 @@ class _StartPageState extends State<StartPage>
                   ),
                 ),
                 const SizedBox(width: 17),
-                Text(
-                  flowDisplay,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    height: 1,
-                  ),
+                ValueListenableBuilder<int?>(
+                  valueListenable: _hydrogenFlowTick,
+                  builder: (context, flowValue, child) {
+                    return Text(
+                      flowValue == null ? '--' : '$flowValue',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        height: 1,
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
@@ -746,6 +764,8 @@ class _StartPageState extends State<StartPage>
       case 'trapezoid':
         return Assets.startPemfWaveTrapezoid;
       case 'dualFrequency':
+        return Assets.startPemfWaveDualFrequency;
+      case 'infibo':
         return Assets.startPemfWaveDualFrequency;
       default:
         return '';
@@ -1128,12 +1148,13 @@ class _StartPageState extends State<StartPage>
       await _turnoffAmbientLight();
 
       // 4. 构建当前 5 分钟节点的模块命令
+      await _waitForPreloadBeforeStart();
       final List<ModbusWriteCommand> commands = _buildPhaseCommands();
+      await _prepareVatMusicPlayback();
 
       // 预设模式不使用预加载。
       // 自定义方案如果已经预加载，则只发 APPLY / COMMAND + 系统启动。
-      final bool usePreloadedParams =
-          _hasPreloadedPhaseParams && !_logic.isPresetPlan;
+      final bool usePreloadedParams = _hasPreloadedPhaseParams;
 
       if (usePreloadedParams) {
         final List<ModbusWriteCommand> startCommands = <ModbusWriteCommand>[
@@ -1147,7 +1168,7 @@ class _StartPageState extends State<StartPage>
         await modbusService.sendCommandQueue(startCommands);
       } else {
         // 预设模式走这里：完整下发参数 + APPLY + COMMAND + 0x0004
-        await modbusService.startWithCommands(commands);
+        throw StateError('Phase parameter preload is not complete.');
       }
 
       if (!mounted) return;
@@ -1244,14 +1265,14 @@ class _StartPageState extends State<StartPage>
   }
 
   // 预加载参数
-  Future<void> _preloadPhaseParamsIfNeeded() async {
+  Future<void> _preloadPhaseParamsIfNeeded({
+    bool allowWhileCommanding = false,
+  }) async {
     if (!_logic.isCustomizedPlan) return;
 
     //预设模式下，不预加载参数，点击启动按钮，完整下发参数
-    if (_logic.isPresetPlan) return;
-
     if (_logic.isRunning) return;
-    if (_isCommanding || _isSwitchingPhase) return;
+    if ((!allowWhileCommanding && _isCommanding) || _isSwitchingPhase) return;
     if (_isPreloadingPhaseParams || _hasPreloadedPhaseParams) return;
 
     _isPreloadingPhaseParams = true;
@@ -1276,6 +1297,22 @@ class _StartPageState extends State<StartPage>
     } finally {
       _isPreloadingPhaseParams = false;
     }
+  }
+
+  Future<void> _waitForPreloadBeforeStart() async {
+    if (!_logic.isCustomizedPlan) return;
+
+    final Future<void>? pendingPreload = _preloadPhaseParamsFuture;
+    if (pendingPreload != null) {
+      await pendingPreload;
+    }
+
+    if (_hasPreloadedPhaseParams) return;
+
+    _preloadPhaseParamsFuture = _preloadPhaseParamsIfNeeded(
+      allowWhileCommanding: true,
+    );
+    await _preloadPhaseParamsFuture;
   }
 
   // 发送预加载命令
@@ -1966,6 +2003,29 @@ class _StartPageState extends State<StartPage>
   }
 
   /// 获取当前阶段启用的模块列表。
+  Future<void> _prepareVatMusicPlayback() async {
+    final Set<String> modules = _modulesForPhase();
+    final VatPhaseSetting? setting = _logic.activeVatSetting;
+    if (!modules.contains('vat') || setting == null) return;
+
+    final String songId = _currentVatMusicSongId(setting);
+    final int volume = _currentVatIntensity(setting).clamp(0, 100).toInt();
+    final bool singleLoop = _logic.isPresetPlan;
+
+    try {
+      await VatMusicPlayer.instance.prepareForVatPhase(
+        songId,
+        volume: volume,
+        singleLoop: singleLoop,
+      );
+      _lastVatMusicSongId = songId;
+      _lastVatMusicVolume = volume;
+      _lastVatMusicSingleLoop = singleLoop;
+    } catch (e) {
+      debugPrint('VAT music preload failed: $e');
+    }
+  }
+
   Set<String> _modulesForPhase() {
     final _StartArguments args = _StartArguments.from(Get.arguments);
     final Set<String> modules = _logic.activeDevices(args.modeTitle).toSet();
@@ -2058,7 +2118,7 @@ class _StartPageState extends State<StartPage>
         debugPrint('VAT runtime music or intensity change failed: $e');
       }
     } else {
-      _preloadPhaseParamsIfNeeded();
+      _preloadPhaseParamsFuture = _preloadPhaseParamsIfNeeded();
     }
   }
 
@@ -2091,10 +2151,10 @@ class _StartPageState extends State<StartPage>
     _timer?.cancel();
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
       if (!_logic.isRunning) return;
-      setState(() {
-        _logic.tick();
-        _trySwitchPhase();
-      });
+      if (!mounted) return;
+      _logic.tick();
+      _timerTick.value++;
+      _trySwitchPhase();
     });
   }
 
@@ -2122,7 +2182,11 @@ class _StartPageState extends State<StartPage>
     debugPrint('prev modules = $prevDevices');
     debugPrint('current modules = $currentDevices');
 
-    _isSwitchingPhase = true;
+    if (mounted) {
+      setState(() => _isSwitchingPhase = true);
+    } else {
+      _isSwitchingPhase = true;
+    }
     _stopHydrogenFlowPolling(clearValue: false);
 
     final List<ModbusWriteCommand> commands = <ModbusWriteCommand>[];
@@ -2327,6 +2391,20 @@ class _StartPageState extends State<StartPage>
 
     debugPrint('skip system restart because already running');
 
+    void applyPhaseSwitchState() {
+      _lastPhaseIndex = currentIndex;
+      _runningModules
+        ..clear()
+        ..addAll(currentDevices);
+      _runningModuleSignatures
+        ..clear()
+        ..addAll(currentSignatures);
+      _runningModuleParamValues
+        ..clear()
+        ..addAll(currentParamValues);
+      _isSwitchingPhase = false;
+    }
+
     if (commands.isNotEmpty) {
       final Stopwatch phaseSwitchStopwatch = Stopwatch()..start();
       debugPrint('phase switch TX command count: ${commands.length}');
@@ -2339,19 +2417,7 @@ class _StartPageState extends State<StartPage>
               '${phaseSwitchStopwatch.elapsedMilliseconds}ms',
             );
             if (mounted) {
-              setState(() {
-                _lastPhaseIndex = currentIndex;
-                _runningModules
-                  ..clear()
-                  ..addAll(currentDevices);
-                _runningModuleSignatures
-                  ..clear()
-                  ..addAll(currentSignatures);
-                _runningModuleParamValues
-                  ..clear()
-                  ..addAll(currentParamValues);
-                _isSwitchingPhase = false;
-              });
+              setState(applyPhaseSwitchState);
             }
             _syncHydrogenFlowPolling();
             unawaited(_syncVatMusicPlayback());
@@ -2369,17 +2435,11 @@ class _StartPageState extends State<StartPage>
             }
           });
     } else {
-      _lastPhaseIndex = currentIndex;
-      _runningModules
-        ..clear()
-        ..addAll(currentDevices);
-      _runningModuleSignatures
-        ..clear()
-        ..addAll(currentSignatures);
-      _runningModuleParamValues
-        ..clear()
-        ..addAll(currentParamValues);
-      _isSwitchingPhase = false;
+      if (mounted) {
+        setState(applyPhaseSwitchState);
+      } else {
+        applyPhaseSwitchState();
+      }
       _syncHydrogenFlowPolling();
       unawaited(_syncVatMusicPlayback());
     }
@@ -2411,7 +2471,7 @@ class _StartPageState extends State<StartPage>
     _hydrogenFlowTimer?.cancel();
     _hydrogenFlowTimer = null;
     if (clearValue) {
-      _hydrogenFlowValue = null;
+      _hydrogenFlowTick.value = null;
     }
   }
 
@@ -2425,9 +2485,7 @@ class _StartPageState extends State<StartPage>
     _isReadingHydrogenFlow = true;
     try {
       final int flow = await modbusService.readHydrogenFlow();
-      if (mounted) {
-        setState(() => _hydrogenFlowValue = flow);
-      }
+      _hydrogenFlowTick.value = flow;
     } catch (e) {
       debugPrint('readHydrogenFlow failed: $e');
     } finally {

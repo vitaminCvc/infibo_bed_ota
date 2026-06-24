@@ -462,8 +462,8 @@ class _ChakraLine extends StatelessWidget {
             ),
           ),
           Positioned(
-            left: 92,
-            top: 17,
+            left: 82,
+            top: 32,
             child: SizedBox(
               width: 96,
               height: 45,
@@ -473,13 +473,18 @@ class _ChakraLine extends StatelessWidget {
                 keyboardType: TextInputType.number,
                 textInputAction: TextInputAction.done,
                 textAlign: TextAlign.center,
+                textAlignVertical: TextAlignVertical.center,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                style: const TextStyle(color: Colors.white, fontSize: 18),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  height: 1,
+                ),
                 cursorColor: Colors.white,
                 decoration: const InputDecoration(
                   isCollapsed: true,
                   border: InputBorder.none,
-                  contentPadding: EdgeInsets.only(top: 12),
+                  contentPadding: EdgeInsets.zero,
                 ),
                 onChanged: onStrengthChanged,
               ),

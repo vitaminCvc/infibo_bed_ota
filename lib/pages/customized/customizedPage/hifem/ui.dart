@@ -34,7 +34,6 @@ class _HifemExpandPageState extends State<HifemExpandPage> {
   static const double _designWidth = 800;
   static const double _designHeight = 1088;
 
-  late final HifemSettingController _controller;
   late HifemRegion? _selectedRegion;
   late Map<HifemRegion, HifemRegionSetting> _regionSettings;
 
@@ -49,7 +48,6 @@ class _HifemExpandPageState extends State<HifemExpandPage> {
   @override
   void initState() {
     super.initState();
-    _controller = HifemSettingController.instance;
     final HifemExpandResult? initialSetting = widget.initialSetting;
     if (initialSetting != null) {
       _selectedRegion = _normalizeSelectedRegion(initialSetting.selectedRegion);
@@ -60,12 +58,9 @@ class _HifemExpandPageState extends State<HifemExpandPage> {
       return;
     }
 
-    final HifemSettingSnapshot snapshot = _controller.snapshot();
-    _selectedRegion = _normalizeSelectedRegion(snapshot.selectedRegion);
-    _regionSettings = Map<HifemRegion, HifemRegionSetting>.from(
-      snapshot.regionSettings,
-    );
-    _normalizeForeheadSettings();
+    // 新节点：从空白状态开始，不使用全局单例避免跨节点污染。
+    _selectedRegion = null;
+    _regionSettings = <HifemRegion, HifemRegionSetting>{};
   }
 
   @override
@@ -222,6 +217,7 @@ class _HifemExpandPageState extends State<HifemExpandPage> {
   }
 
   bool _isRegionSelected(HifemRegion region) {
+    // 🔥 额头：左右都算同一个选中态
     if (_isForeheadRegion(region)) {
       return _selectedRegion == HifemRegion.foreheadLeft;
     }
@@ -230,10 +226,17 @@ class _HifemExpandPageState extends State<HifemExpandPage> {
 
   bool _isRegionConfigured(HifemRegion region) {
     if (_isForeheadRegion(region)) {
-      return _settingFor(HifemRegion.foreheadLeft).hasOutput ||
-          _settingFor(HifemRegion.foreheadRight).hasOutput;
+      final left = _settingFor(HifemRegion.foreheadLeft);
+      final right = _settingFor(HifemRegion.foreheadRight);
+
+      return left.rfPercent > 0 ||
+          left.hifesPercent > 0 ||
+          right.rfPercent > 0 ||
+          right.hifesPercent > 0;
     }
-    return _settingFor(region).hasOutput;
+
+    final setting = _settingFor(region);
+    return setting.rfPercent > 0 || setting.hifesPercent > 0;
   }
 
   void _normalizeForeheadSettings() {
@@ -254,22 +257,50 @@ class _HifemExpandPageState extends State<HifemExpandPage> {
   }
 
   void _selectRegion(HifemRegion region) {
+    // 额头统一映射为 left（逻辑合并）
     final HifemRegion target = _isForeheadRegion(region)
         ? HifemRegion.foreheadLeft
         : region;
-    if (_selectedRegion == target) return;
-    setState(() => _selectedRegion = target);
+
+    setState(() {
+      // ================================
+      // 点击同一个区域 => 取消选中 + 清零
+      // ================================
+      if (_selectedRegion == target) {
+        _selectedRegion = null;
+
+        // 🔥 额头整体清零（左右同步）
+        if (target == HifemRegion.foreheadLeft) {
+          _regionSettings[HifemRegion.foreheadLeft] =
+              const HifemRegionSetting();
+          _regionSettings[HifemRegion.foreheadRight] =
+              const HifemRegionSetting();
+        } else {
+          _regionSettings[target] = const HifemRegionSetting();
+        }
+
+        return;
+      }
+
+      // ================================
+      // 选中新的区域
+      // ================================
+      _selectedRegion = target;
+    });
   }
 
   void _updateCurrent({int? rfPercent, int? hifesPercent}) {
     final HifemRegion? region = _selectedRegion;
     if (region == null) return;
 
-    // 拖动进度条时只更新“当前正在编辑的区域”，不会影响其他三个区域。
     setState(() {
       final HifemRegionSetting updated = _settingFor(
         region,
       ).copyWith(rfPercent: rfPercent, hifesPercent: hifesPercent);
+
+      // ================================
+      // 额头：左右同步更新
+      // ================================
       if (_isForeheadRegion(region)) {
         _regionSettings[HifemRegion.foreheadLeft] = updated;
         _regionSettings[HifemRegion.foreheadRight] = updated;
@@ -287,10 +318,6 @@ class _HifemExpandPageState extends State<HifemExpandPage> {
       ),
     );
 
-    _controller.save(
-      selectedRegion: result.selectedRegion,
-      regionSettings: result.regionSettings,
-    );
     popExpandPage(pageContext, result);
   }
 }
@@ -321,16 +348,17 @@ class _HifemRegionPatch extends StatelessWidget {
             Positioned.fill(
               child: Image.asset(data.defaultAsset, fit: BoxFit.fill),
             ),
-            if (configured)
+            if (selected)
               Positioned.fill(
                 child: Image.asset(data.selectedAsset, fit: BoxFit.fill),
               )
-            else if (selected)
+            else if (configured)
               Positioned.fill(
-                child: Opacity(
-                  opacity: 0.42,
-                  child: Image.asset(data.selectedAsset, fit: BoxFit.fill),
-                ),
+                child: Image.asset(data.selectedAsset, fit: BoxFit.fill),
+              )
+            else
+              Positioned.fill(
+                child: Image.asset(data.defaultAsset, fit: BoxFit.fill),
               ),
           ],
         ),

@@ -1,18 +1,11 @@
-// VAT 音乐播放器。
-//
-// 集中维护播放列表、当前歌曲、音量和播放状态快照。
 import 'package:infibo_app/pages/music/logic.dart';
 import 'package:just_audio/just_audio.dart';
 
 class VatMusicPlaybackSnapshot {
   const VatMusicPlaybackSnapshot({
-    // 当前选中的歌曲ID
     required this.selectedSongId,
-    //音量
     required this.volume,
-    //是否正在进行播放
     required this.wasPlaying,
-    //当前播放的索引
     this.currentIndex,
     this.position = Duration.zero,
   });
@@ -30,9 +23,11 @@ class VatMusicPlayer {
   static final VatMusicPlayer instance = VatMusicPlayer._();
 
   final AudioPlayer _player = AudioPlayer();
-  ConcatenatingAudioSource? _playlist;
+  String? _loadedSongId;
   String _selectedSongId = defaultSongId;
   int _volume = 50;
+  int? _appliedVolume;
+  LoopMode? _appliedLoopMode;
 
   List<Song> get _playableSongs =>
       allSongs.where((song) => song.assetPath != null).toList();
@@ -46,24 +41,22 @@ class VatMusicPlayer {
       selectedSongId: _selectedSongId,
       volume: _volume,
       wasPlaying: _player.playing,
-      currentIndex: _player.currentIndex,
+      currentIndex: _playableIndexForSongId(_selectedSongId),
       position: _player.position,
     );
   }
 
   Future<bool> previewSong(String songId, int volume) async {
-    final int index = _playableIndexForSongId(songId);
-    if (index < 0) return false;
+    if (_playableIndexForSongId(songId) < 0) return false;
 
     _selectedSongId = songId;
     await setVolume(volume);
-    await _ensurePlaylist(initialIndex: index);
-    await _player.seek(Duration.zero, index: index);
+    await _ensureSongLoaded(songId);
+    await _player.seek(Duration.zero);
     await _player.play();
     return true;
   }
 
-  // 应用选中的歌曲
   Future<void> applySelection(
     String songId, {
     required int volume,
@@ -72,19 +65,13 @@ class VatMusicPlayer {
     bool singleLoop = false,
   }) async {
     _selectedSongId = songId;
-    //设置音量
     await setVolume(volume);
 
-    //如果需要重新开始播放，就重新设置播放列表
-    if (restart) {
-      final int index = _playableIndexForSongId(songId);
-      if (index >= 0) {
-        await _ensurePlaylist(initialIndex: index);
-        await _player.seek(Duration.zero, index: index);
-      }
+    if (restart && _playableIndexForSongId(songId) >= 0) {
+      await _ensureSongLoaded(songId);
+      await _player.seek(Duration.zero);
     }
 
-    //进行单曲循环播放
     if (playNow) {
       await playForVatPhase(singleLoop: singleLoop);
     } else {
@@ -92,15 +79,15 @@ class VatMusicPlayer {
     }
   }
 
-  //播放单曲循环
   Future<void> playForVatPhase({bool singleLoop = false}) async {
-    final int index = _playableIndexForSongId(_selectedSongId);
-    if (index < 0) return;
+    if (_playableIndexForSongId(_selectedSongId) < 0) return;
 
-    await _ensurePlaylist(initialIndex: index);
-    await _player.setLoopMode(singleLoop ? LoopMode.one : LoopMode.all);
-    await _player.setVolume(_volume / 100);
-    await _player.play();
+    await _ensureSongLoaded(_selectedSongId);
+    await _setLoopMode(singleLoop ? LoopMode.one : LoopMode.all);
+    await _applyVolume();
+    if (!_player.playing) {
+      await _player.play();
+    }
   }
 
   Future<void> pause() => _player.pause();
@@ -116,13 +103,10 @@ class VatMusicPlayer {
   }) async {
     _selectedSongId = snapshot.selectedSongId;
     await setVolume(snapshot.volume);
-    //如果当前索引不为空，就把播放器恢复到当时的那首歌，当时的播放位置
-    if (snapshot.currentIndex != null) {
-      //确保播放列表存在.不能直接让播放器跳到第几首歌，前提是播放器里面已经有播放列表
-      await _ensurePlaylist(initialIndex: snapshot.currentIndex!);
 
-      //恢复播放进度
-      await _player.seek(snapshot.position, index: snapshot.currentIndex);
+    if (_playableIndexForSongId(snapshot.selectedSongId) >= 0) {
+      await _ensureSongLoaded(snapshot.selectedSongId);
+      await _player.seek(snapshot.position);
     }
 
     if (shouldPlay && snapshot.wasPlaying) {
@@ -133,26 +117,51 @@ class VatMusicPlayer {
   }
 
   Future<void> setVolume(int volume) async {
-    _volume = volume.clamp(0, 100).toInt();
-    await _player.setVolume(_volume / 100);
+    final int nextVolume = volume.clamp(0, 100).toInt();
+    if (_volume == nextVolume && _appliedVolume == nextVolume) return;
+
+    _volume = nextVolume;
+    await _applyVolume();
   }
 
-  Future<void> _ensurePlaylist({required int initialIndex}) async {
-    if (_playlist != null) return;
+  Future<void> prepareForVatPhase(
+    String songId, {
+    required int volume,
+    bool singleLoop = false,
+  }) async {
+    if (_playableIndexForSongId(songId) < 0) return;
 
-    final List<Song> songs = _playableSongs;
-    if (songs.isEmpty) return;
+    _selectedSongId = songId;
+    await setVolume(volume);
+    await _ensureSongLoaded(songId);
+    await _player.seek(Duration.zero);
+    await _setLoopMode(singleLoop ? LoopMode.one : LoopMode.all);
+  }
 
-    _playlist = ConcatenatingAudioSource(
-      children: [
-        for (final Song song in songs) AudioSource.asset(song.assetPath!),
-      ],
-    );
-    await _player.setAudioSource(
-      _playlist!,
-      initialIndex: initialIndex.clamp(0, songs.length - 1).toInt(),
-    );
-    await _player.setLoopMode(LoopMode.all);
+  Future<void> _ensureSongLoaded(String songId) async {
+    if (_loadedSongId == songId) return;
+
+    final Song? song = findSongById(songId);
+    final String? assetPath = song?.assetPath;
+    if (assetPath == null) return;
+
+    await _player.setAudioSource(AudioSource.asset(assetPath));
+    _loadedSongId = songId;
+    _appliedLoopMode = null;
+  }
+
+  Future<void> _applyVolume() async {
+    if (_appliedVolume == _volume) return;
+
+    await _player.setVolume(_volume / 100);
+    _appliedVolume = _volume;
+  }
+
+  Future<void> _setLoopMode(LoopMode loopMode) async {
+    if (_appliedLoopMode == loopMode) return;
+
+    await _player.setLoopMode(loopMode);
+    _appliedLoopMode = loopMode;
   }
 
   int _playableIndexForSongId(String songId) {

@@ -5,6 +5,7 @@
 // Windows 调试时仍保留 flutter_libserialport 分支，便于桌面串口测试。
 import 'dart:async';
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_libserialport/flutter_libserialport.dart';
@@ -348,35 +349,152 @@ class ModbusRtuService {
     final _HifemBatchParseResult hifemParsed = _extractHifemPayload(
       fragranceParsed.remainingCommands,
     );
-    await sendCommandQueue(hifemParsed.remainingCommands);
+
+    final List<_QueueModbusFrame> frames = <_QueueModbusFrame>[];
+
+    //其他没有被模块批处理吃掉的命令，仍然按照0x06放到同一个队列
+    for (final ModbusWriteCommand command in hifemParsed.remainingCommands) {
+      frames.add(
+        _singleFrame(
+          address: command.address,
+          value: command.value,
+          tag: 'Remaining',
+        ),
+      );
+    }
+
     if (redParsed.payload != null) {
-      await _applyRedLightPayload(redParsed.payload!);
+      final RedLightBatchPayload payload = redParsed.payload!;
+      _addModulePayloadFrames(
+        frames,
+        tag: 'RedLight',
+        startAddress: payload.startAddress,
+        values: payload.values,
+        applyAddress: payload.applyAddress,
+        applyValue: payload.applyValue,
+        commandAddress: payload.commandAddress,
+        commandValue: payload.commandValue,
+      );
     }
+
     if (pemfParsed.payload != null) {
-      await _applyPemfPayload(pemfParsed.payload!);
+      final PemfBatchPayload payload = pemfParsed.payload!;
+
+      // PEMF 的 0x00C0 单写要在 0x10 参数前面。
+      frames.add(
+        _singleFrame(
+          address: payload.enableAddress,
+          value: payload.enableValue,
+          tag: 'PEMF enable',
+        ),
+      );
+
+      _addModulePayloadFrames(
+        frames,
+        tag: 'PEMF',
+        startAddress: payload.startAddress,
+        values: payload.values,
+        applyAddress: payload.applyAddress,
+        applyValue: payload.applyValue,
+        commandAddress: payload.commandAddress,
+        commandValue: payload.commandValue,
+      );
     }
+
     if (vatParsed.payload != null) {
-      await _applyVatPayload(vatParsed.payload!);
+      final VatBatchPayload payload = vatParsed.payload!;
+      _addModulePayloadFrames(
+        frames,
+        tag: 'VAT',
+        startAddress: payload.startAddress,
+        values: payload.values,
+        applyAddress: payload.applyAddress,
+        applyValue: payload.applyValue,
+        commandAddress: payload.commandAddress,
+        commandValue: payload.commandValue,
+      );
     }
+
     if (hydrogenParsed.payload != null) {
-      await _applyHydrogenPayload(hydrogenParsed.payload!);
+      final HydrogenBatchPayload payload = hydrogenParsed.payload!;
+      _addModulePayloadFrames(
+        frames,
+        tag: 'Hydrogen',
+        startAddress: payload.startAddress,
+        values: payload.values,
+        applyAddress: payload.applyAddress,
+        applyValue: payload.applyValue,
+        commandAddress: payload.commandAddress,
+        commandValue: payload.commandValue,
+      );
     }
+
     if (chakraParsed.payload != null) {
-      await _applyChakraPayload(chakraParsed.payload!);
+      final ChakraBatchPayload payload = chakraParsed.payload!;
+      _addModulePayloadFrames(
+        frames,
+        tag: 'Chakra',
+        startAddress: payload.startAddress,
+        values: payload.values,
+        applyAddress: payload.applyAddress,
+        applyValue: payload.applyValue,
+        commandAddress: payload.commandAddress,
+        commandValue: payload.commandValue,
+      );
     }
+
     if (terahertzParsed.payload != null) {
-      await _applyTerahertzPayload(terahertzParsed.payload!);
+      final TerahertzBatchPayload payload = terahertzParsed.payload!;
+      _addModulePayloadFrames(
+        frames,
+        tag: 'Terahertz',
+        startAddress: payload.startAddress,
+        values: payload.values,
+        applyAddress: payload.applyAddress,
+        applyValue: payload.applyValue,
+        commandAddress: payload.commandAddress,
+        commandValue: payload.commandValue,
+      );
     }
+
     if (fragranceParsed.payload != null) {
-      await _applyFragrancePayload(fragranceParsed.payload!);
+      final FragranceBatchPayload payload = fragranceParsed.payload!;
+      _addModulePayloadFrames(
+        frames,
+        tag: 'Fragrance',
+        startAddress: payload.startAddress,
+        values: payload.values,
+        applyAddress: payload.applyAddress,
+        applyValue: payload.applyValue,
+        commandAddress: payload.commandAddress,
+        commandValue: payload.commandValue,
+      );
     }
+
     if (hifemParsed.payload != null) {
-      await _applyHifemPayload(hifemParsed.payload!);
+      final HifemBatchPayload payload = hifemParsed.payload!;
+      _addModulePayloadFrames(
+        frames,
+        tag: 'HIFEM',
+        startAddress: payload.startAddress,
+        values: payload.values,
+        applyAddress: payload.applyAddress,
+        applyValue: payload.applyValue,
+        commandAddress: payload.commandAddress,
+        commandValue: payload.commandValue,
+      );
     }
-    debugPrint('System start command will be sent last: 0x0004 = 1');
-    await sendCommandQueue([
-      const ModbusWriteCommand(address: systemCommandAddress, value: 1),
-    ]);
+
+    // 系统启动必须最后发。
+    frames.add(
+      _singleFrame(
+        address: systemCommandAddress,
+        value: 1,
+        tag: 'System start',
+      ),
+    );
+
+    await _sendMixedFrameQueue(frames);
   }
 
   // 构建红光模块相关寄存器的写命令列表。
@@ -2520,6 +2638,232 @@ class ModbusRtuService {
     }
   }
 
+  Future<void> _sendMixedFrameQueue(List<_QueueModbusFrame> items) async {
+    if (items.isEmpty) return;
+
+    final List<Uint8List> frames = items.map((item) => item.frame).toList();
+    final Stopwatch stopwatch = Stopwatch()..start();
+
+    if (Platform.isAndroid) {
+      try {
+        for (int i = 0; i < items.length; i++) {
+          debugPrint(
+            'Mixed queue TX[${i + 1}/${items.length}]: ${items[i].description}',
+          );
+        }
+
+        final List<Uint8List> responses = await AndroidSerialPortService
+            .instance
+            .writeModbusQueue(
+              frames: frames,
+              path: portName,
+              baudRate: baudRate,
+              timeout: timeout,
+              commandDelay: commandDelay,
+              maxRetries: maxRetries,
+            );
+
+        if (responses.length != items.length) {
+          throw ModbusRtuException(
+            'Mixed queue response count mismatch: ${responses.length}/${items.length}',
+          );
+        }
+
+        for (int i = 0; i < responses.length; i++) {
+          final Uint8List response = responses[i];
+          debugPrint('Mixed queue RX[${i + 1}]: ${_formatBytes(response)}');
+          items[i].validate(response);
+        }
+
+        stopwatch.stop();
+        debugPrint(
+          'Mixed queue complete: ${responses.length}/${items.length} frames, '
+          '${stopwatch.elapsedMilliseconds}ms',
+        );
+      } on PlatformException catch (error) {
+        throw ModbusRtuException(_normalizeNativeError(error.message));
+      }
+
+      return;
+    }
+
+    if (!Platform.isWindows) {
+      throw UnsupportedError(
+        'Modbus RTU serial test requires Android or Windows desktop.',
+      );
+    }
+
+    await _sendMixedFrameQueueWindows(items);
+  }
+
+  Future<void> _sendMixedFrameQueueWindows(
+    List<_QueueModbusFrame> items,
+  ) async {
+    final SerialPort port = SerialPort(portName);
+    SerialPortConfig? config;
+    final Stopwatch stopwatch = Stopwatch()..start();
+
+    try {
+      if (!port.openReadWrite()) {
+        throw Exception(
+          'Open serial port failed: $portName, ${SerialPort.lastError}',
+        );
+      }
+
+      config = SerialPortConfig()
+        ..baudRate = baudRate
+        ..bits = 8
+        ..parity = SerialPortParity.none
+        ..stopBits = 1
+        ..setFlowControl(SerialPortFlowControl.none);
+      port.config = config;
+      config = null;
+      port.flush();
+
+      for (int index = 0; index < items.length; index++) {
+        await _writeQueuedFrameWithRetryWindows(
+          port: port,
+          item: items[index],
+          index: index,
+          total: items.length,
+        );
+      }
+
+      stopwatch.stop();
+      debugPrint(
+        'Mixed queue complete: ${items.length}/${items.length} frames, '
+        '${stopwatch.elapsedMilliseconds}ms',
+      );
+    } finally {
+      if (port.isOpen) {
+        port.close();
+      }
+      config?.dispose();
+      port.dispose();
+    }
+  }
+
+  Future<void> _writeQueuedFrameWithRetryWindows({
+    required SerialPort port,
+    required _QueueModbusFrame item,
+    required int index,
+    required int total,
+  }) async {
+    Object? lastError;
+
+    for (int attempt = 0; attempt <= maxRetries; attempt++) {
+      try {
+        port.flush();
+        debugPrint(
+          'Mixed queue TX[${index + 1}/$total] attempt ${attempt + 1}: '
+          '${item.description}',
+        );
+
+        final int written = port.write(
+          item.frame,
+          timeout: timeout.inMilliseconds,
+        );
+        if (written != item.frame.length) {
+          throw TimeoutException(
+            'Serial write timeout: $written/${item.frame.length} bytes',
+          );
+        }
+
+        final Uint8List response = port.read(
+          8,
+          timeout: timeout.inMilliseconds,
+        );
+        debugPrint('Mixed queue RX[${index + 1}]: ${_formatBytes(response)}');
+        item.validate(response);
+
+        if (commandDelay > Duration.zero) {
+          await Future<void>.delayed(commandDelay);
+        }
+        return;
+      } catch (error) {
+        lastError = error;
+        if (attempt < maxRetries) {
+          await Future<void>.delayed(commandDelay);
+        }
+      }
+    }
+
+    throw ModbusRtuException(_failureReason(lastError));
+  }
+
+  _QueueModbusFrame _singleFrame({
+    required int address,
+    required int value,
+    required String tag,
+  }) {
+    return _QueueModbusFrame(
+      frame: _buildWriteSingleRegisterFrame(
+        slaveId: slaveId,
+        address: address,
+        value: value,
+      ),
+      description:
+          '$tag 0x06 0x${address.toRadixString(16).toUpperCase().padLeft(4, '0')}=$value',
+      validate: (Uint8List response) {
+        _validateWriteSingleRegisterResponse(
+          response: response,
+          address: address,
+          value: value,
+        );
+      },
+    );
+  }
+
+  _QueueModbusFrame _multipleFrame({
+    required int startAddress,
+    required List<int> values,
+    required String tag,
+  }) {
+    return _QueueModbusFrame(
+      frame: _buildWriteMultipleRegistersFrame(
+        slaveId: slaveId,
+        startAddress: startAddress,
+        values: values,
+      ),
+      description:
+          '$tag 0x10 0x${startAddress.toRadixString(16).toUpperCase().padLeft(4, '0')} '
+          'quantity=${values.length} values=$values',
+      validate: (Uint8List response) {
+        _validateWriteMultipleRegistersResponse(
+          response: response,
+          startAddress: startAddress,
+          quantity: values.length,
+        );
+      },
+    );
+  }
+
+  //增加模块payload转队列帧方法
+  void _addModulePayloadFrames(
+    List<_QueueModbusFrame> frames, {
+    required String tag,
+    required int startAddress,
+    required List<int> values,
+    required int applyAddress,
+    required int applyValue,
+    required int commandAddress,
+    required int commandValue,
+  }) {
+    frames.add(
+      _multipleFrame(tag: tag, startAddress: startAddress, values: values),
+    );
+    frames.add(
+      _singleFrame(address: applyAddress, value: applyValue, tag: '$tag apply'),
+    );
+    frames.add(
+      _singleFrame(
+        address: commandAddress,
+        value: commandValue,
+        tag: '$tag command',
+      ),
+    );
+  }
+
   String _formatBytes(Uint8List bytes) {
     return bytesToHex(bytes, emptyText: '<empty>');
   }
@@ -2633,4 +2977,20 @@ class _HifemBatchParseResult {
 
   final List<ModbusWriteCommand> remainingCommands;
   final HifemBatchPayload? payload;
+}
+
+//增加一个队列帧类
+
+class _QueueModbusFrame {
+  const _QueueModbusFrame({
+    //帧数据
+    required this.frame,
+    //帧描述
+    required this.description,
+    //是否校验
+    required this.validate,
+  });
+  final Uint8List frame;
+  final String description;
+  final void Function(Uint8List response) validate;
 }

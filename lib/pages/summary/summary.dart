@@ -148,23 +148,30 @@ Widget _buildUser(SummaryLogic logic) {
 
 // 标题1
 Widget _buildSummaryTitle1() {
-  return Row(
-    children: [
-      Container(
-        width: 3,
-        height: 24,
-        decoration: BoxDecoration(color: Color(0xff1464DF)),
-      ),
-      SizedBox(width: 12),
-      Text(
-        'therapy_report'.tr,
-        style: const TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
-          color: Color(0xFFFFFFFF),
+  return SizedBox(
+    width: 710,
+    child: Row(
+      children: [
+        Container(
+          width: 3,
+          height: 24,
+          decoration: BoxDecoration(color: Color(0xff1464DF)),
         ),
-      ),
-    ],
+        SizedBox(width: 12),
+        Expanded(
+          child: Text(
+            'therapy_report'.tr,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              color: Color(0xFFFFFFFF),
+            ),
+          ),
+        ),
+      ],
+    ),
   );
 }
 
@@ -226,7 +233,6 @@ Widget _buildExpand(SummaryLogic logic) {
     icon: Assets.expandIcon,
     title: 'module_expand'.tr,
     durationText: logic.moduleDurationText('expand'),
-    titleWeight: FontWeight.w100,
   );
 }
 
@@ -245,17 +251,28 @@ Widget _buildModuleCard({
       children: [
         Image.asset(icon),
         const SizedBox(height: 14),
-        Text(
-          title,
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: titleWeight,
-            color: const Color(0xFFFFFFFF),
+        SizedBox(
+          width: 104,
+          height: 42,
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              title,
+              maxLines: 2,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: titleWeight,
+                color: const Color(0xFFFFFFFF),
+              ),
+            ),
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 8),
         Text(
           durationText,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
           style: const TextStyle(fontSize: 14, color: Color(0xFF9A9DA8)),
         ),
       ],
@@ -265,23 +282,30 @@ Widget _buildModuleCard({
 
 // 标题2
 Widget _buildSummaryTitle2() {
-  return Row(
-    children: [
-      Container(
-        width: 3,
-        height: 24,
-        decoration: BoxDecoration(color: Color(0xff1464DF)),
-      ),
-      SizedBox(width: 12),
-      Text(
-        'health_effect_assessment'.tr,
-        style: const TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
-          color: Color(0xFFFFFFFF),
+  return SizedBox(
+    width: 710,
+    child: Row(
+      children: [
+        Container(
+          width: 3,
+          height: 24,
+          decoration: BoxDecoration(color: Color(0xff1464DF)),
         ),
-      ),
-    ],
+        SizedBox(width: 12),
+        Expanded(
+          child: Text(
+            'health_effect_assessment'.tr,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              color: Color(0xFFFFFFFF),
+            ),
+          ),
+        ),
+      ],
+    ),
   );
 }
 ///////////////////////////////////////////////健康效果评估卡片///////////////////////////////
@@ -455,6 +479,7 @@ Widget _buildHealthEffectCard({
   double scoreTop = 100,
   double changeTextLeft = 24,
   double changeTextTop = 158,
+  double changeTextWidth = 145,
 }) {
   final List<String> changeParts = changeText.trim().split(RegExp(r'\s{2,}'));
   final String changePrefix = changeParts.isNotEmpty ? changeParts.first : '';
@@ -481,8 +506,11 @@ Widget _buildHealthEffectCard({
         Positioned(
           top: 31,
           left: 76,
+          width: 120,
           child: Text(
             title,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: const TextStyle(
               fontSize: 17,
               fontWeight: FontWeight.w500,
@@ -494,9 +522,10 @@ Widget _buildHealthEffectCard({
         // 状态标签
         Positioned(
           top: 33,
-          left: 156,
+          left: 202,
           child: Container(
             height: 22,
+            constraints: const BoxConstraints(maxWidth: 56),
             padding: const EdgeInsets.symmetric(horizontal: 12),
             alignment: Alignment.center,
             decoration: BoxDecoration(
@@ -507,6 +536,7 @@ Widget _buildHealthEffectCard({
               text: tagText,
               gradientColors: scoreGradientColors,
               style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ),
@@ -545,7 +575,10 @@ Widget _buildHealthEffectCard({
         Positioned(
           left: changeTextLeft,
           top: changeTextTop,
+          width: changeTextWidth,
           child: RichText(
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             text: TextSpan(
               children: [
                 TextSpan(
@@ -579,6 +612,7 @@ Widget _buildGradientText({
   required List<Color> gradientColors,
   required TextStyle style,
   TextAlign? textAlign,
+  TextOverflow? overflow,
 }) {
   return ShaderMask(
     blendMode: BlendMode.srcIn,
@@ -592,6 +626,8 @@ Widget _buildGradientText({
     child: Text(
       text,
       textAlign: textAlign,
+      maxLines: 1,
+      overflow: overflow,
       style: style.copyWith(color: Colors.white),
     ),
   );
@@ -1192,12 +1228,19 @@ Widget _buildButton(SummaryLogic logic) {
       padding: EdgeInsets.zero,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(29)),
     ),
-    child: Text(
-      'confirm'.tr,
-      style: const TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.w100,
-        color: Color(0xFFFFFFFF),
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Text(
+          'confirm'.tr,
+          maxLines: 1,
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w100,
+            color: Color(0xFFFFFFFF),
+          ),
+        ),
       ),
     ),
   );
@@ -1230,7 +1273,8 @@ Widget _buildFeelingBox(SummaryLogic logic) {
         isCollapsed: true,
         border: InputBorder.none,
         hintText: 'therapy_feedback_hint'.tr,
-        hintStyle: const TextStyle(fontSize: 18, color: Color(0xFF4c4c4c)),
+        hintMaxLines: 2,
+        hintStyle: const TextStyle(fontSize: 16, color: Color(0xFF4c4c4c)),
       ),
     ),
   );

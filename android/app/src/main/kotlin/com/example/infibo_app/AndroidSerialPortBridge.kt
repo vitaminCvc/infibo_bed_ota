@@ -1,7 +1,9 @@
 package com.example.infibo_app
 
 import android.os.Handler
+import android.os.HandlerThread
 import android.os.Looper
+import android.os.Process
 import android_serialport_api.Device
 import android_serialport_api.SerialPortManager
 import io.flutter.plugin.common.BinaryMessenger
@@ -14,6 +16,11 @@ import java.util.concurrent.atomic.AtomicBoolean
 class AndroidSerialPortBridge(messenger: BinaryMessenger) : MethodChannel.MethodCallHandler {
     private val channel = MethodChannel(messenger, CHANNEL_NAME)
     private val mainHandler = Handler(Looper.getMainLooper())
+    private val workerThread = HandlerThread(
+        "InfiboSerialWorker",
+        Process.THREAD_PRIORITY_BACKGROUND,
+    ).apply { start() }
+    private val workerHandler = Handler(workerThread.looper)
     private val reading = AtomicBoolean(false)
     private val lock = Any()
 
@@ -26,58 +33,65 @@ class AndroidSerialPortBridge(messenger: BinaryMessenger) : MethodChannel.Method
     }
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
-        try {
-            when (call.method) {
-                "openSerialPort" -> {
-                    val path = call.argument<String>("path")
-                        ?.takeIf { it.isNotBlank() }
-                        ?: DEFAULT_SERIAL_PATH
-                    val baudRate = call.argument<Int>("baudRate") ?: DEFAULT_BAUD_RATE
+        when (call.method) {
+            "openSerialPort" -> {
+                val path = call.argument<String>("path")
+                    ?.takeIf { it.isNotBlank() }
+                    ?: DEFAULT_SERIAL_PATH
+                val baudRate = call.argument<Int>("baudRate") ?: DEFAULT_BAUD_RATE
 
+                runOnWorker(result) {
                     openSerialPort(path, baudRate)
-                    result.success(true)
+                    true
                 }
+            }
 
-                "sendBytes" -> {
-                    val bytes = extractBytes(call.argument<Any>("bytes"))
+            "sendBytes" -> {
+                val bytes = extractBytes(call.argument<Any>("bytes"))
+                runOnWorker(result) {
                     sendBytes(bytes)
-                    result.success(bytes.size)
+                    bytes.size
                 }
+            }
 
-                "transceiveBytes" -> {
-                    val path = call.argument<String>("path")
-                        ?.takeIf { it.isNotBlank() }
-                        ?: DEFAULT_SERIAL_PATH
-                    val baudRate = call.argument<Int>("baudRate") ?: DEFAULT_BAUD_RATE
-                    val timeoutMs = call.argument<Int>("timeoutMs") ?: DEFAULT_TIMEOUT_MS
-                    val bytes = extractBytes(call.argument<Any>("bytes"))
+            "transceiveBytes" -> {
+                val path = call.argument<String>("path")
+                    ?.takeIf { it.isNotBlank() }
+                    ?: DEFAULT_SERIAL_PATH
+                val baudRate = call.argument<Int>("baudRate") ?: DEFAULT_BAUD_RATE
+                val timeoutMs = call.argument<Int>("timeoutMs") ?: DEFAULT_TIMEOUT_MS
+                val bytes = extractBytes(call.argument<Any>("bytes"))
 
-                    val response = transceiveBytes(path, baudRate, bytes, timeoutMs)
-                    result.success(response)
+                runOnWorker(result) {
+                    transceiveBytes(path, baudRate, bytes, timeoutMs)
                 }
+            }
 
-                "writeBytesOnce" -> {
-                    val path = call.argument<String>("path")
-                        ?.takeIf { it.isNotBlank() }
-                        ?: DEFAULT_SERIAL_PATH
-                    val baudRate = call.argument<Int>("baudRate") ?: DEFAULT_BAUD_RATE
-                    val bytes = extractBytes(call.argument<Any>("bytes"))
+            "writeBytesOnce" -> {
+                val path = call.argument<String>("path")
+                    ?.takeIf { it.isNotBlank() }
+                    ?: DEFAULT_SERIAL_PATH
+                val baudRate = call.argument<Int>("baudRate") ?: DEFAULT_BAUD_RATE
+                val bytes = extractBytes(call.argument<Any>("bytes"))
 
+                runOnWorker(result) {
                     writeBytesOnce(path, baudRate, bytes)
-                    result.success(bytes.size)
+                    bytes.size
                 }
+            }
 
-                "writeModbusQueue" -> {
-                    val path = call.argument<String>("path")
-                        ?.takeIf { it.isNotBlank() }
-                        ?: DEFAULT_SERIAL_PATH
-                    val baudRate = call.argument<Int>("baudRate") ?: DEFAULT_BAUD_RATE
-                    val timeoutMs = call.argument<Int>("timeoutMs") ?: DEFAULT_TIMEOUT_MS
-                    val delayMs = call.argument<Int>("delayMs") ?: DEFAULT_DELAY_MS
-                    val maxRetries = call.argument<Int>("maxRetries") ?: DEFAULT_MAX_RETRIES
-                    val frames = extractFrames(call.argument<Any>("frames"))
+            "writeModbusQueue" -> {
+                val path = call.argument<String>("path")
+                    ?.takeIf { it.isNotBlank() }
+                    ?: DEFAULT_SERIAL_PATH
+                val baudRate = call.argument<Int>("baudRate") ?: DEFAULT_BAUD_RATE
+                val timeoutMs = call.argument<Int>("timeoutMs") ?: DEFAULT_TIMEOUT_MS
+                val delayMs = call.argument<Int>("delayMs") ?: DEFAULT_DELAY_MS
+                val maxRetries = call.argument<Int>("maxRetries") ?: DEFAULT_MAX_RETRIES
+                val frames = extractFrames(call.argument<Any>("frames"))
 
-                    val responses = writeModbusQueue(
+                runOnWorker(result) {
+                    writeModbusQueue(
                         path,
                         baudRate,
                         frames,
@@ -85,42 +99,59 @@ class AndroidSerialPortBridge(messenger: BinaryMessenger) : MethodChannel.Method
                         delayMs,
                         maxRetries,
                     )
-                    result.success(responses)
                 }
+            }
 
-                "writeModbusQueueNoResponse" -> {
-                    val path = call.argument<String>("path")
-                        ?.takeIf { it.isNotBlank() }
-                        ?: DEFAULT_SERIAL_PATH
-                    val baudRate = call.argument<Int>("baudRate") ?: DEFAULT_BAUD_RATE
-                    val delayMs = call.argument<Int>("delayMs") ?: DEFAULT_DELAY_MS
-                    val frames = extractFrames(call.argument<Any>("frames"))
+            "writeModbusQueueNoResponse" -> {
+                val path = call.argument<String>("path")
+                    ?.takeIf { it.isNotBlank() }
+                    ?: DEFAULT_SERIAL_PATH
+                val baudRate = call.argument<Int>("baudRate") ?: DEFAULT_BAUD_RATE
+                val delayMs = call.argument<Int>("delayMs") ?: DEFAULT_DELAY_MS
+                val frames = extractFrames(call.argument<Any>("frames"))
 
-                    val writtenCount = writeModbusQueueNoResponse(
+                runOnWorker(result) {
+                    writeModbusQueueNoResponse(
                         path,
                         baudRate,
                         frames,
                         delayMs,
                     )
-                    result.success(writtenCount)
                 }
-
-                "closeSerialPort" -> {
-                    closeSerialPort()
-                    result.success(true)
-                }
-
-                else -> result.notImplemented()
             }
-        } catch (error: Throwable) {
-            emitError(error.message ?: error.javaClass.simpleName)
-            result.error("SERIAL_PORT_ERROR", error.message, null)
+
+            "closeSerialPort" -> {
+                runOnWorker(result) {
+                    closeSerialPort()
+                    true
+                }
+            }
+
+            else -> result.notImplemented()
         }
     }
 
     fun dispose() {
         closeSerialPort()
         channel.setMethodCallHandler(null)
+        workerThread.quitSafely()
+    }
+
+    private fun runOnWorker(
+        result: MethodChannel.Result,
+        action: () -> Any?,
+    ) {
+        workerHandler.post {
+            try {
+                val value = action()
+                mainHandler.post { result.success(value) }
+            } catch (error: Throwable) {
+                emitError(error.message ?: error.javaClass.simpleName)
+                mainHandler.post {
+                    result.error("SERIAL_PORT_ERROR", error.message, null)
+                }
+            }
+        }
     }
 
     private fun openSerialPort(path: String, baudRate: Int, startReader: Boolean = true) {
