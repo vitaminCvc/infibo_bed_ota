@@ -104,6 +104,12 @@ class AppTranslations extends Translations {
       'device_fault': '设备故障',
       'water_level_warning_title': '设备缺水提醒',
       'water_level_warning_message': '水箱水量不足，请及时加水后继续使用设备',
+      'water_level_shortage_title': '设备缺水',
+      'water_level_shortage_message': '水箱水量不足，请及时加水后继续使用设备',
+      'water_level_filling_title': '注水中',
+      'water_level_filling_message': '正在注水，请稍候...',
+      'water_level_complete_title': '注水完成',
+      'water_level_complete_message': '注水已完成，可以继续使用设备',
 
       // 登录页面
       'login_email_hint': '输入邮箱',
@@ -347,6 +353,13 @@ class AppTranslations extends Translations {
       'water_level_warning_title': 'Low Water Alert',
       'water_level_warning_message':
           'Water tank level is low. Please refill before continuing.',
+      'water_level_shortage_title': 'Low Water',
+      'water_level_shortage_message':
+          'Water tank level is low. Please refill before continuing.',
+      'water_level_filling_title': 'Filling',
+      'water_level_filling_message': 'Filling water, please wait...',
+      'water_level_complete_title': 'Filling Complete',
+      'water_level_complete_message': 'Water filling complete. You may continue using the device.',
       // 登录页面
       'login_email_hint': 'Enter email address', // 输入邮箱
       'login_password_hint': 'Enter password', // 输入密码
@@ -591,6 +604,13 @@ class AppTranslations extends Translations {
       'water_level_warning_title': 'Aviso de agua insuficiente',
       'water_level_warning_message':
           'El nivel del tanque de agua es bajo. Rellénelo para continuar.',
+      'water_level_shortage_title': 'Falta de agua',
+      'water_level_shortage_message':
+          'El nivel del tanque de agua es bajo. Rellénelo para continuar.',
+      'water_level_filling_title': 'Llenando',
+      'water_level_filling_message': 'Llenando agua, espere...',
+      'water_level_complete_title': 'Llenado completo',
+      'water_level_complete_message': 'Llenado de agua completo. Puede continuar usando el dispositivo.',
       // 登录页面
       'login_email_hint': 'Ingrese correo electrónico', // 输入邮箱
       'login_password_hint': 'Ingrese contraseña', // 输入密码
@@ -837,6 +857,13 @@ class AppTranslations extends Translations {
       'water_level_warning_title': 'Aviso de falta de água',
       'water_level_warning_message':
           'O nível do reservatório está baixo. Reabasteça antes de continuar.',
+      'water_level_shortage_title': 'Falta de água',
+      'water_level_shortage_message':
+          'O nível do reservatório está baixo. Reabasteça antes de continuar.',
+      'water_level_filling_title': 'Enchendo',
+      'water_level_filling_message': 'Enchendo água, aguarde...',
+      'water_level_complete_title': 'Enchimento concluído',
+      'water_level_complete_message': 'Enchimento de água concluído. Pode continuar a utilizar o dispositivo.',
       // 登录页面
       'login_email_hint': 'Introduza o e-mail', // 输入邮箱
       'login_password_hint': 'Introduza a palavra-passe', // 输入密码
@@ -1084,6 +1111,13 @@ class AppTranslations extends Translations {
       'water_level_warning_title': 'Предупреждение о нехватке воды',
       'water_level_warning_message':
           'Низкий уровень воды. Долейте перед продолжением.',
+      'water_level_shortage_title': 'Нехватка воды',
+      'water_level_shortage_message':
+          'Низкий уровень воды. Долейте перед продолжением.',
+      'water_level_filling_title': 'Наполнение',
+      'water_level_filling_message': 'Идет наполнение водой, подождите...',
+      'water_level_complete_title': 'Наполнение завершено',
+      'water_level_complete_message': 'Наполнение водой завершено. Можно продолжать использование устройства.',
       // 登录页面
       'login_email_hint': 'Введите адрес электронной почты', // 输入邮箱
       'login_password_hint': 'Введите пароль', // 输入密码
@@ -1325,6 +1359,13 @@ class AppTranslations extends Translations {
       'water_level_warning_title': 'Alerte niveau d’eau faible',
       'water_level_warning_message':
           'Le niveau du réservoir d’eau est bas. Ajoutez de l’eau pour continuer.',
+      'water_level_shortage_title': 'Niveau d’eau bas',
+      'water_level_shortage_message':
+          'Le niveau du réservoir d’eau est bas. Ajoutez de l’eau pour continuer.',
+      'water_level_filling_title': 'Remplissage',
+      'water_level_filling_message': 'Remplissage en cours, veuillez patienter...',
+      'water_level_complete_title': 'Remplissage terminé',
+      'water_level_complete_message': 'Remplissage d’eau terminé. Vous pouvez continuer à utiliser l’appareil.',
       // 登录页面
       'login_email_hint': 'Saisir l’adresse e-mail', // 输入邮箱
       'login_password_hint': 'Saisir le mot de passe', // 输入密码

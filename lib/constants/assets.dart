@@ -5,6 +5,11 @@
 // - 每个常量上方都写清楚图片用途和所在页面，方便改素材时快速定位。
 // - 资源目录统一使用英文命名，避免 Android / Windows 调试时中文路径造成排查困难。
 class Assets {
+  //注水图标
+  static const String waterLogo = "assets/Mainimages/water.png";
+  //完成
+  static const String ok = "assets/Mainimages/ok.png";
+
   // 登录页：品牌 Logo。
   static const String logo = "assets/Loginimages/logo.png";
 
@@ -328,10 +333,10 @@ class Assets {
   // 自定义方案编辑页：PEMF 模块波形弹窗背景图。
   static const String customizedPemfWaveDialog =
       "assets/customized/PEMF/Waveform/dialogBox.png";
+  static const String customizedPemfWaveSquare =
+      "assets/customized/PEMF/Waveform/cubic.png";
   static const String customizedPemfWaveSine =
       "assets/customized/PEMF/Waveform/sine.png";
-  static const String customizedPemfWaveStandardSine =
-      "assets/customized/PEMF/Waveform/standardSine.png";
   static const String customizedPemfWaveHalfSine =
       "assets/customized/PEMF/Waveform/halfSine.png";
   static const String customizedPemfWavePulse =
@@ -348,11 +353,18 @@ class Assets {
       "assets/customized/PEMF/Waveform/triangle.png";
   static const String customizedPemfWaveTrapezoid =
       "assets/customized/PEMF/Waveform/trapezoid.png";
+  static const String customizedPemfWaveStandardSine =
+      "assets/customized/PEMF/Waveform/decrease.png";
+  static const String customizedPemfWaveDecay = customizedPemfWaveStandardSine;
+  static const String customizedPemfWaveInfibo =
+      "assets/customized/PEMF/Waveform/dualFrequency.png";
   ///////////////////////pemf选择素材/////////////////////////////////////
   static const String customizedPemfWaveSineSelected =
       "assets/customized/PEMF/Waveform/selected/sineselected.png";
   static const String customizedPemfWaveStandardSineSelected =
-      "assets/customized/PEMF/Waveform/selected/standardSineselected.png";
+      "assets/customized/PEMF/Waveform/selected/decreaseselected.png";
+  static const String customizedPemfWaveDecaySelected =
+      customizedPemfWaveStandardSineSelected;
   static const String customizedPemfWaveHalfSineSelected =
       "assets/customized/PEMF/Waveform/selected/halfSineselected.png";
   static const String customizedPemfWavePulseSelected =
@@ -369,6 +381,10 @@ class Assets {
       "assets/customized/PEMF/Waveform/selected/triangleselected.png";
   static const String customizedPemfWaveTrapezoidSelected =
       "assets/customized/PEMF/Waveform/selected/trapezoidselected.png";
+  static const String customizedPemfWaveInfiboSelected =
+      "assets/customized/PEMF/Waveform/selected/dualFrequencyselected.png";
+  static const String customizedPemfWaveSquareSelected =
+      "assets/customized/PEMF/Waveform/selected/cubicselected.png";
 
   // 自定义方案编辑页：VAT 右侧参数面板背景。
   static const String customizedVatPanelBg =
@@ -727,15 +743,17 @@ class Assets {
   // 启动治疗页：PEMF 波形图片资源。
   static const String startPemfWaveSine = "assets/waveforms/sine_wave.png";
   static const String startPemfWaveStandardSine =
-      "assets/waveforms/standard_sine.png";
+      "assets/waveforms/decreaseselected.png";
   static const String startPemfWaveHalfSine = "assets/waveforms/half_sine.png";
   static const String startPemfWavePulse = "assets/waveforms/pulse.png";
   static const String startPemfWaveSquare = "assets/waveforms/square.png";
   static const String startPemfWaveFastRise = "assets/waveforms/fast_rise.png";
+  static const String startPemfWaveDecay =
+      "assets/waveforms/decreaseselected.png";
   static const String startPemfWaveSawtooth = "assets/waveforms/sawtooth.png";
   static const String startPemfWaveTriangle = "assets/waveforms/triangle.png";
   static const String startPemfWaveTrapezoid = "assets/waveforms/trapezoid.png";
-  static const String startPemfWaveDualFrequency =
+  static const String startPemfWaveInfibo =
       "assets/waveforms/dual_frequency.png";
 
   // 摇杆组件：默认底图。

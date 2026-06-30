@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:infibo_app/api/dio/therapy_report/therapy_report_models.dart';
 import 'package:infibo_app/api/dio/login/login_models.dart';
 import 'package:infibo_app/api/modbus/modbus_rtu_service.dart';
-import 'package:infibo_app/components/water_level_warning_dialog.dart';
+import 'package:infibo_app/components/water_level_state_dialog.dart';
 import 'package:infibo_app/pages/customized/logic.dart';
 import 'package:infibo_app/pages/music/logic.dart';
 import 'package:infibo_app/pages/main/ui.dart';
@@ -143,23 +143,55 @@ void main() {
     }
   });
 
-  testWidgets('water level warning dialog renders localized text', (
+  testWidgets('water level state dialog renders shortage state (1)', (
     WidgetTester tester,
   ) async {
     Get.addTranslations(AppTranslations().keys);
     Get.updateLocale(const Locale('zh', 'CN'));
 
+    final ValueNotifier<int> notifier = ValueNotifier<int>(1);
+
     await tester.pumpWidget(
-      const GetMaterialApp(
-        home: Scaffold(body: Center(child: WaterLevelWarningDialog())),
+      GetMaterialApp(
+        home: Scaffold(
+          body: Center(child: WaterLevelStateDialog(notifier: notifier)),
+        ),
       ),
     );
 
-    expect(find.text('设备缺水提醒'), findsOneWidget);
+    expect(find.text('设备缺水'), findsOneWidget);
     expect(find.text('水箱水量不足，请及时加水后继续使用设备'), findsOneWidget);
   });
 
-  testWidgets('water level dialog closes when 0x01E5 recovers', (
+  testWidgets('water level state dialog transitions to filling state (2)', (
+    WidgetTester tester,
+  ) async {
+    Get.addTranslations(AppTranslations().keys);
+    Get.updateLocale(const Locale('zh', 'CN'));
+
+    final ValueNotifier<int> notifier = ValueNotifier<int>(1);
+
+    await tester.pumpWidget(
+      GetMaterialApp(
+        home: Scaffold(
+          body: Center(child: WaterLevelStateDialog(notifier: notifier)),
+        ),
+      ),
+    );
+
+    // Initial state: shortage
+    expect(find.text('设备缺水'), findsOneWidget);
+
+    // Transition to filling
+    notifier.value = 2;
+    await tester.pump();
+
+    expect(find.text('注水中'), findsOneWidget);
+    expect(find.text('正在注水，请稍候...'), findsOneWidget);
+    expect(find.text('设备缺水'), findsNothing);
+  });
+
+  testWidgets('water level state dialog appears on 0x01E5=1', (
     WidgetTester tester,
   ) async {
     Get.testMode = true;
@@ -183,14 +215,111 @@ void main() {
       ),
     );
 
+    // First read returns 0 → no dialog
     await tester.pump(const Duration(milliseconds: 250));
-    expect(find.text('设备缺水提醒'), findsOneWidget);
+    expect(find.text('设备缺水'), findsNothing);
 
+    // Second read returns 1 → dialog opens with "缺水" state
     await tester.pump(const Duration(seconds: 3));
     await tester.pump(const Duration(milliseconds: 250));
 
-    expect(find.text('设备缺水提醒'), findsNothing);
+    expect(find.text('设备缺水'), findsOneWidget);
     expect(modbusService.waterLevelReads, greaterThanOrEqualTo(2));
+
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
+    if (Get.isRegistered<AppHeaderClockController>()) {
+      Get.find<AppHeaderClockController>().onClose();
+      Get.delete<AppHeaderClockController>(force: true);
+    }
+  });
+
+  testWidgets('water level complete dialog auto dismisses after five minutes', (
+    WidgetTester tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(1024, 1366));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    Get.testMode = true;
+    Get.addTranslations(AppTranslations().keys);
+    Get.updateLocale(const Locale('zh', 'CN'));
+    Get.put(UserStore());
+    addTearDown(() {
+      if (Get.isRegistered<AppHeaderClockController>()) {
+        Get.delete<AppHeaderClockController>(force: true);
+      }
+      Get.reset();
+    });
+
+    final _FakeWaterLevelModbusService modbusService =
+        _FakeWaterLevelModbusService(waterLevelStates: <int>[1, 3]);
+
+    await tester.pumpWidget(
+      GetMaterialApp(
+        navigatorObservers: [appRouteObserver],
+        home: MainPage(modbusService: modbusService),
+      ),
+    );
+
+    await tester.pump(const Duration(milliseconds: 250));
+    expect(find.text('设备缺水'), findsOneWidget);
+
+    await tester.pump(const Duration(seconds: 3));
+    await tester.pump(const Duration(milliseconds: 250));
+    expect(find.text('注水完成'), findsOneWidget);
+
+    await tester.pump(const Duration(minutes: 4, seconds: 59));
+    expect(find.text('注水完成'), findsOneWidget);
+
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pump(const Duration(milliseconds: 250));
+    expect(find.text('注水完成'), findsNothing);
+
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
+    if (Get.isRegistered<AppHeaderClockController>()) {
+      Get.find<AppHeaderClockController>().onClose();
+      Get.delete<AppHeaderClockController>(force: true);
+    }
+  });
+
+  testWidgets('water level complete dialog still dismisses on barrier tap', (
+    WidgetTester tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(1024, 1366));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    Get.testMode = true;
+    Get.addTranslations(AppTranslations().keys);
+    Get.updateLocale(const Locale('zh', 'CN'));
+    Get.put(UserStore());
+    addTearDown(() {
+      if (Get.isRegistered<AppHeaderClockController>()) {
+        Get.delete<AppHeaderClockController>(force: true);
+      }
+      Get.reset();
+    });
+
+    final _FakeWaterLevelModbusService modbusService =
+        _FakeWaterLevelModbusService(waterLevelStates: <int>[1, 3]);
+
+    await tester.pumpWidget(
+      GetMaterialApp(
+        navigatorObservers: [appRouteObserver],
+        home: MainPage(modbusService: modbusService),
+      ),
+    );
+
+    await tester.pump(const Duration(milliseconds: 250));
+    await tester.pump(const Duration(seconds: 3));
+    await tester.pump(const Duration(milliseconds: 250));
+    expect(find.text('注水完成'), findsOneWidget);
+
+    await tester.tapAt(const Offset(1000, 1300));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 250));
+
+    expect(find.text('注水完成'), findsNothing);
 
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pump();
@@ -431,15 +560,22 @@ void main() {
 }
 
 class _FakeWaterLevelModbusService extends ModbusRtuService {
-  _FakeWaterLevelModbusService() : super();
+  _FakeWaterLevelModbusService({List<int>? waterLevelStates})
+    : _waterLevelStates = waterLevelStates ?? const <int>[0, 1],
+      super();
 
   int waterLevelReads = 0;
+  final List<int> _waterLevelStates;
 
   @override
   Future<int> readHoldingRegister(int address) async {
     if (address == 0x01E5) {
       waterLevelReads++;
-      return waterLevelReads == 1 ? 0 : 1;
+      final int index = waterLevelReads - 1;
+      if (index < _waterLevelStates.length) {
+        return _waterLevelStates[index];
+      }
+      return _waterLevelStates.last;
     }
     if (address == 0x0012) return 1;
     if (address == 0x0006) return 0;

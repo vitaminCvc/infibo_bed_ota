@@ -586,12 +586,10 @@ class _StartPageState extends State<StartPage>
                       fontSize: 13,
                     ),
                   ),
-                  const SizedBox(width: 5),
-                  Image.asset(
-                    waveformAsset,
-                    width: 170,
-                    height: 24,
-                    fit: BoxFit.contain,
+                  const SizedBox(width: 20),
+                  SizedBox(
+                    width: 168,
+                    child: Image.asset(waveformAsset, fit: BoxFit.contain),
                   ),
                 ],
               ),
@@ -744,29 +742,32 @@ class _StartPageState extends State<StartPage>
 
   String _getWaveformAsset(String waveform) {
     switch (waveform) {
+      case 'square':
+      case 'burstSquare':
+      case 'cubic':
+        return Assets.startPemfWaveSquare;
       case 'sine':
         return Assets.startPemfWaveSine;
-      case 'standardSine':
-        return Assets.startPemfWaveStandardSine;
-      case 'halfSine':
-        return Assets.startPemfWaveHalfSine;
-      case 'pulse':
-        return Assets.startPemfWavePulse;
-      case 'square':
-        return Assets.startPemfWaveSquare;
-      case 'fastRise':
-        return Assets.startPemfWaveFastRise;
-      case 'saw':
-      case 'sawtooth':
-        return Assets.startPemfWaveSawtooth;
       case 'triangle':
         return Assets.startPemfWaveTriangle;
       case 'trapezoid':
         return Assets.startPemfWaveTrapezoid;
+      case 'saw':
+      case 'sawtooth':
+        return Assets.startPemfWaveSawtooth;
+      case 'halfSine':
+        return Assets.startPemfWaveHalfSine;
+      case 'pulse':
+        return Assets.startPemfWavePulse;
+      case 'fastRise':
+        return Assets.startPemfWaveFastRise;
+      case 'decay':
+      case 'standardSine':
+      case 'decrease':
+        return Assets.startPemfWaveDecay;
       case 'dualFrequency':
-        return Assets.startPemfWaveDualFrequency;
       case 'infibo':
-        return Assets.startPemfWaveDualFrequency;
+        return Assets.startPemfWaveInfibo;
       default:
         return '';
     }
@@ -2143,6 +2144,7 @@ class _StartPageState extends State<StartPage>
         'planName': args.modeTitle,
         'planType': 'preset',
         'durationSeconds': _logic.elapsedSeconds,
+        'isOfflineMode': args.isOfflineMode,
       },
     );
   }
@@ -2540,11 +2542,13 @@ class _StartArguments {
     required this.modeTitle,
     required this.userName,
     required this.clientId,
+    required this.isOfflineMode,
   });
 
   final String modeTitle;
   final String userName;
   final int? clientId;
+  final bool isOfflineMode;
 
   factory _StartArguments.from(Object? args) {
     if (args is Map) {
@@ -2552,6 +2556,7 @@ class _StartArguments {
         modeTitle: args['modeTitle'] as String? ?? 'default_mode_title'.tr,
         userName: _readName(args['user']),
         clientId: _readClientId(args['user']),
+        isOfflineMode: args['isOfflineMode'] == true,
       );
     }
     //默认返回主页面
@@ -2559,6 +2564,7 @@ class _StartArguments {
       modeTitle: 'default_mode_title'.tr,
       userName: 'no_user_selected'.tr,
       clientId: null,
+      isOfflineMode: false,
     );
   }
 

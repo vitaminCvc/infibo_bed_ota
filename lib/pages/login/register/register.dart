@@ -148,11 +148,10 @@ class _RegisterPageState extends State<RegisterPage> {
                 children: [
                   // 构建品牌页头
                   _buildBrandHeader(),
-                  const SizedBox(height: 120),
+                  const SizedBox(height: 70),
 
                   // 构建角色选择器
-                  _buildRoleSelector(),
-                  const SizedBox(height: 38),
+                  // _buildRoleSelector(),
 
                   // 构建邮箱输入框容器。
                   _buildInputEmail(),
@@ -170,7 +169,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   _buildRegisterButton(),
                   const SizedBox(height: 23),
                   _buildAlreadyHaveAccountRow(),
-                  const SizedBox(height: 178),
+                  const SizedBox(height: 100),
                   // 用户协议
                   _buildAgreementRow(),
                   const SizedBox(height: 34),

@@ -35,7 +35,7 @@ class _LoginPageState extends State<LoginPage> {
   //是否同意协议 默认值为false（未同意）
   bool _agreed = false;
   //是否显示密码  默认值为true（隐藏密码框）
-  //bool _obscurePassword = true;
+  bool _obscurePassword = true;
   // 邮箱输入框控制器：读取用户在登录页输入的邮箱。
   final TextEditingController _emailController = TextEditingController();
   //密码输入框控制器
@@ -235,10 +235,11 @@ class _LoginPageState extends State<LoginPage> {
         // 宽度撑开（不加会报错）
         Expanded(
           child: TextField(
-            cursorColor: Color(0xFF1464DF),
+            cursorColor: const Color(0xFF1464DF),
             controller: _passwordController,
             focusNode: _passwordFocusNode,
-            keyboardType: TextInputType.text,
+            keyboardType: TextInputType.visiblePassword, // 建议使用 visiblePassword
+            obscureText: _obscurePassword, // 1. 添加此属性控制密码隐藏
             //输入框内容样式
             style: const TextStyle(color: Colors.white, fontSize: 18),
             textAlignVertical: TextAlignVertical.center,
@@ -252,6 +253,26 @@ class _LoginPageState extends State<LoginPage> {
               ),
               border: InputBorder.none, //
               contentPadding: EdgeInsets.zero,
+              // 2. 添加 suffixIcon 实现小眼睛切换
+              suffixIcon: IconButton(
+                onPressed: () {
+                  setState(() {
+                    _obscurePassword = !_obscurePassword;
+                  });
+                },
+                icon: Icon(
+                  _obscurePassword
+                      ? Icons.visibility_off_outlined
+                      : Icons.visibility_outlined,
+                  size: 24,
+                  color: const Color.fromARGB(
+                    255,
+                    129,
+                    133,
+                    145,
+                  ), // 颜色可与提示文字保持一致
+                ),
+              ),
             ),
           ),
         ),

@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:infibo_app/api/modbus/modbus_rtu_service.dart';
 import 'package:infibo_app/components/index.dart';
-import 'package:infibo_app/components/water_level_warning_dialog.dart';
+import 'package:infibo_app/components/water_level_state_dialog.dart';
 import 'package:infibo_app/constants/assets.dart';
 import 'package:infibo_app/constants/color.dart';
 import 'package:infibo_app/pages/joystick/ui.dart';
@@ -38,6 +38,8 @@ class _MainPageState extends State<MainPage> with RouteAware {
   bool _isWaterLevelPolling = false;
   bool _isWaterLevelReading = false;
   bool _isWaterLevelDialogVisible = false;
+  Timer? _waterLevelCompleteAutoDismissTimer;
+  final ValueNotifier<int> _waterLevelStateNotifier = ValueNotifier<int>(1);
   bool _isRouteSubscribed = false;
   // 主页面逻辑控制器
   final MainLogic _logic = MainLogic();
@@ -67,6 +69,8 @@ class _MainPageState extends State<MainPage> with RouteAware {
     }
     _stopDeviceStatusPolling();
     _stopWaterLevelPolling();
+    _cancelWaterLevelCompleteAutoDismissTimer();
+    _waterLevelStateNotifier.dispose();
     super.dispose();
   }
 
@@ -169,11 +173,24 @@ class _MainPageState extends State<MainPage> with RouteAware {
     try {
       final int state = await widget.modbusService.readHoldingRegister(0x01E5);
       if (!mounted) return;
-      if (state == 0) {
-        _showWaterLevelWarningDialog();
-      } else {
-        _hideWaterLevelWarningDialog();
+
+      if (state == 1 && !_isWaterLevelDialogVisible) {
+        // 只有首次收到 0x01E5=1 时才弹出弹窗，进入"缺水"状态。
+        _waterLevelStateNotifier.value = 1;
+        _cancelWaterLevelCompleteAutoDismissTimer();
+        _showWaterLevelStateDialog();
+      } else if (_isWaterLevelDialogVisible && (state == 2 || state == 3)) {
+        // 弹窗已打开，收到 2/3 只切状态，不重新弹出、不关闭重开。
+        final int previousState = _waterLevelStateNotifier.value;
+        _waterLevelStateNotifier.value = state;
+        if (state == 3 && previousState != 3) {
+          _startWaterLevelCompleteAutoDismissTimer();
+        } else if (state != 3) {
+          _cancelWaterLevelCompleteAutoDismissTimer();
+        }
       }
+      // state==2 或 3 但弹窗未打开：直接忽略，不触发弹窗。
+
       debugPrint('Water level sync RX 0x01E5=$state');
     } catch (e) {
       debugPrint('Water level sync failed: $e');
@@ -182,33 +199,77 @@ class _MainPageState extends State<MainPage> with RouteAware {
     }
   }
 
-  void _showWaterLevelWarningDialog() {
+  void _startWaterLevelCompleteAutoDismissTimer() {
+    _cancelWaterLevelCompleteAutoDismissTimer();
+    _waterLevelCompleteAutoDismissTimer = Timer(
+      const Duration(milliseconds: 5000),
+      () {
+        if (!mounted ||
+            !_isWaterLevelDialogVisible ||
+            _waterLevelStateNotifier.value != 3) {
+          return;
+        }
+        _dismissWaterLevelStateDialog();
+      },
+    );
+  }
+
+  void _cancelWaterLevelCompleteAutoDismissTimer() {
+    _waterLevelCompleteAutoDismissTimer?.cancel();
+    _waterLevelCompleteAutoDismissTimer = null;
+  }
+
+  void _dismissWaterLevelStateDialog() {
+    if (!_isWaterLevelDialogVisible || !mounted) return;
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+
+  void _showWaterLevelStateDialog() {
     if (_isWaterLevelDialogVisible || !mounted) return;
     _isWaterLevelDialogVisible = true;
     unawaited(
       showGeneralDialog<void>(
         context: context,
         barrierDismissible: false,
-        barrierLabel: 'water_level_warning_title'.tr,
-        barrierColor: Colors.black.withValues(alpha: 0.35),
+        barrierLabel: 'water_level_dialog',
+        barrierColor: Colors.transparent,
         transitionDuration: const Duration(milliseconds: 180),
         pageBuilder: (context, animation, secondaryAnimation) {
-          return const Center(
-            child: Material(
-              color: Colors.transparent,
-              child: PopScope(canPop: false, child: WaterLevelWarningDialog()),
-            ),
+          return ValueListenableBuilder<int>(
+            valueListenable: _waterLevelStateNotifier,
+            builder: (context, state, _) {
+              final bool canDismiss = state == 3;
+              return Stack(
+                children: [
+                  // 自定义遮罩：仅注水完成时可点击关闭。
+                  Positioned.fill(
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: canDismiss ? _dismissWaterLevelStateDialog : null,
+                      child: Container(
+                        color: Colors.black.withValues(alpha: 0.35),
+                      ),
+                    ),
+                  ),
+                  // 弹窗本体。
+                  Center(
+                    child: Material(
+                      color: Colors.transparent,
+                      child: WaterLevelStateDialog(
+                        notifier: _waterLevelStateNotifier,
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
           );
         },
       ).whenComplete(() {
+        _cancelWaterLevelCompleteAutoDismissTimer();
         _isWaterLevelDialogVisible = false;
       }),
     );
-  }
-
-  void _hideWaterLevelWarningDialog() {
-    if (!_isWaterLevelDialogVisible || !mounted) return;
-    Navigator.of(context, rootNavigator: true).pop();
   }
 
   ///////////////////////////////////////////////模式卡片数据////////////////////////////////////////////////

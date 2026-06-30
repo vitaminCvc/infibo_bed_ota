@@ -251,7 +251,7 @@ class _SettingWidgetState extends State<SettingWidget> {
   Widget _buildLeftMenuPanel() {
     return Container(
       // 高度固定，确保左栏在不同屏幕下保持稳定比例，不被内容撑变形。
-      height: 704,
+      height: 730,
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           begin: Alignment.topCenter,
@@ -359,7 +359,7 @@ class _SettingWidgetState extends State<SettingWidget> {
     // 右侧标题跟随左侧当前选中项，语言设置页显示专属内容。
     final String pageTitle = _menuItems[_selectedMenuIndex].titleKey.tr;
     return Container(
-      height: 704,
+      height: 730,
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
@@ -432,24 +432,32 @@ class _SettingWidgetState extends State<SettingWidget> {
             },
           ),
         ),
-        const SizedBox(height: 12),
-        SizedBox(
-          height: 40,
-          child: ElevatedButton(
-            onPressed: _confirmLanguageChange,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF2E84FF),
-              foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
+        const SizedBox(height: 20),
+        Align(
+          alignment: Alignment.center,
+          child: SizedBox(
+            width: 360,
+            height: 48,
+            child: ElevatedButton(
+              onPressed: _confirmLanguageChange,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF2E84FF),
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(28),
+                ),
               ),
-            ),
-            child: Text(
-              'save_changes'.tr,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+              child: Text(
+                'save_changes'.tr,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
             ),
           ),
         ),
+        const SizedBox(height: 10),
       ],
     );
   }
@@ -696,11 +704,11 @@ class _SettingWidgetState extends State<SettingWidget> {
           Center(
             child: SizedBox(
               width: 360,
-              height: 56,
+              height: 48,
               child: ElevatedButton(
                 onPressed: _confirmDateTimeChange,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF1F74E8),
+                  backgroundColor: const Color(0xFF2E84FF),
                   foregroundColor: Colors.white,
                   elevation: 0,
                   shape: RoundedRectangleBorder(

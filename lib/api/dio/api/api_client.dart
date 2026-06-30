@@ -12,9 +12,9 @@ class ApiClient {
       baseUrl: const String.fromEnvironment(
         'API_BASE_URL',
         // WIFI 环境
-        // defaultValue: 'http://192.168.1.80:8080',
+        defaultValue: 'http://192.168.1.81:8080',
         // 安卓模拟器环境
-        defaultValue: 'http://127.0.0.1:8080',
+        // defaultValue: 'http://127.0.0.1:8080',
       ),
       connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(seconds: 10),

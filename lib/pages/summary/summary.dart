@@ -1235,11 +1235,7 @@ Widget _buildButton(SummaryLogic logic) {
         child: Text(
           'confirm'.tr,
           maxLines: 1,
-          style: const TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w100,
-            color: Color(0xFFFFFFFF),
-          ),
+          style: const TextStyle(fontSize: 20, color: Color(0xFFFFFFFF)),
         ),
       ),
     ),

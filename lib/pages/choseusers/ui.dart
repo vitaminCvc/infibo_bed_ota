@@ -1,8 +1,7 @@
-﻿// 閫夋嫨鐢ㄦ埛椤甸潰銆?
+﻿// 选择用户页面。
 //
-// 鐢ㄦ埛鍦ㄨ繖閲岄€夋嫨鎴栨柊澧炴帴鍙楃悊鐤楃殑鐢ㄦ埛锛岀劧鍚庡甫鐫€褰撳墠妯″紡鎴栬嚜瀹氫箟鏂规杩涘叆鍚姩鐞嗙枟椤点€?
+// 用户在这里选择或新增接受理疗的用户，然后带着当前模式或自定义方案进入启动理疗页。
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -14,68 +13,65 @@ import 'package:infibo_app/utils/age_utils.dart';
 import 'package:infibo_app/utils/gender_utils.dart';
 import 'package:infibo_app/utils/phone_utils.dart';
 
-// 閫夋嫨鐢ㄦ埛椤甸潰銆?
+// 选择用户页面。
 class ChoseUsersPage extends StatefulWidget {
   const ChoseUsersPage({super.key});
-
   @override
   State<ChoseUsersPage> createState() => _ChoseUsersPageState();
 }
 
 class _ChoseUsersPageState extends State<ChoseUsersPage> {
-  // 閫夋嫨鐢ㄦ埛閫昏緫銆?
+  // 选择用户逻辑。
   final ChoseUsersLogic _logic = ChoseUsersLogic();
-  // 鐢ㄦ埛鍒楄〃婊氬姩鎺у埗鍣ㄣ€?
+  // 用户列表滚动控制器。
   final ScrollController _listController = ScrollController();
-  // 鎼滅储妗嗘帶鍒跺櫒銆?
+  // 搜索框控制器。
   final TextEditingController _searchController = TextEditingController();
-  // 濮撳悕杈撳叆妗嗘帶鍒跺櫒銆?
+  // 姓名输入框控制器。
   final TextEditingController _nameController = TextEditingController();
-  // 骞撮緞杈撳叆妗嗘帶鍒跺櫒銆?
+  // 年龄输入框控制器。
   final TextEditingController _ageController = TextEditingController();
-  // 鎵嬫満鍙疯緭鍏ユ鎺у埗鍣ㄣ€?
+  // 手机号输入框控制器。
   final TextEditingController _phoneController = TextEditingController();
-
-  // 娣诲姞鐢ㄦ埛寮圭獥鏄惁鏄剧ず銆?
+  // 添加用户弹窗是否显示。
   bool _showAddPopup = false;
-  // 鏄惁鍑嗗灏辩华銆?
+  // 是否准备就绪。
   bool _isReady = false;
-  //璁剧疆鎬у埆鐨勯粯璁ゅ€间负鐢?
+  // 设置性别的默认值为男
   String _selectedGender = '\u7537';
-
   @override
-  //杩涜鍒濆鍖?
+  // 进行初始化
   void initState() {
     super.initState();
-    // 鍒濆鍖栫敤鎴峰垪琛?
+    // 初始化用户列表
     _loadUsers();
   }
 
   @override
-  //
+  // 销毁资源
   void dispose() {
     _listController.dispose();
     _searchController.dispose();
     _nameController.dispose();
     _ageController.dispose();
     _phoneController.dispose();
-    // 閲婃斁鏁版嵁搴撹祫婧?
+    // 释放数据库资源
     unawaited(_logic.dispose());
     super.dispose();
   }
 
   @override
-  // 鏋勫缓椤甸潰
+  // 构建页面
   Widget build(BuildContext context) {
-    //鏋勫缓椤佃〃澶?
+    //构建页表头
     return AppUsersHeaderPage(
-      // 鐐瑰嚮娣诲姞鐢ㄦ埛鎸夐挳鏃惰皟鐢?
+      // 点击添加用户按钮时调用
       onAddTap: _toggleAddPopup,
       children: [
-        // 鍥哄畾鍐呭鍖哄煙
+        // 固定内容区域
         Positioned(left: 44, top: 145, right: 44, child: _buildFixedContent()),
         Positioned(
-          top: 292, //鐢ㄦ埛鍒楄〃椤堕儴璺濈
+          top: 292, //用户列表顶部距离
           left: 44,
           right: 44,
           bottom: 24,
@@ -87,7 +83,7 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
     );
   }
 
-  /// 鏄剧ず鎴栭殣钘忔坊鍔犵敤鎴峰脊绐椼€?
+  /// 显示或隐藏添加用户弹窗。
   void _toggleAddPopup() {
     setState(() {
       _showAddPopup = !_showAddPopup;
@@ -95,24 +91,20 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
     });
   }
 
-  /// 浠庢暟鎹簱鍔犺浇鐢ㄦ埛銆?
+  /// 从数据库加载用户。
   Future<void> _loadUsers() async {
     await _logic.init();
     if (!mounted) return;
-
     setState(() => _isReady = true);
   }
 
-  /// 淇濆瓨鏂板鐢ㄦ埛銆?
+  /// 保存新增用户。
   Future<void> _saveUser() async {
     if (!_isReady) return;
-
     final String name = _nameController.text.trim();
     final String age = _ageController.text.trim();
     final String phone = _phoneController.text.trim();
-
     if (name.isEmpty || age.isEmpty || phone.isEmpty) return;
-
     await _logic.addUser(
       name: name,
       gender: _selectedGender,
@@ -120,7 +112,6 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
       phone: phone,
     );
     if (!mounted) return;
-
     setState(() {
       _showAddPopup = false;
       _selectedGender = '\u7537';
@@ -128,39 +119,33 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
       _ageController.clear();
       _phoneController.clear();
     });
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollToUser(_logic.users.length - 1);
     });
   }
 
-  /// 鎼滅储骞跺畾浣嶇敤鎴枫€?
+  /// 搜索并定位用户。
   void _searchUser(String keyword) {
     if (!_isReady) return;
-
     final int index = _logic.findUserIndex(keyword);
     if (index < 0) return;
-
     setState(() => _logic.highlightUser(index));
     _scrollToUser(index);
   }
 
-  /// 鍒犻櫎鐢ㄦ埛銆?
+  /// 删除用户。
   Future<void> _deleteUser(int index) async {
     await _logic.deleteUser(index);
     if (!mounted) return;
-
     setState(() {});
   }
 
-  /// 婊氬姩鍒版寚瀹氱敤鎴枫€?
+  /// 滚动到指定用户。
   void _scrollToUser(int index) {
     if (!_listController.hasClients) return;
-
     const double itemHeight = 112;
     final double targetOffset = (index * itemHeight).toDouble();
     final double maxOffset = _listController.position.maxScrollExtent;
-
     _listController.animateTo(
       targetOffset.clamp(0, maxOffset),
       duration: const Duration(milliseconds: 260),
@@ -168,7 +153,7 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
     );
   }
 
-  /// 鏋勫缓鍥哄畾鍖哄煙锛屾爣棰樺拰鎼滅储妗嗕笉浼氳窡鐫€鍒楄〃婊氬姩銆?
+  /// 构建固定区域，标题和搜索框不会跟着列表滚动。
   Widget _buildFixedContent() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -176,7 +161,7 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
     );
   }
 
-  /// 鏋勫缓椤甸潰鏍囬銆?
+  /// 构建页面标题。
   Widget _buildTitle() {
     return Text(
       'choose_therapy_user'.tr,
@@ -192,31 +177,31 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
     );
   }
 
-  /// 鏋勫缓鎼滅储妗嗐€?
+  /// 构建搜索框。
   Widget _buildSearchBar() {
     return SizedBox(
       height: 48,
       child: Stack(
-        alignment: Alignment.centerLeft, //灞呬腑宸﹀榻?
+        alignment: Alignment.centerLeft, //居中对齐
         children: [
-          // 鎼滅储妗嗚儗鏅簿婊℃暣涓尯鍩?
+          // 搜索框背景铺满整个区域
           Positioned.fill(
-            // 鎼滅储妗嗚儗鏅?
+            // 搜索框背景
             child: Image.asset(Assets.choseUserSearchBg, fit: BoxFit.fill),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 22, right: 22),
             child: Row(
               children: [
-                // 鎼滅储鍥炬爣
+                // 搜索图标
                 Image.asset(Assets.choseUserSearchIcon, width: 16, height: 16),
                 const SizedBox(width: 10),
                 Expanded(
-                  // 鎼滅储杈撳叆妗?
+                  // 搜索输入框
                   child: TextField(
                     controller: _searchController,
                     cursorColor: Colors.white,
-                    textInputAction: TextInputAction.search, //鎼滅储鎸夐挳
+                    textInputAction: TextInputAction.search, //搜索按钮
                     onSubmitted: _searchUser,
                     style: const TextStyle(
                       color: Colors.white,
@@ -224,7 +209,7 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
                       fontFamily: 'Microsoft YaHei',
                     ),
                     decoration: InputDecoration(
-                      // 鎼滅储杈撳叆妗嗘牱寮?
+                      // 搜索输入框样式
                       isDense: true,
                       border: InputBorder.none,
                       hintText: 'search_user_hint'.tr,
@@ -244,12 +229,11 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
     );
   }
 
-  /// 鏋勫缓鍙粴鍔ㄧ敤鎴峰垪琛ㄣ€?
+  /// 构建可滑动用户列表。
   Widget _buildUserList() {
     if (!_isReady) {
       return const SizedBox.shrink();
     }
-
     return ListView.separated(
       controller: _listController,
       padding: EdgeInsets.zero,
@@ -257,7 +241,6 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
       separatorBuilder: (context, index) => const SizedBox(height: 16),
       itemBuilder: (context, index) {
         final UserItemData item = _logic.users[index];
-
         return Slidable(
           key: ValueKey(item.id ?? '${item.name}-$index'),
           endActionPane: ActionPane(
@@ -291,7 +274,7 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
     );
   }
 
-  /// 鏋勫缓娣诲姞鐢ㄦ埛寮圭獥銆?
+  /// 构建添加用户弹窗。
   Widget _buildAddUserPopup() {
     return SizedBox(
       width: 232,
@@ -304,7 +287,6 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
           ),
           Column(
             mainAxisSize: MainAxisSize.min,
-
             children: [
               const SizedBox(height: 36),
               Transform.translate(
@@ -363,13 +345,12 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
     );
   }
 
-  /// 鏋勫缓鎬у埆鐐归€夈€?
+  /// 构建性别点选。
   Widget _buildGenderSelector() {
     return Container(
       height: 30,
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 15),
-
       child: Row(
         children: [
           const SizedBox(width: 24),
@@ -387,9 +368,17 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
             offset: const Offset(-8, 0),
             child: Row(
               children: [
-                SizedBox(width: 34, height: 30, child: _buildGenderOption('\u7537')),
+                SizedBox(
+                  width: 34,
+                  height: 30,
+                  child: _buildGenderOption('\u7537'),
+                ),
                 const SizedBox(width: 8),
-                SizedBox(width: 34, height: 30, child: _buildGenderOption('\u5973')),
+                SizedBox(
+                  width: 34,
+                  height: 30,
+                  child: _buildGenderOption('\u5973'),
+                ),
               ],
             ),
           ),
@@ -398,10 +387,9 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
     );
   }
 
-  /// 鏋勫缓鍗曚釜鎬у埆閫夐」銆?
+  /// 构建单个性别选项。
   Widget _buildGenderOption(String value) {
     final bool isSelected = _selectedGender == value;
-
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () {
@@ -458,7 +446,7 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
     );
   }
 
-  /// 鏋勫缓寮圭獥杈撳叆妗嗐€?
+  /// 构建弹窗输入框。
   Widget _buildPopupInput({
     required TextEditingController controller,
     required String hintText,
@@ -468,7 +456,7 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
     return SizedBox(
       height: 30,
       width: 186,
-      //閿洏绫诲瀷
+      //键盘类型
       child: TextField(
         controller: controller,
         keyboardType: keyboardType,
@@ -503,7 +491,7 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
     );
   }
 
-  /// 鏋勫缓鐢ㄦ埛鍗＄墖銆?
+  /// 构建用户卡片。
   Widget _buildUserCard(UserItemData item, int index, bool isHighlighted) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 180),
@@ -552,7 +540,7 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
     );
   }
 
-  /// 鏋勫缓鐢ㄦ埛澶村儚銆?
+  /// 构建用户头像。
   Widget _buildAvatar(String name, int index) {
     final List<Color> colors = [
       const Color(0xFF4A5B65),
@@ -561,7 +549,6 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
       const Color(0xFF405D52),
       const Color(0xFF5A4A60),
     ];
-
     return SizedBox(
       width: 48,
       height: 48,
@@ -595,7 +582,7 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
     );
   }
 
-  /// 鏋勫缓鐢ㄦ埛濮撳悕銆佹€у埆銆佸勾榫勩€佹墜鏈哄彿銆?
+  /// 构建用户姓名、性别、年龄、手机号。
   Widget _buildUserInfo(UserItemData item) {
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -640,7 +627,7 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
     return formatAgeForLanguage(ageRaw, localeCode);
   }
 
-  /// 鏋勫缓鎬у埆銆佸勾榫勬爣绛俱€?
+  /// 构建性别、年龄标签。
   Widget _buildInfoBadge(String text) {
     return SizedBox(
       width: 48,
@@ -665,7 +652,7 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
     );
   }
 
-  /// 鏋勫缓閫夋嫨鎸夐挳銆?
+  /// 构建选择按钮。
   Widget _buildSelectButton(UserItemData item) {
     return SizedBox(
       width: 88,

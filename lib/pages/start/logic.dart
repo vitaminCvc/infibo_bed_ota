@@ -538,28 +538,31 @@ class PemfPhaseSetting {
   int get waveformNumber {
     if (waveformValue != null) return waveformValue!;
     switch (waveform) {
-      case 'sine':
+      case 'square':
+      case 'burstSquare':
+      case 'cubic':
         return 0;
-      case 'halfSine':
+      case 'sine':
         return 1;
-      case 'trapezoid':
+      case 'triangle':
         return 2;
-      case 'standardSine':
+      case 'trapezoid':
         return 3;
       case 'saw':
       case 'sawtooth':
         return 4;
-      case 'triangle':
+      case 'halfSine':
         return 5;
       case 'pulse':
         return 6;
       case 'fastRise':
         return 7;
-      case 'dualFrequency':
-      case 'infibo':
+      case 'decay':
+      case 'standardSine':
+      case 'decrease':
         return 8;
-      case 'cubic':
-      case 'burstSquare':
+      case 'infibo':
+      case 'dualFrequency':
         return 9;
       default:
         return 0;

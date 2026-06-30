@@ -6,5 +6,6 @@ export 'byte_utils.dart';
 export 'date_time_utils.dart';
 export 'duration_utils.dart';
 export 'email_utils.dart';
+export 'network_checker.dart';
 export 'number_utils.dart';
 export 'phone_utils.dart';

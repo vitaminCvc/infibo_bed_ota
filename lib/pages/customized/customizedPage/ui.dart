@@ -650,33 +650,33 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
                 Image.asset(Assets.expandIcon, width: 43, height: 43),
               ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 25),
             _buildExpandLine(
               id: 'chakra',
               text: 'chakra'.tr,
-              selectedImage: Assets.startExpandIconOn,
-              unselectedImage: Assets.startExpandIconOff,
+              selectedImage: Assets.customizedExpandChakraSelected,
+              unselectedImage: Assets.customizedExpandChakraDefault,
             ),
             const SizedBox(height: 18),
             _buildExpandLine(
               id: 'terahertz',
               text: 'terahertz'.tr,
-              selectedImage: Assets.startTerahertzIconOn,
-              unselectedImage: Assets.startTerahertzIconOff,
+              selectedImage: Assets.customizedExpandTerahertzSelected,
+              unselectedImage: Assets.customizedExpandTerahertzDefault,
             ),
             const SizedBox(height: 18),
             _buildExpandLine(
               id: 'hifem',
               text: 'HIFEM',
-              selectedImage: Assets.startHifemIconOn,
-              unselectedImage: Assets.startHifemIconOff,
+              selectedImage: Assets.customizedExpandHifemSelected,
+              unselectedImage: Assets.customizedExpandHifemDefault,
             ),
             const SizedBox(height: 18),
             _buildExpandLine(
               id: 'fragrance',
               text: 'fragrance'.tr,
-              selectedImage: Assets.startFragranceIconOn,
-              unselectedImage: Assets.startFragranceIconOff,
+              selectedImage: Assets.customizedExpandFragranceSelected,
+              unselectedImage: Assets.customizedExpandFragranceDefault,
             ),
           ],
         ),
@@ -764,7 +764,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
       child: Stack(
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 25, 20, 18),
+            padding: const EdgeInsets.fromLTRB(20, 25, 20, 25),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -772,7 +772,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
                   title: 'red_light'.tr,
                   icon: _moduleById('redlight').iconOn,
                 ),
-                const SizedBox(height: 18),
+                const SizedBox(height: 14),
                 _buildTwoColumnLabels('wavelength'.tr, 'intensity'.tr),
                 const SizedBox(height: 6),
                 _buildWavelengthRow(
@@ -788,7 +788,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
                   controller: _redLight850Controllers[index],
                   focusNode: _redLight850FocusNodes[index],
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 10),
                 Row(
                   children: [
                     SizedBox(
@@ -962,7 +962,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
       child: Stack(
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 26, 20, 18),
+            padding: const EdgeInsets.fromLTRB(20, 25, 20, 25),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -972,28 +972,30 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
                 const SizedBox(height: 7),
                 Row(
                   children: [
-                    _InputBox(
-                      width: 88,
-                      controller: _pemfFrequencyControllers[index],
-                      focusNode: _pemfFrequencyFocusNodes[index],
-                      keyboardType: TextInputType.number,
-                      maxValue: 75,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                        LengthLimitingTextInputFormatter(2),
-                      ],
+                    Expanded(
+                      child: _InputBox(
+                        controller: _pemfFrequencyControllers[index],
+                        focusNode: _pemfFrequencyFocusNodes[index],
+                        keyboardType: TextInputType.number,
+                        maxValue: 75,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                          LengthLimitingTextInputFormatter(2),
+                        ],
+                      ),
                     ),
                     const SizedBox(width: 30),
-                    _InputBox(
-                      width: 88,
-                      controller: _pemfIntensityControllers[index],
-                      focusNode: _pemfIntensityFocusNodes[index],
-                      keyboardType: TextInputType.number,
-                      maxValue: 100,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                        LengthLimitingTextInputFormatter(3),
-                      ],
+                    Expanded(
+                      child: _InputBox(
+                        controller: _pemfIntensityControllers[index],
+                        focusNode: _pemfIntensityFocusNodes[index],
+                        keyboardType: TextInputType.number,
+                        maxValue: 100,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                          LengthLimitingTextInputFormatter(3),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -1070,7 +1072,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
       child: Stack(
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 24, 20, 18),
+            padding: const EdgeInsets.fromLTRB(20, 25, 20, 25),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -1080,27 +1082,29 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
                 const SizedBox(height: 7),
                 Row(
                   children: [
-                    _InputBox(
-                      width: 88,
-                      controller: _vatFrequencyControllers[index],
-                      focusNode: _vatFrequencyFocusNodes[index],
-                      keyboardType: TextInputType.number,
-                      maxValue: 100,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                        LengthLimitingTextInputFormatter(3),
-                      ],
+                    Expanded(
+                      child: _InputBox(
+                        controller: _vatFrequencyControllers[index],
+                        focusNode: _vatFrequencyFocusNodes[index],
+                        keyboardType: TextInputType.number,
+                        maxValue: 100,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                          LengthLimitingTextInputFormatter(3),
+                        ],
+                      ),
                     ),
                     const SizedBox(width: 30),
-                    GestureDetector(
-                      onTap: () => _openVatMusicPage(index),
-                      child: AbsorbPointer(
-                        // 吸收指针事件，防止内部输入框抢夺点击
-                        child: _InputBox(
-                          // 移除内部的 onTap，因为现在由外层 GestureDetector 处理
-                          width: 88,
-                          controller: _vatIntensityController,
-                          enabled: false, // 保持禁用状态，仅作为展示或数据绑定
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => _openVatMusicPage(index),
+                        child: AbsorbPointer(
+                          // 吸收指针事件，防止内部输入框抢夺点击
+                          child: _InputBox(
+                            // 移除内部的 onTap，因为现在由外层 GestureDetector 处理
+                            controller: _vatIntensityController,
+                            enabled: false, // 保持禁用状态，仅作为展示或数据绑定
+                          ),
                         ),
                       ),
                     ),
@@ -1124,7 +1128,8 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
   Widget _buildVatTitleRow(int index) {
     return Row(
       children: [
-        const Expanded(
+        const SizedBox(
+          width: 150,
           child: Text(
             'VAT',
             style: TextStyle(
@@ -1134,20 +1139,11 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
             ),
           ),
         ),
+        const Spacer(),
         GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: () => _openVatMusicPage(index),
-          child: SizedBox(
-            width: 67,
-            height: 43,
-            child: Center(
-              child: Image.asset(
-                _moduleById('vat').iconOn,
-                width: 43,
-                height: 43,
-              ),
-            ),
-          ),
+          child: Image.asset(_moduleById('vat').iconOn, width: 43, height: 43),
         ),
       ],
     );
@@ -1196,7 +1192,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
       child: Stack(
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 24, 20, 18),
+            padding: const EdgeInsets.fromLTRB(20, 25, 20, 25),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -1209,16 +1205,17 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
                 const SizedBox(height: 7),
                 Row(
                   children: [
-                    _InputBox(
-                      width: 206,
-                      controller: _hydrogenConcentrationControllers[index],
-                      focusNode: _hydrogenConcentrationFocusNodes[index],
-                      keyboardType: TextInputType.number,
-                      maxValue: 100,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                        LengthLimitingTextInputFormatter(3),
-                      ],
+                    Expanded(
+                      child: _InputBox(
+                        controller: _hydrogenConcentrationControllers[index],
+                        focusNode: _hydrogenConcentrationFocusNodes[index],
+                        keyboardType: TextInputType.number,
+                        maxValue: 100,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                          LengthLimitingTextInputFormatter(3),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -1240,9 +1237,9 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
   Widget _buildTwoColumnLabels(String left, String right) {
     return Row(
       children: [
-        SizedBox(width: 88, child: Text(left, style: _smallLabelStyle)),
+        Expanded(child: Text(left, style: _smallLabelStyle)),
         const SizedBox(width: 30),
-        SizedBox(width: 88, child: Text(right, style: _smallLabelStyle)),
+        Expanded(child: Text(right, style: _smallLabelStyle)),
       ],
     );
   }
@@ -1255,8 +1252,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        SizedBox(
-          width: 88,
+        Expanded(
           child: RichText(
             text: TextSpan(
               children: [
@@ -1273,17 +1269,18 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
           ),
         ),
         const SizedBox(width: 30),
-        _InputHitArea(
-          focusNode: focusNode,
-          child: _InputBox(
-            width: 88,
-            controller: controller,
+        Expanded(
+          child: _InputHitArea(
             focusNode: focusNode,
-            keyboardType: TextInputType.number,
-            inputFormatters: [
-              FilteringTextInputFormatter.digitsOnly,
-              LengthLimitingTextInputFormatter(3),
-            ],
+            child: _InputBox(
+              controller: controller,
+              focusNode: focusNode,
+              keyboardType: TextInputType.number,
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                LengthLimitingTextInputFormatter(3),
+              ],
+            ),
           ),
         ),
       ],
@@ -2605,16 +2602,22 @@ class _PemfWave {
 
 const List<_PemfWave> _pemfWaves = [
   _PemfWave(
+    id: 'square',
+    label: 'square',
+    asset: Assets.customizedPemfWaveSquare,
+    selectedAsset: Assets.customizedPemfWaveSquareSelected,
+  ),
+  _PemfWave(
     id: 'sine',
     label: 'sine',
     asset: Assets.customizedPemfWaveSine,
     selectedAsset: Assets.customizedPemfWaveSineSelected,
   ),
   _PemfWave(
-    id: 'halfSine',
-    label: 'halfSine',
-    asset: Assets.customizedPemfWaveHalfSine,
-    selectedAsset: Assets.customizedPemfWaveHalfSineSelected,
+    id: 'triangle',
+    label: 'triangle',
+    asset: Assets.customizedPemfWaveTriangle,
+    selectedAsset: Assets.customizedPemfWaveTriangleSelected,
   ),
   _PemfWave(
     id: 'trapezoid',
@@ -2623,22 +2626,16 @@ const List<_PemfWave> _pemfWaves = [
     selectedAsset: Assets.customizedPemfWaveTrapezoidSelected,
   ),
   _PemfWave(
-    id: 'standardSine',
-    label: 'standardSine',
-    asset: Assets.customizedPemfWaveStandardSine,
-    selectedAsset: Assets.customizedPemfWaveStandardSineSelected,
-  ),
-  _PemfWave(
     id: 'saw',
     label: 'saw',
     asset: Assets.customizedPemfWaveSaw,
     selectedAsset: Assets.customizedPemfWaveSawSelected,
   ),
   _PemfWave(
-    id: 'triangle',
-    label: 'triangle',
-    asset: Assets.customizedPemfWaveTriangle,
-    selectedAsset: Assets.customizedPemfWaveTriangleSelected,
+    id: 'halfSine',
+    label: 'halfSine',
+    asset: Assets.customizedPemfWaveHalfSine,
+    selectedAsset: Assets.customizedPemfWaveHalfSineSelected,
   ),
   _PemfWave(
     id: 'pulse',
@@ -2653,20 +2650,36 @@ const List<_PemfWave> _pemfWaves = [
     selectedAsset: Assets.customizedPemfWaveFastRiseSelected,
   ),
   _PemfWave(
-    id: 'dualFrequency',
-    label: 'dualFrequency',
-    asset: Assets.customizedPemfWaveDualFrequency,
-    selectedAsset: Assets.customizedPemfWaveDualFrequencySelected,
+    id: 'decay',
+    label: 'decay',
+    asset: Assets.customizedPemfWaveDecay,
+    selectedAsset: Assets.customizedPemfWaveDecaySelected,
   ),
   _PemfWave(
-    id: 'cubic',
-    label: 'cubic',
-    asset: Assets.customizedPemfWaveCubic,
-    selectedAsset: Assets.customizedPemfWaveCubicSelected,
+    id: 'infibo',
+    label: 'infibo',
+    asset: Assets.customizedPemfWaveInfibo,
+    selectedAsset: Assets.customizedPemfWaveInfiboSelected,
   ),
 ];
 
 _PemfWave? _pemfWaveFromId(String id) {
+  switch (id) {
+    case 'burstSquare':
+    case 'cubic':
+      id = 'square';
+      break;
+    case 'sawtooth':
+      id = 'saw';
+      break;
+    case 'standardSine':
+    case 'decrease':
+      id = 'decay';
+      break;
+    case 'dualFrequency':
+      id = 'infibo';
+      break;
+  }
   for (final _PemfWave wave in _pemfWaves) {
     if (wave.id == id) return wave;
   }
@@ -2823,17 +2836,19 @@ class _PanelTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Expanded(
+        SizedBox(
+          width: 150,
           child: Text(
             title,
+            overflow: TextOverflow.ellipsis,
             style: const TextStyle(
               color: Colors.white,
               fontSize: 22,
-              height: 1,
               fontWeight: FontWeight.w500,
             ),
           ),
         ),
+        const Spacer(),
         Image.asset(icon, width: 43, height: 43),
       ],
     );
@@ -2842,7 +2857,7 @@ class _PanelTitle extends StatelessWidget {
 
 class _InputBox extends StatelessWidget {
   const _InputBox({
-    required this.width,
+    this.width,
     this.controller,
     this.focusNode,
     this.keyboardType,
@@ -2851,7 +2866,7 @@ class _InputBox extends StatelessWidget {
     this.enabled = true,
   });
 
-  final double width;
+  final double? width;
   final TextEditingController? controller;
   final FocusNode? focusNode;
   final TextInputType? keyboardType;
@@ -2964,7 +2979,7 @@ class _InputBoxMetrics {
   static const double visualHeight = 29;
 
   static double visualWidth(Widget child) {
-    if (child is _InputBox) return child.width;
+    if (child is _InputBox) return child.width ?? 88;
     return 88;
   }
 }
@@ -2981,7 +2996,6 @@ class _PemfWaveSelector extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
       child: Container(
-        width: 206,
         height: 37,
         padding: const EdgeInsets.symmetric(horizontal: 10),
         decoration: BoxDecoration(
@@ -2997,7 +3011,7 @@ class _PemfWaveSelector extends StatelessWidget {
             Expanded(
               child: wave == null
                   ? const SizedBox.shrink()
-                  : Image.asset(wave!.asset, height: 24, fit: BoxFit.contain),
+                  : Image.asset(wave!.asset, height: 20, fit: BoxFit.contain),
             ),
             Icon(
               Icons.keyboard_arrow_down,

@@ -1,15 +1,15 @@
 // 十个预设模式共同使用的10个预设模型
 enum pemfModels {
-  sine(0), // 正弦波
-  halfSine(1), // 半正弦
-  trapezoid(2), // 梯形
-  standardSine(3), // 标准正弦
-  sawtooth(4), // 锯齿
-  triangle(5), // 三角
-  pulse(6), // 矩形脉冲
-  fastRise(7), // 快速上升
-  infibo(8), // 双频 / INFIBO
-  burstSquare(9); // Burst矩形 / 标准方波
+  burstSquare(0), // 方波
+  sine(1), // 正弦波
+  triangle(2), // 三角波
+  trapezoid(3), // 梯形波
+  sawtooth(4), // 锯齿波
+  halfSine(5), // 半正弦波
+  pulse(6), // 脉冲串波
+  fastRise(7), // 指数波（快速上升）
+  standardSine(8), // 指数衰减波
+  infibo(9); // INFIBO波 / 双频波
 
   const pemfModels(this.deviceValue);
 

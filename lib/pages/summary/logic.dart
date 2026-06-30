@@ -27,10 +27,13 @@ class SummaryLogic {
   String planType = '';
   int durationSeconds = 0;
   bool reportSaved = false;
+  bool _isOfflineMode = false;
 
   // 读取启动理疗页传过来的用户和模块运行时间。
   void configure(Object? args) {
     if (args is! Map) return;
+
+    _isOfflineMode = args['isOfflineMode'] == true;
 
     final Object? name = args['userName'];
     if (name is String && name.trim().isNotEmpty) {
@@ -124,7 +127,9 @@ class SummaryLogic {
   // 确认按钮和无操作自动返回，都统一从这里回到首页。
   void confirmBackToMain() async {
     _idleTimer?.cancel();
-    await saveReport();
+    if (!_isOfflineMode) {
+      await saveReport();
+    }
     AppComponentLogic.backToMainPage();
   }
 
