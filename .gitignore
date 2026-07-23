@@ -29,5 +29,8 @@ android/.kotlin/
 # Claude Code local settings
 .claude/settings.local.json
 
+# Local Git worktrees
+.worktrees/
+
 # Flutter / Android sensitive configs
 android/gradle.properties
