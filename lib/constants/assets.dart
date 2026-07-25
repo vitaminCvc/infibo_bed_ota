@@ -4,6 +4,8 @@
 // - 这里只放图片路径，不放业务逻辑。
 // - 每个常量上方都写清楚图片用途和所在页面，方便改素材时快速定位。
 // - 资源目录统一使用英文命名，避免 Android / Windows 调试时中文路径造成排查困难。
+import 'package:infibo_app/config/app_brand.dart';
+
 class Assets {
   //注水图标
   static const String waterLogo = "assets/Mainimages/water.png";
@@ -11,7 +13,7 @@ class Assets {
   static const String ok = "assets/Mainimages/ok.png";
 
   // 登录页：品牌 Logo。
-  static const String logo = "assets/Loginimages/logo.png";
+  static String get logo => AppBrand.current.loginLogoAsset;
 
   // 登录页：输入框毛玻璃背景。
   static const String glassLogo = "assets/Loginimages/glass.png";
@@ -40,7 +42,7 @@ class Assets {
   static const String mainBodyLogo = "assets/Mainimages/body.png";
 
   // 主页 / 公共页头：顶部品牌 Logo。
-  static const String mainLogo = "assets/Mainimages/mainlogo.png";
+  static String get mainLogo => AppBrand.current.headerLogoAsset;
 
   // 公共页头：顶部添加按钮图片。
   static const String addLogo = "assets/Mainimages/add.png";

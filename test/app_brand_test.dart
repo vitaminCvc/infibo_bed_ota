@@ -1,9 +1,19 @@
+import 'dart:io';
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:infibo_app/config/app_brand.dart';
+import 'package:infibo_app/constants/assets.dart';
 
 void main() {
   group('AppBrands', () {
+    const supportedBrands = <AppBrandConfig>[
+      AppBrands.global,
+      AppBrands.india,
+      AppBrands.spain,
+      AppBrands.turkey,
+    ];
+
     test('provides the exact configuration for every flavor', () {
       final expectations =
           <
@@ -66,6 +76,13 @@ void main() {
         throwsA(isA<ArgumentError>()),
       );
     });
+
+    test('provides existing login and header logo assets', () {
+      for (final brand in supportedBrands) {
+        expect(File(brand.loginLogoAsset).existsSync(), isTrue);
+        expect(File(brand.headerLogoAsset).existsSync(), isTrue);
+      }
+    });
   });
 
   group('AppBrand', () {
@@ -79,6 +96,20 @@ void main() {
       AppBrand.configure(AppBrands.spain);
 
       expect(AppBrand.current, same(AppBrands.spain));
+    });
+
+    test('updates shared logo asset paths for every configuration', () {
+      for (final brand in const <AppBrandConfig>[
+        AppBrands.global,
+        AppBrands.india,
+        AppBrands.spain,
+        AppBrands.turkey,
+      ]) {
+        AppBrand.configure(brand);
+
+        expect(Assets.logo, brand.loginLogoAsset);
+        expect(Assets.mainLogo, brand.headerLogoAsset);
+      }
     });
   });
 }
