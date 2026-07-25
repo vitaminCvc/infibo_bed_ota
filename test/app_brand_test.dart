@@ -4,36 +4,52 @@ import 'package:infibo_app/config/app_brand.dart';
 
 void main() {
   group('AppBrands', () {
-    test('provides the default locale for every flavor', () {
-      expect(AppBrands.global.defaultLocale, const Locale('en', 'US'));
-      expect(AppBrands.india.defaultLocale, const Locale('en', 'US'));
-      expect(AppBrands.spain.defaultLocale, const Locale('es', 'ES'));
-      expect(AppBrands.turkey.defaultLocale, const Locale('tr', 'TR'));
-    });
+    test('provides the exact configuration for every flavor', () {
+      final expectations =
+          <
+            ({
+              AppBrandConfig brand,
+              String flavor,
+              Locale locale,
+              String loginLogoAsset,
+              String headerLogoAsset,
+            })
+          >[
+            (
+              brand: AppBrands.global,
+              flavor: 'global',
+              locale: const Locale('en', 'US'),
+              loginLogoAsset: 'assets/branding/global/login_logo.png',
+              headerLogoAsset: 'assets/branding/global/header_logo.png',
+            ),
+            (
+              brand: AppBrands.india,
+              flavor: 'india',
+              locale: const Locale('en', 'US'),
+              loginLogoAsset: 'assets/branding/india/login_logo.png',
+              headerLogoAsset: 'assets/branding/india/header_logo.png',
+            ),
+            (
+              brand: AppBrands.spain,
+              flavor: 'spain',
+              locale: const Locale('es', 'ES'),
+              loginLogoAsset: 'assets/branding/spain/login_logo.png',
+              headerLogoAsset: 'assets/branding/spain/header_logo.png',
+            ),
+            (
+              brand: AppBrands.turkey,
+              flavor: 'turkey',
+              locale: const Locale('tr', 'TR'),
+              loginLogoAsset: 'assets/branding/turkey/login_logo.png',
+              headerLogoAsset: 'assets/branding/turkey/header_logo.png',
+            ),
+          ];
 
-    test('uses the Spain login logo', () {
-      expect(AppBrands.spain.loginLogoAsset, contains('/spain/'));
-    });
-
-    test('uses the Turkey header logo', () {
-      expect(AppBrands.turkey.headerLogoAsset, contains('/turkey/'));
-    });
-
-    test('provides exact logo asset paths for every flavor', () {
-      for (final brand in <AppBrandConfig>[
-        AppBrands.global,
-        AppBrands.india,
-        AppBrands.spain,
-        AppBrands.turkey,
-      ]) {
-        expect(
-          brand.loginLogoAsset,
-          'assets/branding/${brand.flavor}/login_logo.png',
-        );
-        expect(
-          brand.headerLogoAsset,
-          'assets/branding/${brand.flavor}/header_logo.png',
-        );
+      for (final expectation in expectations) {
+        expect(expectation.brand.flavor, expectation.flavor);
+        expect(expectation.brand.defaultLocale, expectation.locale);
+        expect(expectation.brand.loginLogoAsset, expectation.loginLogoAsset);
+        expect(expectation.brand.headerLogoAsset, expectation.headerLogoAsset);
       }
     });
 

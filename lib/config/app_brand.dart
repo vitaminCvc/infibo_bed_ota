@@ -54,9 +54,11 @@ abstract final class AppBrands {
 }
 
 abstract final class AppBrand {
-  static AppBrandConfig current = AppBrands.global;
+  static AppBrandConfig _current = AppBrands.global;
+
+  static AppBrandConfig get current => _current;
 
   static void configure(AppBrandConfig config) {
-    current = config;
+    _current = config;
   }
 }
