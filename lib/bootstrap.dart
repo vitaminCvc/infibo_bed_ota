@@ -1,3 +1,5 @@
+import 'dart:async' show unawaited;
+
 import 'package:flutter/widgets.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
@@ -24,7 +26,8 @@ Future<void> bootstrapApp(AppBrandConfig brand) async {
 
   final UserStore userStore = Get.put(UserStore());
   await userStore.loadUser();
-  CustomizedLogic.preload();
+  // Preloading intentionally runs in parallel with the remaining startup work.
+  unawaited(CustomizedLogic.preload());
 
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   final String? languageCode = prefs.getString('app_language_code');
