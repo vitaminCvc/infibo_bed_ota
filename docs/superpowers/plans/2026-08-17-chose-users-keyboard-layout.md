@@ -4,7 +4,7 @@
 
 **Goal:** Prevent the add-user keyboard from resizing the underlying chose-users page while leaving the popup fixed in place.
 
-**Architecture:** Keep the existing `AppHeaderPage` API and override its keyboard-inset behavior only at the `ChoseUsersPage` call site. The popup already disables inset-driven resizing, so no popup or shared-component changes are required.
+**Architecture:** Keep the existing `AppHeaderPage` API and override its keyboard-inset behavior only at the `ChoseUsersPage` call site. Allow a `ChoseUsersLogic` instance to be injected into the page so a real widget test can avoid the backend while measuring the root layout before and after keyboard insets. The popup already disables inset-driven resizing, so no popup or shared-component changes are required.
 
 **Tech Stack:** Flutter, Dart, `flutter_test`
 
@@ -22,35 +22,77 @@
 
 **Files:**
 - Create: `test/choseusers_keyboard_layout_test.dart`
-- Modify: `lib/pages/choseusers/ui.dart` at the `AppHeaderPage` returned by `_ChoseUsersPageState.build`
+- Modify: `lib/pages/choseusers/ui.dart` at `ChoseUsersPage`, `_ChoseUsersPageState.initState`, and the `AppHeaderPage` returned by `_ChoseUsersPageState.build`
 
 **Interfaces:**
 - Consumes: `AppHeaderPage({bool resizeToAvoidBottomInset = true, ...})`
-- Produces: `ChoseUsersPage` root layout configured with `resizeToAvoidBottomInset: false`
+- Produces: `ChoseUsersPage({ChoseUsersLogic? logic})` and a root layout configured with `resizeToAvoidBottomInset: false`
 
 - [ ] **Step 1: Write the failing regression test**
 
-Create `test/choseusers_keyboard_layout_test.dart` with a focused assertion against the chose-users root page declaration. This source-level regression test avoids introducing dependency-injection changes solely to construct a page whose state immediately starts a backend request.
+Create `test/choseusers_keyboard_layout_test.dart` with a widget test that injects a repository with no users, opens the real page, applies a 284-pixel keyboard inset, and checks that the page body keeps the same size.
 
 ```dart
-import 'dart:io';
-
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get/get.dart';
+import 'package:infibo_app/pages/choseusers/logic.dart';
+import 'package:infibo_app/pages/choseusers/ui.dart';
+import 'package:infibo_app/stores/app_header_clock_store.dart';
+import 'package:infibo_app/stores/user_store.dart';
 
 void main() {
-  test('chose users page disables keyboard-driven scaffold resizing', () {
-    final String source = File(
-      'lib/pages/choseusers/ui.dart',
-    ).readAsStringSync();
+  testWidgets('chose users page stays fixed when keyboard opens', (
+    WidgetTester tester,
+  ) async {
+    Get.testMode = true;
+    tester.view.physicalSize = const Size(800, 1280);
+    tester.view.devicePixelRatio = 1;
+    Get.put(UserStore());
+    Get.put<AppHeaderClockController>(_TestClockController());
+    addTearDown(() {
+      tester.view.resetViewInsets();
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+      Get.reset();
+    });
 
-    expect(
-      RegExp(
-        r'return AppHeaderPage\(\s*resizeToAvoidBottomInset: false,',
-      ).hasMatch(source),
-      isTrue,
-      reason: 'The underlying page must stay fixed when the popup keyboard opens.',
+    await tester.pumpWidget(
+      GetMaterialApp(
+        home: ChoseUsersPage(
+          logic: ChoseUsersLogic(repository: _EmptyChoseUsersRepository()),
+        ),
+      ),
     );
+    await tester.pump();
+
+    final Finder pageBody = find.byType(SafeArea).first;
+    final Size sizeBeforeKeyboard = tester.getSize(pageBody);
+
+    tester.view.viewInsets = const FakeViewPadding(bottom: 284);
+    await tester.pump();
+
+    expect(tester.getSize(pageBody), sizeBeforeKeyboard);
   });
+}
+
+class _TestClockController extends AppHeaderClockController {
+  @override
+  void startClock() {}
+}
+
+class _EmptyChoseUsersRepository implements ChoseUsersRepository {
+  @override
+  Future<List<UserItemData>> listUsers() async => <UserItemData>[];
+
+  @override
+  Future<UserItemData> addUser(UserItemData user) async => user;
+
+  @override
+  Future<void> deleteUser(int id) async {}
+
+  @override
+  Future<void> dispose() async {}
 }
 ```
 
@@ -62,11 +104,37 @@ Run:
 flutter test test/choseusers_keyboard_layout_test.dart
 ```
 
-Expected: FAIL because the `AppHeaderPage` call does not yet contain `resizeToAvoidBottomInset: false`.
+Expected: FAIL because the `SafeArea` height shrinks by 284 pixels when the `AppHeaderPage` still uses its default keyboard avoidance.
 
 - [ ] **Step 3: Implement the minimal production change**
 
-In `lib/pages/choseusers/ui.dart`, change only the root `AppHeaderPage` call:
+In `lib/pages/choseusers/ui.dart`, accept an optional testable logic dependency and initialize the state from it:
+
+```dart
+class ChoseUsersPage extends StatefulWidget {
+  const ChoseUsersPage({super.key, this.logic});
+
+  final ChoseUsersLogic? logic;
+
+  @override
+  State<ChoseUsersPage> createState() => _ChoseUsersPageState();
+}
+```
+
+Change the state field and initialize it before `_loadUsers()`:
+
+```dart
+late final ChoseUsersLogic _logic;
+
+@override
+void initState() {
+  super.initState();
+  _logic = widget.logic ?? ChoseUsersLogic();
+  _loadUsers();
+}
+```
+
+Then change the root `AppHeaderPage` call:
 
 ```dart
 return AppHeaderPage(
