@@ -8,6 +8,9 @@ $builds = @(
     @{ Flavor = 'india'; Target = 'lib/main_india.dart' }
     @{ Flavor = 'spain'; Target = 'lib/main_spain.dart' }
     @{ Flavor = 'turkey'; Target = 'lib/main_turkey.dart' }
+    @{ Flavor = 'america'; Target = 'lib/main_america.dart' }
+    @{ Flavor = 'britain'; Target = 'lib/main_britain.dart' }
+    @{ Flavor = 'australia'; Target = 'lib/main_australia.dart' }
 )
 
 Push-Location -LiteralPath $projectRoot

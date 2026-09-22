@@ -7,11 +7,14 @@ import 'package:infibo_app/pages/customized/logic.dart';
 
 // 自定义方案编辑页逻辑。
 class CustomizedEditLogic {
+  CustomizedEditLogic({CustomizedLogic? planLogic})
+    : _planLogic = planLogic ?? CustomizedLogic();
+
   /////自定义方案页与后端联调，这里之后可以保留，但 CustomizedLogic 内部必须已经改成后端 API。
   /////如果你做 Repository 分层，则把这一行改成：
   /////  final CustomizedPlanRepository _repository = BackendCustomizedPlanRepository();
   /////然后 savePlan 里直接调用 _repository.create/_repository.update。
-  final CustomizedLogic _planLogic = CustomizedLogic();
+  final CustomizedLogic _planLogic;
 
   /////自定义方案页与后端联调，这里要确认传进来的 plan.id 是后端 planId。
   /////如果 customized/logic.dart 的 select/openEditPage 以后只传 planId，则这里要改成从 arguments['planId'] 读取，再调用后端详情接口拿完整方案。
@@ -25,22 +28,25 @@ class CustomizedEditLogic {
 
   //保存方案方法
   Future<void> savePlan({
+    required CustomizedPlanData? editingPlan,
     required String name,
     required List<String> featureIds,
     required int durationMinutes,
   }) async {
     await _planLogic.init();
 
-    final CustomizedPlanData? plan = editingPlan;
-    if (plan == null) {
+    if (editingPlan == null) {
       await _planLogic.addPlan(
         name: name,
         featureIds: featureIds,
         durationMinutes: durationMinutes,
       );
     } else {
+      if (editingPlan.id == null) {
+        throw CustomizedPlanNameException('custom_plan_edit_invalid'.tr);
+      }
       await _planLogic.updatePlan(
-        plan: plan.copyWith(name: name, featureIds: featureIds),
+        plan: editingPlan.copyWith(name: name, featureIds: featureIds),
         durationMinutes: durationMinutes,
       );
     }

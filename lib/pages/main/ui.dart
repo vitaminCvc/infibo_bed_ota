@@ -5,13 +5,18 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:infibo_app/api/modbus/hydrogen_modbus.dart';
 import 'package:infibo_app/api/modbus/modbus_rtu_service.dart';
+import 'package:infibo_app/components/designCanvas/design.dart';
 import 'package:infibo_app/components/index.dart';
 import 'package:infibo_app/components/water_level_state_dialog.dart';
 import 'package:infibo_app/constants/assets.dart';
 import 'package:infibo_app/constants/color.dart';
+import 'package:infibo_app/constants/layout.dart';
 import 'package:infibo_app/pages/joystick/ui.dart';
 import 'package:infibo_app/pages/main/logic.dart';
+import 'package:infibo_app/pages/start/audio_prompt_player.dart';
+import 'package:infibo_app/pages/WifiBluetooth/connection_prompt_host.dart';
 import 'package:infibo_app/routes/route_observer.dart';
 
 // 主页面UI
@@ -35,19 +40,24 @@ class _MainPageState extends State<MainPage> with RouteAware {
   Timer? _deviceStatusTimer; //设备状态轮询定时器
   Timer? _waterLevelTimer; //水位状态轮询定时器
   bool _isDeviceStatusPolling = false;
+  bool _isHomeDeviceStateReading = false;
   bool _isWaterLevelPolling = false;
   bool _isWaterLevelReading = false;
   bool _isWaterLevelDialogVisible = false;
+  bool _isWaterLevelDialogDismissedForVisit = false;
   Timer? _waterLevelCompleteAutoDismissTimer;
   final ValueNotifier<int> _waterLevelStateNotifier = ValueNotifier<int>(1);
+  final ValueNotifier<bool> _waterLevelShortageCanDismissNotifier =
+      ValueNotifier<bool>(false);
   bool _isRouteSubscribed = false;
+  // final ValueNotifier<String> _liftCurrentText = ValueNotifier<String>('--');
   // 主页面逻辑控制器
   final MainLogic _logic = MainLogic();
 
   @override
   void initState() {
     super.initState();
-    _syncAmbientLightStateFromDevice();
+    unawaited(AudioPromptPlayer.instance.preloadWaterSafely());
   }
 
   @override
@@ -71,43 +81,69 @@ class _MainPageState extends State<MainPage> with RouteAware {
     _stopWaterLevelPolling();
     _cancelWaterLevelCompleteAutoDismissTimer();
     _waterLevelStateNotifier.dispose();
+    _waterLevelShortageCanDismissNotifier.dispose();
+    // _liftCurrentText.dispose();
     super.dispose();
   }
 
   @override
   void didPush() {
+    _isWaterLevelDialogDismissedForVisit = false;
     _startDeviceStatusPolling();
     _startWaterLevelPolling();
   }
 
   @override
   void didPopNext() {
+    // 关闭水位弹窗也会触发 didPopNext；只有从其他页面返回才算重新进入首页。
+    if (!_isWaterLevelDialogVisible) {
+      _isWaterLevelDialogDismissedForVisit = false;
+    }
     _startDeviceStatusPolling();
     _startWaterLevelPolling();
   }
 
+  ///新增离开首页发送摇杆停止指令
+  ///
+  Future<void> _stopLiftOnLeave() async {
+    try {
+      await widget.modbusService.sendCommandQueue([
+        const ModbusWriteCommand(address: 0x0010, value: 0),
+      ]);
+
+      ///发送失败
+    } catch (e) {
+      debugPrint('离开首页发送停止指令失败: $e');
+    }
+  }
+
   @override
+  ///离开首页
   void didPushNext() {
     _stopDeviceStatusPolling();
     // Keep polling while the blocking water warning dialog is on top.
     if (!_isWaterLevelDialogVisible) {
       _stopWaterLevelPolling();
+      //离开首页时，向下位机发送摇杆停止指令。
+      unawaited(_stopLiftOnLeave());
     }
   }
 
   @override
+  ///释放资源
   void didPop() {
     _stopDeviceStatusPolling();
     _stopWaterLevelPolling();
+    unawaited(_stopLiftOnLeave());
   }
 
   void _startDeviceStatusPolling() {
     if (_isDeviceStatusPolling) return;
     _isDeviceStatusPolling = true;
-    _readDeviceStatus0006();
+    unawaited(_readHomeDeviceState());
     _deviceStatusTimer = Timer.periodic(
       const Duration(seconds: 5),
-      (_) => _readDeviceStatus0006(),
+      (_) => unawaited(_readHomeDeviceState()),
     );
   }
 
@@ -117,9 +153,23 @@ class _MainPageState extends State<MainPage> with RouteAware {
     _isDeviceStatusPolling = false;
   }
 
+  // 首页显示期间同时同步设备故障状态和氛围灯真实状态。
+  Future<void> _readHomeDeviceState() async {
+    if (!_isDeviceStatusPolling || _isHomeDeviceStateReading) return;
+    _isHomeDeviceStateReading = true;
+    try {
+      await _syncAmbientLightStateFromDevice();
+      if (!mounted || !_isDeviceStatusPolling) return;
+      await _readDeviceStatus0006();
+    } finally {
+      _isHomeDeviceStateReading = false;
+    }
+  }
+
   void _startWaterLevelPolling() {
     if (_isWaterLevelPolling) return;
     _isWaterLevelPolling = true;
+    // 注释掉分子氢读取水位状态
     _readWaterLevelStatus01E5();
     _waterLevelTimer = Timer.periodic(
       const Duration(seconds: 3),
@@ -133,7 +183,7 @@ class _MainPageState extends State<MainPage> with RouteAware {
     _isWaterLevelPolling = false;
   }
 
-  //进入页面，从下位机读取0x0012寄存器状态，同步界面环境灯光开关状态
+  // 从下位机读取0x0012寄存器状态，同步界面环境灯光开关状态。
   Future<void> _syncAmbientLightStateFromDevice() async {
     try {
       final int state = await widget.modbusService.readHoldingRegister(0x0012);
@@ -167,14 +217,23 @@ class _MainPageState extends State<MainPage> with RouteAware {
     }
   }
 
+  //注释掉分子氢读取水位状态
   Future<void> _readWaterLevelStatus01E5() async {
     if (_isWaterLevelReading) return;
     _isWaterLevelReading = true;
     try {
-      final int state = await widget.modbusService.readHoldingRegister(0x01E5);
+      final int state = await widget.modbusService.readHoldingRegister(
+        HydrogenModbus.waterLevelReadAddress,
+      );
       if (!mounted) return;
 
-      if (state == 1 && !_isWaterLevelDialogVisible) {
+      if (state == 0) {
+        // 0 表示本轮缺水已恢复，允许后续新的缺水事件再次提醒。
+        _isWaterLevelDialogDismissedForVisit = false;
+      }
+      if (state == 1 &&
+          !_isWaterLevelDialogVisible &&
+          !_isWaterLevelDialogDismissedForVisit) {
         // 只有首次收到 0x01E5=1 时才弹出弹窗，进入"缺水"状态。
         _waterLevelStateNotifier.value = 1;
         _cancelWaterLevelCompleteAutoDismissTimer();
@@ -227,6 +286,8 @@ class _MainPageState extends State<MainPage> with RouteAware {
   void _showWaterLevelStateDialog() {
     if (_isWaterLevelDialogVisible || !mounted) return;
     _isWaterLevelDialogVisible = true;
+    _waterLevelShortageCanDismissNotifier.value = false;
+    unawaited(AudioPromptPlayer.instance.playWaterSafely());
     unawaited(
       showGeneralDialog<void>(
         context: context,
@@ -238,29 +299,46 @@ class _MainPageState extends State<MainPage> with RouteAware {
           return ValueListenableBuilder<int>(
             valueListenable: _waterLevelStateNotifier,
             builder: (context, state, _) {
-              final bool canDismiss = state == 3;
-              return Stack(
-                children: [
-                  // 自定义遮罩：仅注水完成时可点击关闭。
-                  Positioned.fill(
-                    child: GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTap: canDismiss ? _dismissWaterLevelStateDialog : null,
-                      child: Container(
-                        color: Colors.black.withValues(alpha: 0.35),
-                      ),
+              return ValueListenableBuilder<bool>(
+                valueListenable: _waterLevelShortageCanDismissNotifier,
+                builder: (context, shortageCanDismiss, _) {
+                  final bool canDismiss = state != 1 || shortageCanDismiss;
+                  return PopScope(
+                    canPop: canDismiss,
+                    child: Stack(
+                      children: [
+                        Positioned.fill(
+                          child: GestureDetector(
+                            key: const ValueKey<String>(
+                              'water_level_dialog_barrier',
+                            ),
+                            behavior: HitTestBehavior.opaque,
+                            onTap: canDismiss
+                                ? _dismissWaterLevelStateDialog
+                                : null,
+                            child: Container(
+                              color: Colors.black.withValues(alpha: 0.6),
+                            ),
+                          ),
+                        ),
+                        Center(
+                          child: Material(
+                            color: Colors.transparent,
+                            child: WaterLevelStateDialog(
+                              notifier: _waterLevelStateNotifier,
+                              onShortageAnimationCompleted: () {
+                                if (mounted && _isWaterLevelDialogVisible) {
+                                  _waterLevelShortageCanDismissNotifier.value =
+                                      true;
+                                }
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  // 弹窗本体。
-                  Center(
-                    child: Material(
-                      color: Colors.transparent,
-                      child: WaterLevelStateDialog(
-                        notifier: _waterLevelStateNotifier,
-                      ),
-                    ),
-                  ),
-                ],
+                  );
+                },
               );
             },
           );
@@ -268,6 +346,7 @@ class _MainPageState extends State<MainPage> with RouteAware {
       ).whenComplete(() {
         _cancelWaterLevelCompleteAutoDismissTimer();
         _isWaterLevelDialogVisible = false;
+        _isWaterLevelDialogDismissedForVisit = true;
       }),
     );
   }
@@ -280,55 +359,60 @@ class _MainPageState extends State<MainPage> with RouteAware {
       titleKey: 'deep_relax',
       color: Color(0xFF26D1EF),
       asset: Assets.deepRelaxLogo,
-      left: 153,
-      top: 244,
-      width: 212,
-      titleLeft: 41,
-      titleTop: 19,
+      iconAsset: Assets.deepRelaxationIcon,
+      left: 150,
+      top: 246,
+      width: 220,
+      headerLeft: 11,
+      headerTop: 16,
     ),
     // 能量提升
     _ModeCardData(
       titleKey: 'energy_boost',
       color: Color(0xFFFB933E),
       asset: Assets.energyBoostLogo,
+      iconAsset: Assets.energyBoostIcon,
       left: 103,
-      top: 393,
+      top: 396,
       width: 191,
-      titleLeft: 41,
-      titleTop: 19,
+      headerLeft: 10,
+      headerTop: 17,
     ),
     // 疼痛缓解
     _ModeCardData(
       titleKey: 'pain_relief',
       color: Color(0xFFF9645C),
       asset: Assets.painReliefLogo,
+      iconAsset: Assets.painReliefIcon,
       left: 53,
-      top: 544,
-      width: 217,
-      titleLeft: 41,
-      titleTop: 19,
+      top: 546,
+      width: 215,
+      headerLeft: 13,
+      headerTop: 19,
     ),
     // 睡眠改善
     _ModeCardData(
       titleKey: 'sleep_enhancement',
       color: Color(0xFFA68DF5),
       asset: Assets.sleepEnhancementLogo,
-      left: 103,
-      top: 694,
-      width: 190,
-      titleLeft: 41,
-      titleTop: 19,
+      iconAsset: Assets.sleepEnhancementIcon,
+      left: 98,
+      top: 696,
+      width: 200,
+      headerLeft: 12,
+      headerTop: 17,
     ),
     // 运动恢复
     _ModeCardData(
       titleKey: 'sports_recovery',
       color: Color(0xFF56D785),
       asset: Assets.sportsRehabilitationLogo,
-      left: 153,
-      top: 843,
-      width: 212,
-      titleLeft: 41,
-      titleTop: 16,
+      iconAsset: Assets.sportsRehabilitationIcon,
+      left: 148,
+      top: 846,
+      width: 218,
+      headerLeft: 9,
+      headerTop: 16,
     ),
   ];
 
@@ -339,66 +423,73 @@ class _MainPageState extends State<MainPage> with RouteAware {
       titleKey: 'stress_release',
       color: Color(0xFF45CD9F),
       asset: Assets.stressReliefLogo,
-      left: 437,
-      top: 244,
-      width: 212,
-      titleLeft: 88,
-      titleTop: 18,
+      iconAsset: Assets.stressReliefIcon,
+      left: 430,
+      top: 246,
+      width: 220,
+      headerLeft: 50,
+      headerTop: 19,
     ),
-    // 免疫增强
+    // 日常活力
     _ModeCardData(
       titleKey: 'immune_boost',
       color: Color(0xFF3DBAFA),
       asset: Assets.immuneBoostLogo,
+      iconAsset: Assets.immuneBoostIcon,
       left: 500,
-      top: 393,
-      width: 191,
-      titleLeft: 61,
-      titleTop: 19,
+      top: 395,
+      width: 200,
+      headerLeft: 25,
+      headerTop: 18,
     ),
-    // 抗衰老
+    // 焕采活力
     _ModeCardData(
       titleKey: 'anti_aging',
       color: Color(0xFFF9645C),
       asset: Assets.antiAgingLogo,
+      iconAsset: Assets.antiAgingIcon,
       left: 525,
-      top: 544,
+      top: 548,
       width: 217,
-      titleLeft: 49,
-      titleTop: 18,
+      headerLeft: 16,
+      headerTop: 18,
     ),
-    // 全面养护
+    // 全身换新
     _ModeCardData(
       titleKey: 'full_care',
       color: Color(0xFFE87CF3),
       asset: Assets.fullCareLogo,
-      left: 500,
-      top: 694,
-      width: 190,
-      titleLeft: 61,
-      titleTop: 18,
+      iconAsset: Assets.fullCareIcon,
+      left: 498,
+      top: 697,
+      width: 200,
+      headerLeft: 29,
+      headerTop: 20,
     ),
     // 情绪疗愈
     _ModeCardData(
       titleKey: 'mental_healing',
       color: Color(0xFFFDBC2A),
       asset: Assets.mentalHealingLogo,
+      iconAsset: Assets.emotionalHealingIcon,
       left: 437,
-      top: 843,
-      width: 212,
-      titleLeft: 88,
-      titleTop: 17,
+      top: 845,
+      width: 220,
+      headerLeft: 59,
+      headerTop: 17,
     ),
   ];
 
   ///////////////////////////////////////////////主页面布局////////////////////////////////////////////////
   @override
   Widget build(BuildContext context) {
+    final AppLayoutMetrics layout = AppLayoutScope.of(context);
     final double scale = ((MediaQuery.sizeOf(context).width - 32) / 800)
         .clamp(0.72, 1.0)
         .toDouble();
 
     return AppHeaderPage(
+      enableLogout: true,
       enableLogoBack: false,
       children: [
         Positioned.fill(
@@ -408,7 +499,7 @@ class _MainPageState extends State<MainPage> with RouteAware {
               child: SizedBox(
                 // 主页面画布宽度
                 width: 800 * scale,
-                height: 1230 * scale,
+                height: layout.mainContentHeight * scale,
                 child: FittedBox(
                   // 主页面画布高度
                   fit: BoxFit.contain,
@@ -416,8 +507,8 @@ class _MainPageState extends State<MainPage> with RouteAware {
                   alignment: Alignment.topCenter,
                   child: SizedBox(
                     width: 800,
-                    height: 1230,
-                    child: _buildMainCanvas(),
+                    height: layout.mainContentHeight,
+                    child: _buildMainCanvas(layout),
                   ),
                 ),
               ),
@@ -430,34 +521,70 @@ class _MainPageState extends State<MainPage> with RouteAware {
 
   ///////////////////////////////////////////////主页面组件构建////////////////////////////////////////////////
   /// 构建主页画布
-  Widget _buildMainCanvas() {
+  Widget _buildMainCanvas(AppLayoutMetrics layout) {
     return Stack(
       //超出内容也显示
       clipBehavior: Clip.none,
       children: [
-        _buildTitle(),
-        _buildBodyStage(),
-        ..._leftModeCards.map((card) => _buildModeCard(card)),
-        ..._rightModeCards.map((card) => _buildModeCard(card)),
-        _buildBottomActions(),
-        const Positioned(left: 590, top: 1010, child: JoystickControl()),
+        _buildTitle(layout),
+        _buildBodyStage(layout),
+        ..._leftModeCards.map((card) => _buildModeCard(card, layout)),
+        ..._rightModeCards.map((card) => _buildModeCard(card, layout)),
+        _buildBottomActions(layout),
+        Positioned(
+          left: 590,
+          top: layout.mainContentY(1010),
+          child: JoystickControl(
+            modbusService: widget.modbusService,
+            /* 电流检测暂时停用。
+            onLiftCurrentChanged: (value) {
+              if (!mounted) return;
+              _liftCurrentText.value = value?.toString() ?? '读取失败';
+            },
+            */
+          ),
+        ),
+        /* 电流显示暂时停用，保留代码方便恢复。
+        Positioned(
+          left: 250,
+          top: layout.mainContentY(190),
+          width: 300,
+          child: IgnorePointer(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: const Color(0xB3000000),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: ValueListenableBuilder<String>(
+                valueListenable: _liftCurrentText,
+                builder: (context, value, child) => Text(
+                  '电流 0x0017：$value',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: Colors.white, fontSize: 16),
+                ),
+              ),
+            ),
+          ),
+        ),
+        */
       ],
     );
   }
 
   // 构建模式卡片
-  Widget _buildModeCard(_ModeCardData item) {
+  Widget _buildModeCard(_ModeCardData item, AppLayoutMetrics layout) {
     return Positioned(
       left: item.left,
-      top: item.top,
+      top: layout.mainContentY(item.top),
       child: _ModeCard(item: item, onTap: _logic.openModeDetail),
     );
   }
 
   /// 构建标题区域
-  Widget _buildTitle() {
+  Widget _buildTitle(AppLayoutMetrics layout) {
     return Positioned(
-      top: 120,
+      top: layout.mainContentY(120),
       left: 0,
       right: 0,
       child: Column(
@@ -538,26 +665,26 @@ class _MainPageState extends State<MainPage> with RouteAware {
   // }
 
   /// 构建中间人体图片
-  Widget _buildBodyStage() {
+  Widget _buildBodyStage(AppLayoutMetrics layout) {
     return Positioned(
-      left: 160,
-      top: 180,
+      left: layout.is16x9 ? 98 : 160,
+      top: layout.mainContentY(180),
       child: Image.asset(
         Assets.mainBodyLogo,
-        width: 479,
-        height: 800,
+        width: layout.is16x9 ? 600 : 479,
+        height: layout.is16x9 ? 900 : 800,
         fit: BoxFit.contain,
       ),
     );
   }
 
   /// 构建底部按钮区域
-  Widget _buildBottomActions() {
+  Widget _buildBottomActions(AppLayoutMetrics layout) {
     return Stack(
       children: [
         Positioned(
           left: 45,
-          top: 1092,
+          top: layout.mainContentY(1092),
           child: SizedBox(
             width: 192,
             height: 72,
@@ -567,6 +694,7 @@ class _MainPageState extends State<MainPage> with RouteAware {
                 child: Material(
                   color: const Color(0xFF1876F2),
                   child: InkWell(
+                    enableFeedback: false,
                     onTap: _logic.openCustomizedPage,
                     child: SizedBox(
                       width: 192,
@@ -599,7 +727,7 @@ class _MainPageState extends State<MainPage> with RouteAware {
         ),
         Positioned(
           left: 265,
-          top: 1092,
+          top: layout.mainContentY(1092),
           child:
               //检测用户手势操作
               GestureDetector(
@@ -675,12 +803,21 @@ class _ModeCard extends StatefulWidget {
 
 // 模式卡片点击状态
 class _ModeCardState extends State<_ModeCard> {
+  static const Set<String> _raisedTitleLanguageCodes = <String>{
+    'zh',
+    'ru',
+    'ko',
+  };
+
   // 是否按下
   bool _pressed = false;
 
   @override
   Widget build(BuildContext context) {
     final _ModeCardData item = widget.item;
+    final String? languageCode = Get.locale?.languageCode;
+    final double titleBottomPadding =
+        _raisedTitleLanguageCodes.contains(languageCode) ? 5 : 3;
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
@@ -704,19 +841,34 @@ class _ModeCardState extends State<_ModeCard> {
                   child: Image.asset(item.asset, fit: BoxFit.fill),
                 ),
                 Positioned(
-                  left: item.titleLeft,
-                  top: item.titleTop,
+                  left: item.headerLeft,
+                  top: item.headerTop,
                   right: 12,
-                  child: Text(
-                    item.titleKey.tr,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: item.color,
-                      fontSize: 16,
-                      fontFamily: 'Microsoft YaHei',
-                      height: 1,
-                      fontWeight: FontWeight.w600,
-                    ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: Image.asset(item.iconAsset),
+                      ),
+                      const SizedBox(width: 5),
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.only(bottom: titleBottomPadding),
+                          child: Text(
+                            item.titleKey.tr,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: item.color,
+                              fontSize: 16,
+                              fontFamily: 'Microsoft YaHei',
+                              height: 1,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -765,11 +917,12 @@ class _ModeCardData {
     required this.titleKey,
     required this.color,
     required this.asset,
+    required this.iconAsset,
     required this.left,
     required this.top,
     required this.width,
-    required this.titleLeft,
-    required this.titleTop,
+    required this.headerLeft,
+    required this.headerTop,
   });
 
   // 中文标题
@@ -781,6 +934,9 @@ class _ModeCardData {
   // 卡片底图
   final String asset;
 
+  // 卡片标题图标
+  final String iconAsset;
+
   // 卡片在页面中的横向位置
   final double left;
 
@@ -790,9 +946,9 @@ class _ModeCardData {
   // 卡片显示宽度
   final double width;
 
-  // 中文标题在卡片内部的横向位置
-  final double titleLeft;
+  // 图标与标题行在卡片内部的横向位置
+  final double headerLeft;
 
-  // 中文标题在卡片内部的纵向位置
-  final double titleTop;
+  // 图标与标题行在卡片内部的纵向位置
+  final double headerTop;
 }

@@ -52,6 +52,21 @@ android {
             applicationId = "com.infibo.app.turkey"
             resValue("string", "app_name", "Infibo Turkey")
         }
+        create("america") {
+            dimension = "market"
+            applicationId = "com.infibo.app.america"
+            resValue("string", "app_name", "Infibo America")
+        }
+        create("britain") {
+            dimension = "market"
+            applicationId = "com.infibo.app.britain"
+            resValue("string", "app_name", "Infibo Britain")
+        }
+        create("australia") {
+            dimension = "market"
+            applicationId = "com.infibo.app.australia"
+            resValue("string", "app_name", "Infibo Australia")
+        }
     }
 
     buildTypes {

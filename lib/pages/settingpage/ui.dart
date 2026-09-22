@@ -5,21 +5,35 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:infibo_app/api/dio/therapy_report/therapy_report_models.dart';
+import 'package:infibo_app/components/designCanvas/design.dart';
 import 'package:infibo_app/components/settingindex.dart';
 import 'package:infibo_app/pages/customized/customizedPage/setting_page_helpers.dart';
+import 'package:infibo_app/pages/WifiBluetooth/connection_prompt_controller.dart';
+import 'package:infibo_app/pages/settingpage/DeviceInfo.dart';
 import 'package:infibo_app/pages/settingpage/logic.dart';
+import 'package:infibo_app/pages/settingpage/prompt_volume_settings_panel.dart';
+import 'package:infibo_app/pages/settingpage/wifi_ble_settings_panel.dart';
 import 'package:infibo_app/stores/app_header_clock_store.dart';
 import 'package:infibo_app/utils/date_time_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingWidget extends StatefulWidget {
-  const SettingWidget({super.key});
+  const SettingWidget({super.key, this.connectionGateway});
+
+  /// 测试可注入连接网关；正式页面留空即可读取系统真实连接信息。
+  final ConnectionDetailsGateway? connectionGateway;
 
   @override
   State<SettingWidget> createState() => _SettingWidgetState();
 }
 
 class _SettingWidgetState extends State<SettingWidget> {
+  static const TextStyle _rightPanelTitleStyle = TextStyle(
+    color: Colors.white,
+    fontSize: 24,
+    fontWeight: FontWeight.w500,
+  );
+
   ////////////////////////////// 日期时间选择器布局参数 //////////////////////////////
 
   // 日期时间滚轮整体左边距，数值越小越靠左
@@ -33,6 +47,17 @@ class _SettingWidgetState extends State<SettingWidget> {
 
   // 选中项字体大小
   static const double _dateTimeSelectedFontSize = 26;
+
+  static const double _dateTimeTextBaseline = 20;
+
+  static const double _dateTimeUnitFontSize = 16;
+
+  static const TextStyle _dateTimeUnitTextStyle = TextStyle(
+    color: Colors.white,
+    fontSize: _dateTimeUnitFontSize,
+    height: 1,
+    fontWeight: FontWeight.w500,
+  );
 
   // 未选中项字体大小
   static const double _dateTimeNormalFontSize = 17;
@@ -98,13 +123,16 @@ class _SettingWidgetState extends State<SettingWidget> {
     _SettingMenuItemData(titleKey: 'language_setting', icon: Icons.public),
     _SettingMenuItemData(titleKey: 'date_time', icon: Icons.schedule),
     _SettingMenuItemData(titleKey: 'device_info', icon: Icons.layers_outlined),
-    _SettingMenuItemData(
-      titleKey: 'debug_mode',
-      icon: Icons.device_hub_outlined,
-    ),
+    _SettingMenuItemData(titleKey: 'wifi_ble', icon: Icons.wifi),
     _SettingMenuItemData(
       titleKey: 'history_record',
       icon: Icons.event_note_outlined,
+    ),
+
+    ///新增音量调节组件
+    _SettingMenuItemData(
+      titleKey: 'prompt_volume',
+      icon: Icons.volume_up_outlined,
     ),
   ];
 
@@ -225,11 +253,11 @@ class _SettingWidgetState extends State<SettingWidget> {
       children: [
         Positioned(
           left: 44,
-          top: 115,
+          top: AppLayoutScope.of(context).viewportY(130),
           child: ExpandBackButton(onTap: () => popExpandPage(context)),
         ),
         Positioned.fill(
-          top: 226,
+          top: AppLayoutScope.of(context).viewportContentY(226),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 44),
             child: Row(
@@ -251,7 +279,7 @@ class _SettingWidgetState extends State<SettingWidget> {
   Widget _buildLeftMenuPanel() {
     return Container(
       // 高度固定，确保左栏在不同屏幕下保持稳定比例，不被内容撑变形。
-      height: 730,
+      height: 900,
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           begin: Alignment.topCenter,
@@ -318,6 +346,7 @@ class _SettingWidgetState extends State<SettingWidget> {
     required VoidCallback onTap,
   }) {
     return InkWell(
+      enableFeedback: false,
       onTap: onTap,
       child: Container(
         // 每个菜单项固定高度，和截图中的行高一致，避免文字抖动。
@@ -340,12 +369,19 @@ class _SettingWidgetState extends State<SettingWidget> {
               size: 23,
             ),
             const SizedBox(width: 18),
-            Text(
-              item.titleKey.tr,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.w400,
+            Expanded(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: AlignmentDirectional.centerStart,
+                child: Text(
+                  item.titleKey.tr,
+                  maxLines: 1,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
               ),
             ),
           ],
@@ -359,7 +395,7 @@ class _SettingWidgetState extends State<SettingWidget> {
     // 右侧标题跟随左侧当前选中项，语言设置页显示专属内容。
     final String pageTitle = _menuItems[_selectedMenuIndex].titleKey.tr;
     return Container(
-      height: 730,
+      height: 900,
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
@@ -370,7 +406,7 @@ class _SettingWidgetState extends State<SettingWidget> {
         border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
       ),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
+        padding: const EdgeInsets.fromLTRB(20, 30, 14, 14),
         child: _buildRightPanelContent(pageTitle),
       ),
     );
@@ -385,16 +421,36 @@ class _SettingWidgetState extends State<SettingWidget> {
     if (_selectedMenuIndex == 1) {
       return _buildDateTimePanel();
     }
+    if (_selectedMenuIndex == 2) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          _buildRightPanelTitle(pageTitle),
+          const SizedBox(height: 34),
+          const Expanded(
+            child: DeviceInfoPanel(showDeviceStatusHeading: false),
+          ),
+        ],
+      );
+    }
+    if (_selectedMenuIndex == 3) {
+      // 原“调试模式”占位页替换为连接详情页，保留后续历史记录索引不变。
+      return WifiBleSettingsPanel(gateway: widget.connectionGateway);
+    }
     if (_selectedMenuIndex == 4) {
       return _buildHistoryPanel();
     }
+    if (_selectedMenuIndex == 5) {
+      return const PromptVolumeSettingsPanel();
+    }
     return Align(
       alignment: Alignment.topLeft,
-      child: Text(
-        pageTitle,
-        style: const TextStyle(color: Colors.white, fontSize: 24),
-      ),
+      child: _buildRightPanelTitle(pageTitle),
     );
+  }
+
+  Widget _buildRightPanelTitle(String title) {
+    return Text(title, style: _rightPanelTitleStyle);
   }
 
   ////////////////////////////////////////语言设置页面///////////////////////////////
@@ -404,14 +460,7 @@ class _SettingWidgetState extends State<SettingWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(
-          'language_switch'.tr,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 24,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
+        _buildRightPanelTitle('language_switch'.tr),
         const SizedBox(height: 34),
         Expanded(
           child: ListView.separated(
@@ -432,7 +481,7 @@ class _SettingWidgetState extends State<SettingWidget> {
             },
           ),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 30),
         Align(
           alignment: Alignment.center,
           child: SizedBox(
@@ -457,7 +506,7 @@ class _SettingWidgetState extends State<SettingWidget> {
             ),
           ),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 30),
       ],
     );
   }
@@ -471,6 +520,7 @@ class _SettingWidgetState extends State<SettingWidget> {
     required VoidCallback onTap,
   }) {
     return InkWell(
+      enableFeedback: false,
       onTap: onTap,
       borderRadius: BorderRadius.circular(10),
       child: Container(
@@ -537,23 +587,16 @@ class _SettingWidgetState extends State<SettingWidget> {
   // 新增日期时间页面
   Widget _buildDateTimePanel() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(6, 4, 6, 14),
+      padding: EdgeInsets.zero,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(
-            'date_time'.tr,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
+          _buildRightPanelTitle('date_time'.tr),
 
-          const SizedBox(height: 42),
+          const SizedBox(height: 46),
 
           Padding(
-            padding: const EdgeInsets.only(left: _dateTimePickerLeft),
+            padding: EdgeInsets.only(left: _dateTimePickerLeft + 6),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -617,7 +660,7 @@ class _SettingWidgetState extends State<SettingWidget> {
                   ],
                 ),
 
-                const SizedBox(height: 14),
+                const SizedBox(height: 50),
 
                 // 第二行：上午/下午 / 时 / 分
                 Row(
@@ -725,6 +768,7 @@ class _SettingWidgetState extends State<SettingWidget> {
               ),
             ),
           ),
+          const SizedBox(height: 30),
         ],
       ),
     );
@@ -767,12 +811,19 @@ class _SettingWidgetState extends State<SettingWidget> {
               children: [
                 for (int index = 0; index < values.length; index++)
                   Center(
-                    child: Text(
-                      twoDigits
-                          ? values[index].toString().padLeft(2, '0')
-                          : values[index].toString(),
-                      style: _buildWheelTextStyle(
-                        distance: (index - selectedIndex).abs(),
+                    child: SizedBox(
+                      height: _dateTimeSelectedFontSize,
+                      child: Baseline(
+                        baseline: _dateTimeTextBaseline,
+                        baselineType: TextBaseline.alphabetic,
+                        child: Text(
+                          twoDigits
+                              ? values[index].toString().padLeft(2, '0')
+                              : values[index].toString(),
+                          style: _buildWheelTextStyle(
+                            distance: (index - selectedIndex).abs(),
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -784,12 +835,12 @@ class _SettingWidgetState extends State<SettingWidget> {
             width: unitWidth,
             height: _dateTimeWheelHeight,
             child: Center(
-              child: Text(
-                unit,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
+              child: SizedBox(
+                height: _dateTimeSelectedFontSize,
+                child: Baseline(
+                  baseline: _dateTimeTextBaseline,
+                  baselineType: TextBaseline.alphabetic,
+                  child: Text(unit, style: _dateTimeUnitTextStyle),
                 ),
               ),
             ),
@@ -916,21 +967,13 @@ class _SettingWidgetState extends State<SettingWidget> {
     }
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 18, 20, 16),
+      padding: EdgeInsets.zero,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(
             children: [
-              Text(
-                'history_record'.tr,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontFamily: 'Microsoft YaHei',
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
+              _buildRightPanelTitle('history_record'.tr),
               const Spacer(),
               _buildHistorySearchBox(),
             ],
@@ -1041,6 +1084,7 @@ class _SettingWidgetState extends State<SettingWidget> {
 
   Widget _buildHistoryRow(HistoryReportUserItemDto item, int index) {
     return InkWell(
+      enableFeedback: false,
       onTap: () {
         Get.toNamed('/setting/history-detail', arguments: item);
       },
@@ -1181,6 +1225,7 @@ class _SettingWidgetState extends State<SettingWidget> {
     return TextStyle(
       color: Colors.white.withValues(alpha: alpha),
       fontSize: fontSize,
+      height: 1,
       fontWeight: weight,
     );
   }

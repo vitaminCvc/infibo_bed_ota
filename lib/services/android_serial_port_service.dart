@@ -17,7 +17,8 @@ class AndroidSerialPortService {
 
   static final AndroidSerialPortService instance = AndroidSerialPortService._();
   // 厂家确认安卓屏 RS232 对应这个节点。后续正式业务默认也用它。
-  static const String defaultPath = '/dev/ttyS0';
+  // static const String defaultPath = '/dev/ttyS0';
+  static const String defaultPath = '/dev/ttyS2';
   static const int defaultBaudRate = 115200;
   static const int defaultDataBits = 8;
   static const int defaultStopBits = 1;

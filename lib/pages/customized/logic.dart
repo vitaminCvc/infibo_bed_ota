@@ -10,11 +10,145 @@ import 'package:infibo_app/api/dio/therapy_plan/therapy_plan_api.dart';
 import 'package:infibo_app/api/dio/therapy_plan/therapy_plan_models.dart';
 import 'package:infibo_app/stores/user_store.dart';
 
+abstract class CustomizedPlanRepository {
+  Future<List<CustomizedPlanData>> listPlans();
+
+  Future<CustomizedPlanData> addPlan({
+    required int durationMinutes,
+    required String name,
+    required List<String> featureIds,
+  });
+
+  Future<CustomizedPlanData> updatePlan({
+    required CustomizedPlanData plan,
+    required int durationMinutes,
+  });
+
+  Future<void> renamePlan({required int planId, required String planName});
+
+  Future<void> deletePlan(int planId);
+
+  Future<void> dispose();
+}
+
+class BackendCustomizedPlanRepository implements CustomizedPlanRepository {
+  BackendCustomizedPlanRepository({TherapyPlanApi? api})
+    : _api = api ?? TherapyPlanApi();
+
+  final TherapyPlanApi _api;
+
+  @override
+  Future<List<CustomizedPlanData>> listPlans() async {
+    final ApiResponse<List<TherapyPlanDto>> response = await _api.list(
+      ownerUserId: _currentOwnerUserId(),
+    );
+    if (!response.isSuccess) {
+      throw CustomizedPlanNameException(response.message);
+    }
+
+    return (response.data ?? <TherapyPlanDto>[])
+        .map(CustomizedPlanData.fromDto)
+        .toList();
+  }
+
+  @override
+  Future<CustomizedPlanData> addPlan({
+    required int durationMinutes,
+    required String name,
+    required List<String> featureIds,
+  }) async {
+    final ApiResponse<TherapyPlanDto> response = await _api.create(
+      ownerUserId: _currentOwnerUserId(),
+      request: TherapyPlanRequestDto(
+        planName: name,
+        durationMinutes: durationMinutes,
+        usedModulesJson: jsonEncode(featureIds),
+        planConfigJson: jsonEncode(<String, Object?>{'featureIds': featureIds}),
+      ),
+    );
+
+    if (!response.isSuccess || response.data == null) {
+      throw CustomizedPlanNameException(response.message);
+    }
+
+    return CustomizedPlanData.fromDto(response.data!);
+  }
+
+  @override
+  Future<CustomizedPlanData> updatePlan({
+    required CustomizedPlanData plan,
+    required int durationMinutes,
+  }) async {
+    if (plan.id == null) return plan;
+
+    final ApiResponse<TherapyPlanDto> response = await _api.update(
+      ownerUserId: _currentOwnerUserId(),
+      planId: plan.id!,
+      request: TherapyPlanRequestDto(
+        planName: plan.name,
+        durationMinutes: durationMinutes,
+        usedModulesJson: jsonEncode(plan.featureIds),
+        planConfigJson: jsonEncode(<String, Object?>{
+          'featureIds': plan.featureIds,
+        }),
+      ),
+    );
+
+    if (!response.isSuccess || response.data == null) {
+      throw CustomizedPlanNameException(response.message);
+    }
+
+    return CustomizedPlanData.fromDto(response.data!);
+  }
+
+  @override
+  Future<void> renamePlan({
+    required int planId,
+    required String planName,
+  }) async {
+    final ApiResponse<void> response = await _api.rename(
+      ownerUserId: _currentOwnerUserId(),
+      planId: planId,
+      planName: planName,
+    );
+    if (!response.isSuccess) {
+      throw CustomizedPlanNameException(response.message);
+    }
+  }
+
+  @override
+  Future<void> deletePlan(int planId) async {
+    final ApiResponse<void> response = await _api.delete(
+      ownerUserId: _currentOwnerUserId(),
+      planId: planId,
+    );
+
+    if (!response.isSuccess) {
+      throw CustomizedPlanNameException(response.message);
+    }
+  }
+
+  @override
+  Future<void> dispose() async {}
+
+  int _currentOwnerUserId() {
+    final int? ownerUserId = UserStore.instance.userId;
+    if (ownerUserId == null) {
+      throw CustomizedPlanNameException('user_not_logged_in_retry'.tr);
+    }
+    return ownerUserId;
+  }
+}
+
 // 自定义方案列表逻辑。
 class CustomizedLogic {
+  CustomizedLogic({CustomizedPlanRepository? repository})
+    : _repository = repository ?? BackendCustomizedPlanRepository();
+
   static const String editRoute = '/customized/edit';
   static const String choseUsersRoute = '/choseusers';
 
+  final CustomizedPlanRepository _repository;
   final List<CustomizedPlanData> plans = [];
 
   int? highlightedIndex;
@@ -37,20 +171,18 @@ class CustomizedLogic {
   }
 
   Future<void> loadPlans() async {
-    final int ownerUserId = _currentOwnerUserId();
-
-    final ApiResponse<List<TherapyPlanDto>> response = await TherapyPlanApi()
-        .list(ownerUserId: ownerUserId);
-
-    if (!response.isSuccess) {
-      throw CustomizedPlanNameException(response.message);
-    }
-
+    final List<CustomizedPlanData> loadedPlans = await _repository.listPlans();
+    loadedPlans.sort((CustomizedPlanData left, CustomizedPlanData right) {
+      final int? leftId = left.id;
+      final int? rightId = right.id;
+      if (leftId == null && rightId == null) return 0;
+      if (leftId == null) return 1;
+      if (rightId == null) return -1;
+      return rightId.compareTo(leftId);
+    });
     plans
       ..clear()
-      ..addAll(
-        (response.data ?? <TherapyPlanDto>[]).map(CustomizedPlanData.fromDto),
-      );
+      ..addAll(loadedPlans);
 
     highlightedIndex = null;
   }
@@ -61,27 +193,16 @@ class CustomizedLogic {
     required String name,
     required List<String> featureIds,
   }) async {
-    final int ownerUserId = _currentOwnerUserId();
-
     final String trimmedName = name.trim();
     final String? errorText = validatePlanName(trimmedName);
     if (errorText != null) throw CustomizedPlanNameException(errorText);
 
-    final ApiResponse<TherapyPlanDto> response = await TherapyPlanApi().create(
-      ownerUserId: ownerUserId,
-      request: TherapyPlanRequestDto(
-        planName: trimmedName,
-        durationMinutes: durationMinutes,
-        usedModulesJson: jsonEncode(featureIds),
-        planConfigJson: jsonEncode(<String, Object?>{'featureIds': featureIds}),
-      ),
+    final CustomizedPlanData savedPlan = await _repository.addPlan(
+      durationMinutes: durationMinutes,
+      name: trimmedName,
+      featureIds: featureIds,
     );
-
-    if (!response.isSuccess || response.data == null) {
-      throw CustomizedPlanNameException(response.message);
-    }
-
-    plans.add(CustomizedPlanData.fromDto(response.data!));
+    plans.insert(0, savedPlan);
     highlightedIndex = null;
   }
 
@@ -91,30 +212,16 @@ class CustomizedLogic {
   }) async {
     if (plan.id == null) return;
 
-    final int ownerUserId = _currentOwnerUserId();
-
     final String trimmedName = plan.name.trim();
     final String? errorText = validatePlanName(trimmedName, excludeId: plan.id);
     if (errorText != null) throw CustomizedPlanNameException(errorText);
 
-    final ApiResponse<TherapyPlanDto> response = await TherapyPlanApi().update(
-      ownerUserId: ownerUserId,
-      planId: plan.id!,
-      request: TherapyPlanRequestDto(
-        planName: trimmedName,
-        durationMinutes: durationMinutes,
-        usedModulesJson: jsonEncode(plan.featureIds),
-        planConfigJson: jsonEncode(<String, Object?>{
-          'featureIds': plan.featureIds,
-        }),
-      ),
+    final CustomizedPlanData savedPlan = await _repository.updatePlan(
+      plan: plan.copyWith(name: trimmedName),
+      durationMinutes: durationMinutes,
     );
-
-    if (!response.isSuccess || response.data == null) {
-      throw CustomizedPlanNameException(response.message);
-    }
-
-    await loadPlans();
+    final int index = plans.indexWhere((item) => item.id == savedPlan.id);
+    if (index >= 0) plans[index] = savedPlan;
   }
 
   // /////自定义方案页与后端联调：这个方法后面可先接重命名接口。
@@ -122,16 +229,11 @@ class CustomizedLogic {
     final CustomizedPlanData plan = plans[index].copyWith(name: name.trim());
     if (plan.id == null) return;
 
-    final ApiResponse<void> response = await TherapyPlanApi().rename(
-      ownerUserId: _currentOwnerUserId(),
-      planId: plan.id!,
-      planName: plan.name,
-    );
-    if (!response.isSuccess) {
-      throw CustomizedPlanNameException(response.message);
-    }
+    final String? errorText = validatePlanName(plan.name, excludeId: plan.id);
+    if (errorText != null) throw CustomizedPlanNameException(errorText);
 
-    await loadPlans();
+    await _repository.renamePlan(planId: plan.id!, planName: plan.name);
+    plans[index] = plan;
   }
 
   // /////自定义方案页与后端联调：这个方法可以保留。
@@ -150,19 +252,10 @@ class CustomizedLogic {
 
   // /////自定义方案页与后端联调：这个方法要整体改成 DELETE /therapy/plan/custom/{planId}。
   Future<void> deletePlan(int index) async {
-    final int ownerUserId = _currentOwnerUserId();
-
     final CustomizedPlanData plan = plans[index];
 
     if (plan.id != null) {
-      final ApiResponse<void> response = await TherapyPlanApi().delete(
-        ownerUserId: ownerUserId,
-        planId: plan.id!,
-      );
-
-      if (!response.isSuccess) {
-        throw CustomizedPlanNameException(response.message);
-      }
+      await _repository.deletePlan(plan.id!);
     }
 
     plans.removeAt(index);
@@ -222,16 +315,8 @@ class CustomizedLogic {
   }
 
   Future<void> dispose() async {
+    await _repository.dispose();
     // 后端接口模式下，不需要关闭本地数据库连接。
-  }
-
-  //查询当前用户ID
-  int _currentOwnerUserId() {
-    final int? ownerUserId = UserStore.instance.userId;
-    if (ownerUserId == null) {
-      throw CustomizedPlanNameException('user_not_logged_in_retry'.tr);
-    }
-    return ownerUserId;
   }
 }
 

@@ -1,13 +1,16 @@
-﻿// 选择用户页面。
+// 选择用户页面。
 //
 // 用户在这里选择或新增接受理疗的用户，然后带着当前模式或自定义方案进入启动理疗页。
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
-import 'package:infibo_app/components/userindex.dart';
+import 'package:infibo_app/components/designCanvas/design.dart';
+import 'package:infibo_app/components/index.dart';
 import 'package:infibo_app/constants/assets.dart';
+import 'package:infibo_app/constants/layout.dart';
+import 'package:infibo_app/pages/choseusers/Popup/user_Popup.dart';
+import 'package:infibo_app/pages/choseusers/Popup/user_Popup_logic.dart';
 import 'package:infibo_app/pages/choseusers/logic.dart';
 import 'package:infibo_app/utils/age_utils.dart';
 import 'package:infibo_app/utils/gender_utils.dart';
@@ -15,34 +18,31 @@ import 'package:infibo_app/utils/phone_utils.dart';
 
 // 选择用户页面。
 class ChoseUsersPage extends StatefulWidget {
-  const ChoseUsersPage({super.key});
+  const ChoseUsersPage({super.key, this.logic});
+
+  final ChoseUsersLogic? logic;
+
   @override
   State<ChoseUsersPage> createState() => _ChoseUsersPageState();
 }
 
 class _ChoseUsersPageState extends State<ChoseUsersPage> {
+  static const double _designWidth = 800;
+  static const double _minPageScale = 0.72;
+
   // 选择用户逻辑。
-  final ChoseUsersLogic _logic = ChoseUsersLogic();
+  late final ChoseUsersLogic _logic;
   // 用户列表滚动控制器。
   final ScrollController _listController = ScrollController();
   // 搜索框控制器。
   final TextEditingController _searchController = TextEditingController();
-  // 姓名输入框控制器。
-  final TextEditingController _nameController = TextEditingController();
-  // 年龄输入框控制器。
-  final TextEditingController _ageController = TextEditingController();
-  // 手机号输入框控制器。
-  final TextEditingController _phoneController = TextEditingController();
-  // 添加用户弹窗是否显示。
-  bool _showAddPopup = false;
   // 是否准备就绪。
   bool _isReady = false;
-  // 设置性别的默认值为男
-  String _selectedGender = '\u7537';
   @override
   // 进行初始化
   void initState() {
     super.initState();
+    _logic = widget.logic ?? ChoseUsersLogic();
     // 初始化用户列表
     _loadUsers();
   }
@@ -52,9 +52,6 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
   void dispose() {
     _listController.dispose();
     _searchController.dispose();
-    _nameController.dispose();
-    _ageController.dispose();
-    _phoneController.dispose();
     // 释放数据库资源
     unawaited(_logic.dispose());
     super.dispose();
@@ -63,32 +60,74 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
   @override
   // 构建页面
   Widget build(BuildContext context) {
+    final AppLayoutMetrics layout = AppLayoutScope.of(context);
+    final double scale =
+        ((MediaQuery.sizeOf(context).width - 32) / _designWidth)
+            .clamp(_minPageScale, 1.0)
+            .toDouble();
+    final double planListHeight = layout.is16x9 ? 900 : 800;
+    final double listBottom =
+        layout.designHeight -
+        75 -
+        (layout.standardContentY(220) + planListHeight) * scale;
     //构建页表头
-    return AppUsersHeaderPage(
+    return AppHeaderPage(
+      resizeToAvoidBottomInset: false,
       // 点击添加用户按钮时调用
-      onAddTap: _toggleAddPopup,
       children: [
         // 固定内容区域
-        Positioned(left: 44, top: 145, right: 44, child: _buildFixedContent()),
         Positioned(
-          top: 292, //用户列表顶部距离
+          left: 44,
+          top: layout.viewportContentY(145 - layout.contentTopOffset),
+          right: 44,
+          child: _buildFixedContent(layout),
+        ),
+        Positioned(
+          top: layout.viewportContentY(
+            292 - layout.contentTopOffset,
+          ), //用户列表顶部距离
           left: 44,
           right: 44,
-          bottom: 24,
+          bottom: listBottom,
           child: _buildUserList(),
         ),
-        if (_showAddPopup)
-          Positioned(right: 125, top: 78, child: _buildAddUserPopup()),
+        _buildAddUserButtonLayer(layout, scale),
       ],
     );
   }
 
-  /// 显示或隐藏添加用户弹窗。
-  void _toggleAddPopup() {
-    setState(() {
-      _showAddPopup = !_showAddPopup;
-      if (_showAddPopup) _selectedGender = '\u7537';
-    });
+  /// 使用与自定义方案页相同的画布缩放和定位规则放置底部按钮。
+  Widget _buildAddUserButtonLayer(AppLayoutMetrics layout, double scale) {
+    return Positioned.fill(
+      top: 75,
+      child: Center(
+        child: Column(
+          children: [
+            SizedBox(
+              width: _designWidth * scale,
+              height: layout.standardContentHeight * scale,
+              child: FittedBox(
+                fit: BoxFit.contain,
+                alignment: Alignment.topCenter,
+                child: SizedBox(
+                  width: _designWidth,
+                  height: layout.standardContentHeight,
+                  child: Stack(
+                    children: [
+                      Positioned(
+                        left: 175,
+                        bottom: layout.is16x9 ? 46 : 34,
+                        child: _buildAddUserButton(),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   /// 从数据库加载用户。
@@ -98,29 +137,31 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
     setState(() => _isReady = true);
   }
 
-  /// 保存新增用户。
-  Future<void> _saveUser() async {
+  /// 打开添加用户弹窗并保存新增用户。
+  Future<void> _handleAddUser() async {
     if (!_isReady) return;
-    final String name = _nameController.text.trim();
-    final String age = _ageController.text.trim();
-    final String phone = _phoneController.text.trim();
-    if (name.isEmpty || age.isEmpty || phone.isEmpty) return;
-    await _logic.addUser(
-      name: name,
-      gender: _selectedGender,
-      age: age,
-      phone: phone,
-    );
+    final UserPopupData? user = await showAddUserPopup(context);
+    if (!mounted || user == null) return;
+
+    try {
+      await _logic.addUser(
+        name: user.name,
+        gender: user.gender,
+        age: user.age.toString(),
+        phone: user.phone,
+      );
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('${'add_user_failed'.tr}: $error')),
+      );
+      return;
+    }
+
     if (!mounted) return;
-    setState(() {
-      _showAddPopup = false;
-      _selectedGender = '\u7537';
-      _nameController.clear();
-      _ageController.clear();
-      _phoneController.clear();
-    });
+    setState(() {});
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _scrollToUser(_logic.users.length - 1);
+      _scrollToUser(0);
     });
   }
 
@@ -154,10 +195,14 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
   }
 
   /// 构建固定区域，标题和搜索框不会跟着列表滚动。
-  Widget _buildFixedContent() {
+  Widget _buildFixedContent(AppLayoutMetrics layout) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [_buildTitle(), const SizedBox(height: 39), _buildSearchBar()],
+      children: [
+        _buildTitle(),
+        SizedBox(height: layout.is16x9 ? 44 : 39),
+        _buildSearchBar(),
+      ],
     );
   }
 
@@ -274,218 +319,43 @@ class _ChoseUsersPageState extends State<ChoseUsersPage> {
     );
   }
 
-  /// 构建添加用户弹窗。
-  Widget _buildAddUserPopup() {
+  /// 构建底部添加用户按钮。
+  Widget _buildAddUserButton() {
     return SizedBox(
-      width: 232,
-      height: 240,
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          Positioned.fill(
-            child: Image.asset(Assets.choseUserAddBg, fit: BoxFit.fill),
+      width: 450,
+      height: 52,
+      child: ElevatedButton(
+        onPressed: _handleAddUser,
+        style: ElevatedButton.styleFrom(
+          elevation: 0,
+          backgroundColor: const Color(0xFF1F74E8),
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(50),
           ),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const SizedBox(height: 36),
-              Transform.translate(
-                offset: const Offset(-10, 0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _buildPopupInput(
-                      controller: _nameController,
-                      hintText: 'name'.tr,
-                    ),
-                    const SizedBox(height: 10),
-                    _buildGenderSelector(),
-                    _buildPopupInput(
-                      controller: _ageController,
-                      hintText: 'age'.tr,
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    ),
-                    const SizedBox(height: 10),
-                    _buildPopupInput(
-                      controller: _phoneController,
-                      hintText: 'phone'.tr,
-                      keyboardType: TextInputType.phone,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 14),
-              SizedBox(
-                width: 190,
-                height: 30,
-                child: ElevatedButton(
-                  onPressed: _saveUser,
-                  style: ElevatedButton.styleFrom(
-                    elevation: 0,
-                    backgroundColor: const Color(0xFF1876F2),
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18),
-                    ),
-                    textStyle: const TextStyle(
-                      fontSize: 15,
-                      fontFamily: 'Microsoft YaHei',
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  child: Text('save'.tr),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// 构建性别点选。
-  Widget _buildGenderSelector() {
-    return Container(
-      height: 30,
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 15),
-      child: Row(
-        children: [
-          const SizedBox(width: 24),
-          Text(
-            'gender'.tr,
-            style: TextStyle(
-              color: Color(0xFF696969),
-              fontSize: 14,
-              fontFamily: 'Microsoft YaHei',
-            ),
-          ),
-          const SizedBox(width: 12),
-          const Spacer(),
-          Transform.translate(
-            offset: const Offset(-8, 0),
-            child: Row(
-              children: [
-                SizedBox(
-                  width: 34,
-                  height: 30,
-                  child: _buildGenderOption('\u7537'),
-                ),
-                const SizedBox(width: 8),
-                SizedBox(
-                  width: 34,
-                  height: 30,
-                  child: _buildGenderOption('\u5973'),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// 构建单个性别选项。
-  Widget _buildGenderOption(String value) {
-    final bool isSelected = _selectedGender == value;
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: () {
-        setState(() {
-          _selectedGender = value;
-        });
-      },
-      child: SizedBox.expand(
-        child: Align(
-          alignment: Alignment.centerLeft,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 120),
-                width: 14,
-                height: 14,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: isSelected
-                        ? const Color(0xFF1876F2)
-                        : const Color(0xFF777A84),
-                    width: 2,
-                  ),
-                ),
-                child: Center(
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 120),
-                    width: isSelected ? 6 : 0,
-                    height: isSelected ? 6 : 0,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFF1876F2),
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 4),
-              Text(
-                value == '\u7537' ? 'male'.tr : 'female'.tr,
-                maxLines: 1,
-                overflow: TextOverflow.visible,
-                style: TextStyle(
-                  color: isSelected ? Colors.white : const Color(0xFF696969),
-                  fontSize: 14,
-                  fontFamily: 'Microsoft YaHei',
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  /// 构建弹窗输入框。
-  Widget _buildPopupInput({
-    required TextEditingController controller,
-    required String hintText,
-    TextInputType? keyboardType,
-    List<TextInputFormatter>? inputFormatters,
-  }) {
-    return SizedBox(
-      height: 30,
-      width: 186,
-      //键盘类型
-      child: TextField(
-        controller: controller,
-        keyboardType: keyboardType,
-        inputFormatters: inputFormatters,
-        cursorColor: Colors.white,
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 14,
-          fontFamily: 'Microsoft YaHei',
-        ),
-        decoration: InputDecoration(
-          filled: true,
-          fillColor: const Color(0x00FFFFFF),
-          hintText: hintText,
-          hintStyle: const TextStyle(
-            color: Color(0xFF696969),
-            fontSize: 14,
+          textStyle: const TextStyle(
+            fontSize: 18,
             fontFamily: 'Microsoft YaHei',
+            fontWeight: FontWeight.w800,
           ),
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 12,
-            vertical: 8,
-          ),
-          enabledBorder: UnderlineInputBorder(
-            borderSide: const BorderSide(color: Color(0x503A3D49)),
-          ),
-          focusedBorder: UnderlineInputBorder(
-            borderSide: const BorderSide(color: Color(0x503A3D49)),
-          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.baseline,
+          textBaseline: TextBaseline.alphabetic,
+          children: [
+            Baseline(
+              baseline: 18,
+              baselineType: TextBaseline.alphabetic,
+              child: Image.asset(
+                Assets.choseUserAddIcon,
+                width: 20,
+                height: 20,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text('add_user'.tr),
+          ],
         ),
       ),
     );

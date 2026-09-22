@@ -347,22 +347,15 @@ class _DeviceDetailsPanel extends StatelessWidget {
           top: 38,
           child: _SectionHeading('Device Status'),
         ),
-        const Positioned(
-          left: 26,
-          top: 95,
-          child: Text(
-            'Therapy Chamber',
-            style: TextStyle(color: Colors.white, fontSize: 20, height: 1),
-          ),
-        ),
-        const Positioned(left: 162, top: 92, child: _RunningBadge()),
+        Positioned(left: 26, top: 90, child: secondRow()),
+
         const Positioned(
           left: 26,
           top: 150,
           child: _DeviceInfoCell(
             icon: Icons.view_in_ar_outlined,
             label: 'Model',
-            value: 'IMMORTAL-MT-01',
+            value: 'INMORTAL-MT-01',
           ),
         ),
         const Positioned(
@@ -512,6 +505,21 @@ class _ModuleStatusTable extends StatelessWidget {
   }
 }
 
+// 多功能理疗仓 正常运行
+
+Widget secondRow() {
+  return Row(
+    children: [
+      const Text(
+        '	Wellness Pod',
+        style: TextStyle(color: Colors.white, fontSize: 20, height: 1),
+      ),
+      SizedBox(width: 24),
+      _RunningBadge(),
+    ],
+  );
+}
+
 class _ModuleStatusRow extends StatelessWidget {
   const _ModuleStatusRow({required this.module});
 
@@ -555,53 +563,53 @@ class _ModuleStatusRow extends StatelessWidget {
   }
 }
 
-// class _RuntimeStatistics extends StatelessWidget {
-//   const _RuntimeStatistics();
+class _RuntimeStatistics extends StatelessWidget {
+  const _RuntimeStatistics();
 
-//   static const List<_RuntimeStatData> _statistics = <_RuntimeStatData>[
-//     _RuntimeStatData('128', '设备累计运行'),
-//     _RuntimeStatData('45', 'PEMF累计运行'),
-//     _RuntimeStatData('56', '红光累计运行'),
-//     _RuntimeStatData('61', 'VAT累计运行'),
-//     _RuntimeStatData('23', '氢气累计运行'),
-//     _RuntimeStatData('352', '启动次数'),
-//   ];
+  static const List<_RuntimeStatData> _statistics = <_RuntimeStatData>[
+    _RuntimeStatData('128', '设备累计运行'),
+    _RuntimeStatData('45', 'PEMF累计运行'),
+    _RuntimeStatData('56', '红光累计运行'),
+    _RuntimeStatData('61', 'VAT累计运行'),
+    _RuntimeStatData('23', '氢气累计运行'),
+    _RuntimeStatData('352', '启动次数'),
+  ];
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return SizedBox(
-//       height: 174,
-//       child: Stack(
-//         children: <Widget>[
-//           for (int index = 0; index < _statistics.length; index++)
-//             Positioned(
-//               left: (index % 3) * 137,
-//               top: (index ~/ 3) * 87,
-//               width: 137,
-//               height: 75,
-//               child: _RuntimeStatCell(data: _statistics[index]),
-//             ),
-//           for (final double left in <double>[137, 274]) ...<Widget>[
-//             Positioned(
-//               left: left,
-//               top: 10,
-//               width: 1,
-//               height: 58,
-//               child: const ColoredBox(color: Color(0xFF2C2D35)),
-//             ),
-//             Positioned(
-//               left: left,
-//               top: 97,
-//               width: 1,
-//               height: 58,
-//               child: const ColoredBox(color: Color(0xFF2C2D35)),
-//             ),
-//           ],
-//         ],
-//       ),
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 174,
+      child: Stack(
+        children: <Widget>[
+          for (int index = 0; index < _statistics.length; index++)
+            Positioned(
+              left: (index % 3) * 137,
+              top: (index ~/ 3) * 87,
+              width: 137,
+              height: 75,
+              child: _RuntimeStatCell(data: _statistics[index]),
+            ),
+          for (final double left in <double>[137, 274]) ...<Widget>[
+            Positioned(
+              left: left,
+              top: 10,
+              width: 1,
+              height: 58,
+              child: const ColoredBox(color: Color(0xFF2C2D35)),
+            ),
+            Positioned(
+              left: left,
+              top: 97,
+              width: 1,
+              height: 58,
+              child: const ColoredBox(color: Color(0xFF2C2D35)),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
 
 class _RuntimeStatCell extends StatelessWidget {
   const _RuntimeStatCell({required this.data});

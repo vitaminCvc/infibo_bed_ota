@@ -26,6 +26,16 @@ class ModbusRtuService {
   /// 系统控制命令寄存器地址。
   static const int systemCommandAddress = 0x0004;
 
+  /* 电流相关寄存器地址 */
+  // / 升降杆电流原始值（只读，换算比例待硬件协议确认）。
+  // 新增读取升降杆电流值寄存器码（0x0017）
+  // static const int liftCurrentAddress = 0x0017;
+
+  // / 读取升降杆电流值
+  // /
+  // / 读取升降杆电流原始值（0-65535），换算比例待硬件协议确认。
+  // Future<int> readLiftCurrent() => readHoldingRegister(liftCurrentAddress);
+
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //////////////////红光模块相关寄存器地址//////////////////
 

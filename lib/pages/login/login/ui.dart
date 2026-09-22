@@ -7,13 +7,16 @@ import 'package:get/get.dart';
 import 'package:infibo_app/api/dio/api/api_response.dart';
 import 'package:infibo_app/api/dio/login/login_api.dart';
 import 'package:infibo_app/api/dio/login/login_models.dart';
+import 'package:infibo_app/components/designCanvas/design.dart';
+import 'package:infibo_app/config/app_brand.dart';
 import 'package:infibo_app/constants/assets.dart';
 import 'package:infibo_app/components/glass_card.dart';
+import 'package:infibo_app/constants/layout.dart';
 import 'package:infibo_app/pages/login/login/logic.dart';
 import 'package:infibo_app/constants/color.dart';
 import 'package:infibo_app/stores/user_store.dart';
+import 'package:infibo_app/utils/auth_feedback.dart';
 import 'package:infibo_app/utils/email_utils.dart';
-import 'package:infibo_app/utils/localized_api_message.dart';
 
 //可选登录角色（管理员、操作员、用户）
 // enum LoginRole { admin, operator, user }
@@ -67,7 +70,7 @@ class _LoginPageState extends State<LoginPage> {
     if (_didPrecache) return;
     _didPrecache = true;
 
-    precacheImage(const AssetImage(Assets.logo), context);
+    precacheImage(AssetImage(Assets.logo), context);
     precacheImage(const AssetImage(Assets.glassLogo), context);
     precacheImage(const AssetImage(Assets.passwordLogo), context);
   }
@@ -88,50 +91,90 @@ class _LoginPageState extends State<LoginPage> {
   ///////////////////////////////////////////////////登录页界面布局///////////////////////////////////////////////////
   @override
   Widget build(BuildContext context) {
+    final bool is16x9 = AppLayoutScope.of(context).is16x9;
+
     return Scaffold(
       //当键盘弹出来时，页面不自动调整大小，保持原样显示
       resizeToAvoidBottomInset: false,
       backgroundColor: AppTheme.primaryColor,
       body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 32),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 520),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ///构建品牌页头
-                  _buildBrandHeader(),
-                  const SizedBox(height: 120),
+        child: Stack(
+          children: [
+            Align(
+              alignment: is16x9 ? Alignment.topCenter : Alignment.center,
+              child: SingleChildScrollView(
+                padding: is16x9
+                    ? const EdgeInsets.fromLTRB(
+                        32,
+                        AppLayout.authBrandLogoTop,
+                        32,
+                        0,
+                      )
+                    : const EdgeInsets.symmetric(horizontal: 32),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 520),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ///构建品牌页头
+                      if (is16x9)
+                        const SizedBox(
+                          width: AppLayout.authBrandLogoWidth,
+                          height: AppLayout.authBrandLogoHeight,
+                        )
+                      else
+                        _buildBrandHeader(),
+                      SizedBox(height: is16x9 ? 88 : 80),
 
-                  ///构建邮箱输入框容器
-                  _buildInputEmail(),
-                  const SizedBox(height: 30),
+                      ///构建邮箱输入框容器
+                      _buildInputEmail(),
+                      SizedBox(height: is16x9 ? 38 : 30),
 
-                  ///构建密码输入框容器
-                  _buildInputPassword(),
-                  const SizedBox(height: 30),
+                      ///构建密码输入框容器
+                      _buildInputPassword(),
+                      SizedBox(height: is16x9 ? 38 : 30),
 
-                  ///构建忘记密码链接
-                  _buildForgotPassword(),
-                  const SizedBox(height: 54),
+                      ///构建忘记密码链接
+                      _buildForgotPassword(),
+                      SizedBox(height: is16x9 ? 64 : 54),
 
-                  ///构建登录按钮
-                  _buildLoginButton(),
-                  const SizedBox(height: 24),
+                      ///构建登录按钮
+                      _buildLoginButton(),
+                      SizedBox(height: is16x9 ? 30 : 24),
 
-                  ///构建注册按钮
-                  _buildRegisterButton(),
-                  const SizedBox(height: 88),
+                      ///构建注册按钮
+                      _buildRegisterButton(),
+                      SizedBox(height: is16x9 ? 110 : 88),
 
-                  ///构建同意协议行组件
-                  _buildAgreementRow(),
-                  const SizedBox(height: 34),
-                ],
+                      ///构建同意协议行组件
+                      _buildAgreementRow(),
+                      SizedBox(height: is16x9 ? 40 : 34),
+                    ],
+                  ),
+                ),
               ),
             ),
-          ),
+            if (is16x9)
+              Positioned(
+                top: AppLayout.authBrandLogoTop,
+                left: 0,
+                right: 0,
+                child: IgnorePointer(
+                  child: Center(
+                    child: SizedBox(
+                      width: AppLayout.authBrandLogoWidth,
+                      height: AppLayout.authBrandLogoHeight,
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        child: _buildBrandHeader(
+                          key: const ValueKey<String>('auth-brand-logo'),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+          ],
         ),
       ),
     );
@@ -139,8 +182,16 @@ class _LoginPageState extends State<LoginPage> {
 
   ///////////////////////////////////////////////////登录页组件构建///////////////////////////////////////////////////
   ///构建品牌页头
-  Widget _buildBrandHeader() {
-    return Image.asset(Assets.logo, fit: BoxFit.cover);
+  Widget _buildBrandHeader({Key? key}) {
+    final Size logoSize = AppBrand.current.loginLogoSize;
+
+    return Image.asset(
+      Assets.logo,
+      key: key,
+      width: logoSize.width,
+      height: logoSize.height,
+      fit: BoxFit.contain,
+    );
   }
 
   /// 构建邮箱输入框容器。
@@ -255,6 +306,7 @@ class _LoginPageState extends State<LoginPage> {
               contentPadding: EdgeInsets.zero,
               // 2. 添加 suffixIcon 实现小眼睛切换
               suffixIcon: IconButton(
+                enableFeedback: false,
                 onPressed: () {
                   setState(() {
                     _obscurePassword = !_obscurePassword;
@@ -423,7 +475,7 @@ class _LoginPageState extends State<LoginPage> {
         final LoginResult? user = result.data;
         if (user == null) {
           /////Get.snackbar风格修改：
-          /////保留 Get.snackbar，参数加 snackPosition: SnackPosition.BOTTOM、backgroundColor: const Color(0xFF323232)、colorText: Colors.white、margin: const EdgeInsets.all(16)、borderRadius: 4。
+          /////保留 Get.snackbar，参数加 snackPosition: SnackPosition.Bf145 : 80TTOM、backgroundColor: const Color(0xFF323232)、colorText: Colors.white、margin: const EdgeInsets.all(16)、borderRadius: 4。
           Get.snackbar(
             'prompt'.tr,
             'login_success_empty_user'.tr,
@@ -447,7 +499,7 @@ class _LoginPageState extends State<LoginPage> {
         /////保留 Get.snackbar，参数加 snackPosition: SnackPosition.BOTTOM、backgroundColor: const Color(0xFF323232)、colorText: Colors.white、margin: const EdgeInsets.all(16)、borderRadius: 4。
         Get.snackbar(
           'prompt'.tr,
-          localizedApiMessage(result.message, fallbackKey: 'login_success'),
+          'login_success'.tr,
 
           backgroundColor: const Color(0xFF323232),
           colorText: Colors.white,
@@ -462,7 +514,7 @@ class _LoginPageState extends State<LoginPage> {
         /////保留 Get.snackbar，参数加 snackPosition: SnackPosition.BOTTOM、backgroundColor: const Color(0xFF323232)、colorText: Colors.white、margin: const EdgeInsets.all(16)、borderRadius: 4。
         Get.snackbar(
           'prompt'.tr,
-          localizedApiMessage(result.message, fallbackKey: 'login_failed'),
+          resolveAuthApiMessage(result.message, fallbackKey: 'login_failed'),
 
           backgroundColor: const Color(0xFF323232),
           colorText: Colors.white,
@@ -476,7 +528,7 @@ class _LoginPageState extends State<LoginPage> {
       /////保留 Get.snackbar，参数加 snackPosition: SnackPosition.BOTTOM、backgroundColor: const Color(0xFF323232)、colorText: Colors.white、margin: const EdgeInsets.all(16)、borderRadius: 4。
       Get.snackbar(
         'error'.tr,
-        '${'login_request_failed'.tr}$e',
+        'network_error'.tr,
 
         backgroundColor: const Color(0xFF323232),
         colorText: Colors.white,
@@ -589,14 +641,14 @@ class _LoginPageState extends State<LoginPage> {
 
   ////创建用户协议内容
   static const String _userAgreementContent =
-      '''IMMORTAL CHAMBER – TERMS OF SERVICE
+      '''INMORTAL CHAMBER – TERMS OF SERVICE
 
 Last Updated: June 10, 2026
 
-Welcome to the IMMORTAL CHAMBER smart longevity wellness system. This End-User License Agreement ("Agreement") is a legal agreement between you ("User" or "you") and Infibo （Guangzhou）Technology Co., Ltd. ("Company", "we", or "us") for the use of the IMMORTAL CHAMBER Android control software ("Software") and the operating of the immortal chamber hardware ("Device").
+Welcome to the INMORTAL CHAMBER smart longevity wellness system. This End-User License Agreement ("Agreement") is a legal agreement between you ("User" or "you") and Infibo （Guangzhou）Technology Co., Ltd. ("Company", "we", or "us") for the use of the INMORTAL CHAMBER Android control software ("Software") and the operating of the INMORTAL chamber hardware ("Device").
 
 1. MEDICAL DISCLAIMER (CRITICAL)
-1.1 NO MEDICAL ADVICE: The IMMORTAL CHAMBER, including its Software and hardware features (such as Photobiomodulation/Red Light Therapy, Pulsed Electromagnetic Fields (PEMF), Acoustic Vibration, and Molecular Hydrogen Therapy), is designed solely for general wellness, relaxation, and physical recovery purposes. It is NOT a medical device and is NOT intended to diagnose, treat, cure, or prevent any medical condition or disease.
+1.1 NO MEDICAL ADVICE: The INMORTAL CHAMBER, including its Software and hardware features (such as Photobiomodulation/Red Light Therapy, Pulsed Electromagnetic Fields (PEMF), Acoustic Vibration, and Molecular Hydrogen Therapy), is designed solely for general wellness, relaxation, and physical recovery purposes. It is NOT a medical device and is NOT intended to diagnose, treat, cure, or prevent any medical condition or disease.
 1.2 USER RESPONSIBILITY: You should consult a qualified healthcare professional before using the Device, especially if you have pre-existing medical conditions, implanted medical devices (e.g., pacemakers), are pregnant, or are sensitive to thermal or light stimulation. You assume all risks associated with the use of the therapies provided by the Device.
 
 2. ELIGIBILITY & USER ACCOUNT
@@ -617,11 +669,11 @@ To the maximum extent permitted by applicable law (including EU and US consumer 
 This Agreement shall be governed by and construed in accordance with the laws of the jurisdiction where the commercial distributor agreement was executed, or as required under local consumer protection laws.''';
   ////创建隐私政策内容
   static const String _privacyPolicyContent = '''
-IMMORTAL CHAMBER – PRIVACY POLICY
+INMORTAL CHAMBER – PRIVACY POLICY
 
 Last Updated: June 10, 2026
 
-Your privacy is paramount to us. This Privacy Policy explains how Infibo （Guangzhou）Technology Co., Ltd. ("we", "us", or "our") collects, uses, discloses, and safeguards your information when you use the IMMORTAL CHAMBER Android application ("Software").
+Your privacy is paramount to us. This Privacy Policy explains how Infibo （Guangzhou）Technology Co., Ltd. ("we", "us", or "our") collects, uses, discloses, and safeguards your information when you use the INMORTAL CHAMBER Android application ("Software").
 
 1. INFORMATION WE COLLECT
 To provide a personalized wellness experience, we may collect the following categories of data:
@@ -664,7 +716,7 @@ To exercise these rights, please contact our privacy compliance team at: [info@i
       barrierLabel: title,
 
       //控制弹窗外面背景变暗程度
-      barrierColor: Colors.black.withValues(alpha: 0.35),
+      barrierColor: Colors.black.withValues(alpha: 0.6),
       transitionDuration: const Duration(milliseconds: 180),
       pageBuilder: (context, animation, secondaryAnimation) {
         return Center(

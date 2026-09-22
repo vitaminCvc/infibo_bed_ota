@@ -5,6 +5,7 @@ import 'package:infibo_app/api/dio/therapy_report/therapy_report_models.dart';
 import 'package:infibo_app/api/dio/login/login_models.dart';
 import 'package:infibo_app/api/modbus/modbus_rtu_service.dart';
 import 'package:infibo_app/components/water_level_state_dialog.dart';
+import 'package:infibo_app/constants/assets.dart';
 import 'package:infibo_app/pages/customized/logic.dart';
 import 'package:infibo_app/pages/music/logic.dart';
 import 'package:infibo_app/pages/main/ui.dart';
@@ -124,22 +125,32 @@ void main() {
     }
   });
 
-  test('water level warning translations exist in every locale', () {
+  test('water level state translations exist in every locale', () {
+    const Set<String> requiredKeys = <String>{
+      'water_level_shortage_title',
+      'water_level_shortage_message',
+      'water_level_filling_title',
+      'water_level_filling_message',
+      'water_level_complete_title',
+      'water_level_complete_message',
+    };
     final Map<String, Map<String, String>> translations =
         AppTranslations().keys;
 
     for (final MapEntry<String, Map<String, String>> locale
         in translations.entries) {
-      expect(
-        locale.value['water_level_warning_title'],
-        isNotNull,
-        reason: '${locale.key} needs a water level warning title',
-      );
-      expect(
-        locale.value['water_level_warning_message'],
-        isNotNull,
-        reason: '${locale.key} needs a water level warning message',
-      );
+      for (final String key in requiredKeys) {
+        expect(
+          locale.value[key],
+          isNotNull,
+          reason: '${locale.key} is missing $key',
+        );
+        expect(
+          locale.value[key],
+          isNot(key),
+          reason: '${locale.key} has not translated $key',
+        );
+      }
     }
   });
 
@@ -159,8 +170,9 @@ void main() {
       ),
     );
 
-    expect(find.text('设备缺水'), findsOneWidget);
-    expect(find.text('水箱水量不足，请及时加水后继续使用设备'), findsOneWidget);
+    expect(find.text('设备缺水提醒'), findsOneWidget);
+    expect(find.text('水量不足，请连接水源自动加水'), findsOneWidget);
+    expect(find.text('分子氢功能暂不可用'), findsOneWidget);
   });
 
   testWidgets('water level state dialog transitions to filling state (2)', (
@@ -180,7 +192,7 @@ void main() {
     );
 
     // Initial state: shortage
-    expect(find.text('设备缺水'), findsOneWidget);
+    expect(find.text('设备缺水提醒'), findsOneWidget);
 
     // Transition to filling
     notifier.value = 2;
@@ -188,7 +200,215 @@ void main() {
 
     expect(find.text('注水中'), findsOneWidget);
     expect(find.text('正在注水，请稍候...'), findsOneWidget);
-    expect(find.text('设备缺水'), findsNothing);
+    expect(find.text('设备缺水提醒'), findsNothing);
+  });
+
+  testWidgets(
+    'shortage dialog stays visible and allows dismissal after four seconds',
+    (WidgetTester tester) async {
+      Get.addTranslations(AppTranslations().keys);
+      Get.updateLocale(const Locale('zh', 'CN'));
+
+      final ValueNotifier<int> notifier = ValueNotifier<int>(1);
+      bool animationCompleted = false;
+
+      await tester.pumpWidget(
+        GetMaterialApp(
+          home: Scaffold(
+            body: Center(
+              child: WaterLevelStateDialog(
+                notifier: notifier,
+                onShortageAnimationCompleted: () => animationCompleted = true,
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.pump(const Duration(seconds: 2));
+      expect(animationCompleted, isFalse);
+
+      await tester.pump(const Duration(seconds: 2));
+      expect(animationCompleted, isTrue);
+
+      final Finder fadeFinder = find.descendant(
+        of: find.byType(WaterLevelStateDialog),
+        matching: find.byType(FadeTransition),
+      );
+      expect(fadeFinder, findsNothing);
+      expect(find.text('设备缺水提醒'), findsOneWidget);
+    },
+  );
+
+  testWidgets('mode card header places icon and translated title in one row', (
+    WidgetTester tester,
+  ) async {
+    Get.testMode = true;
+    tester.view.physicalSize = const Size(1200, 1600);
+    tester.view.devicePixelRatio = 1;
+    Get.put(UserStore());
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+      Get.reset();
+    });
+
+    await tester.pumpWidget(
+      GetMaterialApp(
+        translations: AppTranslations(),
+        locale: const Locale('zh', 'CN'),
+        navigatorObservers: [appRouteObserver],
+        home: MainPage(
+          modbusService: _FakeWaterLevelModbusService(
+            waterLevelStates: const <int>[0],
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+
+    final Finder headerRowFinder = find.byWidgetPredicate((Widget widget) {
+      if (widget is! Row || widget.children.length != 3) return false;
+      final Widget titleSlot = widget.children[2];
+      if (titleSlot is! Expanded) return false;
+      final Widget titlePadding = titleSlot.child;
+      if (titlePadding is! Padding) return false;
+      final Widget? title = titlePadding.child;
+      return title is Text && title.data == '深度放松';
+    });
+
+    expect(headerRowFinder, findsOneWidget);
+    final Row headerRow = tester.widget<Row>(headerRowFinder);
+    expect(headerRow.children[0], isA<SizedBox>());
+    final SizedBox iconBox = headerRow.children[0] as SizedBox;
+    expect(iconBox.width, 24);
+    expect(iconBox.height, 24);
+    final Image icon = iconBox.child! as Image;
+    expect(
+      (icon.image as AssetImage).assetName,
+      'assets/Mode/DeepRelaxation_Icon.png',
+    );
+    expect(headerRow.children[1], isA<SizedBox>());
+    expect((headerRow.children[1] as SizedBox).width, 5);
+    expect(headerRow.children[2], isA<Expanded>());
+    final Expanded titleSlot = headerRow.children[2] as Expanded;
+    final Padding titlePadding = titleSlot.child as Padding;
+    expect(titlePadding.padding.resolve(TextDirection.ltr).bottom, 6);
+
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
+    if (Get.isRegistered<AppHeaderClockController>()) {
+      Get.find<AppHeaderClockController>().onClose();
+      Get.delete<AppHeaderClockController>(force: true);
+    }
+  });
+
+  testWidgets('mode card title keeps its default position in English', (
+    WidgetTester tester,
+  ) async {
+    Get.testMode = true;
+    tester.view.physicalSize = const Size(1200, 1600);
+    tester.view.devicePixelRatio = 1;
+    Get.put(UserStore());
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+      Get.reset();
+    });
+
+    await tester.pumpWidget(
+      GetMaterialApp(
+        translations: AppTranslations(),
+        locale: const Locale('en', 'US'),
+        navigatorObservers: [appRouteObserver],
+        builder: (BuildContext context, Widget? child) {
+          return MediaQuery(
+            data: MediaQuery.of(
+              context,
+            ).copyWith(textScaler: const TextScaler.linear(0.5)),
+            child: child!,
+          );
+        },
+        home: MainPage(
+          modbusService: _FakeWaterLevelModbusService(
+            waterLevelStates: const <int>[0],
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+
+    final Finder headerRowFinder = find.byWidgetPredicate((Widget widget) {
+      if (widget is! Row || widget.children.length != 3) return false;
+      final Widget titleSlot = widget.children[2];
+      if (titleSlot is! Expanded) return false;
+      final Widget titlePadding = titleSlot.child;
+      if (titlePadding is! Padding) return false;
+      final Widget? title = titlePadding.child;
+      return title is Text && title.data == 'DEEP RELAX';
+    });
+
+    expect(headerRowFinder, findsOneWidget);
+    final Row headerRow = tester.widget<Row>(headerRowFinder);
+    final Expanded titleSlot = headerRow.children[2] as Expanded;
+    final Padding titlePadding = titleSlot.child as Padding;
+    expect(titlePadding.padding.resolve(TextDirection.ltr).bottom, 0);
+
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
+    if (Get.isRegistered<AppHeaderClockController>()) {
+      Get.find<AppHeaderClockController>().onClose();
+      Get.delete<AppHeaderClockController>(force: true);
+    }
+  });
+
+  testWidgets('home refreshes the ambient light icon from register 0x0012', (
+    WidgetTester tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(1024, 1366));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    Get.testMode = true;
+    Get.addTranslations(AppTranslations().keys);
+    Get.updateLocale(const Locale('zh', 'CN'));
+    Get.put(UserStore());
+    addTearDown(() {
+      if (Get.isRegistered<AppHeaderClockController>()) {
+        Get.delete<AppHeaderClockController>(force: true);
+      }
+      Get.reset();
+    });
+
+    final _FakeWaterLevelModbusService modbusService =
+        _FakeWaterLevelModbusService(
+          waterLevelStates: const <int>[0],
+          ambientLightState: 0,
+        );
+
+    await tester.pumpWidget(
+      GetMaterialApp(
+        navigatorObservers: [appRouteObserver],
+        home: MainPage(modbusService: modbusService),
+      ),
+    );
+    await tester.pump(const Duration(milliseconds: 250));
+
+    expect(_findAssetImage(Assets.lightCloseLogo), findsOneWidget);
+    expect(modbusService.ambientLightReads, greaterThanOrEqualTo(1));
+
+    modbusService.ambientLightState = 1;
+    await tester.pump(const Duration(seconds: 5));
+    await tester.pump(const Duration(milliseconds: 250));
+
+    expect(_findAssetImage(Assets.lightOpenLogo), findsOneWidget);
+    expect(modbusService.ambientLightReads, greaterThanOrEqualTo(2));
+
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
+    if (Get.isRegistered<AppHeaderClockController>()) {
+      Get.find<AppHeaderClockController>().onClose();
+      Get.delete<AppHeaderClockController>(force: true);
+    }
   });
 
   testWidgets('water level state dialog appears on 0x01E5=1', (
@@ -217,14 +437,199 @@ void main() {
 
     // First read returns 0 → no dialog
     await tester.pump(const Duration(milliseconds: 250));
-    expect(find.text('设备缺水'), findsNothing);
+    expect(find.text('设备缺水提醒'), findsNothing);
 
     // Second read returns 1 → dialog opens with "缺水" state
     await tester.pump(const Duration(seconds: 3));
     await tester.pump(const Duration(milliseconds: 250));
 
-    expect(find.text('设备缺水'), findsOneWidget);
+    expect(find.text('设备缺水提醒'), findsOneWidget);
     expect(modbusService.waterLevelReads, greaterThanOrEqualTo(2));
+
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
+    if (Get.isRegistered<AppHeaderClockController>()) {
+      Get.find<AppHeaderClockController>().onClose();
+      Get.delete<AppHeaderClockController>(force: true);
+    }
+  });
+
+  testWidgets(
+    'shortage dialog stays closed for current visit and returns on re-entry',
+    (WidgetTester tester) async {
+      await tester.binding.setSurfaceSize(const Size(1024, 1366));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      Get.testMode = true;
+      Get.addTranslations(AppTranslations().keys);
+      Get.updateLocale(const Locale('zh', 'CN'));
+      Get.put(UserStore());
+      addTearDown(() {
+        if (Get.isRegistered<AppHeaderClockController>()) {
+          Get.delete<AppHeaderClockController>(force: true);
+        }
+        Get.reset();
+      });
+
+      final _FakeWaterLevelModbusService modbusService =
+          _FakeWaterLevelModbusService(waterLevelStates: const <int>[1]);
+
+      await tester.pumpWidget(
+        GetMaterialApp(
+          navigatorObservers: [appRouteObserver],
+          home: MainPage(modbusService: modbusService),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 250));
+      expect(find.text('设备缺水提醒'), findsOneWidget);
+
+      final Finder barrier = find.byKey(
+        const ValueKey<String>('water_level_dialog_barrier'),
+      );
+      expect(tester.widget<GestureDetector>(barrier).onTap, isNull);
+      await tester.pump(const Duration(milliseconds: 250));
+      expect(find.text('设备缺水提醒'), findsOneWidget);
+
+      await tester.pump(const Duration(seconds: 4));
+      final GestureTapCallback? dismissShortage = tester
+          .widget<GestureDetector>(barrier)
+          .onTap;
+      expect(dismissShortage, isNotNull);
+      dismissShortage!();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 250));
+      expect(find.text('设备缺水提醒'), findsNothing);
+
+      await tester.pump(const Duration(seconds: 6));
+      expect(find.text('设备缺水提醒'), findsNothing);
+
+      final BuildContext mainContext = tester.element(find.byType(MainPage));
+      Navigator.of(mainContext).push<void>(
+        MaterialPageRoute<void>(
+          builder: (_) => const Scaffold(
+            key: ValueKey<String>('water_level_reentry_test_page'),
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 250));
+
+      final Finder reentryPage = find.byKey(
+        const ValueKey<String>('water_level_reentry_test_page'),
+      );
+      expect(reentryPage, findsOneWidget);
+      Navigator.of(tester.element(reentryPage)).pop();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 250));
+      expect(find.text('设备缺水提醒'), findsOneWidget);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pump();
+      if (Get.isRegistered<AppHeaderClockController>()) {
+        Get.find<AppHeaderClockController>().onClose();
+        Get.delete<AppHeaderClockController>(force: true);
+      }
+    },
+  );
+
+  testWidgets(
+    'a new shortage after recovery is shown again in the same visit',
+    (WidgetTester tester) async {
+      await tester.binding.setSurfaceSize(const Size(1024, 1366));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      Get.testMode = true;
+      Get.addTranslations(AppTranslations().keys);
+      Get.updateLocale(const Locale('zh', 'CN'));
+      Get.put(UserStore());
+      addTearDown(() {
+        if (Get.isRegistered<AppHeaderClockController>()) {
+          Get.delete<AppHeaderClockController>(force: true);
+        }
+        Get.reset();
+      });
+
+      final _FakeWaterLevelModbusService modbusService =
+          _FakeWaterLevelModbusService(
+            waterLevelStates: const <int>[1, 1, 0, 1],
+          );
+
+      await tester.pumpWidget(
+        GetMaterialApp(
+          navigatorObservers: [appRouteObserver],
+          home: MainPage(modbusService: modbusService),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 250));
+      expect(find.text('设备缺水提醒'), findsOneWidget);
+
+      await tester.pump(const Duration(seconds: 4));
+      final Finder barrier = find.byKey(
+        const ValueKey<String>('water_level_dialog_barrier'),
+      );
+      final GestureTapCallback? dismissShortage = tester
+          .widget<GestureDetector>(barrier)
+          .onTap;
+      expect(dismissShortage, isNotNull);
+      dismissShortage!();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 250));
+      expect(find.text('设备缺水提醒'), findsNothing);
+
+      await tester.pump(const Duration(seconds: 5));
+      expect(find.text('设备缺水提醒'), findsOneWidget);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pump();
+      if (Get.isRegistered<AppHeaderClockController>()) {
+        Get.find<AppHeaderClockController>().onClose();
+        Get.delete<AppHeaderClockController>(force: true);
+      }
+    },
+  );
+
+  testWidgets('filling dialog dismisses immediately on barrier tap', (
+    WidgetTester tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(1024, 1366));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    Get.testMode = true;
+    Get.addTranslations(AppTranslations().keys);
+    Get.updateLocale(const Locale('zh', 'CN'));
+    Get.put(UserStore());
+    addTearDown(() {
+      if (Get.isRegistered<AppHeaderClockController>()) {
+        Get.delete<AppHeaderClockController>(force: true);
+      }
+      Get.reset();
+    });
+
+    final _FakeWaterLevelModbusService modbusService =
+        _FakeWaterLevelModbusService(waterLevelStates: const <int>[1, 2]);
+
+    await tester.pumpWidget(
+      GetMaterialApp(
+        navigatorObservers: [appRouteObserver],
+        home: MainPage(modbusService: modbusService),
+      ),
+    );
+    await tester.pump(const Duration(milliseconds: 250));
+    await tester.pump(const Duration(seconds: 3));
+    await tester.pump(const Duration(milliseconds: 250));
+    expect(find.text('注水中'), findsOneWidget);
+
+    final Finder barrier = find.byKey(
+      const ValueKey<String>('water_level_dialog_barrier'),
+    );
+    final GestureTapCallback? dismissFilling = tester
+        .widget<GestureDetector>(barrier)
+        .onTap;
+    expect(dismissFilling, isNotNull);
+    dismissFilling!();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 250));
+    expect(find.text('注水中'), findsNothing);
 
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pump();
@@ -262,7 +667,7 @@ void main() {
     );
 
     await tester.pump(const Duration(milliseconds: 250));
-    expect(find.text('设备缺水'), findsOneWidget);
+    expect(find.text('设备缺水提醒'), findsOneWidget);
 
     await tester.pump(const Duration(seconds: 3));
     await tester.pump(const Duration(milliseconds: 250));
@@ -538,7 +943,7 @@ void main() {
           'phase:0:vat',
           'vat:0:frequency=20|intensity=55|songId=Aria 2',
           'phase:1:vat',
-          'vat:1:frequency=40|intensity=80|songId=Immortal Love',
+          'vat:1:frequency=40|intensity=80|songId=INMORTAL Love',
         ],
       ),
     });
@@ -560,11 +965,15 @@ void main() {
 }
 
 class _FakeWaterLevelModbusService extends ModbusRtuService {
-  _FakeWaterLevelModbusService({List<int>? waterLevelStates})
-    : _waterLevelStates = waterLevelStates ?? const <int>[0, 1],
-      super();
+  _FakeWaterLevelModbusService({
+    List<int>? waterLevelStates,
+    this.ambientLightState = 1,
+  }) : _waterLevelStates = waterLevelStates ?? const <int>[0, 1],
+       super();
 
   int waterLevelReads = 0;
+  int ambientLightReads = 0;
+  int ambientLightState;
   final List<int> _waterLevelStates;
 
   @override
@@ -577,13 +986,24 @@ class _FakeWaterLevelModbusService extends ModbusRtuService {
       }
       return _waterLevelStates.last;
     }
-    if (address == 0x0012) return 1;
+    if (address == 0x0012) {
+      ambientLightReads++;
+      return ambientLightState;
+    }
     if (address == 0x0006) return 0;
     return 1;
   }
 
   @override
   Future<void> sendCommandQueue(List<ModbusWriteCommand> commands) async {}
+}
+
+Finder _findAssetImage(String assetName) {
+  return find.byWidgetPredicate((Widget widget) {
+    return widget is Image &&
+        widget.image is AssetImage &&
+        (widget.image as AssetImage).assetName == assetName;
+  });
 }
 
 class FakeHistoryRecordRepository implements HistoryRecordRepository {

@@ -7,10 +7,16 @@ import 'package:get/get.dart';
 import 'package:infibo_app/constants/assets.dart';
 
 class LogoutMenu extends StatefulWidget {
-  const LogoutMenu({super.key, required this.child, required this.onLogout});
+  const LogoutMenu({
+    super.key,
+    required this.child,
+    required this.onLogout,
+    required this.enabled,
+  });
 
   final Widget child;
   final Future<void> Function() onLogout;
+  final bool enabled;
   //退出登录悬浮层组件（ui界面）
   //用CompositedTransformTarget 和 CompositedTransformFollower。它会自动把弹窗定位在用户按钮正下方
   @override
@@ -29,8 +35,20 @@ class _LogoutMenuState extends State<LogoutMenu> {
   }
 
   @override
+  void didUpdateWidget(covariant LogoutMenu oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.enabled && !widget.enabled) {
+      _hideMenu();
+    }
+  }
+
+  @override
   // 构建退出登录菜单组件
   Widget build(BuildContext context) {
+    if (!widget.enabled) {
+      return AbsorbPointer(child: widget.child);
+    }
+
     // 点击退出登录菜单时，切换显示状态
     return CompositedTransformTarget(
       // 退出登录菜单的OverlayEntry
@@ -63,6 +81,7 @@ class _LogoutMenuState extends State<LogoutMenu> {
             child: GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: _hideMenu,
+              child: ColoredBox(color: Colors.black.withValues(alpha: 0.6)),
             ),
           ),
           CompositedTransformFollower(

@@ -3,6 +3,7 @@
 // 这里集中注册所有页面路由；正式入口不会展示调试页，但保留 /debug/serial-test 隐藏路由便于现场排查串口。
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:infibo_app/components/designCanvas/design.dart';
 import 'package:infibo_app/pages/login/forgetpassword/forget.dart';
 import 'package:infibo_app/pages/login/register/register.dart';
 import 'package:infibo_app/pages/summary/summary.dart';
@@ -12,13 +13,14 @@ import 'package:infibo_app/pages/choseusers/ui.dart';
 import 'package:infibo_app/pages/customized/customizedPage/mailun/ui.dart';
 import 'package:infibo_app/pages/customized/customizedPage/ui.dart';
 import 'package:infibo_app/pages/customized/ui.dart';
-import 'package:infibo_app/pages/debug/serial_test_page.dart';
 import 'package:infibo_app/pages/login/login/ui.dart';
 import 'package:infibo_app/pages/main/ui.dart';
 import 'package:infibo_app/pages/music/ui.dart';
 import 'package:infibo_app/pages/settingpage/history_detail.dart';
 import 'package:infibo_app/pages/settingpage/ui.dart';
 import 'package:infibo_app/pages/start/ui.dart';
+import 'package:infibo_app/pages/WifiBluetooth/connection_prompt_controller.dart';
+import 'package:infibo_app/pages/WifiBluetooth/connection_prompt_host.dart';
 
 const String _initialRoute = String.fromEnvironment(
   'INFIBO_INITIAL_ROUTE',
@@ -28,12 +30,33 @@ const String _initialRoute = String.fromEnvironment(
 );
 
 // 获取根级路由
-Widget getRootWidget({String? initialRoute, required Locale locale}) {
+Widget getRootWidget({
+  String? initialRoute,
+  required Locale locale,
+  ConnectionPromptGateway? connectionPromptGateway,
+}) {
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   return GetMaterialApp(
+    navigatorKey: navigatorKey,
+    builder: (BuildContext context, Widget? child) {
+      return DesignCanvas(
+        child: ConnectionPromptHost(
+          navigatorKey: navigatorKey,
+          gateway: connectionPromptGateway,
+          child: child ?? const SizedBox.shrink(),
+        ),
+      );
+    },
+    theme: ThemeData(
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(enableFeedback: false),
+      ),
+    ),
+
     // 国际化语言配置
     translations: AppTranslations(),
     locale: locale,
-    fallbackLocale: const Locale('zh', 'CN'),
+    fallbackLocale: const Locale('en', 'US'),
     // 初始路由为登录页
     initialRoute: initialRoute ?? _initialRoute,
     // 国际化配置
@@ -75,8 +98,6 @@ List<GetPage> getRoutes() {
       name: "/setting/history-detail",
       page: () => const HistoryDetailPage(),
     ),
-    // 隐藏调试路由：不在正式页面提供入口。
-    GetPage(name: "/debug/serial-test", page: () => const SerialTestPage()),
     // 总结页
     GetPage(name: "/summary", page: () => const SummaryPage()),
   ];

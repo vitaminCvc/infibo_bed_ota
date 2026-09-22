@@ -6,11 +6,15 @@ import 'dart:math' as math;
 import 'package:infibo_app/api/modbus/modbus_rtu_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:infibo_app/components/designCanvas/design.dart';
 import 'package:infibo_app/components/index.dart';
+import 'package:infibo_app/config/app_brand.dart';
 import 'package:infibo_app/constants/assets.dart';
+import 'package:infibo_app/constants/layout.dart';
 import 'package:infibo_app/pages/joystick/ui.dart';
 import 'package:infibo_app/pages/music/logic.dart';
 import 'package:infibo_app/pages/music/player.dart';
+import 'package:infibo_app/pages/start/audio_prompt_player.dart';
 import 'package:infibo_app/pages/start/logic.dart';
 import 'package:lottie/lottie.dart';
 
@@ -33,6 +37,13 @@ class _StartPageState extends State<StartPage>
   bool _isSyncingVatMusic = false;
   // 这里使用 AndroidSerialPortService，默认路径为 /dev/ttyS0
   final ModbusRtuService modbusService = const ModbusRtuService();
+  bool get _isBritainVersion => AppBrand.current.flavor == 'britain';
+  bool _britainFinishPending = false;
+  StartLiftSequence get _liftSequence => StartLiftSequence(
+    service: modbusService,
+    isBritain: _isBritainVersion,
+    isActive: () => mounted,
+  );
   static const Duration _phaseSwitchCommandDelay = Duration(milliseconds: 40);
   late final ModbusRtuService _phaseSwitchModbusService = ModbusRtuService(
     portName: modbusService.portName,
@@ -66,6 +77,7 @@ class _StartPageState extends State<StartPage>
   final ValueNotifier<int> _timerTick = ValueNotifier<int>(0);
   // 是否正在下发命令
   bool _isCommanding = false;
+  bool _hasStartBeenPressed = false;
   int _lastPhaseIndex = 0;
   final Set<String> _runningModules = <String>{};
   // 记录每个模块在上一个已下发节点的“参数签名”，用于快速判断是否有参数变化。
@@ -81,11 +93,15 @@ class _StartPageState extends State<StartPage>
   Timer? _hydrogenFlowTimer;
   bool _isReadingHydrogenFlow = false;
   final ValueNotifier<int?> _hydrogenFlowTick = ValueNotifier<int?>(null);
+  /*电流相关寄存器地址 */
+  // 电流显示已移到首页。
+  // final ValueNotifier<String> _liftCurrentText = ValueNotifier<String>('--');
   VatMusicSelection? _vatMusicSelection;
 
   @override
   void initState() {
     super.initState();
+    unawaited(AudioPromptPlayer.instance.preloadWelcomeSafely());
     // 初始化时预加载阶段参数
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _preloadPhaseParamsFuture = _preloadPhaseParamsIfNeeded();
@@ -121,6 +137,8 @@ class _StartPageState extends State<StartPage>
     _hydrogenFlowTimer?.cancel();
     _timerTick.dispose();
     _hydrogenFlowTick.dispose();
+    // _liftCurrentText.dispose();
+    unawaited(AudioPromptPlayer.instance.disposeOwner());
     unawaited(VatMusicPlayer.instance.pause());
     _waitingLiftBreathController.dispose();
     super.dispose();
@@ -131,13 +149,17 @@ class _StartPageState extends State<StartPage>
     // 从 Get.arguments 中获取启动参数
     final _StartArguments args = _StartArguments.from(Get.arguments);
 
+    /// 获取当前屏幕布局指标
+    final AppLayoutMetrics layout = AppLayoutScope.of(context);
+
     // 页面横向留 32px 安全边距，然后按设计稿宽度等比缩放
     final double scale =
         ((MediaQuery.sizeOf(context).width - 32) / _designWidth)
             .clamp(_minPageScale, 1.0)
             .toDouble();
+
     return AppHeaderPage(
-      enableLogoBack: false,
+      enableLogoBack: !_hasStartBeenPressed,
       children: [
         Positioned.fill(
           top: 75,
@@ -146,14 +168,14 @@ class _StartPageState extends State<StartPage>
               children: [
                 SizedBox(
                   width: _designWidth * scale,
-                  height: _designHeight * scale,
+                  height: layout.standardContentHeight * scale,
                   child: FittedBox(
                     fit: BoxFit.contain,
                     alignment: Alignment.topCenter,
                     child: SizedBox(
                       width: _designWidth,
-                      height: _designHeight,
-                      child: _buildCanvas(args),
+                      height: layout.standardContentHeight,
+                      child: _buildCanvas(args, layout),
                     ),
                   ),
                 ),
@@ -169,7 +191,8 @@ class _StartPageState extends State<StartPage>
   ///
   /// 这里的 Positioned 的 left/top 都是基于 800x1160 设计稿的固定坐标，
   /// 页面外层会统一缩放，所以调整 UI 位置时只需要改这里的设计稿坐标。
-  Widget _buildCanvas(_StartArguments args) {
+  Widget _buildCanvas(_StartArguments args, AppLayoutMetrics layout) {
+    final bool is16x9 = layout.is16x9;
     // 暂停时所有设备都视为未运行；运行时根据当前 5 分钟阶段点亮对应 icon
     final List<String> activeDevices = _logic.isRunning
         ? _modulesForPhase().toList()
@@ -178,17 +201,23 @@ class _StartPageState extends State<StartPage>
     return Stack(
       children: [
         // 当前理疗模式标题
-        Positioned(left: 36, top: 30, child: _buildTitle(args)),
+        Positioned(left: 36, top: is16x9 ? 80 : 30, child: _buildTitle(args)),
 
         // 中间人体图，它需要盖住左右功能框的手部边缘，所以放在功能框之前
         Positioned(
-          left: 50,
-          top: -10,
-          child: Image.asset(
-            Assets.startBodyLogo,
-            width: 700,
-            height: 1120,
-            fit: BoxFit.contain,
+          left: 0,
+          right: 0,
+          top: is16x9 ? 80 : -10,
+          child: Center(
+            child: Transform.scale(
+              scale: is16x9 ? 1.12 : 1.0, // 等比例放大倍数
+              alignment: Alignment.topCenter,
+              child: Image.asset(
+                Assets.startBodyLogo,
+                width: 700,
+                fit: BoxFit.contain,
+              ),
+            ),
           ),
         ),
 
@@ -196,9 +225,9 @@ class _StartPageState extends State<StartPage>
         _buildFunctionPanel(
           id: 'red',
           left: 46,
-          top: 96,
+          top: is16x9 ? 186 : 96,
           width: 280,
-          height: 407,
+          height: 420,
           panelAsset: Assets.startRedLightPanel,
           iconOff: Assets.startRedLightIconOff,
           iconOn: Assets.startRedLightIconOn,
@@ -209,7 +238,7 @@ class _StartPageState extends State<StartPage>
         _buildFunctionPanel(
           id: 'pemf',
           left: 46,
-          top: 525,
+          top: is16x9 ? 651 : 551,
           width: 280,
           height: 317,
           panelAsset: Assets.startPemfPanel,
@@ -222,9 +251,9 @@ class _StartPageState extends State<StartPage>
         _buildFunctionPanel(
           id: 'vat',
           left: 486,
-          top: 116,
+          top: is16x9 ? 285 : 195,
           width: 269,
-          height: 243,
+          height: 240,
           panelAsset: Assets.startVatPanel,
           iconOff: Assets.startVatIconOff,
           iconOn: Assets.startVatIconOn,
@@ -235,9 +264,9 @@ class _StartPageState extends State<StartPage>
         _buildFunctionPanel(
           id: 'hydrogen',
           left: 486,
-          top: 379,
+          top: is16x9 ? 570 : 470,
           width: 269,
-          height: 241,
+          height: 240,
           panelAsset: Assets.startHydrogenPanel,
           iconOff: Assets.startHydrogenIconOff,
           iconOn: Assets.startHydrogenIconOn,
@@ -245,34 +274,74 @@ class _StartPageState extends State<StartPage>
         ),
 
         // 右侧扩展功能状态框，内部显示脉轮、太赫兹、HIFEM、香氛状态
-        _buildFunctionPanel(
-          id: 'expand',
-          left: 486,
-          top: 640,
-          width: 269,
-          height: 176,
-          panelAsset: Assets.startExpandPanel,
-          iconOff: Assets.startExpandIconOff,
-          iconOn: Assets.startExpandIconOn,
-          activeDevices: activeDevices,
-        ),
+        // _buildFunctionPanel(
+        //   id: 'expand',
+        //   left: 486,
+        //   top: 640,
+        //   width: 269,
+        //   height: 176,
+        //   panelAsset: Assets.startExpandPanel,
+        //   iconOff: Assets.startExpandIconOff,
+        //   iconOn: Assets.startExpandIconOn,
+        //   activeDevices: activeDevices,
+        // ),
 
         // 底部倒计时与暂停/启动按钮
         Positioned(
           left: 278,
-          top: 850,
+          top: is16x9 ? 1000 : 850,
           child: ValueListenableBuilder<int>(
             valueListenable: _timerTick,
             builder: (context, _, child) => _buildTimer(),
           ),
         ),
-        Positioned(left: 126, top: 995, child: _buildPauseButton()),
-        Positioned(left: 508, top: 995, child: _buildPlayButton()),
+        Positioned(
+          left: 126,
+          top: is16x9 ? 1145 : 995,
+          child: _buildPauseButton(),
+        ),
+        Positioned(
+          left: 508,
+          top: is16x9 ? 1145 : 995,
+          child: _buildPlayButton(),
+        ),
         Positioned(
           left: 590,
-          top: 830,
-          child: JoystickControl(modbusService: modbusService),
+          top: is16x9 ? 980 : 830,
+          child: JoystickControl(
+            modbusService: modbusService,
+            /* 电流显示已停用。
+            onLiftCurrentChanged: (value) {
+              if (!mounted) return;
+              _liftCurrentText.value = value?.toString() ?? '读取失败';
+            },
+            */
+          ),
         ),
+        /* 电流显示已停用，保留原显示框代码。
+        // 启动页显示升降杆电流值框
+        Positioned(
+          left: 486,
+          top: is16x9 ? 110 : 30,
+          width: 269,
+          child: IgnorePointer(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: const Color(0xB3000000),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: ValueListenableBuilder<String>(
+                valueListenable: _liftCurrentText,
+                builder: (context, value, child) => Text(
+                  '电流 0x0017\n$value',
+                  style: const TextStyle(color: Colors.white, fontSize: 16),
+                ),
+              ),
+            ),
+          ),
+        ),
+        */
       ],
     );
   }
@@ -424,11 +493,11 @@ class _StartPageState extends State<StartPage>
               ],
             ),
 
-            const SizedBox(height: 4),
+            const SizedBox(height: 10),
 
             _buildRedLightInfoRow('660', strength660Text),
 
-            const SizedBox(height: 8),
+            const SizedBox(height: 10),
 
             Row(
               children: [
@@ -530,7 +599,7 @@ class _StartPageState extends State<StartPage>
               'PEMF',
               style: TextStyle(color: Colors.white, fontSize: 20),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 22),
             Row(
               children: [
                 SizedBox(
@@ -559,7 +628,7 @@ class _StartPageState extends State<StartPage>
                     frequencyText,
                     style: const TextStyle(
                       color: Colors.white,
-                      fontSize: 21,
+                      fontSize: 20,
                       height: 1,
                     ),
                   ),
@@ -617,7 +686,7 @@ class _StartPageState extends State<StartPage>
               'VAT',
               style: TextStyle(color: Colors.white, fontSize: 20),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 15),
             Row(
               children: [
                 SizedBox(
@@ -627,7 +696,7 @@ class _StartPageState extends State<StartPage>
                     style: TextStyle(color: Color(0xffb9bcc6), fontSize: 17),
                   ),
                 ),
-                SizedBox(width: 20),
+                SizedBox(width: 18),
                 SizedBox(
                   width: 100,
                   child: Text(
@@ -637,7 +706,7 @@ class _StartPageState extends State<StartPage>
                 ),
               ],
             ),
-            const SizedBox(height: 6),
+            const SizedBox(height: 12),
             Row(
               children: [
                 SizedBox(
@@ -684,7 +753,7 @@ class _StartPageState extends State<StartPage>
               'hydrogen_molecule'.tr,
               style: TextStyle(color: Colors.white, fontSize: 20),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 18),
             Row(
               children: [
                 SizedBox(
@@ -704,16 +773,16 @@ class _StartPageState extends State<StartPage>
                 ),
               ],
             ),
-            const SizedBox(height: 6),
+            const SizedBox(height: 11),
             Row(
               children: [
                 SizedBox(
                   width: 100,
                   child: Text(
-                    concentrationText,
+                    '99.99%',
                     style: const TextStyle(
                       color: Colors.white,
-                      fontSize: 21,
+                      fontSize: 20,
                       height: 1,
                     ),
                   ),
@@ -723,7 +792,7 @@ class _StartPageState extends State<StartPage>
                   valueListenable: _hydrogenFlowTick,
                   builder: (context, flowValue, child) {
                     return Text(
-                      flowValue == null ? '--' : '$flowValue',
+                      flowValue == null ? ' --' : ' $flowValue',
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 20,
@@ -788,7 +857,7 @@ class _StartPageState extends State<StartPage>
         return [
           Positioned(
             left: 23,
-            top: 253,
+            top: 258,
             child: _buildEffectAsset(
               Assets.startRedLight,
               fit: BoxFit.contain,
@@ -812,7 +881,7 @@ class _StartPageState extends State<StartPage>
         return [
           Positioned(
             left: 57,
-            top: 151,
+            top: 150,
             child: _buildEffectAsset(
               Assets.startVat,
               fit: BoxFit.contain,
@@ -1056,9 +1125,9 @@ class _StartPageState extends State<StartPage>
 
   // 构建启动按钮
   Widget _buildPlayButton() {
-    final bool isStopMode = _logic.isRunning;
+    final bool isStopMode = _logic.isRunning || _britainFinishPending;
     final bool isResumeMode = _logic.canResume;
-    final bool isStartMode = _logic.canStart;
+    final bool isStartMode = _logic.canStart && !_britainFinishPending;
     final bool isActive =
         !_isCommanding && (isStopMode || isResumeMode || isStartMode);
 
@@ -1122,21 +1191,25 @@ class _StartPageState extends State<StartPage>
   // 启动治疗
   // 启动治疗
   Future<void> _handleStartPressed() async {
-    if (_isCommanding || !_logic.canStart) return;
+    if (_isCommanding || _britainFinishPending || !_logic.canStart) return;
 
     setState(() {
+      _hasStartBeenPressed = true;
       _isCommanding = true;
       _isWaitingLiftBottom = true;
     });
 
     _waitingLiftBreathController.repeat(reverse: true);
+    final Future<void> welcomePlayback = AudioPromptPlayer.instance
+        .playWelcomeSafely();
 
     try {
       // 1. 先发送升降杆下降
       await _runStartButtonDeviceActions();
+      if (!mounted) return;
 
       // 2. 等待升降杆到底
-      await _waitForLiftReachBottom();
+      await _waitForLiftReachBottom(welcomePlayback);
 
       if (mounted) {
         setState(() => _isWaitingLiftBottom = false);
@@ -1145,8 +1218,8 @@ class _StartPageState extends State<StartPage>
       _waitingLiftBreathController.stop();
       _waitingLiftBreathController.reset();
 
-      // 3. 关闭氛围灯
-      await _turnoffAmbientLight();
+      // 英国版在下降前已关灯；其他版本保留到位后关灯的流程。
+      if (!_isBritainVersion) await _turnoffAmbientLight();
 
       // 4. 构建当前 5 分钟节点的模块命令
       await _waitForPreloadBeforeStart();
@@ -1158,6 +1231,19 @@ class _StartPageState extends State<StartPage>
       final bool usePreloadedParams = _hasPreloadedPhaseParams;
 
       if (usePreloadedParams) {
+        // 一键下降期间下位机可能清除分子氢的使能/功率参数。
+        // 到达下限后紧邻 APPLY/COMMAND 再批量写一次 0x01C0～0x01C4，
+        // 避免只触发 0x01D0/0x01D1、但模块拿到的是空参数。
+        final List<ModbusWriteCommand> hydrogenReplayCommands =
+            StartHydrogenCommandReplay.parametersFrom(commands);
+        if (hydrogenReplayCommands.isNotEmpty) {
+          debugPrint(
+            'replay hydrogen params after lift bottom: '
+            '${hydrogenReplayCommands.map((command) => '${command.addressText}=${command.value}').join(', ')}',
+          );
+          await _sendPreloadCommandsByFunction10(hydrogenReplayCommands);
+        }
+
         final List<ModbusWriteCommand> startCommands = <ModbusWriteCommand>[
           ..._onlyApplyAndCommand(commands),
           const ModbusWriteCommand(
@@ -1211,13 +1297,14 @@ class _StartPageState extends State<StartPage>
   }
 
   // 等待升降杆到达底部
-  Future<void> _waitForLiftReachBottom() async {
+  Future<void> _waitForLiftReachBottom(Future<void> welcomePlayback) async {
     const Duration pollInterval = Duration(milliseconds: 500);
     while (mounted) {
       final int liftStatus = await modbusService.readHoldingRegister(0x0011);
       debugPrint('start button wait lift status RX 0x0011=$liftStatus');
       if (liftStatus == 0) {
         debugPrint('start button lift reached bottom, continue start flow');
+        await AudioPromptPlayer.instance.playStartAfter(welcomePlayback);
         return;
       }
       await Future<void>.delayed(pollInterval);
@@ -1244,25 +1331,7 @@ class _StartPageState extends State<StartPage>
   }
 
   Future<void> _runStartButtonDeviceActions() async {
-    // 下发参数
-    await modbusService.sendCommandQueue([
-      const ModbusWriteCommand(address: 0x0010, value: 4),
-    ]);
-    JoystickCommandBus.instance.lockLeftBottom();
-    // 关闭氛围灯
-    // try {
-    //   final int ambientLightState = await modbusService.readHoldingRegister(
-    //     0x0012,
-    //   );
-    //   if (ambientLightState == 1) {
-    //     await modbusService.sendCommandQueue([
-    //       const ModbusWriteCommand(address: 0x0012, value: 0),
-    //     ]);
-    //     debugPrint('start button auto-off ambient light TX 0x0012=0');
-    //   }
-    // } catch (e) {
-    //   debugPrint('start button read/close ambient light skipped: $e');
-    // }
+    await _liftSequence.descend();
   }
 
   // 预加载参数
@@ -1435,7 +1504,7 @@ class _StartPageState extends State<StartPage>
   }
 
   Future<void> _handleStopPressed() async {
-    if (_isCommanding || !_logic.canStop) return;
+    if (_isCommanding || (!_logic.canStop && !_britainFinishPending)) return;
 
     final _StartArguments args = _StartArguments.from(Get.arguments);
     setState(() => _isCommanding = true);
@@ -1450,9 +1519,22 @@ class _StartPageState extends State<StartPage>
         stopHifem: _runningModules.contains('hifem'),
         stopFragrance: _runningModules.contains('fragrance'),
       );
-      await _runStopButtonDeviceActions();
+      unawaited(AudioPromptPlayer.instance.playEndSafely());
+      if (_isBritainVersion) {
+        if (!mounted) return;
+        // 英国版先停止计时、阶段切换和音乐；上升确认后立即进入总结页。
+        // 到位状态与开灯由不依赖页面生命周期的后台任务继续处理。
+        setState(() {
+          _britainFinishPending = true;
+          _logic.stop();
+          _stopHydrogenFlowPolling(clearValue: true);
+        });
+        unawaited(VatMusicPlayer.instance.stop());
+      }
+      if (!await _runStopButtonDeviceActions()) return;
       if (!mounted) return;
       setState(() {
+        _britainFinishPending = false;
         _logic.stop();
         _runningModules.clear();
         _runningModuleSignatures.clear();
@@ -1470,25 +1552,7 @@ class _StartPageState extends State<StartPage>
     }
   }
 
-  Future<void> _runStopButtonDeviceActions() async {
-    try {
-      await modbusService.sendCommandQueue([
-        const ModbusWriteCommand(address: 0x0010, value: 3),
-      ]);
-      JoystickCommandBus.instance.lockLeftTop();
-    } catch (e) {
-      debugPrint('stop button one-key-up failed: $e');
-    }
-
-    try {
-      await modbusService.sendCommandQueue([
-        const ModbusWriteCommand(address: 0x0012, value: 1),
-      ]);
-      debugPrint('stop button auto-on ambient light TX 0x0012=1');
-    } catch (e) {
-      debugPrint('stop button auto-on ambient light failed: $e');
-    }
-  }
+  Future<bool> _runStopButtonDeviceActions() => _liftSequence.riseAndLight();
 
   /// 构建当前阶段的所有模块参数命令列表，包含红光/PEMF/HYDROGEN/VAT。
   List<ModbusWriteCommand> _buildPhaseCommands({
@@ -2486,8 +2550,14 @@ class _StartPageState extends State<StartPage>
     if (!activeDevices.contains('hydrogen')) return;
     _isReadingHydrogenFlow = true;
     try {
-      final int flow = await modbusService.readHydrogenFlow();
-      _hydrogenFlowTick.value = flow;
+      final HydrogenPhaseSetting? setting = _logic.activeHydrogenSetting;
+      // 英国版显示浓度原值，其他版本显示浓度的 6 倍。
+      final int displayMultiplier = AppBrand.current.flavor == 'britain'
+          ? 1
+          : 6;
+      _hydrogenFlowTick.value = setting == null
+          ? null
+          : setting.concentration * displayMultiplier;
     } catch (e) {
       debugPrint('readHydrogenFlow failed: $e');
     } finally {
@@ -2561,6 +2631,7 @@ class _StartArguments {
     }
     //默认返回主页面
     return _StartArguments(
+      //默认返回主页面
       modeTitle: 'default_mode_title'.tr,
       userName: 'no_user_selected'.tr,
       clientId: null,
@@ -2612,6 +2683,112 @@ class _ExpandStatusItem {
   final String label;
   final String iconOn;
   final String iconOff;
+}
+
+/// 启动页的升降与灯光顺序，放在原文件中供页面和协议顺序测试共用。
+class StartLiftSequence {
+  StartLiftSequence({
+    required this.service,
+    required this.isBritain,
+    required this.isActive,
+    Future<void> Function(Duration)? delay,
+  }) : delay = delay ?? ((duration) => Future<void>.delayed(duration));
+
+  final ModbusRtuService service;
+  final bool isBritain;
+  final bool Function() isActive;
+  final Future<void> Function(Duration) delay;
+
+  Future<void> _write(int address, int value) async {
+    await service.sendCommandQueue([
+      ModbusWriteCommand(address: address, value: value),
+    ]);
+    debugPrint(
+      'Start lift write confirmed: 0x${address.toRadixString(16)}=$value',
+    );
+  }
+
+  Future<bool> descend() async {
+    if (isBritain) {
+      if (!isActive()) return false;
+      // 必须收到关灯确认后再下降，异常直接交给启动页提示。
+      await _write(0x0012, 0);
+      if (!isActive()) return false;
+    }
+    await _write(0x0010, 4);
+    JoystickCommandBus.instance.lockLeftBottom();
+    return true;
+  }
+
+  Future<bool> riseAndLight() async {
+    if (isBritain) {
+      if (!isActive()) return false;
+      await _write(0x0010, 3);
+      JoystickCommandBus.instance.lockLeftTop();
+      // 写入上升命令成功后立即允许跳转总结页。后续轮询不依赖启动页生命周期。
+      unawaited(_waitForLiftReachTopAndTurnOnLight());
+      return true;
+    }
+
+    // 其他版本保留原来的等待 2 秒及异常处理行为。
+    try {
+      await _write(0x0010, 3);
+      JoystickCommandBus.instance.lockLeftTop();
+    } catch (e) {
+      debugPrint('stop button one-key-up failed: $e');
+    }
+    try {
+      await delay(const Duration(seconds: 2));
+      await _write(0x0012, 1);
+      debugPrint('stop button auto-on ambient light TX 0x0012=1');
+    } catch (e) {
+      debugPrint('stop button auto-on ambient light failed: $e');
+    }
+    return true;
+  }
+
+  Future<void> _waitForLiftReachTopAndTurnOnLight() async {
+    while (true) {
+      final int status;
+      try {
+        status = await service.readHoldingRegister(0x0011);
+      } catch (error) {
+        // 总结页已打开，后台读取失败只记录并继续轮询，避免一次超时永久不开灯。
+        debugPrint('stop button background lift status read failed: $error');
+        await delay(const Duration(milliseconds: 500));
+        continue;
+      }
+
+      debugPrint('stop button background lift status RX 0x0011=$status');
+      if (status == 0) {
+        JoystickCommandBus.instance.reset();
+        try {
+          await _write(0x0012, 1);
+          debugPrint('stop button background ambient light TX 0x0012=1');
+        } catch (error) {
+          debugPrint('stop button background ambient light failed: $error');
+        }
+        return;
+      }
+      await delay(const Duration(milliseconds: 500));
+    }
+  }
+}
+
+/// 提取需要在摇杆到底后重新下发的分子氢参数。
+class StartHydrogenCommandReplay {
+  const StartHydrogenCommandReplay._();
+
+  static List<ModbusWriteCommand> parametersFrom(
+    List<ModbusWriteCommand> commands,
+  ) {
+    return commands
+        .where((command) {
+          return command.address >= ModbusRtuService.hydrogenEnableAddress &&
+              command.address <= ModbusRtuService.hydrogenAutoCleanAddress;
+        })
+        .toList(growable: false);
+  }
 }
 
 class _PreloadCommandBatch {

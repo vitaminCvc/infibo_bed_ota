@@ -5,6 +5,7 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   connectivity_plus
   flutter_libserialport
+  universal_ble
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST

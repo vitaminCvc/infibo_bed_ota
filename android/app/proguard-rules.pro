@@ -10,6 +10,9 @@
 -keep class io.flutter.plugin.common.** { *; }
 -keep class io.flutter.embedding.** { *; }
 
+# Keep Universal BLE channel classes used by the generated platform bridge
+-keep class com.navideck.universal_ble.** { *; }
+
 # Keep data classes that may be accessed via reflection
 -keepattributes *Annotation*
 -keepattributes SourceFile,LineNumberTable

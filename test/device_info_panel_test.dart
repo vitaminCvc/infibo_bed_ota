@@ -19,7 +19,7 @@ void main() {
     );
 
     expect(find.text('Therapy Chamber'), findsOneWidget);
-    expect(find.text('IMMORTAL-MT-01'), findsOneWidget);
+    expect(find.text('INMORTAL-MT-01'), findsOneWidget);
     expect(find.text('Version Information'), findsOneWidget);
     expect(find.text('Module Status'), findsOneWidget);
     expect(find.text('Temperature Monitor'), findsOneWidget);

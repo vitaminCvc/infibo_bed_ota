@@ -32,6 +32,7 @@ class HydrogenModbus {
   static const int applyAddress = 0x01D0;
   static const int commandAddress = 0x01D1;
   static const int flowReadAddress = 0x01E4;
+  static const int waterLevelReadAddress = 0x01E5;
 
   static HydrogenBatchPayload buildPayload({required int concentration}) {
     final int safeConcentration = clampPercentage(concentration);
