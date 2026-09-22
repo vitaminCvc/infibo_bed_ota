@@ -3,8 +3,10 @@
 // 提供常规页面使用的顶部 Header 和基础页面容器；共享时钟状态由 stores 统一维护。
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:infibo_app/components/designCanvas/design.dart';
 import 'package:infibo_app/components/logic.dart';
 import 'package:infibo_app/components/logout_menu.dart';
+import 'package:infibo_app/config/app_brand.dart';
 import 'package:infibo_app/constants/assets.dart';
 import 'package:infibo_app/constants/color.dart';
 import 'package:infibo_app/stores/index.dart';
@@ -15,6 +17,7 @@ class AppHeaderPage extends StatelessWidget {
     this.children = const [],
     this.onSettingTap,
     this.onUserTap,
+    this.enableLogout = false,
     this.enableLogoBack = true,
     this.resizeToAvoidBottomInset = true,
   });
@@ -22,34 +25,42 @@ class AppHeaderPage extends StatelessWidget {
   final List<Widget> children;
   final VoidCallback? onSettingTap;
   final VoidCallback? onUserTap;
+  final bool enableLogout;
   final bool enableLogoBack;
   final bool resizeToAvoidBottomInset;
 
   @override
   Widget build(BuildContext context) {
+    final double pageTopOffset = AppLayoutScope.of(context).pageTopOffset;
+
     return Scaffold(
       resizeToAvoidBottomInset: resizeToAvoidBottomInset,
       backgroundColor: AppTheme.primaryColor,
       body: SafeArea(
+        maintainBottomViewPadding: true,
         child: SizedBox(
           width: double.infinity,
           height: double.infinity,
-          child: Stack(
-            children: [
-              ...children,
-              Positioned(
-                left: 48,
-                top: 25,
-                right: 44,
-                child: AppTopHeader(
-                  onLogoTap: enableLogoBack
-                      ? AppComponentLogic.backToMainPage
-                      : null,
-                  onSettingTap: onSettingTap,
-                  onUserTap: onUserTap,
+          child: Transform.translate(
+            offset: Offset(0, pageTopOffset),
+            child: Stack(
+              children: [
+                ...children,
+                Positioned(
+                  left: 48,
+                  top: 25,
+                  right: AppBrand.current.headerLayout.indexPageRightInset,
+                  child: AppTopHeader(
+                    onLogoTap: enableLogoBack
+                        ? AppComponentLogic.backToMainPage
+                        : null,
+                    onSettingTap: onSettingTap,
+                    onUserTap: onUserTap,
+                    enableLogout: enableLogout,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -63,55 +74,81 @@ class AppTopHeader extends StatelessWidget {
     this.onLogoTap,
     this.onSettingTap,
     this.onUserTap,
+    this.enableLogout = false,
   });
 
   final VoidCallback? onLogoTap;
   final VoidCallback? onSettingTap;
   final VoidCallback? onUserTap;
+  final bool enableLogout;
 
   @override
   Widget build(BuildContext context) {
     final AppHeaderClockController clock = AppHeaderClockController.instance
       ..startClock();
+    final HeaderLayoutConfig layout = AppBrand.current.headerLayout;
+    final Widget clockBlock = Obx(
+      () => _buildTimeBlock(clock.timeText, clock.dateText),
+    );
+    final Widget userButton = _buildUserButton();
+    final Widget settingButton = _buildSettingButton();
+
+    if (layout.logoPosition == HeaderLogoPosition.trailing) {
+      return Row(
+        children: [
+          userButton,
+          const SizedBox(width: 8),
+          settingButton,
+          SizedBox(width: layout.indexClockGap),
+          clockBlock,
+          const Spacer(),
+          _buildLogo(layout),
+        ],
+      );
+    }
 
     return Row(
       children: [
-        _buildLogo(),
-        const SizedBox(width: 80),
-        Obx(() => _buildTimeBlock(clock.timeText, clock.dateText)),
+        _buildLogo(layout),
+        SizedBox(width: layout.indexClockGap),
+        clockBlock,
         const Spacer(),
         //创建用户信息按钮
-        _buildUserButton(),
+        userButton,
         const SizedBox(width: 8),
-        _buildImageButton(
-          asset: Assets.settingLogo,
-          width: 100,
-          height: 48,
-          onTap: AppComponentLogic.openSettingPage,
-          child: Positioned(
-            left: 18,
-            top: 10,
-            child: SizedBox(
-              height: 28,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.settings_outlined, color: Colors.white, size: 18),
-                  const SizedBox(width: 4),
-                  Text(
-                    'settings'.tr,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
+        settingButton,
+      ],
+    );
+  }
+
+  Widget _buildSettingButton() {
+    return _buildImageButton(
+      asset: Assets.settingLogo,
+      width: 100,
+      height: 48,
+      onTap: AppComponentLogic.openSettingPage,
+      child: Positioned(
+        left: 18,
+        top: 10,
+        child: SizedBox(
+          height: 28,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.settings_outlined, color: Colors.white, size: 18),
+              const SizedBox(width: 4),
+              Text(
+                'settings'.tr,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
-            ),
+            ],
           ),
         ),
-      ],
+      ),
     );
   }
 
@@ -121,6 +158,7 @@ class AppTopHeader extends StatelessWidget {
 
       return LogoutMenu(
         onLogout: AppComponentLogic.logout,
+        enabled: enableLogout,
         child: _buildImageButton(
           asset: Assets.adminMainLogo,
           width: 108,
@@ -180,21 +218,29 @@ class AppTopHeader extends StatelessWidget {
   }
 
   //创建用户信息按钮
-  Widget _buildLogo() {
+  Widget _buildLogo(HeaderLayoutConfig layout) {
     final Widget logo = Image.asset(
       Assets.mainLogo,
-      width: 242,
-      height: 44,
+      width: layout.logoSize.width,
+      height: layout.logoSize.height,
       fit: BoxFit.contain,
     );
-    if (onLogoTap == null) return logo;
+
+    // 固定 Header 中 Logo 占用的高度，避免是否可点击导致上下位置变化
+    final Widget logoBox = SizedBox(
+      width: layout.indexLogoSlotWidth,
+      height: 48,
+      child: Align(alignment: Alignment.centerLeft, child: logo),
+    );
+
+    if (onLogoTap == null) {
+      return logoBox;
+    }
+
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onLogoTap,
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(minWidth: 200, minHeight: 70),
-        child: Align(alignment: Alignment.centerLeft, child: logo),
-      ),
+      child: logoBox,
     );
   }
 

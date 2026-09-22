@@ -6,6 +6,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:infibo_app/components/designCanvas/design.dart';
 import 'package:infibo_app/components/index.dart';
 import 'package:infibo_app/constants/assets.dart';
 import 'package:infibo_app/pages/summary/logic.dart';
@@ -19,8 +20,8 @@ class SummaryPage extends StatefulWidget {
 
 class _SummaryPageState extends State<SummaryPage> {
   static const double _designWidth = 800;
-  static const double _designHeight = 1160;
-  static const double _designScale = 0.72;
+  static const double _summaryBottomMargin = 80;
+  static const double _keyboardButtonGap = 24;
 
   final SummaryLogic _logic = SummaryLogic();
 
@@ -40,15 +41,15 @@ class _SummaryPageState extends State<SummaryPage> {
 
   @override
   Widget build(BuildContext context) {
-    final double scale =
-        ((MediaQuery.sizeOf(context).width - 32) / _designWidth)
-            .clamp(_designScale, 1)
-            .toDouble();
-
+    final bool is16x9 = AppLayoutScope.of(context).is16x9;
     // 获取键盘高度
     final double keyboardHeight = MediaQuery.viewInsetsOf(context).bottom;
-    // 键盘是否弹出
-    final bool keyboardVisible = keyboardHeight > 0;
+    final double keyboardShift = keyboardHeight > 0
+        ? math.max(
+            0,
+            keyboardHeight - _summaryBottomMargin + _keyboardButtonGap,
+          )
+        : 0;
 
     // 监听页面上的点击、滑动和滚动；只要用户有操作，就重新计算 2 分钟。
     return Listener(
@@ -66,31 +67,24 @@ class _SummaryPageState extends State<SummaryPage> {
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 220),
                 curve: Curves.easeOut,
-
-                // 键盘弹出时，让页面整体往上移动
-                transform: Matrix4.translationValues(
-                  0,
-                  keyboardVisible ? -230 : 0,
-                  0,
-                ),
-
-                child: SizedBox(
-                  width: _designWidth * scale,
-                  height: _designHeight * scale,
-                  child: FittedBox(
-                    fit: BoxFit.contain,
-                    alignment: Alignment.topCenter,
+                transform: Matrix4.translationValues(0, -keyboardShift, 0),
+                child: LayoutBuilder(
+                  builder: (context, constraints) => Center(
                     child: SizedBox(
                       width: _designWidth,
-                      height: _designHeight,
-                      child: _buildSummary(_logic),
+                      height: constraints.maxHeight,
+                      child: _buildSummary(
+                        _logic,
+                        is16x9: is16x9,
+                        canvasHeight: constraints.maxHeight,
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
           ),
-          if (keyboardVisible)
+          if (keyboardHeight > 0)
             Positioned(
               top: 0,
               left: 0,
@@ -106,7 +100,19 @@ class _SummaryPageState extends State<SummaryPage> {
   }
 }
 
-Widget _buildSummary(SummaryLogic logic) {
+Widget _buildSummary(
+  SummaryLogic logic, {
+  required bool is16x9,
+  required double canvasHeight,
+}) {
+  const double buttonHeight = 56;
+  const double feedbackButtonGap = 46;
+  final double feedbackHeight = is16x9 ? 221 : 134;
+  final double buttonTop = is16x9 ? canvasHeight - 80 - buttonHeight : 1040;
+  final double feedbackTop = is16x9
+      ? buttonTop - feedbackButtonGap - feedbackHeight
+      : 860;
+
   return Stack(
     children: [
       // 用户信息
@@ -119,17 +125,21 @@ Widget _buildSummary(SummaryLogic logic) {
       Positioned(top: 122, left: 45, child: _buildrunDuration(logic)),
 
       // 标题：健康效果评估
-      Positioned(top: 314, left: 45, child: _buildSummaryTitle2()),
+      Positioned(top: 320, left: 45, child: _buildSummaryTitle2()),
 
       // 健康效果评估卡片
-      Positioned(top: 362, left: 45, child: _buildHealthEffectCards()),
+      Positioned(top: 368, left: 45, child: _buildHealthEffectCards()),
 
       // 健康效果评估感受
-      Positioned(top: 854, left: 45, child: _buildFeelingBox(logic)),
+      Positioned(
+        top: feedbackTop,
+        left: 45,
+        child: _buildFeelingBox(logic, height: feedbackHeight),
+      ),
 
       // 确认按钮
       Positioned(
-        top: 1040,
+        top: buttonTop,
         left: 0,
         right: 0,
         child: Center(child: _buildButton(logic)),
@@ -186,7 +196,7 @@ Widget _buildrunDuration(SummaryLogic logic) {
       const SizedBox(width: 20),
       _buildHydrogen(logic),
       const SizedBox(width: 20),
-      _buildExpand(logic),
+      // _buildExpand(logic),
     ],
   );
 }
@@ -228,13 +238,13 @@ Widget _buildHydrogen(SummaryLogic logic) {
 }
 
 // 拓展
-Widget _buildExpand(SummaryLogic logic) {
-  return _buildModuleCard(
-    icon: Assets.expandIcon,
-    title: 'module_expand'.tr,
-    durationText: logic.moduleDurationText('expand'),
-  );
-}
+// Widget _buildExpand(SummaryLogic logic) {
+//   return _buildModuleCard(
+//     icon: Assets.expandIcon,
+//     title: 'module_expand'.tr,
+//     durationText: logic.moduleDurationText('expand'),
+//   );
+// }
 
 Widget _buildModuleCard({
   required String icon,
@@ -243,8 +253,8 @@ Widget _buildModuleCard({
   FontWeight titleWeight = FontWeight.w400,
 }) {
   return _buildGlassCard(
-    width: 127,
-    height: 162,
+    width: 162,
+    height: 170,
     padding: EdgeInsets.zero,
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -335,7 +345,7 @@ Widget _buildHealthEffectCards() {
 
 // 能量指数
 Widget _buildEnergyCard() {
-  const int score = 70;
+  const int score = 0;
   const List<Color> themeColors = [
     Color(0xFF22D7FF),
     Color(0xFF1299FF),
@@ -344,24 +354,26 @@ Widget _buildEnergyCard() {
 
   return _buildHealthEffectCard(
     backgroundImage: Assets.energy,
+
     title: 'energy_score'.tr,
     tagText: 'status_good'.tr,
-    score: score,
+    score: '--',
     unit: '/100',
-    changeText: '${'compared_to_last'.tr}   ↗ 8%',
+    changeText: '${'compared_to_last'.tr}   --',
+
     scoreColor: const Color(0xFF1299FF),
     scoreGradientColors: themeColors,
-    chartLeft: 185,
-    chartTop: 73,
-    chartWidth: 118,
-    chartHeight: 118,
+    chartLeft: 200,
+    chartTop: 82,
+    chartWidth: 120,
+    chartHeight: 120,
     chart: _buildCircleScoreChart(score: score, gradientColors: themeColors),
   );
 }
 
 // 细胞活化
 Widget _buildCellCard() {
-  const int score = 79;
+  const int score = 0;
   const List<Color> themeColors = [
     Color(0xFFFFC266),
     Color(0xFFFF7A2A),
@@ -372,17 +384,17 @@ Widget _buildCellCard() {
     backgroundImage: Assets.cell,
     title: 'cell_score'.tr,
     tagText: 'status_good'.tr,
-    score: score,
+    score: '--',
     unit: '/100',
-    changeText: '${'compared_to_last'.tr}   ↗ 3%',
+    changeText: '${'compared_to_last'.tr}   --',
     scoreColor: const Color(0xFFFF7A2A),
     scoreGradientColors: themeColors,
-    chartLeft: 185,
-    chartTop: 72,
-    chartWidth: 130,
-    chartHeight: 115,
+    chartLeft: 178,
+    chartTop: 85,
+    chartWidth: 140,
+    chartHeight: 119,
     chart: _buildBarChart(
-      values: const [40, 62, 70, 80],
+      values: const [0, 0, 0, 0],
       gradientColors: themeColors,
     ),
   );
@@ -390,7 +402,7 @@ Widget _buildCellCard() {
 
 // 放松指数
 Widget _buildRelaxCard() {
-  const int score = 72;
+  const int score = 0;
   const List<Color> themeColors = [
     Color(0xFFC58CFF),
     Color(0xFF9B6BFF),
@@ -401,13 +413,13 @@ Widget _buildRelaxCard() {
     backgroundImage: Assets.relax,
     title: 'relaxation_score'.tr,
     tagText: 'status_good'.tr,
-    score: score,
+    score: '--',
     unit: '/100',
-    changeText: '${'compared_to_last'.tr}   ↗ 8%',
+    changeText: '${'compared_to_last'.tr}   --',
     scoreColor: const Color(0xFF9B6BFF),
     scoreGradientColors: themeColors,
     //放松指数坐标轴的位置
-    chartLeft: 24,
+    chartLeft: 26,
     chartTop: 160,
     chartWidth: 290,
     chartHeight: 48,
@@ -416,7 +428,7 @@ Widget _buildRelaxCard() {
     changeTextLeft: 150,
 
     // 单独调“较上次”上下位置
-    changeTextTop: 114,
+    changeTextTop: 117,
 
     chart: _buildRelaxSliderChart(score: score, gradientColors: themeColors),
   );
@@ -424,7 +436,7 @@ Widget _buildRelaxCard() {
 
 // 免疫提升
 Widget _buildImmuneCard() {
-  const int score = 50;
+  const int score = 0;
   const List<Color> themeColors = [
     Color(0xFF7AFADC),
     Color(0xFF28D3A3),
@@ -435,15 +447,15 @@ Widget _buildImmuneCard() {
     backgroundImage: Assets.immune,
     title: 'immune_score'.tr,
     tagText: 'status_good'.tr,
-    score: score,
+    score: '--',
     unit: '/100',
-    changeText: '${'compared_to_last'.tr}   ↗ 3%',
+    changeText: '${'compared_to_last'.tr}   --',
     scoreColor: const Color(0xFF28D3A3),
     scoreGradientColors: themeColors,
-    chartLeft: 175,
-    chartTop: 68,
-    chartWidth: 145,
-    chartHeight: 128,
+    chartLeft: 168,
+    chartTop: 76,
+    chartWidth: 149,
+    chartHeight: 120,
 
     // 这里不要再写 scoreTop: 88
     // 不写就会使用默认 scoreTop: 100，和放松指数、能量指数、细胞活化保持一致。
@@ -460,7 +472,7 @@ Widget _buildHealthEffectCard({
   // 状态标签
   required String tagText,
   // 得分
-  required int score,
+  required String score,
   // 单位
   required String unit,
   // 变化文本
@@ -476,9 +488,9 @@ Widget _buildHealthEffectCard({
   required double chartTop,
   required double chartWidth,
   required double chartHeight,
-  double scoreTop = 100,
+  double scoreTop = 94,
   double changeTextLeft = 24,
-  double changeTextTop = 158,
+  double changeTextTop = 170,
   double changeTextWidth = 145,
 }) {
   final List<String> changeParts = changeText.trim().split(RegExp(r'\s{2,}'));
@@ -512,7 +524,7 @@ Widget _buildHealthEffectCard({
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(
-              fontSize: 17,
+              fontSize: 18,
               fontWeight: FontWeight.w500,
               color: Color(0xFFFFFFFF),
             ),
@@ -522,15 +534,14 @@ Widget _buildHealthEffectCard({
         // 状态标签
         Positioned(
           top: 33,
-          left: 202,
+          left: 265,
           child: Container(
-            height: 22,
+            height: 24,
             constraints: const BoxConstraints(maxWidth: 56),
-            padding: const EdgeInsets.symmetric(horizontal: 12),
             alignment: Alignment.center,
             decoration: BoxDecoration(
               color: scoreColor.withValues(alpha: 0.14),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(20),
             ),
             child: _buildGradientText(
               text: tagText,
@@ -552,17 +563,16 @@ Widget _buildHealthEffectCard({
                 text: score.toString(),
                 gradientColors: scoreGradientColors,
                 style: const TextStyle(
-                  fontSize: 42,
-                  height: 1,
+                  fontSize: 40,
                   fontWeight: FontWeight.w400,
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 6, bottom: 4),
+                padding: const EdgeInsets.only(left: 6, bottom: 10),
                 child: Text(
                   unit,
                   style: const TextStyle(
-                    fontSize: 18,
+                    fontSize: 20,
                     color: Color(0xFFC7CAD3),
                   ),
                 ),
@@ -584,15 +594,15 @@ Widget _buildHealthEffectCard({
                 TextSpan(
                   text: changePrefix,
                   style: const TextStyle(
-                    fontSize: 14,
+                    fontSize: 18,
                     color: Color(0xFFB8BBC6),
                   ),
                 ),
                 TextSpan(
                   text: changeSuffix.isEmpty ? '' : '  $changeSuffix',
                   style: const TextStyle(
-                    fontSize: 14,
-                    color: Color(0xFF26DFA6),
+                    fontSize: 18,
+                    color: Color(0xFF2BCD9F),
                   ),
                 ),
               ],
@@ -1022,8 +1032,8 @@ class _RelaxSliderPainter extends CustomPainter {
     }
 
     drawText('level_low'.tr, Offset(startX, 0));
-    drawText('level_medium'.tr, Offset(size.width / 2 - 5, 0));
-    drawText('level_high'.tr, Offset(endX - 10, 0));
+    drawText('level_medium'.tr, Offset(size.width / 2 - 14, 0));
+    drawText('level_high'.tr, Offset(endX - 24, 0));
 
     final RRect bubble = RRect.fromRectAndRadius(
       Rect.fromCenter(
@@ -1244,10 +1254,10 @@ Widget _buildButton(SummaryLogic logic) {
 
 ///////////////////////////////底部感受评估///////////////////////////////
 
-Widget _buildFeelingBox(SummaryLogic logic) {
+Widget _buildFeelingBox(SummaryLogic logic, {double height = 134}) {
   return _buildGlassCard(
     width: 711,
-    height: 134,
+    height: height,
     radius: 20,
     // 内边距
     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),

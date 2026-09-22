@@ -6,6 +6,12 @@
 
 #import "GeneratedPluginRegistrant.h"
 
+#if __has_include(<app_settings/AppSettingsPlugin.h>)
+#import <app_settings/AppSettingsPlugin.h>
+#else
+@import app_settings;
+#endif
+
 #if __has_include(<audio_session/AudioSessionPlugin.h>)
 #import <audio_session/AudioSessionPlugin.h>
 #else
@@ -16,6 +22,12 @@
 #import <connectivity_plus/ConnectivityPlusPlugin.h>
 #else
 @import connectivity_plus;
+#endif
+
+#if __has_include(<device_info_plus/FPPDeviceInfoPlusPlugin.h>)
+#import <device_info_plus/FPPDeviceInfoPlusPlugin.h>
+#else
+@import device_info_plus;
 #endif
 
 #if __has_include(<just_audio/JustAudioPlugin.h>)
@@ -36,14 +48,23 @@
 @import sqflite_darwin;
 #endif
 
+#if __has_include(<universal_ble/UniversalBlePlugin.h>)
+#import <universal_ble/UniversalBlePlugin.h>
+#else
+@import universal_ble;
+#endif
+
 @implementation GeneratedPluginRegistrant
 
 + (void)registerWithRegistry:(NSObject<FlutterPluginRegistry>*)registry {
+  [AppSettingsPlugin registerWithRegistrar:[registry registrarForPlugin:@"AppSettingsPlugin"]];
   [AudioSessionPlugin registerWithRegistrar:[registry registrarForPlugin:@"AudioSessionPlugin"]];
   [ConnectivityPlusPlugin registerWithRegistrar:[registry registrarForPlugin:@"ConnectivityPlusPlugin"]];
+  [FPPDeviceInfoPlusPlugin registerWithRegistrar:[registry registrarForPlugin:@"FPPDeviceInfoPlusPlugin"]];
   [JustAudioPlugin registerWithRegistrar:[registry registrarForPlugin:@"JustAudioPlugin"]];
   [SharedPreferencesPlugin registerWithRegistrar:[registry registrarForPlugin:@"SharedPreferencesPlugin"]];
   [SqflitePlugin registerWithRegistrar:[registry registrarForPlugin:@"SqflitePlugin"]];
+  [UniversalBlePlugin registerWithRegistrar:[registry registrarForPlugin:@"UniversalBlePlugin"]];
 }
 
 @end

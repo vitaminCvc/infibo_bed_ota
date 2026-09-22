@@ -9,6 +9,7 @@ android {
     namespace = "com.example.infibo_app"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
+    flavorDimensions += "market"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -28,6 +29,44 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+    }
+
+    productFlavors {
+        create("global") {
+            dimension = "market"
+            applicationId = "com.infibo.app.global"
+            resValue("string", "app_name", "Infibo")
+        }
+        create("india") {
+            dimension = "market"
+            applicationId = "com.infibo.app.india"
+            resValue("string", "app_name", "Infibo India")
+        }
+        create("spain") {
+            dimension = "market"
+            applicationId = "com.infibo.app.spain"
+            resValue("string", "app_name", "Infibo Spain")
+        }
+        create("turkey") {
+            dimension = "market"
+            applicationId = "com.infibo.app.turkey"
+            resValue("string", "app_name", "Infibo Turkey")
+        }
+        create("america") {
+            dimension = "market"
+            applicationId = "com.infibo.app.america"
+            resValue("string", "app_name", "Infibo America")
+        }
+        create("britain") {
+            dimension = "market"
+            applicationId = "com.infibo.app.britain"
+            resValue("string", "app_name", "Infibo Britain")
+        }
+        create("australia") {
+            dimension = "market"
+            applicationId = "com.infibo.app.australia"
+            resValue("string", "app_name", "Infibo Australia")
+        }
     }
 
     buildTypes {

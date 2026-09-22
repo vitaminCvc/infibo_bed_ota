@@ -19,6 +19,7 @@ import 'package:infibo_app/pages/customized/customizedPage/taihezi/ui.dart'
 import 'package:infibo_app/pages/customized/customizedPage/xiangfen/ui.dart'
     as fragrance_page;
 import 'package:infibo_app/pages/customized/customizedPage/logic.dart';
+import 'package:infibo_app/pages/customized/customizedPage/save_plan_feedback_controller.dart';
 import 'package:infibo_app/pages/customized/logic.dart';
 import 'package:infibo_app/pages/customized/plan_features.dart';
 import 'package:infibo_app/pages/music/logic.dart';
@@ -143,16 +144,16 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
       color: Color(0xFF1F74E8),
       bgColors: [Color(0x55394D72), Color(0x33303D59)],
     ),
-    _ModuleItem(
-      id: 'expand',
-      titleKey: 'module_expand',
-      iconOff: Assets.expandIconOff,
-      iconOn: Assets.expandIcon,
-      addIcon: Assets.expandAddIcon,
-      rowBgAsset: Assets.addTreatmentExpand,
-      color: Color(0xFF11A36D),
-      bgColors: [Color(0x55315B45), Color(0x332A4638)],
-    ),
+    // _ModuleItem(
+    //   id: 'expand',
+    //   titleKey: 'module_expand',
+    //   iconOff: Assets.expandIconOff,
+    //   iconOn: Assets.expandIcon,
+    //   addIcon: Assets.expandAddIcon,
+    //   rowBgAsset: Assets.addTreatmentExpand,
+    //   color: Color(0xFF11A36D),
+    //   bgColors: [Color(0x55315B45), Color(0x332A4638)],
+    // ),
   ];
 
   @override
@@ -320,11 +321,11 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
         //添加复制上一个节点参数图标
         ..._buildCopyPreviousNodeButton(),
         if (showModulePanel)
-          Positioned(left: 45, top: 102, child: _buildAddModulePanel()),
-        if (showModulePanel && activeFeatures.contains('expand'))
-          Positioned(left: 45, top: 650, child: _buildExpandPanel()),
+          Positioned(left: 45, top: 98, child: _buildAddModulePanel()),
+        // if (showModulePanel && activeFeatures.contains('expand'))
+        //   Positioned(left: 45, top: 650, child: _buildExpandPanel()),
         if (activeFeatures.contains('redlight'))
-          Positioned(left: 485, top: 75, child: _buildRedLightPanel()),
+          Positioned(left: 485, top: 97, child: _buildRedLightPanel()),
         if (activeFeatures.contains('pemf'))
           Positioned(left: 485, top: 381, child: _buildPemfPanel()),
         if (activeFeatures.contains('vat'))
@@ -582,16 +583,12 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
       _savedNodeIndexes.add(toIndex);
       _activeNodeIndex = null;
     });
-
-    _showMessage(
-      '${'node_copied_prefix'.tr}${(toIndex + 1) * 5}${'node_copied_suffix'.tr}',
-    );
   }
 
   Widget _buildAddModulePanel() {
     return SizedBox(
       width: 270,
-      height: 530,
+      height: 440,
       child: Stack(
         children: [
           Positioned.fill(
@@ -623,128 +620,128 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     );
   }
 
-  Widget _buildExpandPanel() {
-    return _NotchedPanel(
-      width: 250,
-      height: 322,
-      notchSide: _NotchSide.right,
-      gradient: const LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [Color(0x66365F4B), Color(0x5522352D)],
-      ),
-      borderColor: const Color(0xFF5A8E77),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 22, 22, 18),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    'expand_feature'.tr,
-                    style: const TextStyle(color: Colors.white, fontSize: 22),
-                  ),
-                ),
-                Image.asset(Assets.expandIcon, width: 43, height: 43),
-              ],
-            ),
-            const SizedBox(height: 25),
-            _buildExpandLine(
-              id: 'chakra',
-              text: 'chakra'.tr,
-              selectedImage: Assets.customizedExpandChakraSelected,
-              unselectedImage: Assets.customizedExpandChakraDefault,
-            ),
-            const SizedBox(height: 18),
-            _buildExpandLine(
-              id: 'terahertz',
-              text: 'terahertz'.tr,
-              selectedImage: Assets.customizedExpandTerahertzSelected,
-              unselectedImage: Assets.customizedExpandTerahertzDefault,
-            ),
-            const SizedBox(height: 18),
-            _buildExpandLine(
-              id: 'hifem',
-              text: 'HIFEM',
-              selectedImage: Assets.customizedExpandHifemSelected,
-              unselectedImage: Assets.customizedExpandHifemDefault,
-            ),
-            const SizedBox(height: 18),
-            _buildExpandLine(
-              id: 'fragrance',
-              text: 'fragrance'.tr,
-              selectedImage: Assets.customizedExpandFragranceSelected,
-              unselectedImage: Assets.customizedExpandFragranceDefault,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  // Widget _buildExpandPanel() {
+  //   return _NotchedPanel(
+  //     width: 250,
+  //     height: 322,
+  //     notchSide: _NotchSide.right,
+  //     gradient: const LinearGradient(
+  //       begin: Alignment.topLeft,
+  //       end: Alignment.bottomRight,
+  //       colors: [Color(0x66365F4B), Color(0x5522352D)],
+  //     ),
+  //     borderColor: const Color(0xFF5A8E77),
+  //     child: Padding(
+  //       padding: const EdgeInsets.fromLTRB(20, 22, 22, 18),
+  //       child: Column(
+  //         crossAxisAlignment: CrossAxisAlignment.start,
+  //         children: [
+  //           Row(
+  //             children: [
+  //               Expanded(
+  //                 child: Text(
+  //                   'expand_feature'.tr,
+  //                   style: const TextStyle(color: Colors.white, fontSize: 22),
+  //                 ),
+  //               ),
+  //               Image.asset(Assets.expandIcon, width: 43, height: 43),
+  //             ],
+  //           ),
+  //           const SizedBox(height: 25),
+  //           _buildExpandLine(
+  //             id: 'chakra',
+  //             text: 'chakra'.tr,
+  //             selectedImage: Assets.customizedExpandChakraSelected,
+  //             unselectedImage: Assets.customizedExpandChakraDefault,
+  //           ),
+  //           const SizedBox(height: 18),
+  //           _buildExpandLine(
+  //             id: 'terahertz',
+  //             text: 'terahertz'.tr,
+  //             selectedImage: Assets.customizedExpandTerahertzSelected,
+  //             unselectedImage: Assets.customizedExpandTerahertzDefault,
+  //           ),
+  //           const SizedBox(height: 18),
+  //           _buildExpandLine(
+  //             id: 'hifem',
+  //             text: 'HIFEM',
+  //             selectedImage: Assets.customizedExpandHifemSelected,
+  //             unselectedImage: Assets.customizedExpandHifemDefault,
+  //           ),
+  //           const SizedBox(height: 18),
+  //           _buildExpandLine(
+  //             id: 'fragrance',
+  //             text: 'fragrance'.tr,
+  //             selectedImage: Assets.customizedExpandFragranceSelected,
+  //             unselectedImage: Assets.customizedExpandFragranceDefault,
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
-  Widget _buildExpandLine({
-    required String id,
-    required String text,
+  // Widget _buildExpandLine({
+  //   required String id,
+  //   required String text,
 
-    required String selectedImage, // 选中状态图片路径
-    required String unselectedImage, // 未选中状态图片路径
-  }) {
-    final bool isSelected = _activeExpandFeatures.contains(id);
+  //   required String selectedImage, // 选中状态图片路径
+  //   required String unselectedImage, // 未选中状态图片路径
+  // }) {
+  //   final bool isSelected = _activeExpandFeatures.contains(id);
 
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      // 短按：未选中 → 进入选择页；已选中 → 取消该功能
-      onTap: () {
-        if (isSelected) {
-          _removeExpandFeature(id);
-        } else {
-          _openExpandPage(id);
-        }
-      },
-      // 长按：已选中 → 进入编辑页重设参数
-      onLongPress: () {
-        if (isSelected) {
-          _openExpandPage(id);
-        }
-      },
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 11),
-        child: Row(
-          children: [
-            SizedBox(
-              width: 24,
-              height: 24,
-              child: Image.asset(isSelected ? selectedImage : unselectedImage),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                text,
-                style: TextStyle(
-                  color: isSelected ? Colors.white : const Color(0xFFC8D4CD),
-                  fontSize: 18,
-                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-                ),
-              ),
-            ),
-            CircleAvatar(
-              radius: 12,
-              backgroundColor: isSelected
-                  ? const Color(0xFF0E9250)
-                  : const Color(0xff415149),
-              child: Icon(
-                isSelected ? Icons.check : Icons.chevron_right,
-                color: Color(0xFFFFFFFF),
-                size: 22,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  //   return GestureDetector(
+  //     behavior: HitTestBehavior.opaque,
+  //     // 短按：未选中 → 进入选择页；已选中 → 取消该功能
+  //     onTap: () {
+  //       if (isSelected) {
+  //         _removeExpandFeature(id);
+  //       } else {
+  //         _openExpandPage(id);
+  //       }
+  //     },
+  //     // 长按：已选中 → 进入编辑页重设参数
+  //     onLongPress: () {
+  //       if (isSelected) {
+  //         _openExpandPage(id);
+  //       }
+  //     },
+  //     child: Padding(
+  //       padding: const EdgeInsets.only(bottom: 11),
+  //       child: Row(
+  //         children: [
+  //           SizedBox(
+  //             width: 24,
+  //             height: 24,
+  //             child: Image.asset(isSelected ? selectedImage : unselectedImage),
+  //           ),
+  //           const SizedBox(width: 12),
+  //           Expanded(
+  //             child: Text(
+  //               text,
+  //               style: TextStyle(
+  //                 color: isSelected ? Colors.white : const Color(0xFFC8D4CD),
+  //                 fontSize: 18,
+  //                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+  //               ),
+  //             ),
+  //           ),
+  //           CircleAvatar(
+  //             radius: 12,
+  //             backgroundColor: isSelected
+  //                 ? const Color(0xFF0E9250)
+  //                 : const Color(0xff415149),
+  //             child: Icon(
+  //               isSelected ? Icons.check : Icons.chevron_right,
+  //               color: Color(0xFFFFFFFF),
+  //               size: 22,
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _buildRedLightPanel() {
     final int? index = _activeNodeIndex;
@@ -753,7 +750,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
     return _NotchedPanel(
       //红光模块面板大小
       width: 270,
-      height: 288,
+      height: 265,
       notchSide: _NotchSide.left,
       gradient: const LinearGradient(
         begin: Alignment.topLeft,
@@ -788,7 +785,6 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
                   controller: _redLight850Controllers[index],
                   focusNode: _redLight850FocusNodes[index],
                 ),
-                const SizedBox(height: 10),
                 Row(
                   children: [
                     SizedBox(
@@ -1201,7 +1197,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
                   icon: _moduleById('hydrogen').iconOn,
                 ),
                 const SizedBox(height: 17),
-                Text('hydrogen_concentration'.tr, style: _smallLabelStyle),
+                Text('flow'.tr, style: _smallLabelStyle),
                 const SizedBox(height: 7),
                 Row(
                   children: [
@@ -1452,119 +1448,119 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
   }
 
   // 打开拓展功能设置页。
-  Future<void> _openExpandPage(String id) async {
-    final int? index = _activeNodeIndex;
-    if (index == null) return;
+  // Future<void> _openExpandPage(String id) async {
+  //   final int? index = _activeNodeIndex;
+  //   if (index == null) return;
 
-    // 打开具体拓展设置页前先预加载图片，减少页面切换时的闪烁。
-    await _precacheExpandPageAssets(id);
-    if (!mounted) return;
+  //   // 打开具体拓展设置页前先预加载图片，减少页面切换时的闪烁。
+  //   await _precacheExpandPageAssets(id);
+  //   if (!mounted) return;
 
-    final Object? result = await Get.to<Object?>(
-      () => _buildExpandPage(id, index),
-      preventDuplicates: false,
-      transition: Transition.noTransition,
-      duration: Duration.zero,
-      curve: Curves.linear,
-    );
+  //   final Object? result = await Get.to<Object?>(
+  //     () => _buildExpandPage(id, index),
+  //     preventDuplicates: false,
+  //     transition: Transition.noTransition,
+  //     duration: Duration.zero,
+  //     curve: Curves.linear,
+  //   );
 
-    if (!mounted) return;
+  //   if (!mounted) return;
 
-    if (id == 'chakra') {
-      if (result is! chakra_page.ChakraExpandResult ||
-          result.strengths.isEmpty) {
-        return;
-      }
+  //   if (id == 'chakra') {
+  //     if (result is! chakra_page.ChakraExpandResult ||
+  //         result.strengths.isEmpty) {
+  //       return;
+  //     }
 
-      setState(() {
-        _nodeFeatureIds[index].add('expand');
-        _nodeExpandIds[index].add(id);
-        _nodeChakraStrengths[index]
-          ..clear()
-          ..addAll(result.strengths);
-        _nodeChakraModes[index] = result.mode;
-        // 只移除当前节点的保存标记，不影响后面已保存的节点。
-        _savedNodeIndexes.remove(index);
-      });
-      return;
-    }
+  //     setState(() {
+  //       _nodeFeatureIds[index].add('expand');
+  //       _nodeExpandIds[index].add(id);
+  //       _nodeChakraStrengths[index]
+  //         ..clear()
+  //         ..addAll(result.strengths);
+  //       _nodeChakraModes[index] = result.mode;
+  //       // 只移除当前节点的保存标记，不影响后面已保存的节点。
+  //       _savedNodeIndexes.remove(index);
+  //     });
+  //     return;
+  //   }
 
-    if (id == 'terahertz') {
-      if (result is! terahertz_page.TerahertzExpandResult) return;
+  //   if (id == 'terahertz') {
+  //     if (result is! terahertz_page.TerahertzExpandResult) return;
 
-      setState(() {
-        _nodeFeatureIds[index].add('expand');
-        _nodeExpandIds[index].add(id);
-        _nodeTerahertzSettings[index] = result;
-        // 只移除当前节点的保存标记，不影响后面已保存的节点。
-        _savedNodeIndexes.remove(index);
-      });
-      return;
-    }
+  //     setState(() {
+  //       _nodeFeatureIds[index].add('expand');
+  //       _nodeExpandIds[index].add(id);
+  //       _nodeTerahertzSettings[index] = result;
+  //       // 只移除当前节点的保存标记，不影响后面已保存的节点。
+  //       _savedNodeIndexes.remove(index);
+  //     });
+  //     return;
+  //   }
 
-    if (id == 'hifem') {
-      if (result is! hifem_page.HifemExpandResult) return;
+  //   if (id == 'hifem') {
+  //     if (result is! hifem_page.HifemExpandResult) return;
 
-      setState(() {
-        _nodeFeatureIds[index].add('expand');
-        _nodeExpandIds[index].add(id);
-        _nodeHifemSettings[index] = result;
-        // 只移除当前节点的保存标记（需要重新点"保存参数"），
-        // 不触碰后面已保存的节点，因为 HIFEM 各节点相互独立。
-        _savedNodeIndexes.remove(index);
-      });
-      return;
-    }
+  //     setState(() {
+  //       _nodeFeatureIds[index].add('expand');
+  //       _nodeExpandIds[index].add(id);
+  //       _nodeHifemSettings[index] = result;
+  //       // 只移除当前节点的保存标记（需要重新点"保存参数"），
+  //       // 不触碰后面已保存的节点，因为 HIFEM 各节点相互独立。
+  //       _savedNodeIndexes.remove(index);
+  //     });
+  //     return;
+  //   }
 
-    if (id == 'fragrance') {
-      if (result is! fragrance_page.FragranceExpandResult) return;
+  //   if (id == 'fragrance') {
+  //     if (result is! fragrance_page.FragranceExpandResult) return;
 
-      setState(() {
-        _nodeFeatureIds[index].add('expand');
-        _nodeExpandIds[index].add(id);
-        _nodeFragranceSettings[index] = result;
-        // 只移除当前节点的保存标记，不影响后面已保存的节点。
-        _savedNodeIndexes.remove(index);
-      });
-      return;
-    }
+  //     setState(() {
+  //       _nodeFeatureIds[index].add('expand');
+  //       _nodeExpandIds[index].add(id);
+  //       _nodeFragranceSettings[index] = result;
+  //       // 只移除当前节点的保存标记，不影响后面已保存的节点。
+  //       _savedNodeIndexes.remove(index);
+  //     });
+  //     return;
+  //   }
 
-    if (result != true) return;
+  //   if (result != true) return;
 
-    setState(() {
-      _nodeFeatureIds[index].add('expand');
-      _nodeExpandIds[index].add(id);
-      // 只移除当前节点的保存标记，不影响后面已保存的节点。
-      _savedNodeIndexes.remove(index);
-    });
-  }
+  //   setState(() {
+  //     _nodeFeatureIds[index].add('expand');
+  //     _nodeExpandIds[index].add(id);
+  //     // 只移除当前节点的保存标记，不影响后面已保存的节点。
+  //     _savedNodeIndexes.remove(index);
+  //   });
+  // }
 
-  Widget _buildExpandPage(String id, int index) {
-    switch (id) {
-      case 'chakra':
-        return chakra_page.ChakraExpandPage(
-          initialStrengths: _nodeChakraStrengths[index],
-          initialMode: _nodeChakraModes[index],
-        );
-      case 'terahertz':
-        return terahertz_page.TerahertzExpandPage(
-          initialSetting: _nodeTerahertzSettings[index],
-        );
-      case 'hifem':
-        return hifem_page.HifemExpandPage(
-          initialSetting: _nodeHifemSettings[index],
-        );
-      case 'fragrance':
-        return fragrance_page.FragranceExpandPage(
-          initialSetting: _nodeFragranceSettings[index],
-        );
-      default:
-        return chakra_page.ChakraExpandPage(
-          initialStrengths: _nodeChakraStrengths[index],
-          initialMode: _nodeChakraModes[index],
-        );
-    }
-  }
+  // Widget _buildExpandPage(String id, int index) {
+  //   switch (id) {
+  //     case 'chakra':
+  //       return chakra_page.ChakraExpandPage(
+  //         initialStrengths: _nodeChakraStrengths[index],
+  //         initialMode: _nodeChakraModes[index],
+  //       );
+  //     case 'terahertz':
+  //       return terahertz_page.TerahertzExpandPage(
+  //         initialSetting: _nodeTerahertzSettings[index],
+  //       );
+  //     case 'hifem':
+  //       return hifem_page.HifemExpandPage(
+  //         initialSetting: _nodeHifemSettings[index],
+  //       );
+  //     case 'fragrance':
+  //       return fragrance_page.FragranceExpandPage(
+  //         initialSetting: _nodeFragranceSettings[index],
+  //       );
+  //     default:
+  //       return chakra_page.ChakraExpandPage(
+  //         initialStrengths: _nodeChakraStrengths[index],
+  //         initialMode: _nodeChakraModes[index],
+  //       );
+  //   }
+  // }
 
   Future<void> _precacheExpandPageAssets(String id) async {
     final List<String> assetPaths = switch (id) {
@@ -1728,9 +1724,6 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
       _savedNodeIndexes.add(index);
       _activeNodeIndex = null;
     });
-    _showMessage(
-      '${'node_saved_prefix'.tr}${(index + 1) * 5}${'node_saved_suffix'.tr}',
-    );
   }
 
   //根据选择过保存的参数的节点，计算这个方案的总时长
@@ -1745,25 +1738,26 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
 
   //显示保存对话框方法
   Future<void> _showSaveDialog() async {
-    final String? name = await showDialog<String>(
+    final List<String> featureIds = _buildPlanFeatureIds();
+    final int durationMinutes = _selectedDurationMinutes();
+    final bool? didSave = await showDialog<bool>(
       context: context,
-      builder: (context) => _PlanNameDialog(controller: _nameController),
+      barrierColor: Colors.black.withValues(alpha: 0.6),
+      barrierDismissible: false,
+      builder: (context) => _PlanNameDialog(
+        controller: _nameController,
+        onSave: (String name) => _logic.savePlan(
+          editingPlan: _editingPlan,
+          name: name,
+          featureIds: featureIds,
+          durationMinutes: durationMinutes,
+        ),
+      ),
     );
 
-    if (name == null) return;
-
-    try {
-      await _logic.savePlan(
-        name: name,
-        featureIds: _buildPlanFeatureIds(),
-        durationMinutes: _selectedDurationMinutes(),
-      );
-    } on CustomizedPlanNameException catch (error) {
-      if (!mounted) return;
-      _showMessage(error.message);
-      return;
+    if (didSave == true && mounted) {
+      Get.back(result: true);
     }
-    Get.back(result: true);
   }
 
   void _showMessage(String text) {
@@ -1792,7 +1786,7 @@ class _CustomizedEditPageState extends State<CustomizedEditPage> {
         child: GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: () => setState(() => _pemfWavePickerNodeIndex = null),
-          child: Container(color: Colors.black.withValues(alpha: 0.45)),
+          child: Container(color: Colors.black.withValues(alpha: 0.6)),
         ),
       ),
       Positioned(
@@ -3473,119 +3467,219 @@ class _NotchedPanelPainter extends CustomPainter {
   }
 }
 
-//创建方案命名弹窗
-class _PlanNameDialog extends StatelessWidget {
-  const _PlanNameDialog({required this.controller});
+// 创建方案命名弹窗。
+class _PlanNameDialog extends StatefulWidget {
+  const _PlanNameDialog({required this.controller, required this.onSave});
 
   final TextEditingController controller;
+  final Future<void> Function(String name) onSave;
+
+  @override
+  State<_PlanNameDialog> createState() => _PlanNameDialogState();
+}
+
+class _PlanNameDialogState extends State<_PlanNameDialog> {
+  final SavePlanFeedbackController _saveFeedback = SavePlanFeedbackController();
+
+  @override
+  void dispose() {
+    _saveFeedback.dispose();
+    super.dispose();
+  }
+
+  Future<void> _submit() async {
+    final String name = widget.controller.text.trim();
+    if (name.isEmpty) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('plan_name_empty'.tr)));
+      return;
+    }
+
+    await _saveFeedback.submit(() => widget.onSave(name));
+    if (!mounted || _saveFeedback.state != SavePlanFeedbackState.success) {
+      return;
+    }
+    Navigator.of(context).pop(true);
+  }
+
+  Widget _buildStatus() {
+    final SavePlanFeedbackState state = _saveFeedback.state;
+    if (state == SavePlanFeedbackState.saving ||
+        state == SavePlanFeedbackState.slowResponse) {
+      final String text = state == SavePlanFeedbackState.saving
+          ? 'plan_saving'.tr
+          : 'plan_save_slow'.tr;
+      return FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(
+              width: 16,
+              height: 16,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            ),
+            const SizedBox(width: 8),
+            Text(
+              text,
+              style: const TextStyle(color: Color(0xFFD0D4DC), fontSize: 14),
+            ),
+          ],
+        ),
+      );
+    }
+
+    if (state == SavePlanFeedbackState.retry) {
+      final Object? error = _saveFeedback.error;
+      final String text = error is CustomizedPlanNameException
+          ? error.message
+          : 'plan_save_retry'.tr;
+      return FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Text(
+          text,
+          textAlign: TextAlign.center,
+          style: const TextStyle(color: Color(0xFFFF8B84), fontSize: 14),
+        ),
+      );
+    }
+
+    return const SizedBox.shrink();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      backgroundColor: Colors.transparent,
-      insetPadding: EdgeInsets.zero,
-      child: SizedBox(
-        width: 390,
-        height: 222,
-        child: Stack(
-          children: [
-            Positioned.fill(
-              child: Image.asset(
-                Assets.customizedPlanNameDialog,
-                fit: BoxFit.fill,
-              ),
-            ),
-            Positioned(
-              left: 29,
-              top: 28,
-              child: Row(
+    return AnimatedBuilder(
+      animation: _saveFeedback,
+      builder: (BuildContext context, Widget? child) {
+        final bool canSubmit = _saveFeedback.canSubmit;
+        return PopScope(
+          canPop: canSubmit,
+          child: Dialog(
+            backgroundColor: Colors.transparent,
+            insetPadding: EdgeInsets.zero,
+            child: SizedBox(
+              width: 390,
+              height: 222,
+              child: Stack(
                 children: [
-                  const SizedBox(width: 30),
-                  Text(
-                    'plan_naming'.tr,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 22,
-                      fontWeight: FontWeight.w500,
+                  Positioned.fill(
+                    child: Image.asset(
+                      Assets.customizedPlanNameDialog,
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+                  Positioned(
+                    left: 29,
+                    top: 30,
+                    child: Row(
+                      children: [
+                        const SizedBox(width: 30),
+                        Text(
+                          'plan_naming'.tr,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 22,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Positioned(
+                    left: 25,
+                    right: 25, // 响应式宽度，替代固定 width: 340
+                    top: 84,
+                    child: SizedBox(
+                      height: 58,
+                      child: TextField(
+                        controller: widget.controller,
+                        enabled: canSubmit,
+                        autofocus: true,
+                        cursorColor: Colors.white,
+                        keyboardType: TextInputType.text,
+                        textInputAction: TextInputAction.search,
+                        onSubmitted: (value) {
+                          // TODO: 在此处触发搜索逻辑
+                        },
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 17,
+                        ),
+                        decoration: InputDecoration(
+                          isDense: true,
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 14,
+                            vertical: 18,
+                          ),
+                          hintText: 'plan_search_hint'.tr,
+                          hintStyle: const TextStyle(
+                            color: Color(0xFF8B8E98),
+                            fontSize: 17,
+                          ),
+                          filled: true,
+                          fillColor: Colors.transparent,
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(9),
+                            borderSide: const BorderSide(
+                              color: Color(0xFF6A707C),
+                              width: 1,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(9),
+                            borderSide: const BorderSide(
+                              color: Color(0xFF8A93A3),
+                              width: 1,
+                            ),
+                          ),
+                          disabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(9),
+                            borderSide: const BorderSide(
+                              color: Color(0xFF4A4E58),
+                              width: 1,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    left: 25,
+                    top: 145,
+                    width: 340,
+                    height: 22,
+                    child: Center(child: _buildStatus()),
+                  ),
+                  Positioned(
+                    left: 182,
+                    top: 168,
+                    child: _PlanNameDialogButton(
+                      text: 'cancel'.tr,
+                      width: 88,
+                      backgroundColor: const Color(0xFF6C737D),
+                      onTap: canSubmit
+                          ? () => Navigator.of(context).pop()
+                          : null,
+                    ),
+                  ),
+                  Positioned(
+                    left: 282,
+                    top: 168,
+                    child: _PlanNameDialogButton(
+                      text: 'confirm'.tr,
+                      width: 88,
+                      backgroundColor: const Color(0xFF1F74E8),
+                      onTap: canSubmit ? _submit : null,
                     ),
                   ),
                 ],
               ),
             ),
-            Positioned(
-              left: 25,
-              top: 84,
-              child: SizedBox(
-                width: 340,
-                height: 58,
-                child: TextField(
-                  controller: controller,
-                  autofocus: true,
-                  cursorColor: Colors.white,
-                  style: const TextStyle(color: Colors.white, fontSize: 17),
-                  decoration: InputDecoration(
-                    isDense: true,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 14,
-                      vertical: 18,
-                    ),
-                    hintText: 'plan_search_hint'.tr,
-                    hintStyle: const TextStyle(
-                      color: Color(0xFF8B8E98),
-                      fontSize: 17,
-                    ),
-                    filled: true,
-                    fillColor: Colors.transparent,
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(9),
-                      borderSide: const BorderSide(
-                        color: Color(0xFF6A707C),
-                        width: 1,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(9),
-                      borderSide: const BorderSide(
-                        color: Color(0xFF8A93A3),
-                        width: 1,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              left: 182,
-              top: 160,
-              child: _PlanNameDialogButton(
-                text: 'cancel'.tr,
-                width: 88,
-                backgroundColor: const Color(0xFF6C737D),
-                onTap: () => Navigator.of(context).pop(),
-              ),
-            ),
-            Positioned(
-              left: 282,
-              top: 160,
-              child: _PlanNameDialogButton(
-                text: 'confirm'.tr,
-                width: 88,
-                backgroundColor: const Color(0xFF1F74E8),
-                onTap: () {
-                  final String name = controller.text.trim();
-                  if (name.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('plan_name_empty'.tr)),
-                    );
-                    return;
-                  }
-                  Navigator.of(context).pop(name);
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }
@@ -3602,7 +3696,7 @@ class _PlanNameDialogButton extends StatelessWidget {
   final String text;
   final double width;
   final Color backgroundColor;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {

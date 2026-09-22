@@ -5,8 +5,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
+import 'package:infibo_app/components/designCanvas/design.dart';
 import 'package:infibo_app/components/index.dart';
 import 'package:infibo_app/constants/assets.dart';
+import 'package:infibo_app/constants/layout.dart';
 import 'package:infibo_app/pages/customized/logic.dart';
 import 'package:infibo_app/pages/customized/plan_features.dart';
 
@@ -21,7 +23,6 @@ class CustomizedPage extends StatefulWidget {
 class _CustomizedPageState extends State<CustomizedPage> {
   // 自定义方案页按 800x1160 的设计稿坐标摆放，再根据屏幕宽度整体缩放。
   static const double _designWidth = 800;
-  static const double _designHeight = 1160;
   static const double _minPageScale = 0.72;
 
   // 自定义方案列表逻辑。
@@ -53,6 +54,7 @@ class _CustomizedPageState extends State<CustomizedPage> {
 
   @override
   Widget build(BuildContext context) {
+    final AppLayoutMetrics layout = AppLayoutScope.of(context);
     final double scale =
         ((MediaQuery.sizeOf(context).width - 32) / _designWidth)
             .clamp(_minPageScale, 1.0)
@@ -68,14 +70,14 @@ class _CustomizedPageState extends State<CustomizedPage> {
               children: [
                 SizedBox(
                   width: _designWidth * scale,
-                  height: _designHeight * scale,
+                  height: layout.standardContentHeight * scale,
                   child: FittedBox(
                     fit: BoxFit.contain,
                     alignment: Alignment.topCenter,
                     child: SizedBox(
                       width: _designWidth,
-                      height: _designHeight,
-                      child: _buildCanvas(),
+                      height: layout.standardContentHeight,
+                      child: _buildCanvas(layout),
                     ),
                   ),
                 ),
@@ -100,13 +102,29 @@ class _CustomizedPageState extends State<CustomizedPage> {
   }
 
   /// 构建自定义方案页主画布。
-  Widget _buildCanvas() {
+  Widget _buildCanvas(AppLayoutMetrics layout) {
     return Stack(
       children: [
-        Positioned(left: 52, top: 44, child: _buildPageTitle()),
-        Positioned(left: 45, top: 130, child: _buildSearchBar()),
-        Positioned(left: 45, top: 220, child: _buildPlanList()),
-        Positioned(left: 175, bottom: 34, child: _buildAddButton()),
+        Positioned(
+          left: 52,
+          top: layout.standardContentY(44),
+          child: _buildPageTitle(),
+        ),
+        Positioned(
+          left: 45,
+          top: layout.standardContentY(130),
+          child: _buildSearchBar(),
+        ),
+        Positioned(
+          left: 45,
+          top: layout.standardContentY(220),
+          child: _buildPlanList(layout),
+        ),
+        Positioned(
+          left: 175,
+          bottom: layout.is16x9 ? 46 : 34,
+          child: _buildAddButton(),
+        ),
       ],
     );
   }
@@ -184,12 +202,13 @@ class _CustomizedPageState extends State<CustomizedPage> {
   /////自定义方案页与后端联调，这里不用改 UI 结构。
   /////只要 customized/logic.dart 的 loadPlans 改成后端 GET，这里的 _logic.plans 就会自动变成后端数据。
   /////如果后端字段名变了，只改 CustomizedPlanData.fromDto，不改这个 ListView。
-  Widget _buildPlanList() {
-    if (!_isReady) return const SizedBox(width: 710, height: 800);
+  Widget _buildPlanList(AppLayoutMetrics layout) {
+    final double height = layout.is16x9 ? 900 : 800;
+    if (!_isReady) return SizedBox(width: 710, height: height);
 
     return SizedBox(
       width: 710,
-      height: 800,
+      height: height,
       child: ListView.separated(
         controller: _listController,
         itemCount: _logic.plans.length, //根据逻辑中方案列表长度构建列表
@@ -258,13 +277,8 @@ class _CustomizedPageState extends State<CustomizedPage> {
     return SizedBox(
       width: 450,
       height: 52,
-      child: ElevatedButton.icon(
+      child: ElevatedButton(
         onPressed: _openAddPage,
-        icon: Image.asset(Assets.customizedSchemeIcon, width: 20, height: 20),
-        label: Padding(
-          padding: EdgeInsets.only(bottom: 3),
-          child: Text('add_plan'.tr),
-        ),
         style: ElevatedButton.styleFrom(
           elevation: 0,
           backgroundColor: const Color(0xFF1F74E8),
@@ -277,6 +291,24 @@ class _CustomizedPageState extends State<CustomizedPage> {
             fontFamily: 'Microsoft YaHei',
             fontWeight: FontWeight.w800,
           ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.baseline,
+          textBaseline: TextBaseline.alphabetic,
+          children: [
+            Baseline(
+              baseline: 18,
+              baselineType: TextBaseline.alphabetic,
+              child: Image.asset(
+                Assets.customizedSchemeIcon,
+                width: 20,
+                height: 20,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text('add_plan'.tr),
+          ],
         ),
       ),
     );
@@ -357,8 +389,13 @@ class _CustomizedPageState extends State<CustomizedPage> {
 
     final String? name = await showDialog<String>(
       context: context,
-      builder: (context) =>
-          _PlanNameDialog(title: 'rename_plan'.tr, controller: controller),
+      barrierColor: Colors.black.withValues(alpha: 0.6),
+      builder: (context) => _PlanNameDialog(
+        title: 'rename_plan'.tr,
+        controller: controller,
+        validator: (String name) =>
+            _logic.validatePlanName(name, excludeId: _logic.plans[index].id),
+      ),
     );
     // 弹窗关闭后 TextField 还需要一帧完成卸载，下一帧再释放控制器。
     WidgetsBinding.instance.addPostFrameCallback((_) => controller.dispose());
@@ -573,10 +610,15 @@ class _SelectButton extends StatelessWidget {
 
 // 方案命名弹窗。
 class _PlanNameDialog extends StatelessWidget {
-  const _PlanNameDialog({required this.title, required this.controller});
+  const _PlanNameDialog({
+    required this.title,
+    required this.controller,
+    this.validator,
+  });
 
   final String title;
   final TextEditingController controller;
+  final String? Function(String name)? validator;
 
   @override
   Widget build(BuildContext context) {
@@ -611,6 +653,13 @@ class _PlanNameDialog extends StatelessWidget {
               ScaffoldMessenger.of(
                 context,
               ).showSnackBar(SnackBar(content: Text('plan_name_empty'.tr)));
+              return;
+            }
+            final String? errorText = validator?.call(name);
+            if (errorText != null) {
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text(errorText)));
               return;
             }
             Navigator.of(context).pop(name);

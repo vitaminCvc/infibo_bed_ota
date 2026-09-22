@@ -17,12 +17,58 @@ class VatMusicPlaybackSnapshot {
   final Duration position;
 }
 
+abstract class VatAudioPlayer {
+  bool get playing;
+  Duration get position;
+
+  Future<void> setAudioSource(AudioSource source);
+  Future<void> seek(Duration position);
+  Future<void> play();
+  Future<void> pause();
+  Future<void> setVolume(double volume);
+  Future<void> setLoopMode(LoopMode loopMode);
+}
+
+class JustAudioVatPlayer implements VatAudioPlayer {
+  JustAudioVatPlayer([AudioPlayer? player]) : _player = player ?? AudioPlayer();
+
+  final AudioPlayer _player;
+
+  @override
+  bool get playing => _player.playing;
+
+  @override
+  Duration get position => _player.position;
+
+  @override
+  Future<void> setAudioSource(AudioSource source) {
+    return _player.setAudioSource(source);
+  }
+
+  @override
+  Future<void> seek(Duration position) => _player.seek(position);
+
+  @override
+  Future<void> play() => _player.play();
+
+  @override
+  Future<void> pause() => _player.pause();
+
+  @override
+  Future<void> setVolume(double volume) => _player.setVolume(volume);
+
+  @override
+  Future<void> setLoopMode(LoopMode loopMode) => _player.setLoopMode(loopMode);
+}
+
 class VatMusicPlayer {
-  VatMusicPlayer._();
+  VatMusicPlayer({VatAudioPlayer? audioPlayer})
+    : _player = audioPlayer ?? JustAudioVatPlayer();
 
-  static final VatMusicPlayer instance = VatMusicPlayer._();
+  static final VatMusicPlayer instance = VatMusicPlayer();
 
-  final AudioPlayer _player = AudioPlayer();
+  final VatAudioPlayer _player;
+  int _previewRequestId = 0;
   String? _loadedSongId;
   String _selectedSongId = defaultSongId;
   int _volume = 50;
@@ -47,13 +93,42 @@ class VatMusicPlayer {
   }
 
   Future<bool> previewSong(String songId, int volume) async {
+    final int requestId = ++_previewRequestId;
+    return _previewSongLatest(songId, volume, requestId);
+  }
+
+  Future<bool> _previewSongLatest(
+    String songId,
+    int volume,
+    int requestId, {
+    int retryCount = 0,
+  }) async {
     if (_playableIndexForSongId(songId) < 0) return false;
 
     _selectedSongId = songId;
-    await setVolume(volume);
-    await _ensureSongLoaded(songId);
-    await _player.seek(Duration.zero);
-    await _player.play();
+    try {
+      await setVolume(volume);
+      await _ensureSongLoaded(songId);
+      if (requestId != _previewRequestId) return true;
+
+      await _player.seek(Duration.zero);
+      if (requestId != _previewRequestId) return true;
+
+      await _player.play();
+    } on PlayerInterruptedException {
+      if (requestId == _previewRequestId && retryCount < 2) {
+        await Future<void>.delayed(const Duration(milliseconds: 20));
+        if (requestId == _previewRequestId) {
+          return _previewSongLatest(
+            songId,
+            volume,
+            requestId,
+            retryCount: retryCount + 1,
+          );
+        }
+      }
+      return true;
+    }
     return true;
   }
 
@@ -145,7 +220,7 @@ class VatMusicPlayer {
     final String? assetPath = song?.assetPath;
     if (assetPath == null) return;
 
-    await _player.setAudioSource(AudioSource.asset(assetPath));
+    await _player.setAudioSource(AudioSource.asset(assetPath, tag: songId));
     _loadedSongId = songId;
     _appliedLoopMode = null;
   }

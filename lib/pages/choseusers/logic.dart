@@ -132,6 +132,14 @@ class ChoseUsersLogic {
 
   Future<void> loadUsers() async {
     final List<UserItemData> loadedUsers = await _repository.listUsers();
+    loadedUsers.sort((UserItemData left, UserItemData right) {
+      final int? leftId = left.id;
+      final int? rightId = right.id;
+      if (leftId == null && rightId == null) return 0;
+      if (leftId == null) return 1;
+      if (rightId == null) return -1;
+      return rightId.compareTo(leftId);
+    });
     users
       ..clear()
       ..addAll(loadedUsers);
@@ -152,7 +160,7 @@ class ChoseUsersLogic {
     );
 
     final UserItemData savedUser = await _repository.addUser(user);
-    users.add(savedUser);
+    users.insert(0, savedUser);
     highlightedIndex = null;
   }
 

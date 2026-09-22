@@ -26,6 +26,10 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Infibo 使用蓝牙来扫描并连接附近的 BLE 设备。</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Infibo 使用蓝牙来连接附近的设备。</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

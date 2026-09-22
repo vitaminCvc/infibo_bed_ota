@@ -44,9 +44,17 @@ class JoystickCommandBus {
 }
 
 class JoystickControl extends StatefulWidget {
-  const JoystickControl({super.key, this.modbusService});
+  const JoystickControl({
+    super.key,
+    this.modbusService,
+    /*电流相关寄存器地址 */
+    // this.onLiftCurrentChanged,
+  });
 
   final ModbusRtuService? modbusService;
+  /*电流相关寄存器地址 */
+  /// 仅订阅时读取电流；null 表示本次读取失败。
+  // final ValueChanged<int?>? onLiftCurrentChanged;
 
   @override
   State<JoystickControl> createState() => _JoystickControlState();
@@ -83,6 +91,7 @@ class _JoystickControlState extends State<JoystickControl> {
   bool _rightTopCommandSent = false;
   bool _rightBottomCommandSent = false;
   bool _isReadingLiftStatus = false;
+  int _liftPollGeneration = 0;
 
   ModbusRtuService get _service =>
       widget.modbusService ?? const ModbusRtuService();
@@ -281,6 +290,7 @@ class _JoystickControlState extends State<JoystickControl> {
   }
 
   void _startLiftStatusPolling() {
+    _liftPollGeneration++;
     _liftStatusPollTimer?.cancel();
     _liftStatusPollTimer = Timer.periodic(_liftStatusPollInterval, (_) {
       _readLiftStatusOnce();
@@ -327,27 +337,60 @@ class _JoystickControlState extends State<JoystickControl> {
   }
 
   void _stopLiftStatusPolling() {
+    _liftPollGeneration++;
     _liftStatusPollTimer?.cancel();
     _liftStatusPollTimer = null;
   }
 
   Future<void> _readLiftStatusOnce() async {
     if (_isReadingLiftStatus) return;
-    if (_action != JoystickAction.lockedLeftTop &&
-        _action != JoystickAction.lockedLeftBottom) {
+    final bool automatic =
+        _action == JoystickAction.lockedLeftTop ||
+        _action == JoystickAction.lockedLeftBottom;
+    final bool holding =
+        (_action == JoystickAction.holdingRightTop && _rightTopCommandSent) ||
+        (_action == JoystickAction.holdingRightBottom &&
+            _rightBottomCommandSent);
+    if (!automatic && !holding) {
       _stopLiftStatusPolling();
       return;
     }
 
     _isReadingLiftStatus = true;
+    final int generation = _liftPollGeneration;
     try {
-      final int status = await _service.readHoldingRegister(_liftStatusAddress);
-      debugPrint('Joystick lift status RX 0x0011=$status');
-      if (status == _liftIdleStatusValue && mounted) {
-        _actionNotifier.value = JoystickAction.idle;
-        _stopLiftStatusPolling();
-        JoystickCommandBus.instance.reset();
+      if (automatic) {
+        final int status = await _service.readHoldingRegister(
+          _liftStatusAddress,
+        );
+        if (!mounted || generation != _liftPollGeneration) return;
+        debugPrint('Joystick lift status RX 0x0011=$status');
+        if (status == _liftIdleStatusValue && mounted) {
+          _actionNotifier.value = JoystickAction.idle;
+          _stopLiftStatusPolling();
+          JoystickCommandBus.instance.reset();
+          return;
+        }
       }
+
+      /* 电流检测暂时停用。
+      /// 读取升降杆的电流值
+      if (widget.onLiftCurrentChanged != null &&
+          ModalRoute.of(context)?.isCurrent != false) {
+        try {
+          /// 读取升降杆电流值，地址为0x0017
+          /// 0x0017为16位无符号整数，当前值为0-65535
+          final int current = await _service.readLiftCurrent();
+          if (!mounted || generation != _liftPollGeneration) return;
+          debugPrint('Lift current RX 0x0017=$current (raw)');
+          widget.onLiftCurrentChanged?.call(current);
+        } catch (error) {
+          if (!mounted || generation != _liftPollGeneration) return;
+          debugPrint('Lift current read failed: $error');
+          widget.onLiftCurrentChanged?.call(null);
+        }
+      }
+      */
     } catch (e) {
       debugPrint('Joystick lift status read failed: $e');
     } finally {
@@ -368,7 +411,8 @@ class _JoystickControlState extends State<JoystickControl> {
       if (_action != JoystickAction.holdingRightTop) return;
       _rightTopCommandSent = true;
       debugPrint('Joystick rightTop debounce passed TX 0x0010=1');
-      _sendCommand(0x0010, 1);
+      // unawaited(_sendHoldCommand(1, JoystickAction.holdingRightTop));
+      unawaited(_sendCommand(0x0010, 1));
     });
   }
 
@@ -377,6 +421,7 @@ class _JoystickControlState extends State<JoystickControl> {
     _rightTopDebounceTimer?.cancel();
     final bool sent = _rightTopCommandSent;
     _rightTopCommandSent = false;
+    _stopLiftStatusPolling();
     _actionNotifier.value = JoystickAction.idle;
     if (sent) {
       debugPrint('Joystick rightTop up/cancel TX 0x0010=0');
@@ -399,7 +444,8 @@ class _JoystickControlState extends State<JoystickControl> {
       if (_action != JoystickAction.holdingRightBottom) return;
       _rightBottomCommandSent = true;
       debugPrint('Joystick rightBottom debounce passed TX 0x0010=2');
-      _sendCommand(0x0010, 2);
+      // unawaited(_sendHoldCommand(2, JoystickAction.holdingRightBottom));
+      unawaited(_sendCommand(0x0010, 2));
     });
   }
 
@@ -408,6 +454,7 @@ class _JoystickControlState extends State<JoystickControl> {
     _rightBottomDebounceTimer?.cancel();
     final bool sent = _rightBottomCommandSent;
     _rightBottomCommandSent = false;
+    _stopLiftStatusPolling();
     _actionNotifier.value = JoystickAction.idle;
     if (sent) {
       debugPrint('Joystick rightBottom up/cancel TX 0x0010=0');
@@ -418,6 +465,19 @@ class _JoystickControlState extends State<JoystickControl> {
   }
 
   // ── Modbus 命令分发 ──────────────────────────────────────────
+
+  /* 电流检测暂时停用，手动升降只发送控制命令。
+  Future<void> _sendHoldCommand(int value, JoystickAction action) async {
+    final bool sent = await _sendCommand(0x0010, value);
+    if (mounted &&
+        sent &&
+        _action == action &&
+        widget.onLiftCurrentChanged != null) {
+      _startLiftStatusPolling();
+    }
+  }
+
+  */
 
   Future<bool> _sendCommand(int address, int value) async {
     if (_isCommanding) {

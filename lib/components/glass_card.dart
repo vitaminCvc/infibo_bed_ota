@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 Widget buildGlassCard({
   required Widget child,
   double width = 400,
-  double height = 720,
+  double? height = 720,
   double radius = 18,
   EdgeInsets padding = const EdgeInsets.all(22),
   List<Color>? gradientColors,

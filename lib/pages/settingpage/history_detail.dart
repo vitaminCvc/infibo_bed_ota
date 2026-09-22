@@ -564,7 +564,7 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
               text: TextSpan(
                 children: <InlineSpan>[
                   TextSpan(
-                    text: '$value',
+                    text: value == 0 ? '--' : '$value',
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: _scoreValueFontSize,

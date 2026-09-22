@@ -2,12 +2,17 @@
 //
 // 所有页面展示文案按语言代码集中维护在这里。
 import 'package:get/get.dart';
+import 'package:infibo_app/config/app_brand.dart';
 
 class AppTranslations extends Translations {
   @override
   Map<String, Map<String, String>> get keys => {
     ///////////////////////////////////////////////////////////中文语言////////////////////////////////////////////////
     'zh_CN': {
+      'prompt_volume': '提示音音量',
+      'prompt_volume_hint': '调节欢迎、开始、结束和水提示音。0% 为静音，松手后自动保存。',
+      'prompt_volume_update_failed': '音量调节失败，请重试',
+      'prompt_volume_save_failed': '音量保存失败，请重新调节后重试',
       // 通用
       'settings': '设置',
       'administrator': '管理员',
@@ -37,6 +42,20 @@ class AppTranslations extends Translations {
       'logout': '退出登录',
       'parameter_settings': '参数设置',
 
+      // Wi-Fi 与蓝牙连接提示
+      'connection_prompt_title': '未连接',
+      'connection_prompt_subtitle': '请连接后继续',
+      'connection_prompt_wifi': 'WIFI',
+      'connection_prompt_ble': 'BLE',
+      'connection_status_checking': '检测中',
+      'connection_status_connected': '已连接',
+      'connection_status_disconnected': '未连接',
+      'connection_prompt_skip': '跳过',
+      'wifi_ble': 'WIFI & BLE',
+      'wifi_name_unavailable': '无法获取网络名称',
+      'wifi_no_connected_network': '未连接任何网络',
+      'ble_no_connected_device': '未连接任何设备',
+
       // 设置页面
       'setting_menu': '设置菜单',
       'language_setting': '语言设置',
@@ -55,31 +74,31 @@ class AppTranslations extends Translations {
       'history_record': '历史记录',
       'history_detail_missing': '历史记录不存在',
       'current_account_not_logged_in': '当前账号未登录',
-      'therapy_record_load_failed': '理疗记录加载失败',
+      'therapy_record_load_failed': '健康体验记录加载失败',
       'no_history_records': '暂无历史记录',
-      'no_therapy_records': '暂无理疗记录',
+      'no_therapy_records': '暂无健康体验记录',
       'years_old_unit': '岁',
-      'therapy_report': '理疗报告',
-      'total_therapy_duration': '总治疗时长',
-      'feedback_label': '感受：',
-      'no_feedback': '暂无反馈',
-      'treatment_modules': '治疗模块',
+      'therapy_report': '健康体验报告',
+      'total_therapy_duration': '健康时长',
+      'feedback_label': '体验感受：',
+      'no_feedback': '暂无体验感受',
+      'treatment_modules': '健康模块',
       'energy_score': '能量指数',
-      'cell_score': '细胞活化',
+      'cell_score': '活力指数',
       'relaxation_score': '放松指数',
-      'immune_score': '免疫提升',
+      'immune_score': '健康指数',
       'compared_to_last': '较上次',
       'session_once_1': '1次',
       'session_once_2': '2次',
       'session_once_3': '3次',
       'current_session': '本次',
-      'health_effect_assessment': '健康效果评估',
+      'health_effect_assessment': '健康体验概览',
       'status_good': '良好',
       'overall_score': '综合得分',
       'level_low': '低',
       'level_medium': '中',
       'level_high': '高',
-      'therapy_feedback_hint': '请输入本次疗程的感受、身体反应等',
+      'therapy_feedback_hint': '请输入健康体验感受',
       'score_unit': '分',
       'minutes_unit': '分',
       'seconds_unit': '秒',
@@ -87,25 +106,26 @@ class AppTranslations extends Translations {
       'unsupported_language': '该语言暂未支持',
 
       // 主页面
-      'preset_mode': '预设理疗模式',
-      'preset_mode_subtitle': '10种专业配方方案',
+      'preset_mode': '预设健康模式',
+      'preset_mode_subtitle': '10种日常健康方案',
       'device_ready': '设备就绪',
       'custom_plan': '自定义方案',
       'deep_relax': '深度放松',
-      'energy_boost': '能量提升',
-      'pain_relief': '疼痛缓解',
-      'sleep_enhancement': '睡眠改善',
-      'sports_recovery': '运动恢复',
-      'stress_release': '压力释放',
-      'immune_boost': '免疫增强',
-      'anti_aging': '抗衰老',
-      'full_care': '全面养护',
-      'mental_healing': '情绪疗愈',
+      'energy_boost': '焕新充能',
+      'pain_relief': '柔和舒适',
+      'sleep_enhancement': '夜间放松',
+      'sports_recovery': '活动后放松',
+      'stress_release': '舒缓放松',
+      'immune_boost': '日常活力',
+      'anti_aging': '焕采活力',
+      'full_care': '全身焕新',
+      'mental_healing': '心情平衡',
       'device_fault': '设备故障',
       'water_level_warning_title': '设备缺水提醒',
       'water_level_warning_message': '水箱水量不足，请及时加水后继续使用设备',
-      'water_level_shortage_title': '设备缺水',
-      'water_level_shortage_message': '水箱水量不足，请及时加水后继续使用设备',
+      'water_level_shortage_title': '设备缺水提醒',
+      'water_level_shortage_message': '水量不足，请连接水源自动加水',
+      'water_level_shortage_unavailable': '分子氢功能暂不可用',
       'water_level_filling_title': '注水中',
       'water_level_filling_message': '正在注水，请稍候...',
       'water_level_complete_title': '注水完成',
@@ -160,8 +180,22 @@ class AppTranslations extends Translations {
       'password_reset_failed': '密码重置失败',
 
       // 用户选择页面
-      'choose_therapy_user': '选择理疗用户',
+      'choose_therapy_user': '选择体验用户',
       'search_user_hint': '输入用户姓名或手机号',
+      'add_user': '添加用户',
+      'user_name_label': '姓名',
+      'user_age_label': '年龄',
+      'user_phone_label': '电话',
+      'user_email_label': '邮箱',
+      'user_email_hint': '请输入邮箱',
+      'user_gender_label': '性别',
+      'user_male': '男',
+      'user_female': '女',
+      'user_remark_label': '备注',
+      'user_remark_hint': '请输入备注',
+      'user_required_fields': '请填写姓名、年龄和电话',
+      'user_invalid_age': '请输入有效年龄',
+      'add_user_failed': '添加用户失败',
       'confirm_selection': '确认选择',
 
       // 音乐页面
@@ -177,7 +211,7 @@ class AppTranslations extends Translations {
       'chakra': '脉轮',
       'terahertz': '太赫兹',
       'fragrance': '香氛',
-      'therapy_completed': '治疗完成',
+      'therapy_completed': '健康体验完成',
       'user': '使用者',
       'session_duration': '本次使用',
       'module_duration': '模块时长',
@@ -202,10 +236,14 @@ class AppTranslations extends Translations {
 
       // 自定义编辑页面
       'red_ther': '红光',
-      'add_therapy_module': '添加治疗模块',
+      'add_therapy_module': '添加健康模块',
       'expand_feature': '拓展功能',
       'save_params': '保存参数',
       'save_plan': '保存方案',
+      'plan_saving': '正在保存，请稍后',
+      'plan_save_slow': '保存响应较慢，请稍后',
+      'plan_save_retry': '保存失败，请重试',
+      'custom_plan_edit_invalid': '当前方案信息异常，请返回后重试',
       'complete_previous_node': '请先完成上一个 5 分钟节点',
       'node_saved_prefix': '第 ',
       'node_saved_suffix': ' 分钟节点参数已保存',
@@ -256,6 +294,13 @@ class AppTranslations extends Translations {
 
     //////////////////////////////////////////////////////英语语言/////////////////////////////////////////////////////////////////////
     'en_US': {
+      'prompt_volume': 'Prompt Volume',
+      'prompt_volume_hint':
+          'Adjust welcome, start, end and water prompts. 0% mutes prompts. Changes save when you release the slider.',
+      'prompt_volume_update_failed':
+          'Could not adjust volume. Please try again.',
+      'prompt_volume_save_failed':
+          'Could not save volume. Adjust the slider again to retry.',
       // 通用
       'settings': 'Setting', // 设置
       'administrator': 'Admin', // 管理员
@@ -284,6 +329,19 @@ class AppTranslations extends Translations {
       'waiting': 'Waiting', // 等待运行
       'logout': 'Log out', // 退出登录
       'parameter_settings': 'Parameter Settings', // 参数设置
+      // Wi-Fi and Bluetooth connection prompt
+      'connection_prompt_title': 'Not connected',
+      'connection_prompt_subtitle': 'Connect to continue',
+      'connection_prompt_wifi': 'WIFI',
+      'connection_prompt_ble': 'BLE',
+      'connection_status_checking': 'Checking',
+      'connection_status_connected': 'Connected',
+      'connection_status_disconnected': 'Not connected',
+      'connection_prompt_skip': 'Skip',
+      'wifi_ble': 'WIFI & BLE',
+      'wifi_name_unavailable': 'Network name unavailable',
+      'wifi_no_connected_network': 'No network connected',
+      'ble_no_connected_device': 'No device connected',
       // 设置页面
       'setting_menu': 'Settings', // 设置菜单
       'language_setting': 'Language', // 语言设置
@@ -304,62 +362,65 @@ class AppTranslations extends Translations {
       'current_account_not_logged_in':
           'Current account is not logged in', // 当前账号未登录
       'therapy_record_load_failed':
-          'Failed to load therapy records', // 理疗记录加载失败
+          'Failed to load wellness records', // 健康体验记录加载失败
       'no_history_records': 'No history records', // 暂无历史记录
-      'no_therapy_records': 'No therapy records', // 暂无理疗记录
+      'no_therapy_records': 'No wellness records', // 暂无健康体验记录
       'years_old_unit': 'y', // 岁
-      'therapy_report': 'Therapy Report', // 理疗报告
-      'total_therapy_duration': 'Total Duration', // 总治疗时长
-      'feedback_label': 'Feedback: ', // 感受：
-      'no_feedback': 'No feedback', // 暂无反馈
-      'treatment_modules': 'Treatment Modules', // 治疗模块
+      'therapy_report': 'Wellness Report', // 健康体验报告
+      'total_therapy_duration': 'Wellness Time', // 健康时长
+      'feedback_label': 'Wellness Notes: ', // 体验感受：
+      'no_feedback': 'No wellness notes', // 暂无体验感受
+      'treatment_modules': 'Wellness Modules', // 健康模块
       'energy_score': 'Energy Idx.', // 能量指数
-      'cell_score': 'Cell Act.', // 细胞活化
+      'cell_score': 'Vitality Idx.', // 活力指数
       'relaxation_score': 'Relax Idx.', // 放松指数
-      'immune_score': 'Imm. Boost', // 免疫提升
+      'immune_score': 'Wellness Idx.', // 健康指数
       'compared_to_last': 'vs last', // 较上次
       'session_once_1': '1st', // 1次
       'session_once_2': '2nd', // 2次
       'session_once_3': '3rd', // 3次
       'current_session': 'Current', // 本次
-      'health_effect_assessment': 'Health Eval.', // 健康效果评估
+      'health_effect_assessment': 'Wellness Overview', // 健康体验概览
       'status_good': 'Good', // 良好
       'overall_score': 'Overall Score', // 综合得分
       'level_low': 'Low', // 低
       'level_medium': 'Medium', // 中
       'level_high': 'High', // 高
-      'therapy_feedback_hint': 'Session notes', // 请输入本次疗程的感受、身体反应等
+      'therapy_feedback_hint': 'Enter wellness notes', // 请输入健康体验感受
       'score_unit': 'pts', // 分
       'minutes_unit': 'min', // 分
       'seconds_unit': 's', // 秒
       'user_management': 'Users', // 用户管理
       'unsupported_language': 'This language is not supported yet', // 该语言暂未支持
       // 主页面
-      'preset_mode': 'Preset Therapy Modes', // 预设理疗模式
-      'preset_mode_subtitle': '10 professional therapy programs', // 10种专业配方方案
+      'preset_mode': 'Preset Wellness Modes', // 预设健康模式
+      'preset_mode_subtitle': '10 daily wellness programs', // 10种日常健康方案
       'device_ready': 'Device Ready', // 设备就绪
       'custom_plan': 'Custom Plan', // 自定义方案
-      'deep_relax': 'Deep Relaxation', // 深度放松
-      'energy_boost': 'Energy Boost', // 能量提升
-      'pain_relief': 'Pain Relief', // 疼痛缓解
-      'sleep_enhancement': 'Sleep Imp.', // 睡眠增强
-      'sports_recovery': 'Sports Rec.', // 运动恢复
-      'stress_release': 'Stress Relief', // 压力缓解
-      'immune_boost': 'Immune Boost', // 免疫增强
-      'anti_aging': 'Anti-Aging', // 抗衰老
-      'full_care': 'Total Care', // 全面养护
-      'mental_healing': 'Emo. Healing', // 情绪疗愈
+      'deep_relax': 'DEEP RELAX', // 深度放松
+      'energy_boost': 'RE-ENERGIZE', // 焕新充能
+      'pain_relief': 'GENTLE COMFORT', // 柔和舒适
+      'sleep_enhancement': 'NIGHT UNWIND', // 夜间放松
+      'sports_recovery': 'COOL DOWN', // 活动后放松
+      'stress_release': 'CALM&RELAX', // 舒缓放松
+      'immune_boost': 'DAILY BOOST', // 日常活力
+      'anti_aging': 'RADIANT VITALITY', // 焕彩活力
+      'full_care': 'BODY RESET', // 全身焕新
+      'mental_healing': 'MOOD BOOST', // 心情平衡
       'device_fault': 'Device Fault', // 设备故障
       'water_level_warning_title': 'Low Water Alert',
       'water_level_warning_message':
           'Water tank level is low. Please refill before continuing.',
-      'water_level_shortage_title': 'Low Water',
+      'water_level_shortage_title': 'Low Water Alert',
       'water_level_shortage_message':
-          'Water tank level is low. Please refill before continuing.',
+          'Low water level. Please connect a water source for automatic refilling.',
+      'water_level_shortage_unavailable':
+          'Molecular hydrogen is temporarily unavailable',
       'water_level_filling_title': 'Filling',
       'water_level_filling_message': 'Filling water, please wait...',
       'water_level_complete_title': 'Filling Complete',
-      'water_level_complete_message': 'Water filling complete. You may continue using the device.',
+      'water_level_complete_message':
+          'Water filling complete. You may continue using the device.',
       // 登录页面
       'login_email_hint': 'Enter email address', // 输入邮箱
       'login_password_hint': 'Enter password', // 输入密码
@@ -410,23 +471,38 @@ class AppTranslations extends Translations {
       'password_reset_success': 'Password reset successful', // 密码重置成功
       'password_reset_failed': 'Password reset failed', // 密码重置失败
       // 用户选择页面
-      'choose_therapy_user': 'Select Therapy User', // 选择理疗用户
+      'choose_therapy_user': 'Select Wellness User', // 选择体验用户
       'search_user_hint': 'Enter user name or phone number', // 输入用户姓名或手机号
+      'add_user': 'Add User', // 添加用户
+      'user_name_label': 'Name',
+      'user_age_label': 'Age',
+      'user_phone_label': 'Phone',
+      'user_email_label': 'Email',
+      'user_email_hint': 'Enter email address',
+      'user_gender_label': 'Gender',
+      'user_male': 'Male',
+      'user_female': 'Female',
+      'user_remark_label': 'Notes',
+      'user_remark_hint': 'Enter notes',
+      'user_required_fields': 'Please enter name, age, and phone',
+      'user_invalid_age': 'Please enter a valid age',
+      'add_user_failed': 'Failed to add user',
       'confirm_selection': 'Confirm Selection', // 确认选择
       // 音乐页面
       'confirm_music_selection': 'Confirm Selection', // 确认选择
       'music_resource_missing':
           'No audio resource for this music', // 当前音乐暂无音频资源
       // 启动页面
-      'red_light': 'Red Ther.', // 红光
+      'red_light': 'Red Tec.', // 红光
       'wavelength': 'Wavelength', // 波长
       'hydrogen_molecule': 'H₂', // 分子氢
       'hydrogen_concentration': 'H₂ Conc.', // 氢气浓度
-      'flow': 'Flow', // 流量
+      // 英国版英文氢气面板显示强度，其他版本保留流量。
+      'flow': AppBrand.current.flavor == 'britain' ? 'Intensity' : 'Flow',
       'chakra': 'Chakra', // 脉轮
       'terahertz': 'Terahertz', // 太赫兹
       'fragrance': 'Aroma', // 香氛
-      'therapy_completed': 'Therapy Completed', // 治疗完成
+      'therapy_completed': 'Wellness Complete', // 健康体验完成
       'user': 'User', // 使用者
       'session_duration': 'Session Duration', // 本次使用
       'module_duration': 'Module Duration', // 模块时长
@@ -449,11 +525,16 @@ class AppTranslations extends Translations {
       'user_not_logged_in_retry':
           'User not logged in, please log in again', // 用户未登录，请重新登录
       // 自定义编辑页面
-      'red_ther': 'RED THER.', // 红光
-      'add_therapy_module': 'Add Protocal', // 添加治疗模块
+      'red_ther': 'RED Tec.', // 红光
+      'add_therapy_module': 'Add Wellness Module', // 添加健康模块
       'expand_feature': 'Expand Feature', // 拓展功能
       'save_params': 'Save', // 保存参数
       'save_plan': 'Save Plan', // 保存方案
+      'plan_saving': 'Saving, please wait',
+      'plan_save_slow': 'Saving is taking longer than expected, please wait',
+      'plan_save_retry': 'Save failed, please try again',
+      'custom_plan_edit_invalid':
+          'The current plan is invalid. Go back and try again',
       'complete_previous_node':
           'Please complete the previous 5-minute node first', // 请先完成上一个 5 分钟节点
       'node_saved_prefix': 'Minute ', // 第
@@ -507,6 +588,13 @@ class AppTranslations extends Translations {
     },
     ///////////////////////////////////////////////////////西班牙语语言/////////////////////////////////////////////////////////////////////
     'es_ES': {
+      'prompt_volume': 'Volumen de avisos',
+      'prompt_volume_hint':
+          'Ajusta los avisos de bienvenida, inicio, fin y agua. 0% los silencia. Se guarda al soltar el control.',
+      'prompt_volume_update_failed':
+          'No se pudo ajustar el volumen. Inténtalo de nuevo.',
+      'prompt_volume_save_failed':
+          'No se pudo guardar el volumen. Vuelve a ajustar el control.',
       // 通用
       'settings': 'Ajustes', // 设置
       'administrator': 'Admin', // 管理员
@@ -535,6 +623,19 @@ class AppTranslations extends Translations {
       'waiting': 'Espera', // 等待运行
       'logout': 'Salir', // 退出登录
       'parameter_settings': 'Ajustes de parámetros', // 参数设置
+      // Aviso de conexión Wi-Fi y Bluetooth
+      'connection_prompt_title': 'No conectado',
+      'connection_prompt_subtitle': 'Conecta para continuar',
+      'connection_prompt_wifi': 'WIFI',
+      'connection_prompt_ble': 'BLE',
+      'connection_status_checking': 'Comprobando',
+      'connection_status_connected': 'Conectado',
+      'connection_status_disconnected': 'No conectado',
+      'connection_prompt_skip': 'Omitir',
+      'wifi_ble': 'WIFI & BLE',
+      'wifi_name_unavailable': 'Nombre de red no disponible',
+      'wifi_no_connected_network': 'Ninguna red conectada',
+      'ble_no_connected_device': 'Ningún dispositivo conectado',
       // 设置页面
       'setting_menu': 'Ajustes', // 设置菜单
       'language_setting': 'Idioma', // 语言设置
@@ -555,62 +656,65 @@ class AppTranslations extends Translations {
       'current_account_not_logged_in':
           'La cuenta actual no ha iniciado sesión', // 当前账号未登录
       'therapy_record_load_failed':
-          'Error al cargar registros de terapia', // 理疗记录加载失败
+          'Error al cargar registros de bienestar', // 健康体验记录加载失败
       'no_history_records': 'Sin historial', // 暂无历史记录
-      'no_therapy_records': 'Sin registros de terapia', // 暂无理疗记录
+      'no_therapy_records': 'Sin registros de bienestar', // 暂无健康体验记录
       'years_old_unit': 'a', // 岁
-      'therapy_report': 'Informe de terapia', // 理疗报告
-      'total_therapy_duration': 'Duración total', // 总治疗时长
-      'feedback_label': 'Sensación: ', // 感受：
-      'no_feedback': 'Sin comentarios', // 暂无反馈
-      'treatment_modules': 'Módulos de terapia', // 治疗模块
+      'therapy_report': 'Informe de bienestar', // 健康体验报告
+      'total_therapy_duration': 'Tiempo de bienestar', // 健康时长
+      'feedback_label': 'Notas de bienestar: ', // 体验感受：
+      'no_feedback': 'Sin notas de bienestar', // 暂无体验感受
+      'treatment_modules': 'Módulos de bienestar', // 健康模块
       'energy_score': 'Energía', // 能量指数
-      'cell_score': 'Act. cel.', // 细胞活化
+      'cell_score': 'Índ. vitalidad', // 活力指数
       'relaxation_score': 'Relajación', // 放松指数
-      'immune_score': 'Inmunidad', // 免疫提升
+      'immune_score': 'Índ. bienestar', // 健康指数
       'compared_to_last': 'vs ant.', // 较上次
       'session_once_1': '1ª', // 1次
       'session_once_2': '2ª', // 2次
       'session_once_3': '3ª', // 3次
       'current_session': 'Actual', // 本次
-      'health_effect_assessment': 'Eval. salud', // 健康效果评估
+      'health_effect_assessment': 'Resumen de bienestar', // 健康体验概览
       'status_good': 'Bueno', // 良好
       'overall_score': 'Puntuación general', // 综合得分
       'level_low': 'Bajo', // 低
       'level_medium': 'Medio', // 中
       'level_high': 'Alto', // 高
-      'therapy_feedback_hint': 'Notas de sesión', // 请输入本次疗程的感受、身体反应等
+      'therapy_feedback_hint': 'Añade notas de bienestar', // 请输入健康体验感受
       'score_unit': 'pts', // 分
       'minutes_unit': 'min', // 分
       'seconds_unit': 's', // 秒
       'user_management': 'Usuarios', // 用户管理
       'unsupported_language': 'Este idioma aún no es compatible', // 该语言暂未支持
       // 主页
-      'preset_mode': 'Modos preestablecidos', // 预设理疗模式
-      'preset_mode_subtitle': '10 programas pro', // 10种专业配方方案
+      'preset_mode': 'Modos de bienestar', // 预设健康模式
+      'preset_mode_subtitle': '10 programas de bienestar', // 10种日常健康方案
       'device_ready': 'Dispositivo listo', // 设备就绪
       'custom_plan': 'Plan propio', // 自定义方案
-      'deep_relax': 'Relajación', // 深度放松
-      'energy_boost': 'Energía', // 能量提升
-      'pain_relief': 'Alivio del dolor', // 疼痛缓解
-      'sleep_enhancement': 'Mejora del sueño', // 睡眠改善
-      'sports_recovery': 'Recuperación', // 运动恢复
-      'stress_release': 'Estrés', // 压力释放
-      'immune_boost': 'Inmunidad', // 免疫增强
-      'anti_aging': 'Antiedad', // 抗衰老
-      'full_care': 'Cuidado total', // 全面养护
-      'mental_healing': 'Emoción', // 情绪疗愈
+      'deep_relax': 'RELAX PROFUNDO', // 深度放松
+      'energy_boost': 'RECÁRGATE', // 焕新充能
+      'pain_relief': 'CONFORT SUAVE', // 柔和舒适
+      'sleep_enhancement': 'CALMA NOCT.', // 夜间放松
+      'sports_recovery': 'RELAJACIÓN', // 活动后放松
+      'stress_release': 'CALMA & RELAX', // 舒缓放松
+      'immune_boost': 'IMPULSO DIARIO', // 日常活力
+      'anti_aging': 'VITALIDAD RAD.', // 焕彩活力
+      'full_care': 'RENUEVA', // 全身焕新
+      'mental_healing': 'BUEN ÁNIMO', // 心情平衡
       'device_fault': 'Fallo de dispositivo', // 设备故障
       'water_level_warning_title': 'Aviso de agua insuficiente',
       'water_level_warning_message':
           'El nivel del tanque de agua es bajo. Rellénelo para continuar.',
       'water_level_shortage_title': 'Falta de agua',
       'water_level_shortage_message':
-          'El nivel del tanque de agua es bajo. Rellénelo para continuar.',
+          'Agua insuficiente. Conecte el suministro de agua para el llenado automático.',
+      'water_level_shortage_unavailable':
+          'Hidrógeno molecular no disponible temporalmente',
       'water_level_filling_title': 'Llenando',
       'water_level_filling_message': 'Llenando agua, espere...',
       'water_level_complete_title': 'Llenado completo',
-      'water_level_complete_message': 'Llenado de agua completo. Puede continuar usando el dispositivo.',
+      'water_level_complete_message':
+          'Llenado de agua completo. Puede continuar usando el dispositivo.',
       // 登录页面
       'login_email_hint': 'Ingrese correo electrónico', // 输入邮箱
       'login_password_hint': 'Ingrese contraseña', // 输入密码
@@ -647,6 +751,8 @@ class AppTranslations extends Translations {
       'error': 'Error', // 错误
       'network_error': 'Error de conexión, compruebe la red o el servidor',
       'unknown_error': 'Error desconocido',
+      'login_request_failed':
+          'Error en la solicitud de inicio de sesión: ', // 登录请求失败：
       'new_password_hint': 'Ingrese la nueva contraseña', // 输入新密码
       'confirm_new_password_hint': 'Confirme la nueva contraseña', // 确认新密码
       'resetting_password': 'Restableciendo...', // 重置中...
@@ -662,15 +768,29 @@ class AppTranslations extends Translations {
           'Contraseña restablecida correctamente', // 密码重置成功
       'password_reset_failed': 'Error al restablecer la contraseña', // 密码重置失败
       // 用户选择页面
-      'choose_therapy_user': 'Elegir usuario', // 选择理疗用户
+      'choose_therapy_user': 'Elegir usuario', // 选择体验用户
       'search_user_hint': 'Nombre o teléfono', // 输入用户姓名或手机号
+      'add_user': 'Agregar usuario', // 添加用户
+      'user_name_label': 'Nombre',
+      'user_age_label': 'Edad',
+      'user_phone_label': 'Teléfono',
+      'user_email_label': 'Correo',
+      'user_email_hint': 'Ingrese correo electrónico',
+      'user_gender_label': 'Género',
+      'user_male': 'Hombre',
+      'user_female': 'Mujer',
+      'user_remark_label': 'Notas',
+      'user_remark_hint': 'Ingrese notas',
+      'user_required_fields': 'Complete nombre, edad y teléfono',
+      'user_invalid_age': 'Ingrese una edad válida',
+      'add_user_failed': 'No se pudo agregar el usuario',
       'confirm_selection': 'Confirmar selección', // 确认选择
       // 音乐页面
       'confirm_music_selection': 'Confirmar selección', // 确认选择
       'music_resource_missing':
           'Esta música no tiene audio disponible', // 当前音乐暂无音频资源
       // 启动页面
-      'red_light': 'Ter. roja', // 红光
+      'red_light': 'Luz roja', // 红光
       'wavelength': 'Long. onda', // 波长
       'hydrogen_molecule': 'H₂', // 分子氢
       'hydrogen_concentration': 'Conc. H₂', // 氢气浓度
@@ -678,7 +798,7 @@ class AppTranslations extends Translations {
       'chakra': 'Chakra', // 脉轮
       'terahertz': 'THz', // 太赫兹
       'fragrance': 'Aroma', // 香氛
-      'therapy_completed': 'Terapia completada', // 治疗完成
+      'therapy_completed': 'Bienestar completado', // 健康体验完成
       'user': 'Usuario', // 使用者
       'session_duration': 'Duración de sesión', // 本次使用
       'module_duration': 'Tiempo módulo', // 模块时长
@@ -702,10 +822,16 @@ class AppTranslations extends Translations {
           'Usuario no conectado, inicie sesión de nuevo', // 用户未登录，请重新登录
       // 自定义编辑页面
       'red_ther': 'LUZ ROJA', // 红光
-      'add_therapy_module': 'Agregar módulo', // 添加治疗模块
+      'add_therapy_module': 'Añadir módulo', // 添加健康模块
       'expand_feature': 'Funciones extra', // 拓展功能
       'save_params': 'Guardar', // 保存参数
       'save_plan': 'Guardar plan', // 保存方案
+      'plan_saving': 'Guardando, espere por favor',
+      'plan_save_slow':
+          'El guardado tarda más de lo esperado, espere por favor',
+      'plan_save_retry': 'Error al guardar, inténtelo de nuevo',
+      'custom_plan_edit_invalid':
+          'El plan actual no es válido. Vuelva e inténtelo de nuevo',
       'complete_previous_node':
           'Complete primero el nodo anterior de 5 minutos', // 请先完成上一个 5 分钟节点
       'node_saved_prefix': 'Nodo de ', // 第
@@ -760,6 +886,13 @@ class AppTranslations extends Translations {
     },
     ///////////////////////////////////////////////////////////葡萄牙语言////////////////////////////////////////////////
     'pt_PT': {
+      'prompt_volume': 'Volume dos avisos',
+      'prompt_volume_hint':
+          'Ajuste os avisos de boas-vindas, início, fim e água. 0% silencia os avisos. O valor é guardado ao soltar o controlo.',
+      'prompt_volume_update_failed':
+          'Não foi possível ajustar o volume. Tente novamente.',
+      'prompt_volume_save_failed':
+          'Não foi possível guardar o volume. Ajuste novamente o controlo.',
       // 通用
       'settings': 'Ajustes', // 设置
       'administrator': 'Admin', // 管理员
@@ -788,6 +921,19 @@ class AppTranslations extends Translations {
       'waiting': 'Em espera', // 等待运行
       'logout': 'Sair', // 退出登录
       'parameter_settings': 'Definições de parâmetros', // 参数设置
+      // Aviso de ligação Wi-Fi e Bluetooth
+      'connection_prompt_title': 'Não conectado',
+      'connection_prompt_subtitle': 'Conecte para continuar',
+      'connection_prompt_wifi': 'WIFI',
+      'connection_prompt_ble': 'BLE',
+      'connection_status_checking': 'A verificar',
+      'connection_status_connected': 'Conectado',
+      'connection_status_disconnected': 'Não conectado',
+      'connection_prompt_skip': 'Ignorar',
+      'wifi_ble': 'WIFI & BLE',
+      'wifi_name_unavailable': 'Nome da rede indisponível',
+      'wifi_no_connected_network': 'Nenhuma rede ligada',
+      'ble_no_connected_device': 'Nenhum dispositivo ligado',
       // 设置页面
       'setting_menu': 'Menu de definições', // 设置菜单
       'language_setting': 'Idioma', // 语言设置
@@ -808,62 +954,65 @@ class AppTranslations extends Translations {
       'current_account_not_logged_in':
           'A conta atual não iniciou sessão', // 当前账号未登录
       'therapy_record_load_failed':
-          'Falha ao carregar registos de terapia', // 理疗记录加载失败
+          'Falha ao carregar registos de bem-estar', // 健康体验记录加载失败
       'no_history_records': 'Sem histórico', // 暂无历史记录
-      'no_therapy_records': 'Sem registos de terapia', // 暂无理疗记录
+      'no_therapy_records': 'Sem registos de bem-estar', // 暂无健康体验记录
       'years_old_unit': 'a', // 岁
-      'therapy_report': 'Relatório de terapia', // 理疗报告
-      'total_therapy_duration': 'Duração total', // 总治疗时长
-      'feedback_label': 'Sensação: ', // 感受：
-      'no_feedback': 'Sem feedback', // 暂无反馈
-      'treatment_modules': 'Módulos de terapia', // 治疗模块
+      'therapy_report': 'Relatório de bem-estar', // 健康体验报告
+      'total_therapy_duration': 'Tempo de bem-estar', // 健康时长
+      'feedback_label': 'Notas de bem-estar: ', // 体验感受：
+      'no_feedback': 'Sem notas de bem-estar', // 暂无体验感受
+      'treatment_modules': 'Módulos de bem-estar', // 健康模块
       'energy_score': 'Energia', // 能量指数
-      'cell_score': 'Ativ. cel.', // 细胞活化
+      'cell_score': 'Índ. vitalidade', // 活力指数
       'relaxation_score': 'Índ. relax.', // 放松指数
-      'immune_score': 'Imunidade', // 免疫提升
+      'immune_score': 'Índ. bem-estar', // 健康指数
       'compared_to_last': 'vs ant.', // 较上次
       'session_once_1': '1.ª', // 1次
       'session_once_2': '2.ª', // 2次
       'session_once_3': '3.ª', // 3次
       'current_session': 'Atual', // 本次
-      'health_effect_assessment': 'Aval. saúde', // 健康效果评估
+      'health_effect_assessment': 'Resumo de bem-estar', // 健康体验概览
       'status_good': 'Bom', // 良好
       'overall_score': 'Pontuação geral', // 综合得分
       'level_low': 'Baixo', // 低
       'level_medium': 'Médio', // 中
       'level_high': 'Alto', // 高
-      'therapy_feedback_hint': 'Notas da sessão', // 请输入本次疗程的感受、身体反应等
+      'therapy_feedback_hint': 'Introduza notas de bem-estar', // 请输入健康体验感受
       'score_unit': 'pts', // 分
       'minutes_unit': 'min', // 分
       'seconds_unit': 's', // 秒
       'user_management': 'Utilizadores', // 用户管理
       'unsupported_language': 'Este idioma ainda não é suportado', // 该语言暂未支持
       // 主页
-      'preset_mode': 'Modos de terapia predefinidos', // 预设理疗模式
-      'preset_mode_subtitle': '10 programas profissionais', // 10种专业配方方案
+      'preset_mode': 'Modos de bem-estar', // 预设健康模式
+      'preset_mode_subtitle': '10 programas de bem-estar', // 10种日常健康方案
       'device_ready': 'Dispositivo pronto', // 设备就绪
       'custom_plan': 'Plano', // 自定义方案
-      'deep_relax': 'Relaxar', // 深度放松
-      'energy_boost': 'Impulso energ.', // 能量提升
-      'pain_relief': 'Alivio del dolor', // 疼痛缓解
-      'sleep_enhancement': 'Mejora sueño', // 睡眠改善
-      'sports_recovery': 'Recup. dep.', // 运动恢复
-      'stress_release': 'Antiestrés', // 压力释放
-      'immune_boost': 'Imunidade', // 免疫增强
-      'anti_aging': ' Cuidado Integ.', // 抗衰老
-      'full_care': 'Cura Emociona.', // 全面养护
-      'mental_healing': 'Eq. emocional', // 情绪疗愈
+      'deep_relax': 'RELAX PROFUNDO', // 深度放松
+      'energy_boost': 'REENERGIZAR', // 焕新充能
+      'pain_relief': 'CONFORTO SUAVE', // 柔和舒适
+      'sleep_enhancement': 'CALMA NOTURNA', // 夜间放松
+      'sports_recovery': 'RELAXAMENTO', // 活动后放松
+      'stress_release': 'CALMA & RELAX', // 舒缓放松
+      'immune_boost': 'ENERGIA DIÁRIA', // 日常活力
+      'anti_aging': 'VITALIDADE', // 焕彩活力
+      'full_care': 'RENOVA-TE', // 全身焕新
+      'mental_healing': 'BOM HUMOR', // 心情平衡
       'device_fault': 'Falha do dispositivo', // 设备故障
       'water_level_warning_title': 'Aviso de falta de água',
       'water_level_warning_message':
           'O nível do reservatório está baixo. Reabasteça antes de continuar.',
       'water_level_shortage_title': 'Falta de água',
       'water_level_shortage_message':
-          'O nível do reservatório está baixo. Reabasteça antes de continuar.',
+          'Água insuficiente. Ligue o abastecimento de água para enchimento automático.',
+      'water_level_shortage_unavailable':
+          'Hidrogénio molecular temporariamente indisponível',
       'water_level_filling_title': 'Enchendo',
       'water_level_filling_message': 'Enchendo água, aguarde...',
       'water_level_complete_title': 'Enchimento concluído',
-      'water_level_complete_message': 'Enchimento de água concluído. Pode continuar a utilizar o dispositivo.',
+      'water_level_complete_message':
+          'Enchimento de água concluído. Pode continuar a utilizar o dispositivo.',
       // 登录页面
       'login_email_hint': 'Introduza o e-mail', // 输入邮箱
       'login_password_hint': 'Introduza a palavra-passe', // 输入密码
@@ -916,15 +1065,29 @@ class AppTranslations extends Translations {
       'password_reset_success': 'Palavra-passe reposta com sucesso', // 密码重置成功
       'password_reset_failed': 'Falha ao repor a palavra-passe', // 密码重置失败
       // 用户选择页面
-      'choose_therapy_user': 'Selecionar utilizador', // 选择理疗用户
+      'choose_therapy_user': 'Selecionar utilizador', // 选择体验用户
       'search_user_hint': 'Introduza nome ou telefone', // 输入用户姓名或手机号
+      'add_user': 'Adicionar utilizador', // 添加用户
+      'user_name_label': 'Nome',
+      'user_age_label': 'Idade',
+      'user_phone_label': 'Telefone',
+      'user_email_label': 'E-mail',
+      'user_email_hint': 'Introduza o e-mail',
+      'user_gender_label': 'Género',
+      'user_male': 'Masculino',
+      'user_female': 'Feminino',
+      'user_remark_label': 'Observações',
+      'user_remark_hint': 'Introduza observações',
+      'user_required_fields': 'Preencha o nome, idade e telefone',
+      'user_invalid_age': 'Introduza uma idade válida',
+      'add_user_failed': 'Falha ao adicionar utilizador',
       'confirm_selection': 'Confirmar seleção', // 确认选择
       // 音乐页面
       'confirm_music_selection': 'Confirmar seleção', // 确认选择
       'music_resource_missing':
           'Esta música não tem áudio disponível', // 当前音乐暂无音频资源
       // 启动页面
-      'red_light': 'Ter. verm.', // 红光
+      'red_light': 'Luz vermelha', // 红光
       'wavelength': 'Onda', // 波长
       'hydrogen_molecule': 'H₂', // 分子氢
       'hydrogen_concentration': 'Conc. de H₂', // 氢气浓度
@@ -932,7 +1095,7 @@ class AppTranslations extends Translations {
       'chakra': 'Chakra', // 脉轮
       'terahertz': 'Terahertz', // 太赫兹
       'fragrance': 'Aroma', // 香氛
-      'therapy_completed': 'Terapia concluída', // 治疗完成
+      'therapy_completed': 'Bem-estar concluído', // 健康体验完成
       'user': 'Utilizador', // 使用者
       'session_duration': 'Duração da sessão', // 本次使用
       'module_duration': 'Duração do módulo', // 模块时长
@@ -955,11 +1118,16 @@ class AppTranslations extends Translations {
       'user_not_logged_in_retry':
           'Utilizador não autenticado, inicie sessão novamente', // 用户未登录，请重新登录
       // 自定义编辑页面
-      'red_ther': 'Ter. Roja', // 红光
-      'add_therapy_module': 'Adicionar módulo', // 添加治疗模块
+      'red_ther': 'RED TEC.', // 红光
+      'add_therapy_module': 'Adicionar módulo', // 添加健康模块
       'expand_feature': 'Funções extra', // 拓展功能
       'save_params': 'Salvar', // 保存参数
       'save_plan': 'Guardar plano', // 保存方案
+      'plan_saving': 'Salvando, aguarde',
+      'plan_save_slow': 'O salvamento está demorando, aguarde',
+      'plan_save_retry': 'Falha ao salvar, tente novamente',
+      'custom_plan_edit_invalid':
+          'O plano atual é inválido. Volte e tente novamente',
       'complete_previous_node':
           'Conclua primeiro o nó anterior de 5 minutos', // 请先完成上一个 5 分钟节点
       'node_saved_prefix': 'Parâmetros do nó ', // 第
@@ -1014,6 +1182,13 @@ class AppTranslations extends Translations {
     },
     //////////////////////////////////////////////////////////////////////俄语语言/////////////////////////////////////////////////////////////////////
     'ru_RU': {
+      'prompt_volume': 'Громкость подсказок',
+      'prompt_volume_hint':
+          'Громкость приветствия, начала, завершения и уведомления о воде. 0% отключает звук. Отпустите ползунок для сохранения.',
+      'prompt_volume_update_failed':
+          'Не удалось изменить громкость. Повторите попытку.',
+      'prompt_volume_save_failed':
+          'Не удалось сохранить громкость. Передвиньте ползунок ещё раз.',
       // 通用
       'settings': ' Настр.', // 设置
       'administrator': 'Админ', // 管理员
@@ -1042,6 +1217,19 @@ class AppTranslations extends Translations {
       'waiting': 'Ожидание', // 等待运行
       'logout': 'Выйти', // 退出登录
       'parameter_settings': 'Параметры', // 参数设置
+      // Уведомление о подключении Wi-Fi и Bluetooth
+      'connection_prompt_title': 'Не подключено',
+      'connection_prompt_subtitle': 'Сначала подключитесь',
+      'connection_prompt_wifi': 'WIFI',
+      'connection_prompt_ble': 'BLE',
+      'connection_status_checking': 'Проверка',
+      'connection_status_connected': 'Подключено',
+      'connection_status_disconnected': 'Не подключено',
+      'connection_prompt_skip': 'Пропустить',
+      'wifi_ble': 'WIFI & BLE',
+      'wifi_name_unavailable': 'Имя сети недоступно',
+      'wifi_no_connected_network': 'Нет подключенной сети',
+      'ble_no_connected_device': 'Нет подключенных устройств',
       // 设置页面
       'setting_menu': 'Меню настроек', // 设置菜单
       'language_setting': 'Язык', // 语言设置
@@ -1062,62 +1250,65 @@ class AppTranslations extends Translations {
       'current_account_not_logged_in':
           'Текущая учетная запись не вошла в систему', // 当前账号未登录
       'therapy_record_load_failed':
-          'Не удалось загрузить записи терапии', // 理疗记录加载失败
+          'Не удалось загрузить велнес-записи', // 健康体验记录加载失败
       'no_history_records': 'Нет записей истории', // 暂无历史记录
-      'no_therapy_records': 'Нет записей терапии', // 暂无理疗记录
+      'no_therapy_records': 'Нет велнес-записей', // 暂无健康体验记录
       'years_old_unit': 'г', // 岁
-      'therapy_report': 'Отчет о терапии', // 理疗报告
-      'total_therapy_duration': 'Общая длительность', // 总治疗时长
-      'feedback_label': 'Ощущения: ', // 感受：
-      'no_feedback': 'Нет отзыва', // 暂无反馈
-      'treatment_modules': 'Модули терапии', // 治疗模块
+      'therapy_report': 'Велнес-отчет', // 健康体验报告
+      'total_therapy_duration': 'Время велнес', // 健康时长
+      'feedback_label': 'Велнес-заметки: ', // 体验感受：
+      'no_feedback': 'Нет велнес-заметок', // 暂无体验感受
+      'treatment_modules': 'Велнес-модули', // 健康模块
       'energy_score': 'Энергия', // 能量指数
-      'cell_score': 'Акт. клет.', // 细胞活化
+      'cell_score': 'Инд. тонуса', // 活力指数
       'relaxation_score': 'Инд. рел.', // 放松指数
-      'immune_score': 'Иммунитет', // 免疫提升
+      'immune_score': 'Индекс велнес', // 健康指数
       'compared_to_last': 'к прошл.', // 较上次
       'session_once_1': '1-й', // 1次
       'session_once_2': '2-й', // 2次
       'session_once_3': '3-й', // 3次
       'current_session': 'Текущий', // 本次
-      'health_effect_assessment': 'Оценка эффекта', // 健康效果评估
+      'health_effect_assessment': 'Обзор велнес', // 健康体验概览
       'status_good': 'Хорошо', // 良好
       'overall_score': 'Общий балл', // 综合得分
       'level_low': 'Низк.', // 低
       'level_medium': 'Сред.', // 中
       'level_high': 'Выс.', // 高
-      'therapy_feedback_hint': 'Заметки сеанса', // 请输入本次疗程的感受、身体反应等
+      'therapy_feedback_hint': 'Введите велнес-заметки', // 请输入健康体验感受
       'score_unit': 'б', // 分
       'minutes_unit': 'мин', // 分
       'seconds_unit': 'с', // 秒
       'user_management': 'Пользователи', // 用户管理
       'unsupported_language': 'Этот язык пока не поддерживается', // 该语言暂未支持
       // 主页
-      'preset_mode': 'Готовые режимы терапии', // 预设理疗模式
-      'preset_mode_subtitle': '10 профессиональных программ', // 10种专业配方方案
+      'preset_mode': 'Готовые велнес-режимы', // 预设健康模式
+      'preset_mode_subtitle': '10 велнес-программ', // 10种日常健康方案
       'device_ready': 'Устройство готово', // 设备就绪
       'custom_plan': 'Свой режим', // 自定义方案
       'deep_relax': 'Глубокий релакс', // 深度放松
-      'energy_boost': 'Повышение сил', // 能量提升
-      'pain_relief': 'Облегчение боли', // 疼痛缓解
-      'sleep_enhancement': 'Улучшение сна', // 睡眠改善
-      'sports_recovery': 'Восстановл.', // 运动恢复
-      'stress_release': 'Антистресс', // 压力释放
-      'immune_boost': 'Иммунитет', // 免疫增强
-      'anti_aging': 'Омоложение', // 抗衰老
-      'full_care': 'Общий уход', // 全面养护
-      'mental_healing': 'Эмо-Баланс', // 情绪疗愈
+      'energy_boost': 'ЗАРЯД ЭНЕРГИИ', // 焕新充能
+      'pain_relief': 'МЯГКИЙ КОМФОРТ', // 柔和舒适
+      'sleep_enhancement': 'ВЕЧ. РЕЛАКС', // 夜间放松
+      'sports_recovery': 'ЗАМИНКА', // 活动后放松
+      'stress_release': 'СПОКОЙСТВИЕ', // 舒缓放松
+      'immune_boost': 'БОДРОСТЬ ДНЯ', // 日常活力
+      'anti_aging': 'СИЯНИЕ', // 焕彩活力
+      'full_care': 'ОБНОВЛЕНИЕ', // 全身焕新
+      'mental_healing': 'БАЛ. НАСТ.', // 心情平衡
       'device_fault': 'Ошибка устройства', // 设备故障
       'water_level_warning_title': 'Предупреждение о нехватке воды',
       'water_level_warning_message':
           'Низкий уровень воды. Долейте перед продолжением.',
       'water_level_shortage_title': 'Нехватка воды',
       'water_level_shortage_message':
-          'Низкий уровень воды. Долейте перед продолжением.',
+          'Недостаточно воды. Подключите подачу воды для автоматического наполнения.',
+      'water_level_shortage_unavailable':
+          'Функция молекулярного водорода временно недоступна',
       'water_level_filling_title': 'Наполнение',
       'water_level_filling_message': 'Идет наполнение водой, подождите...',
       'water_level_complete_title': 'Наполнение завершено',
-      'water_level_complete_message': 'Наполнение водой завершено. Можно продолжать использование устройства.',
+      'water_level_complete_message':
+          'Наполнение водой завершено. Можно продолжать использование устройства.',
       // 登录页面
       'login_email_hint': 'Введите адрес электронной почты', // 输入邮箱
       'login_password_hint': 'Введите пароль', // 输入密码
@@ -1166,14 +1357,28 @@ class AppTranslations extends Translations {
       'password_reset_success': 'Пароль успешно сброшен', // 密码重置成功
       'password_reset_failed': 'Не удалось сбросить пароль', // 密码重置失败
       // 用户选择页面
-      'choose_therapy_user': 'Выберите пользователя', // 选择理疗用户
+      'choose_therapy_user': 'Выберите пользователя', // 选择体验用户
       'search_user_hint': 'Введите имя или телефон', // 输入用户姓名或手机号
+      'add_user': 'Добавить пользователя', // 添加用户
+      'user_name_label': 'Имя',
+      'user_age_label': 'Возраст',
+      'user_phone_label': 'Телефон',
+      'user_email_label': 'Эл. почта',
+      'user_email_hint': 'Введите адрес эл. почты',
+      'user_gender_label': 'Пол',
+      'user_male': 'Мужской',
+      'user_female': 'Женский',
+      'user_remark_label': 'Примечание',
+      'user_remark_hint': 'Введите примечание',
+      'user_required_fields': 'Укажите имя, возраст и телефон',
+      'user_invalid_age': 'Введите корректный возраст',
+      'add_user_failed': 'Не удалось добавить пользователя',
       'confirm_selection': 'Подтвердить выбор', // 确认选择
       // 音乐页面
       'confirm_music_selection': 'Подтвердить выбор', // 确认选择
       'music_resource_missing': 'Для этой музыки нет аудио', // 当前音乐暂无音频资源
       // 启动页面
-      'red_light': 'Красн. тер.', // 红光
+      'red_light': 'Красный свет', // 红光
       'wavelength': 'Волна', // 波长
       'hydrogen_molecule': 'H₂', // 分子氢
       'hydrogen_concentration': 'Конц. H₂', // 氢气浓度
@@ -1181,7 +1386,7 @@ class AppTranslations extends Translations {
       'chakra': 'Чакра', // 脉轮
       'terahertz': 'Терагерц', // 太赫兹
       'fragrance': 'Аромат', // 香氛
-      'therapy_completed': 'Терапия завершена', // 治疗完成
+      'therapy_completed': 'Велнес завершён', // 健康体验完成
       'user': 'Пользователь', // 使用者
       'session_duration': 'Время сеанса', // 本次使用
       'module_duration': 'Время модуля', // 模块时长
@@ -1198,17 +1403,23 @@ class AppTranslations extends Translations {
       'custom_plan_title': 'Свой режим', // 自定义方案
       'plan_search_hint': 'Введите название плана', // 输入方案名称
       'add_plan': 'Добавить план', // 添加方案
-      'rename_plan': 'Ред.', // 重命名
+      'rename_plan': 'Редак.', // 重命名
       'plan_name_empty': 'Название плана не может быть пустым', // 方案名称不能为空
       'custom_plan_load_failed': 'Не удалось загрузить планы: ', // 自定义方案加载失败：
       'user_not_logged_in_retry':
           'Пользователь не вошел, войдите снова', // 用户未登录，请重新登录
       // 自定义编辑页面
-      'red_ther': 'КРАСНЫЙ', // 红光
-      'add_therapy_module': 'Добавить модуль', // 添加治疗模块
+      'red_ther': 'RED TEC.', // 红光
+      'add_therapy_module': 'Добавить модуль', // 添加模块
       'expand_feature': 'Доп. функции', // 拓展功能
       'save_params': 'Сохранить', // 保存参数
       'save_plan': 'Сохранить план', // 保存方案
+      'plan_saving': 'Сохранение, пожалуйста, подождите',
+      'plan_save_slow':
+          'Сохранение занимает больше времени, пожалуйста, подождите',
+      'plan_save_retry': 'Не удалось сохранить, повторите попытку',
+      'custom_plan_edit_invalid':
+          'Текущий план недействителен. Вернитесь и повторите попытку',
       'complete_previous_node':
           'Сначала завершите предыдущий 5-минутный узел', // 请先完成上一个 5 分钟节点
       'node_saved_prefix': 'Параметры узла ', // 第
@@ -1262,6 +1473,13 @@ class AppTranslations extends Translations {
     },
     ///////////////////////////////////////////////////////////法语语言////////////////////////////////////////////////
     'fr_FR': {
+      'prompt_volume': 'Volume des annonces',
+      'prompt_volume_hint':
+          'Réglez les annonces de bienvenue, de début, de fin et concernant l’eau. 0% coupe le son. Relâchez le curseur pour enregistrer.',
+      'prompt_volume_update_failed':
+          'Impossible de régler le volume. Réessayez.',
+      'prompt_volume_save_failed':
+          'Impossible d’enregistrer le volume. Déplacez à nouveau le curseur.',
       // 通用
       'settings': 'Config.', // 设置
       'administrator': 'Admin', // 管理员
@@ -1290,6 +1508,19 @@ class AppTranslations extends Translations {
       'waiting': 'En attente', // 等待运行
       'logout': 'Quitter', // 退出登录
       'parameter_settings': 'Paramètres', // 参数设置
+      // Invite de connexion Wi-Fi et Bluetooth
+      'connection_prompt_title': 'Non connecté',
+      'connection_prompt_subtitle': 'Connectez-vous d’abord',
+      'connection_prompt_wifi': 'WIFI',
+      'connection_prompt_ble': 'BLE',
+      'connection_status_checking': 'Vérification',
+      'connection_status_connected': 'Connecté',
+      'connection_status_disconnected': 'Non connecté',
+      'connection_prompt_skip': 'Ignorer',
+      'wifi_ble': 'WIFI & BLE',
+      'wifi_name_unavailable': 'Nom du réseau indisponible',
+      'wifi_no_connected_network': 'Aucun réseau connecté',
+      'ble_no_connected_device': 'Aucun appareil connecté',
       // 设置页面
       'setting_menu': 'Menu des paramètres', // 设置菜单
       'language_setting': 'Langue', // 语言设置
@@ -1310,62 +1541,66 @@ class AppTranslations extends Translations {
       'current_account_not_logged_in':
           'Le compte actuel n’est pas connecté', // 当前账号未登录
       'therapy_record_load_failed':
-          'Échec du chargement des séances', // 理疗记录加载失败
+          'Échec du chargement des données bien-être', // 健康体验记录加载失败
       'no_history_records': 'Aucun historique', // 暂无历史记录
-      'no_therapy_records': 'Aucune séance', // 暂无理疗记录
+      'no_therapy_records': 'Aucune donnée bien-être', // 暂无健康体验记录
       'years_old_unit': 'a', // 岁
-      'therapy_report': 'Rapport de thérapie', // 理疗报告
-      'total_therapy_duration': 'Durée totale', // 总治疗时长
-      'feedback_label': 'Ressenti : ', // 感受：
-      'no_feedback': 'Aucun retour', // 暂无反馈
-      'treatment_modules': 'Modules de thérapie', // 治疗模块
+      'therapy_report': 'Rapport bien-être', // 健康体验报告
+      'total_therapy_duration': 'Temps bien-être', // 健康时长
+      'feedback_label': 'Notes bien-être : ', // 体验感受：
+      'no_feedback': 'Aucune note bien-être', // 暂无体验感受
+      'treatment_modules': 'Modules bien-être', // 健康模块
       'energy_score': 'Énergie', // 能量指数
-      'cell_score': 'Act. cell.', // 细胞活化
+      'cell_score': 'Indice vitalité', // 活力指数
       'relaxation_score': 'Relaxation', // 放松指数
-      'immune_score': 'Immunité', // 免疫提升
+      'immune_score': 'Indice bien-être', // 健康指数
       'compared_to_last': 'vs préc.', // 较上次
       'session_once_1': '1re', // 1次
       'session_once_2': '2e', // 2次
       'session_once_3': '3e', // 3次
       'current_session': 'Actuelle', // 本次
-      'health_effect_assessment': 'Évaluation santé', // 健康效果评估
+      'health_effect_assessment': 'Aperçu bien-être', // 健康体验概览
       'status_good': 'Bon', // 良好
       'overall_score': 'Score global', // 综合得分
       'level_low': 'Bas', // 低
       'level_medium': 'Moyen', // 中
       'level_high': 'Haut', // 高
-      'therapy_feedback_hint': 'Notes séance', // 请输入本次疗程的感受、身体反应等
+      'therapy_feedback_hint': 'Saisir notes bien-être', // 请输入健康体验感受
       'score_unit': 'pts', // 分
       'minutes_unit': 'min', // 分
       'seconds_unit': 's', // 秒
       'user_management': 'Utilisateurs', // 用户管理
       'unsupported_language': 'Langue non prise en charge', // 该语言暂未支持
       // 主页面
-      'preset_mode': 'Modes de thérapie prédéfinis', // 预设理疗模式
-      'preset_mode_subtitle': '10 formules professionnelles', // 10种专业配方方案
+      'preset_mode': 'Modes bien-être', // 预设健康模式
+      'preset_mode_subtitle': '10 programmes bien-être', // 10种日常健康方案
       'device_ready': 'Appareil prêt', // 设备就绪
       'custom_plan': 'Programme', // 自定义方案
-      'deep_relax': 'Détente', // 深度放松
-      'energy_boost': 'Boost d’énergie', // 能量提升
-      'pain_relief': 'Anti-douleur', // 疼痛缓解
-      'sleep_enhancement': 'Mieux dormir', // 睡眠改善
-      'sports_recovery': 'Récupération', // 运动恢复
-      'stress_release': 'Anti-stress', // 压力释放
-      'immune_boost': 'Boost immunité', // 免疫增强
-      'anti_aging': 'Anti-âge', // 抗衰老
-      'full_care': 'Soin complet', // 全面养护
-      'mental_healing': 'Soin émotionnel', // 情绪疗愈
+      'deep_relax': 'DÉTENTE PROF.', // 深度放松
+      'energy_boost': 'REVITALISER', // 焕新充能
+      'pain_relief': 'CONFORT DOUX', // 柔和舒适
+      'sleep_enhancement': 'CALME DU SOIR', // 夜间放松
+      'sports_recovery': 'RETOUR&CALME', // 活动后放松
+      'stress_release': 'CALME & RELAX', // 舒缓放松
+      'immune_boost': 'ÉLAN QUOTIDIEN', // 日常活力
+      'anti_aging': 'VITALITÉ', // 焕彩活力
+      'full_care': 'RENOUVEAU', // 全身焕新
+      'mental_healing': 'HUMEUR', // 心情平衡
       'device_fault': 'Défaut de l’appareil', // 设备故障
       'water_level_warning_title': 'Alerte niveau d’eau faible',
       'water_level_warning_message':
           'Le niveau du réservoir d’eau est bas. Ajoutez de l’eau pour continuer.',
       'water_level_shortage_title': 'Niveau d’eau bas',
       'water_level_shortage_message':
-          'Le niveau du réservoir d’eau est bas. Ajoutez de l’eau pour continuer.',
+          'Manque d’eau. Raccordez l’arrivée d’eau pour le remplissage automatique.',
+      'water_level_shortage_unavailable':
+          'Hydrogène moléculaire temporairement indisponible',
       'water_level_filling_title': 'Remplissage',
-      'water_level_filling_message': 'Remplissage en cours, veuillez patienter...',
+      'water_level_filling_message':
+          'Remplissage en cours, veuillez patienter...',
       'water_level_complete_title': 'Remplissage terminé',
-      'water_level_complete_message': 'Remplissage d’eau terminé. Vous pouvez continuer à utiliser l’appareil.',
+      'water_level_complete_message':
+          'Remplissage d’eau terminé. Vous pouvez continuer à utiliser l’appareil.',
       // 登录页面
       'login_email_hint': 'Saisir l’adresse e-mail', // 输入邮箱
       'login_password_hint': 'Saisir le mot de passe', // 输入密码
@@ -1421,16 +1656,30 @@ class AppTranslations extends Translations {
       'password_reset_failed':
           'Échec de la réinitialisation du mot de passe', // 密码重置失败
       // 用户选择页面
-      'choose_therapy_user': 'Sélectionner l’utilisateur', // 选择理疗用户
+      'choose_therapy_user': 'Sélectionner l’utilisateur', // 选择体验用户
       'search_user_hint':
           'Saisir le nom ou le numéro de téléphone', // 输入用户姓名或手机号
+      'add_user': 'Ajouter un utilisateur', // 添加用户
+      'user_name_label': 'Nom',
+      'user_age_label': 'Âge',
+      'user_phone_label': 'Téléphone',
+      'user_email_label': 'E-mail',
+      'user_email_hint': 'Saisissez l’adresse e-mail',
+      'user_gender_label': 'Sexe',
+      'user_male': 'Homme',
+      'user_female': 'Femme',
+      'user_remark_label': 'Remarque',
+      'user_remark_hint': 'Saisissez une remarque',
+      'user_required_fields': 'Renseignez le nom, l’âge et le téléphone',
+      'user_invalid_age': 'Saisissez un âge valide',
+      'add_user_failed': 'Impossible d’ajouter l’utilisateur',
       'confirm_selection': 'Confirmer la sélection', // 确认选择
       // 音乐页面
       'confirm_music_selection': 'Confirmer la sélection', // 确认选择
       'music_resource_missing':
           'Aucune ressource audio pour cette musique', // 当前音乐暂无音频资源
       // 启动页面
-      'red_light': 'Thér. rouge', // 红光
+      'red_light': 'RED TEC.', // 红光
       'wavelength': 'Thér. rouge', // 波长
       'hydrogen_molecule': 'H₂', // 分子氢
       'hydrogen_concentration': 'Conc. H₂', // 氢气浓度
@@ -1438,7 +1687,7 @@ class AppTranslations extends Translations {
       'chakra': 'Chakra', // 脉轮
       'terahertz': 'Térahertz', // 太赫兹
       'fragrance': 'Parfum', // 香氛
-      'therapy_completed': 'Thérapie terminée', // 治疗完成
+      'therapy_completed': 'Bien-être terminé', // 健康体验完成
       'user': 'Utilisateur', // 使用者
       'session_duration': 'Cette session', // 本次使用
       'module_duration': 'Durée du module', // 模块时长
@@ -1464,11 +1713,17 @@ class AppTranslations extends Translations {
       'user_not_logged_in_retry':
           'Utilisateur non connecté, veuillez vous reconnecter', // 用户未登录，请重新登录
       // 自定义编辑页面
-      'red_ther': 'Thér. rouge', // 红光
-      'add_therapy_module': 'Ajouter module', // 添加治疗模块
+      'red_ther': 'RED TEC.', // 红光
+      'add_therapy_module': 'Ajouter module', // 添加模块
       'expand_feature': 'Extras', // 拓展功能
       'save_params': 'Enregistrer', // 保存参数
       'save_plan': 'Enregistrer le programme', // 保存方案
+      'plan_saving': 'Enregistrement en cours, veuillez patienter',
+      'plan_save_slow':
+          'La réponse d’enregistrement est plus longue que prévu, veuillez patienter',
+      'plan_save_retry': 'Échec de l’enregistrement, veuillez réessayer',
+      'custom_plan_edit_invalid':
+          'Le programme actuel est invalide. Revenez en arrière et réessayez',
       'complete_previous_node':
           'Veuillez d’abord terminer le segment précédent de 5 minutes', // 请先完成上一个 5 分钟节点
       'node_saved_prefix': 'Paramètres du point à ', // 第
@@ -1523,6 +1778,11 @@ class AppTranslations extends Translations {
     },
     ///////////////////////////////////////////////////////韩语语言/////////////////////////////////////////////////////////////////////
     'ko_KR': {
+      'prompt_volume': '안내 음량',
+      'prompt_volume_hint':
+          '환영, 시작, 종료 및 물 안내 음량을 조절합니다. 0%는 음소거이며 슬라이더에서 손을 떼면 자동 저장됩니다.',
+      'prompt_volume_update_failed': '음량을 조절하지 못했습니다. 다시 시도해 주세요.',
+      'prompt_volume_save_failed': '음량을 저장하지 못했습니다. 슬라이더를 다시 조절해 주세요.',
       // 通用
       'settings': '설정', // 设置
       'administrator': '관리자', // 管理员
@@ -1551,6 +1811,19 @@ class AppTranslations extends Translations {
       'waiting': '대기 중', // 等待运行
       'logout': '로그아웃', // 退出登录
       'parameter_settings': '파라미터 설정', // 参数设置
+      // Wi-Fi 및 Bluetooth 연결 안내
+      'connection_prompt_title': '연결 안 됨',
+      'connection_prompt_subtitle': '연결 후 계속하세요',
+      'connection_prompt_wifi': 'WIFI',
+      'connection_prompt_ble': 'BLE',
+      'connection_status_checking': '확인 중',
+      'connection_status_connected': '연결됨',
+      'connection_status_disconnected': '연결 안 됨',
+      'connection_prompt_skip': '건너뛰기',
+      'wifi_ble': 'WIFI & BLE',
+      'wifi_name_unavailable': '네트워크 이름을 가져올 수 없음',
+      'wifi_no_connected_network': '연결된 네트워크 없음',
+      'ble_no_connected_device': '연결된 기기 없음',
       // 设置页面
       'setting_menu': '설정 메뉴', // 设置菜单
       'language_setting': '언어 설정', // 语言设置
@@ -1569,54 +1842,61 @@ class AppTranslations extends Translations {
       'history_record': '기록', // 历史记录
       'history_detail_missing': '기록을 찾을 수 없습니다', // 历史记录不存在
       'current_account_not_logged_in': '현재 계정이 로그인되어 있지 않습니다', // 当前账号未登录
-      'therapy_record_load_failed': '치료 기록을 불러오지 못했습니다', // 理疗记录加载失败
+      'therapy_record_load_failed': '웰니스 기록을 불러오지 못했습니다', // 健康体验记录加载失败
       'no_history_records': '기록 없음', // 暂无历史记录
-      'no_therapy_records': '치료 기록 없음', // 暂无理疗记录
+      'no_therapy_records': '웰니스 기록 없음', // 暂无健康体验记录
       'years_old_unit': '세', // 岁
-      'therapy_report': '치료 보고서', // 理疗报告
-      'total_therapy_duration': '총 치료 시간', // 总治疗时长
-      'feedback_label': '느낌: ', // 感受：
-      'no_feedback': '피드백 없음', // 暂无反馈
-      'treatment_modules': '치료 모듈', // 治疗模块
+      'therapy_report': '웰니스 보고서', // 健康体验报告
+      'total_therapy_duration': '웰니스 시간', // 健康时长
+      'feedback_label': '웰니스 메모: ', // 体验感受：
+      'no_feedback': '웰니스 메모 없음', // 暂无体验感受
+      'treatment_modules': '웰니스 모듈', // 健康模块
       'energy_score': '에너지 지수', // 能量指数
-      'cell_score': '세포 활성', // 细胞活化
+      'cell_score': '활력 지수', // 活力指数
       'relaxation_score': '이완 지수', // 放松指数
-      'immune_score': '면역 향상', // 免疫提升
+      'immune_score': '웰니스 지수', // 健康指数
       'compared_to_last': '지난번 대비', // 较上次
       'session_once_1': '1회', // 1次
       'session_once_2': '2회', // 2次
       'session_once_3': '3회', // 3次
       'current_session': '이번', // 本次
-      'health_effect_assessment': '건강 요약', // 健康效果评估
+      'health_effect_assessment': '웰니스 개요', // 健康体验概览
       'status_good': '양호', // 良好
       'overall_score': '종합 점수', // 综合得分
       'level_low': '낮음', // 低
       'level_medium': '중간', // 中
       'level_high': '높음', // 高
-      'therapy_feedback_hint': '세션 메모', // 请输入本次疗程的感受、身体反应等
+      'therapy_feedback_hint': '웰니스 메모 입력', // 请输入健康体验感受
       'score_unit': '점', // 分
       'minutes_unit': '분', // 分
       'seconds_unit': '초', // 秒
       'user_management': '사용자 관리', // 用户管理
       'unsupported_language': '이 언어는 아직 지원되지 않습니다', // 该语言暂未支持
       // 主页
-      'preset_mode': '프리셋 치료 모드', // 预设理疗模式
-      'preset_mode_subtitle': '전문 프로그램 10종', // 10种专业配方方案
+      'preset_mode': '프리셋 웰니스 모드', // 预设健康模式
+      'preset_mode_subtitle': '일상 웰니스 프로그램 10종', // 10种日常健康方案
       'device_ready': '장치 준비 완료', // 设备就绪
       'custom_plan': '맞춤 플랜', // 自定义方案
-      'deep_relax': '심층 이완', // 深度放松
-      'energy_boost': '에너지 향상', // 能量提升
-      'pain_relief': '통증 완화', // 疼痛缓解
-      'sleep_enhancement': '수면 개선', // 睡眠改善
-      'sports_recovery': '운동 회복', // 运动恢复
-      'stress_release': '스트레스 완화', // 压力释放
-      'immune_boost': '면역 강화', // 免疫增强
-      'anti_aging': '안티에이징', // 抗衰老
-      'full_care': '토탈 케어', // 全面养护
-      'mental_healing': '정서 치유', // 情绪疗愈
+      'deep_relax': '깊은 휴식', // 深度放松
+      'energy_boost': '에너지 충전', // 焕新充能
+      'pain_relief': '편안한 휴식', // 柔和舒适
+      'sleep_enhancement': '밤의 휴식', // 夜间放松
+      'sports_recovery': '쿨다운', // 活动后放松
+      'stress_release': '차분한 휴식', // 舒缓放松
+      'immune_boost': '일상 활력', // 日常活力
+      'anti_aging': '빛나는 활력', // 焕彩活力
+      'full_care': '전신 리셋', // 全身焕新
+      'mental_healing': '기분 전환', // 心情平衡
       'device_fault': '장치 고장', // 设备故障
       'water_level_warning_title': '물 부족 알림',
       'water_level_warning_message': '물탱크 수위가 낮습니다. 계속 사용하려면 물을 보충하세요.',
+      'water_level_shortage_title': '물 부족',
+      'water_level_shortage_message': '물이 부족합니다. 자동 급수를 위해 급수원을 연결해 주세요.',
+      'water_level_shortage_unavailable': '분자 수소 기능을 일시적으로 사용할 수 없습니다',
+      'water_level_filling_title': '물 보충 중',
+      'water_level_filling_message': '물을 보충하고 있습니다. 잠시만 기다려 주세요...',
+      'water_level_complete_title': '물 보충 완료',
+      'water_level_complete_message': '물 보충이 완료되었습니다. 장치를 계속 사용할 수 있습니다.',
       // 登录页面
       'login_email_hint': '이메일을 입력하세요', // 输入邮箱
       'login_password_hint': '비밀번호를 입력하세요', // 输入密码
@@ -1664,14 +1944,28 @@ class AppTranslations extends Translations {
       'password_reset_success': '비밀번호가 재설정되었습니다', // 密码重置成功
       'password_reset_failed': '비밀번호 재설정에 실패했습니다', // 密码重置失败
       // 用户选择页面
-      'choose_therapy_user': '사용자 선택', // 选择理疗用户
+      'choose_therapy_user': '사용자 선택', // 选择体验用户
       'search_user_hint': '이름/전화번호 입력', // 输入用户姓名或手机号
+      'add_user': '사용자 추가', // 添加用户
+      'user_name_label': '이름',
+      'user_age_label': '나이',
+      'user_phone_label': '전화번호',
+      'user_email_label': '이메일',
+      'user_email_hint': '이메일 주소 입력',
+      'user_gender_label': '성별',
+      'user_male': '남성',
+      'user_female': '여성',
+      'user_remark_label': '메모',
+      'user_remark_hint': '메모 입력',
+      'user_required_fields': '이름, 나이, 전화번호를 입력하세요',
+      'user_invalid_age': '올바른 나이를 입력하세요',
+      'add_user_failed': '사용자를 추가하지 못했습니다',
       'confirm_selection': '선택 확인', // 确认选择
       // 音乐页面
       'confirm_music_selection': '선택 확인', // 确认选择
       'music_resource_missing': '현재 음악에 오디오 리소스가 없습니다', // 当前音乐暂无音频资源
       // 启动页面
-      'red_light': '레드 테라.', // 红光
+      'red_light': '레드 라이트', // 红光
       'wavelength': '파장', // 波长
       'hydrogen_molecule': '수소', // 分子氢
       'hydrogen_concentration': '수소 농도', // 氢气浓度
@@ -1679,7 +1973,7 @@ class AppTranslations extends Translations {
       'chakra': '차크라', // 脉轮
       'terahertz': '테라헤르츠', // 太赫兹
       'fragrance': '아로마', // 香氛
-      'therapy_completed': '치료 완료', // 治疗完成
+      'therapy_completed': '웰니스 완료', // 健康体验完成
       'user': '사용자', // 使用者
       'session_duration': '세션 시간', // 本次使用
       'module_duration': '모듈 시간', // 模块时长
@@ -1701,11 +1995,15 @@ class AppTranslations extends Translations {
       'custom_plan_load_failed': '맞춤 플랜 로드 실패: ', // 自定义方案加载失败：
       'user_not_logged_in_retry': '로그인이 필요합니다. 다시 로그인하세요', // 用户未登录，请重新登录
       // 自定义编辑页面
-      'red_ther': '레드 테라피', // 红光
-      'add_therapy_module': '모듈 추가', // 添加治疗模块
+      'red_ther': '레드 라이트', // 红光
+      'add_therapy_module': '웰니스 모듈 추가', // 添加健康模块
       'expand_feature': '확장', // 拓展功能
       'save_params': '파라미터 저장', // 保存参数
       'save_plan': '플랜 저장', // 保存方案
+      'plan_saving': '저장 중입니다. 잠시만 기다려 주세요',
+      'plan_save_slow': '저장 응답이 지연되고 있습니다. 잠시만 기다려 주세요',
+      'plan_save_retry': '저장하지 못했습니다. 다시 시도해 주세요',
+      'custom_plan_edit_invalid': '현재 플랜 정보가 올바르지 않습니다. 돌아가서 다시 시도해 주세요',
       'complete_previous_node': '먼저 이전 5분 노드를 완료하세요', // 请先完成上一个 5 分钟节点
       'node_saved_prefix': '', // 第
       'node_saved_suffix': '분 노드 파라미터가 저장되었습니다', // 分钟节点参数已保存
@@ -1755,6 +2053,12 @@ class AppTranslations extends Translations {
     },
     ///////////////////////////////////////////////////////////////////阿拉伯语语言////////////////////////////////////////////////
     'ar_SA': {
+      'prompt_volume': 'مستوى صوت التنبيهات',
+      'prompt_volume_hint':
+          'اضبط تنبيهات الترحيب والبدء والانتهاء والماء. تكتم نسبة 0% الصوت. يُحفظ التغيير عند إفلات شريط التمرير.',
+      'prompt_volume_update_failed': 'تعذر ضبط مستوى الصوت. حاول مرة أخرى.',
+      'prompt_volume_save_failed':
+          'تعذر حفظ مستوى الصوت. اضبط شريط التمرير مرة أخرى.',
       // 通用
       'settings': 'الإعدادات', // 设置
       'administrator': 'المدير', // 管理员
@@ -1768,8 +2072,8 @@ class AppTranslations extends Translations {
       'age': 'أدخل العمر', // 输入年龄
       'phone': 'أدخل الهاتف', // 输入手机号
       'gender': 'الجنس', // 性别
-      'male': 'ذكر', // 男
-      'female': 'أنثى', // 女
+      'male': 'ذ', // 男
+      'female': 'أ', // 女
       'frequency': 'التردد', // 频率
       'intensity': 'الشدة', // 强度
       'mode': 'الوضع', // 模式
@@ -1783,6 +2087,19 @@ class AppTranslations extends Translations {
       'waiting': 'في الانتظار', // 等待运行
       'logout': 'خروج', // 退出登录
       'parameter_settings': 'إعدادات المعلمات', // 参数设置
+      // تنبيه اتصال Wi-Fi وBluetooth
+      'connection_prompt_title': 'غير متصل',
+      'connection_prompt_subtitle': 'يرجى الاتصال للمتابعة',
+      'connection_prompt_wifi': 'WIFI',
+      'connection_prompt_ble': 'BLE',
+      'connection_status_checking': 'جارٍ التحقق',
+      'connection_status_connected': 'متصل',
+      'connection_status_disconnected': 'غير متصل',
+      'connection_prompt_skip': 'تخطي',
+      'wifi_ble': 'WIFI & BLE',
+      'wifi_name_unavailable': 'اسم الشبكة غير متاح',
+      'wifi_no_connected_network': 'لا توجد شبكة متصلة',
+      'ble_no_connected_device': 'لا يوجد جهاز متصل',
       // 设置页面
       'setting_menu': 'قائمة الإعدادات', // 设置菜单
       'language_setting': 'اللغة', // 语言设置
@@ -1802,55 +2119,65 @@ class AppTranslations extends Translations {
       'history_detail_missing': 'سجل التاريخ غير موجود', // 历史记录不存在
       'current_account_not_logged_in':
           'الحساب الحالي غير مسجل الدخول', // 当前账号未登录
-      'therapy_record_load_failed': 'فشل تحميل سجلات العلاج', // 理疗记录加载失败
+      'therapy_record_load_failed': 'فشل تحميل سجلات العافية', // 健康体验记录加载失败
       'no_history_records': 'لا توجد سجلات تاريخ', // 暂无历史记录
-      'no_therapy_records': 'لا توجد سجلات علاج', // 暂无理疗记录
+      'no_therapy_records': 'لا توجد سجلات عافية', // 暂无健康体验记录
       'years_old_unit': 'س', // 岁
-      'therapy_report': 'تقرير العلاج', // 理疗报告
-      'total_therapy_duration': 'المدة الإجمالية', // 总治疗时长
-      'feedback_label': 'الشعور: ', // 感受：
-      'no_feedback': 'لا توجد ملاحظات', // 暂无反馈
-      'treatment_modules': 'وحدات العلاج', // 治疗模块
+      'therapy_report': 'تقرير العافية', // 健康体验报告
+      'total_therapy_duration': 'وقت العافية', // 健康时长
+      'feedback_label': 'ملاحظات العافية: ', // 体验感受：
+      'no_feedback': 'لا توجد ملاحظات عافية', // 暂无体验感受
+      'treatment_modules': 'وحدات العافية', // 健康模块
       'energy_score': 'مؤشر الطاقة', // 能量指数
-      'cell_score': 'تنشيط الخلايا', // 细胞活化
+      'cell_score': 'مؤشر الحيوية', // 活力指数
       'relaxation_score': 'مؤشر الاسترخاء', // 放松指数
-      'immune_score': 'تعزيز المناعة', // 免疫提升
+      'immune_score': 'مؤشر العافية', // 健康指数
       'compared_to_last': 'مقابل السابق', // 较上次
       'session_once_1': '1', // 1次
       'session_once_2': '2', // 2次
       'session_once_3': '3', // 3次
       'current_session': 'الحالية', // 本次
-      'health_effect_assessment': 'ملخص الصحة', // 健康效果评估
+      'health_effect_assessment': 'ملخص العافية', // 健康体验概览
       'status_good': 'جيد', // 良好
       'overall_score': 'النتيجة الإجمالية', // 综合得分
       'level_low': 'منخفض', // 低
       'level_medium': 'متوسط', // 中
       'level_high': 'مرتفع', // 高
-      'therapy_feedback_hint': 'ملاحظات الجلسة', // 请输入本次疗程的感受、身体反应等
+      'therapy_feedback_hint': 'أدخل ملاحظات العافية', // 请输入健康体验感受
       'score_unit': 'نقطة', // 分
       'minutes_unit': 'د', // 分
       'seconds_unit': 'ث', // 秒
       'user_management': 'المستخدمون', // 用户管理
       'unsupported_language': 'هذه اللغة غير مدعومة حاليًا', // 该语言暂未支持
       // 主页
-      'preset_mode': 'أوضاع العلاج المسبقة', // 预设理疗模式
-      'preset_mode_subtitle': '10 برامج علاجية احترافية', // 10种专业配方方案
+      'preset_mode': 'أوضاع العافية', // 预设健康模式
+      'preset_mode_subtitle': '10 برامج عافية يومية', // 10种日常健康方案
       'device_ready': 'الجهاز جاهز', // 设备就绪
       'custom_plan': 'خطة مخصصة', // 自定义方案
       'deep_relax': 'استرخاء عميق', // 深度放松
-      'energy_boost': 'تعزيز الطاقة', // 能量提升
-      'pain_relief': 'تخفيف الألم', // 疼痛缓解
-      'sleep_enhancement': 'تحسين النوم', // 睡眠改善
-      'sports_recovery': 'تعافٍ رياضي', // 运动恢复
-      'stress_release': 'تخفيف التوتر', // 压力释放
-      'immune_boost': 'تعزيز المناعة', // 免疫增强
-      'anti_aging': 'مكافحة الشيخوخة', // 抗衰老
-      'full_care': 'رعاية شاملة', // 全面养护
-      'mental_healing': 'شفاء عاطفي', // 情绪疗愈
+      'energy_boost': 'تجدد ونشاط', // 焕新充能
+      'pain_relief': 'راحة لطيفة', // 柔和舒适
+      'sleep_enhancement': 'هدوء مسائي', // 夜间放松
+      'sports_recovery': 'تهدئة', // 活动后放松
+      'stress_release': 'هدوء واسترخاء', // 舒缓放松
+      'immune_boost': 'نشاط يومي', // 日常活力
+      'anti_aging': 'حيوية مشرقة', // 焕彩活力
+      'full_care': 'تجدد الجسم', // 全身焕新
+      'mental_healing': 'مزاج أفضل', // 心情平衡
       'device_fault': 'عطل الجهاز', // 设备故障
       'water_level_warning_title': 'تنبيه نقص الماء',
       'water_level_warning_message':
           'مستوى الماء في الخزان منخفض. يرجى تعبئته قبل المتابعة.',
+      'water_level_shortage_title': 'نقص الماء',
+      'water_level_shortage_message':
+          'الماء غير كافٍ. يرجى توصيل مصدر الماء للتعبئة التلقائية.',
+      'water_level_shortage_unavailable':
+          'وظيفة الهيدروجين الجزيئي غير متاحة مؤقتًا',
+      'water_level_filling_title': 'جارٍ تعبئة الماء',
+      'water_level_filling_message': 'جارٍ تعبئة الماء، يرجى الانتظار...',
+      'water_level_complete_title': 'اكتملت تعبئة الماء',
+      'water_level_complete_message':
+          'اكتملت تعبئة الماء، ويمكنك متابعة استخدام الجهاز.',
       // 登录页面
       'login_email_hint': 'أدخل البريد الإلكتروني', // 输入邮箱
       'login_password_hint': 'أدخل كلمة المرور', // 输入密码
@@ -1900,8 +2227,22 @@ class AppTranslations extends Translations {
       'password_reset_success': 'تمت إعادة تعيين كلمة المرور بنجاح', // 密码重置成功
       'password_reset_failed': 'فشلت إعادة تعيين كلمة المرور', // 密码重置失败
       // 用户选择页面
-      'choose_therapy_user': 'اختيار مستخدم العلاج', // 选择理疗用户
+      'choose_therapy_user': 'اختيار المستخدم', // 选择体验用户
       'search_user_hint': 'أدخل الاسم أو رقم الهاتف', // 输入用户姓名或手机号
+      'add_user': 'إضافة مستخدم', // 添加用户
+      'user_name_label': 'الاسم',
+      'user_age_label': 'العمر',
+      'user_phone_label': 'الهاتف',
+      'user_email_label': 'البريد الإلكتروني',
+      'user_email_hint': 'أدخل البريد الإلكتروني',
+      'user_gender_label': 'الجنس',
+      'user_male': 'ذكر',
+      'user_female': 'أنثى',
+      'user_remark_label': 'ملاحظات',
+      'user_remark_hint': 'أدخل الملاحظات',
+      'user_required_fields': 'يرجى إدخال الاسم والعمر والهاتف',
+      'user_invalid_age': 'يرجى إدخال عمر صحيح',
+      'add_user_failed': 'تعذرت إضافة المستخدم',
       'confirm_selection': 'تأكيد الاختيار', // 确认选择
       // 音乐页面
       'confirm_music_selection': 'تأكيد الاختيار', // 确认选择
@@ -1915,7 +2256,7 @@ class AppTranslations extends Translations {
       'chakra': 'شاكرا', // 脉轮
       'terahertz': 'تيراهرتز', // 太赫兹
       'fragrance': 'العطر', // 香氛
-      'therapy_completed': 'اكتمل العلاج', // 治疗完成
+      'therapy_completed': 'اكتملت جلسة العافية', // 健康体验完成
       'user': 'المستخدم', // 使用者
       'session_duration': 'مدة الجلسة', // 本次使用
       'module_duration': 'مدة الوحدة', // 模块时长
@@ -1939,10 +2280,15 @@ class AppTranslations extends Translations {
           'المستخدم غير مسجل الدخول، يرجى تسجيل الدخول مرة أخرى', // 用户未登录，请重新登录
       // 自定义编辑页面
       'red_ther': 'الضوء الأحمر', // 红光
-      'add_therapy_module': 'إضافة وحدة علاجية', // 添加治疗模块
+      'add_therapy_module': 'إضافة وحدة عافية', // 添加健康模块
       'expand_feature': 'ميزات إضافية', // 拓展功能
       'save_params': 'حفظ المعلمات', // 保存参数
       'save_plan': 'حفظ الخطة', // 保存方案
+      'plan_saving': 'جارٍ الحفظ، يرجى الانتظار',
+      'plan_save_slow': 'يستغرق الحفظ وقتًا أطول، يرجى الانتظار',
+      'plan_save_retry': 'فشل الحفظ، يرجى المحاولة مرة أخرى',
+      'custom_plan_edit_invalid':
+          'الخطة الحالية غير صالحة. ارجع وحاول مرة أخرى',
       'complete_previous_node':
           'يرجى إكمال نقطة الخمس دقائق السابقة أولًا', // 请先完成上一个 5 分钟节点
       'node_saved_prefix': 'تم حفظ معلمات نقطة ', // 第
@@ -1996,6 +2342,13 @@ class AppTranslations extends Translations {
     },
     /////////////////////////////////////////////////////////////////德语语言////////////////////////////////////////////////
     'de_DE': {
+      'prompt_volume': 'Hinweislautstärke',
+      'prompt_volume_hint':
+          'Lautstärke für Begrüßung, Start, Ende und Wasserhinweise. 0% schaltet die Hinweise stumm. Beim Loslassen wird gespeichert.',
+      'prompt_volume_update_failed':
+          'Lautstärke konnte nicht angepasst werden. Bitte erneut versuchen.',
+      'prompt_volume_save_failed':
+          'Lautstärke konnte nicht gespeichert werden. Regler erneut bewegen.',
       // 通用
       'settings': 'Einst.', // 设置
       'administrator': 'Admin', // 管理员
@@ -2024,6 +2377,19 @@ class AppTranslations extends Translations {
       'waiting': 'Warten', // 等待运行
       'logout': 'Abmelden', // 退出登录
       'parameter_settings': 'Parameter', // 参数设置
+      // Hinweis zur Wi-Fi- und Bluetooth-Verbindung
+      'connection_prompt_title': 'Nicht verbunden',
+      'connection_prompt_subtitle': 'Zum Fortfahren verbinden',
+      'connection_prompt_wifi': 'WIFI',
+      'connection_prompt_ble': 'BLE',
+      'connection_status_checking': 'Wird geprüft',
+      'connection_status_connected': 'Verbunden',
+      'connection_status_disconnected': 'Nicht verbunden',
+      'connection_prompt_skip': 'Überspringen',
+      'wifi_ble': 'WIFI & BLE',
+      'wifi_name_unavailable': 'Netzwerkname nicht verfügbar',
+      'wifi_no_connected_network': 'Kein Netzwerk verbunden',
+      'ble_no_connected_device': 'Kein Gerät verbunden',
       // 设置页面
       'setting_menu': 'Einstellungsmenü', // 设置菜单
       'language_setting': 'Sprache', // 语言设置
@@ -2044,31 +2410,31 @@ class AppTranslations extends Translations {
       'current_account_not_logged_in':
           'Aktuelles Konto ist nicht angemeldet', // 当前账号未登录
       'therapy_record_load_failed':
-          'Therapiedaten konnten nicht geladen werden', // 理疗记录加载失败
+          'Wellness-Daten konnten nicht geladen werden', // 健康体验记录加载失败
       'no_history_records': 'Keine Verlaufsdaten', // 暂无历史记录
-      'no_therapy_records': 'Keine Therapiedaten', // 暂无理疗记录
+      'no_therapy_records': 'Keine Wellness-Daten', // 暂无健康体验记录
       'years_old_unit': 'J', // 岁
-      'therapy_report': 'Therapiebericht', // 理疗报告
-      'total_therapy_duration': 'Gesamtdauer', // 总治疗时长
-      'feedback_label': 'Empfinden: ', // 感受：
-      'no_feedback': 'Kein Feedback', // 暂无反馈
-      'treatment_modules': 'Therapiemodule', // 治疗模块
+      'therapy_report': 'Wellness-Bericht', // 健康体验报告
+      'total_therapy_duration': 'Wellness-Zeit', // 健康时长
+      'feedback_label': 'Wellness-Notizen: ', // 体验感受：
+      'no_feedback': 'Keine Wellness-Notizen', // 暂无体验感受
+      'treatment_modules': 'Wellness-Module', // 健康模块
       'energy_score': 'Energie', // 能量指数
-      'cell_score': 'Zellakt.', // 细胞活化
+      'cell_score': 'Vitalitätsidx.', // 活力指数
       'relaxation_score': 'Entspannung', // 放松指数
-      'immune_score': 'Immun+', // 免疫提升
+      'immune_score': 'Wellness-Idx.', // 健康指数
       'compared_to_last': 'vs letzte', // 较上次
       'session_once_1': '1.', // 1次
       'session_once_2': '2.', // 2次
       'session_once_3': '3.', // 3次
       'current_session': 'Aktuell', // 本次
-      'health_effect_assessment': 'Gesundheit', // 健康效果评估
+      'health_effect_assessment': 'Wellness-Übersicht', // 健康体验概览
       'status_good': 'Gut', // 良好
       'overall_score': 'Gesamtpunktzahl', // 综合得分
       'level_low': 'Niedrig', // 低
       'level_medium': 'Mittel', // 中
       'level_high': 'Hoch', // 高
-      'therapy_feedback_hint': 'Sitzungsnotizen', // 请输入本次疗程的感受、身体反应等
+      'therapy_feedback_hint': 'Wellness-Notizen eingeben', // 请输入健康体验感受
       'score_unit': 'Pkt', // 分
       'minutes_unit': 'min', // 分
       'seconds_unit': 's', // 秒
@@ -2076,24 +2442,34 @@ class AppTranslations extends Translations {
       'unsupported_language':
           'Diese Sprache wird noch nicht unterstützt', // 该语言暂未支持
       // 主页
-      'preset_mode': 'Voreingestellte Therapiemodi', // 预设理疗模式
-      'preset_mode_subtitle': '10 professionelle Programme', // 10种专业配方方案
+      'preset_mode': 'Wellness-Modi', // 预设健康模式
+      'preset_mode_subtitle': '10 Wellness-Programme', // 10种日常健康方案
       'device_ready': 'Gerät bereit', // 设备就绪
       'custom_plan': 'Eigener Plan', // 自定义方案
-      'deep_relax': 'Entspannung', // 深度放松
-      'energy_boost': 'Energieschub', // 能量提升
-      'pain_relief': 'Schmerzlinderung', // 疼痛缓解
-      'sleep_enhancement': 'Besser Schlaf', // 睡眠改善
-      'sports_recovery': 'Sport-Erholung', // 运动恢复
-      'stress_release': 'Stressabbau', // 压力释放
-      'immune_boost': 'Immunstärkung', // 免疫增强
-      'anti_aging': 'Anti-Aging', // 抗衰老
-      'full_care': 'Rundum-Pflege', // 全面养护
-      'mental_healing': 'Emo-Heilung', // 情绪疗愈
+      'deep_relax': 'TIEF ENTSPANNT', // 深度放松
+      'energy_boost': 'NEUE ENERGIE', // 焕新充能
+      'pain_relief': 'SANFTER KOMFORT', // 柔和舒适
+      'sleep_enhancement': 'ABENDRUHE', // 夜间放松
+      'sports_recovery': 'COOL-DOWN', // 活动后放松
+      'stress_release': 'RUHE & RELAX', // 舒缓放松
+      'immune_boost': 'TAGESKRAFT', // 日常活力
+      'anti_aging': 'VITALITÄT', // 焕彩活力
+      'full_care': 'KÖRPER-RESET', // 全身焕新
+      'mental_healing': 'GUTE LAUNE', // 心情平衡
       'device_fault': 'Gerätefehler', // 设备故障
       'water_level_warning_title': 'Wasserstand zu niedrig',
       'water_level_warning_message':
           'Der Wasserstand im Tank ist niedrig. Bitte vor der Nutzung auffüllen.',
+      'water_level_shortage_title': 'Wassermangel',
+      'water_level_shortage_message':
+          'Zu wenig Wasser. Wasserzufuhr zum automatischen Befüllen anschließen.',
+      'water_level_shortage_unavailable':
+          'Molekularer Wasserstoff ist vorübergehend nicht verfügbar',
+      'water_level_filling_title': 'Wasser wird eingefüllt',
+      'water_level_filling_message': 'Wasser wird eingefüllt, bitte warten ...',
+      'water_level_complete_title': 'Wasserfüllung abgeschlossen',
+      'water_level_complete_message':
+          'Das Wasser wurde vollständig eingefüllt. Sie können das Gerät weiter verwenden.',
       // 登录页面
       'login_email_hint': 'E-Mail-Adresse eingeben', // 输入邮箱
       'login_password_hint': 'Passwort eingeben', // 输入密码
@@ -2147,15 +2523,29 @@ class AppTranslations extends Translations {
       'password_reset_failed':
           'Passwort konnte nicht zurückgesetzt werden', // 密码重置失败
       // 用户选择页面
-      'choose_therapy_user': 'Therapiebenutzer auswählen', // 选择理疗用户
+      'choose_therapy_user': 'Benutzer auswählen', // 选择体验用户
       'search_user_hint': 'Name oder Telefonnummer eingeben', // 输入用户姓名或手机号
+      'add_user': 'Benutzer hinzufügen', // 添加用户
+      'user_name_label': 'Name',
+      'user_age_label': 'Alter',
+      'user_phone_label': 'Telefon',
+      'user_email_label': 'E-Mail',
+      'user_email_hint': 'E-Mail-Adresse eingeben',
+      'user_gender_label': 'Geschlecht',
+      'user_male': 'Männlich',
+      'user_female': 'Weiblich',
+      'user_remark_label': 'Notiz',
+      'user_remark_hint': 'Notiz eingeben',
+      'user_required_fields': 'Bitte Name, Alter und Telefon eingeben',
+      'user_invalid_age': 'Bitte gültiges Alter eingeben',
+      'add_user_failed': 'Benutzer konnte nicht hinzugefügt werden',
       'confirm_selection': 'Auswahl bestätigen', // 确认选择
       // 音乐页面
       'confirm_music_selection': 'Auswahl bestätigen', // 确认选择
       'music_resource_missing':
           'Für diese Musik ist kein Audio verfügbar', // 当前音乐暂无音频资源
       // 启动页面
-      'red_light': 'Rot-Ther.', // 红光
+      'red_light': 'Rotlicht', // 红光
       'wavelength': 'Wellenlänge', // 波长
       'hydrogen_molecule': 'H₂', // 分子氢
       'hydrogen_concentration': 'H₂-Konz.', // 氢气浓度
@@ -2163,7 +2553,7 @@ class AppTranslations extends Translations {
       'chakra': 'Chakra', // 脉轮
       'terahertz': 'Terahertz', // 太赫兹
       'fragrance': 'Aroma', // 香氛
-      'therapy_completed': 'Therapie abgeschlossen', // 治疗完成
+      'therapy_completed': 'Wellness abgeschlossen', // 健康体验完成
       'user': 'Benutzer', // 使用者
       'session_duration': 'Sitzungsdauer', // 本次使用
       'module_duration': 'Moduldauer', // 模块时长
@@ -2189,10 +2579,16 @@ class AppTranslations extends Translations {
           'Benutzer nicht angemeldet, bitte erneut anmelden', // 用户未登录，请重新登录
       // 自定义编辑页面
       'red_ther': 'Rotlicht', // 红光
-      'add_therapy_module': 'Modul hinzufügen', // 添加治疗模块
+      'add_therapy_module': 'Modul hinzufügen', // 添加模块
       'expand_feature': 'Erweitern', // 拓展功能
       'save_params': 'Speichern', // 保存参数
       'save_plan': 'Plan speichern', // 保存方案
+      'plan_saving': 'Wird gespeichert, bitte warten',
+      'plan_save_slow':
+          'Das Speichern dauert länger als erwartet, bitte warten',
+      'plan_save_retry': 'Speichern fehlgeschlagen, bitte erneut versuchen',
+      'custom_plan_edit_invalid':
+          'Der aktuelle Plan ist ungültig. Bitte zurückgehen und erneut versuchen',
       'complete_previous_node':
           'Bitte zuerst den vorherigen 5-Minuten-Knoten abschließen', // 请先完成上一个 5 分钟节点
       'node_saved_prefix': 'Parameter des Knotens ', // 第
@@ -2247,6 +2643,13 @@ class AppTranslations extends Translations {
     },
     ////////////////////////////////////////////////////////////////土耳其语言///////////////////////////////
     'tr_TR': {
+      'prompt_volume': 'Uyarı sesi düzeyi',
+      'prompt_volume_hint':
+          'Karşılama, başlangıç, bitiş ve su uyarılarını ayarlayın. %0 sesi kapatır. Kaydırıcıyı bıraktığınızda kaydedilir.',
+      'prompt_volume_update_failed':
+          'Ses düzeyi ayarlanamadı. Lütfen tekrar deneyin.',
+      'prompt_volume_save_failed':
+          'Ses düzeyi kaydedilemedi. Kaydırıcıyı yeniden ayarlayın.',
       // 通用
       'settings': 'Ayarlar', // 设置
       'administrator': 'Yönetici', // 管理员
@@ -2275,6 +2678,19 @@ class AppTranslations extends Translations {
       'waiting': 'Bekliyor', // 等待运行
       'logout': 'Çıkış yap', // 退出登录
       'parameter_settings': 'Parametre Ayarları', // 参数设置
+      // Wi-Fi ve Bluetooth bağlantı uyarısı
+      'connection_prompt_title': 'Bağlı değil',
+      'connection_prompt_subtitle': 'Bağlanıp devam edin',
+      'connection_prompt_wifi': 'WIFI',
+      'connection_prompt_ble': 'BLE',
+      'connection_status_checking': 'Kontrol ediliyor',
+      'connection_status_connected': 'Bağlı',
+      'connection_status_disconnected': 'Bağlı değil',
+      'connection_prompt_skip': 'Atla',
+      'wifi_ble': 'WIFI & BLE',
+      'wifi_name_unavailable': 'Ağ adı alınamıyor',
+      'wifi_no_connected_network': 'Bağlı ağ yok',
+      'ble_no_connected_device': 'Bağlı cihaz yok',
       // 设置页面
       'setting_menu': 'Ayarlar Menüsü', // 设置菜单
       'language_setting': 'Dil', // 语言设置
@@ -2294,55 +2710,66 @@ class AppTranslations extends Translations {
       'history_detail_missing': 'Geçmiş kaydı bulunamadı', // 历史记录不存在
       'current_account_not_logged_in':
           'Geçerli hesap giriş yapmamış', // 当前账号未登录
-      'therapy_record_load_failed': 'Terapi kayıtları yüklenemedi', // 理疗记录加载失败
+      'therapy_record_load_failed':
+          'İyi yaşam kayıtları yüklenemedi', // 健康体验记录加载失败
       'no_history_records': 'Geçmiş kaydı yok', // 暂无历史记录
-      'no_therapy_records': 'Terapi kaydı yok', // 暂无理疗记录
+      'no_therapy_records': 'İyi yaşam kaydı yok', // 暂无健康体验记录
       'years_old_unit': 'y', // 岁
-      'therapy_report': 'Terapi Raporu', // 理疗报告
-      'total_therapy_duration': 'Toplam Süre', // 总治疗时长
-      'feedback_label': 'His: ', // 感受：
-      'no_feedback': 'Geri bildirim yok', // 暂无反馈
-      'treatment_modules': 'Terapi Modülleri', // 治疗模块
+      'therapy_report': 'İyi Yaşam Raporu', // 健康体验报告
+      'total_therapy_duration': 'İyi Yaşam Süresi', // 健康时长
+      'feedback_label': 'İyi yaşam notları: ', // 体验感受：
+      'no_feedback': 'İyi yaşam notu yok', // 暂无体验感受
+      'treatment_modules': 'İyi Yaşam Modülleri', // 健康模块
       'energy_score': 'Enerji', // 能量指数
-      'cell_score': 'Hücre Akt.', // 细胞活化
+      'cell_score': 'Canlılık End.', // 活力指数
       'relaxation_score': 'Rahatlama', // 放松指数
-      'immune_score': 'Bağışıklık', // 免疫提升
+      'immune_score': 'İyi Yaşam End.', // 健康指数
       'compared_to_last': 'son vs', // 较上次
       'session_once_1': '1.', // 1次
       'session_once_2': '2.', // 2次
       'session_once_3': '3.', // 3次
       'current_session': 'Güncel', // 本次
-      'health_effect_assessment': 'Sağlık Özeti', // 健康效果评估
+      'health_effect_assessment': 'İyi Yaşam Özeti', // 健康体验概览
       'status_good': 'İyi', // 良好
       'overall_score': 'Genel Puan', // 综合得分
       'level_low': 'Düşük', // 低
       'level_medium': 'Orta', // 中
       'level_high': 'Yüksek', // 高
-      'therapy_feedback_hint': 'Seans notu', // 请输入本次疗程的感受、身体反应等
+      'therapy_feedback_hint': 'İyi yaşam notu girin', // 请输入健康体验感受
       'score_unit': 'puan', // 分
       'minutes_unit': 'dk', // 分
       'seconds_unit': 'sn', // 秒
       'user_management': 'Kullanıcılar', // 用户管理
       'unsupported_language': 'Bu dil henüz desteklenmiyor', // 该语言暂未支持
       // 主页
-      'preset_mode': 'Hazır Terapi Modları', // 预设理疗模式
-      'preset_mode_subtitle': '10 profesyonel program', // 10种专业配方方案
+      'preset_mode': 'Hazır İyi Yaşam Modları', // 预设健康模式
+      'preset_mode_subtitle': '10 günlük iyi yaşam programı', // 10种日常健康方案
       'device_ready': 'Cihaz Hazır', // 设备就绪
       'custom_plan': 'Özel Plan', // 自定义方案
-      'deep_relax': 'Derin Rahatlama', // 深度放松
-      'energy_boost': 'Enerji Artışı', // 能量提升
-      'pain_relief': 'Ağrı Azaltma', // 疼痛缓解
-      'sleep_enhancement': 'Uyku İyileştirme', // 睡眠改善
-      'sports_recovery': 'Spor Top.', // 运动恢复
-      'stress_release': 'Stres Azaltma', // 压力释放
-      'immune_boost': 'Bağışıklık G.', // 免疫增强
-      'anti_aging': 'Yaşlanma Karşıtı', // 抗衰老
-      'full_care': 'Tam Bakım', // 全面养护
-      'mental_healing': 'Duygusal İyil.', // 情绪疗愈
+      'deep_relax': 'DERİN RAHATLAMA', // 深度放松
+      'energy_boost': 'YENİ ENERJİ', // 焕新充能
+      'pain_relief': 'HAFİF KONFOR', // 柔和舒适
+      'sleep_enhancement': 'GECE RAHATLA', // 夜间放松
+      'sports_recovery': 'SOĞUMA', // 活动后放松
+      'stress_release': 'SAKİN & RAHAT', // 舒缓放松
+      'immune_boost': 'GÜNLÜK ENERJİ', // 日常活力
+      'anti_aging': 'PARLAK CANLILIK', // 焕彩活力
+      'full_care': 'VÜCUT YENİLE', // 全身焕新
+      'mental_healing': 'İYİ RUH HALİ', // 心情平衡
       'device_fault': 'Cihaz Arızası', // 设备故障
       'water_level_warning_title': 'Su seviyesi düşük',
       'water_level_warning_message':
           'Su tankı seviyesi düşük. Devam etmeden önce lütfen su ekleyin.',
+      'water_level_shortage_title': 'Su Eksik',
+      'water_level_shortage_message':
+          'Su yetersiz. Otomatik dolum için su kaynağını bağlayın.',
+      'water_level_shortage_unavailable':
+          'Moleküler hidrojen işlevi geçici olarak kullanılamıyor',
+      'water_level_filling_title': 'Su Dolduruluyor',
+      'water_level_filling_message': 'Su dolduruluyor, lütfen bekleyin...',
+      'water_level_complete_title': 'Su Dolumu Tamamlandı',
+      'water_level_complete_message':
+          'Su dolumu tamamlandı. Cihazı kullanmaya devam edebilirsiniz.',
       // 登录页面
       'login_email_hint': 'E-posta adresini girin', // 输入邮箱
       'login_password_hint': 'Şifreyi girin', // 输入密码
@@ -2393,14 +2820,28 @@ class AppTranslations extends Translations {
       'password_reset_success': 'Şifre başarıyla sıfırlandı', // 密码重置成功
       'password_reset_failed': 'Şifre sıfırlanamadı', // 密码重置失败
       // 用户选择页面
-      'choose_therapy_user': 'Terapi Kullanıcısı Seç', // 选择理疗用户
+      'choose_therapy_user': 'Kullanıcı Seç', // 选择体验用户
       'search_user_hint': 'Ad veya telefon girin', // 输入用户姓名或手机号
+      'add_user': 'Kullanıcı Ekle', // 添加用户
+      'user_name_label': 'Ad',
+      'user_age_label': 'Yaş',
+      'user_phone_label': 'Telefon',
+      'user_email_label': 'E-posta',
+      'user_email_hint': 'E-posta adresini girin',
+      'user_gender_label': 'Cinsiyet',
+      'user_male': 'Erkek',
+      'user_female': 'Kadın',
+      'user_remark_label': 'Not',
+      'user_remark_hint': 'Not girin',
+      'user_required_fields': 'Lütfen ad, yaş ve telefon girin',
+      'user_invalid_age': 'Lütfen geçerli bir yaş girin',
+      'add_user_failed': 'Kullanıcı eklenemedi',
       'confirm_selection': 'Seçimi Onayla', // 确认选择
       // 音乐页面
       'confirm_music_selection': 'Seçimi Onayla', // 确认选择
       'music_resource_missing': 'Bu müzik için ses kaynağı yok', // 当前音乐暂无音频资源
       // 启动页面
-      'red_light': 'Kır. Ter.', // 红光
+      'red_light': 'Kırmızı Işık', // 红光
       'wavelength': 'Dalga Boyu', // 波长
       'hydrogen_molecule': 'H₂', // 分子氢
       'hydrogen_concentration': 'H₂ Kons.', // 氢气浓度
@@ -2408,7 +2849,7 @@ class AppTranslations extends Translations {
       'chakra': 'Çakra', // 脉轮
       'terahertz': 'Terahertz', // 太赫兹
       'fragrance': 'Aroma', // 香氛
-      'therapy_completed': 'Terapi Tamamlandı', // 治疗完成
+      'therapy_completed': 'İyi Yaşam Tamamlandı', // 健康体验完成
       'user': 'Kullanıcı', // 使用者
       'session_duration': 'Seans Süresi', // 本次使用
       'module_duration': 'Modül Süresi', // 模块时长
@@ -2432,10 +2873,15 @@ class AppTranslations extends Translations {
           'Kullanıcı giriş yapmamış, lütfen tekrar giriş yapın', // 用户未登录，请重新登录
       // 自定义编辑页面
       'red_ther': 'Kırmızı Işık', // 红光
-      'add_therapy_module': 'Terapi Modülü Ekle', // 添加治疗模块
+      'add_therapy_module': 'Modül Ekle', // 添加模块
       'expand_feature': 'Доп. функции', // 拓展功能
       'save_params': 'Kaydet', // 保存参数
       'save_plan': 'Planı Kaydet', // 保存方案
+      'plan_saving': 'Kaydediliyor, lütfen bekleyin',
+      'plan_save_slow': 'Kaydetme yanıtı gecikiyor, lütfen bekleyin',
+      'plan_save_retry': 'Kaydetme başarısız oldu, lütfen tekrar deneyin',
+      'custom_plan_edit_invalid':
+          'Geçerli plan bilgileri hatalı. Geri dönüp tekrar deneyin',
       'complete_previous_node':
           'Lütfen önce önceki 5 dakikalık düğümü tamamlayın', // 请先完成上一个 5 分钟节点
       'node_saved_prefix': 'Düğüm ', // 第

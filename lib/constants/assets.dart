@@ -4,6 +4,8 @@
 // - 这里只放图片路径，不放业务逻辑。
 // - 每个常量上方都写清楚图片用途和所在页面，方便改素材时快速定位。
 // - 资源目录统一使用英文命名，避免 Android / Windows 调试时中文路径造成排查困难。
+import 'package:infibo_app/config/app_brand.dart';
+
 class Assets {
   //注水图标
   static const String waterLogo = "assets/Mainimages/water.png";
@@ -11,7 +13,7 @@ class Assets {
   static const String ok = "assets/Mainimages/ok.png";
 
   // 登录页：品牌 Logo。
-  static const String logo = "assets/Loginimages/logo.png";
+  static String get logo => AppBrand.current.loginLogoAsset;
 
   // 登录页：输入框毛玻璃背景。
   static const String glassLogo = "assets/Loginimages/glass.png";
@@ -40,7 +42,7 @@ class Assets {
   static const String mainBodyLogo = "assets/Mainimages/body.png";
 
   // 主页 / 公共页头：顶部品牌 Logo。
-  static const String mainLogo = "assets/Mainimages/mainlogo.png";
+  static String get mainLogo => AppBrand.current.headerLogoAsset;
 
   // 公共页头：顶部添加按钮图片。
   static const String addLogo = "assets/Mainimages/add.png";
@@ -67,33 +69,67 @@ class Assets {
   // 主页模式卡：深度放松模式卡片底图。
   static const String deepRelaxLogo = "assets/Mode/DeepRelaxation.png";
 
+  // 主页模式卡：深度放松图标。
+  static const String deepRelaxationIcon =
+      "assets/Mode/DeepRelaxation_Icon.png";
+
   // 主页模式卡：能量提升模式卡片底图。
   static const String energyBoostLogo = "assets/Mode/EnergyBoost.png";
+
+  // 主页模式卡：能量提升图标。
+  static const String energyBoostIcon = "assets/Mode/EnergyBoost_Icon.png";
 
   // 主页模式卡：疼痛缓解模式卡片底图。
   static const String painReliefLogo = "assets/Mode/PainRelief.png";
 
+  // 主页模式卡：疼痛缓解图标。
+  static const String painReliefIcon = "assets/Mode/PainRelief_Icon.png";
+
   // 主页模式卡：睡眠改善模式卡片底图。
   static const String sleepEnhancementLogo = "assets/Mode/SleepEnhancement.png";
+
+  // 主页模式卡：睡眠改善图标。
+  static const String sleepEnhancementIcon =
+      "assets/Mode/SleepEnhancement_Icon.png";
 
   // 主页模式卡：运动恢复模式卡片底图。
   static const String sportsRehabilitationLogo =
       "assets/Mode/SportsRehabilitation.png";
 
+  // 主页模式卡：运动恢复图标。
+  static const String sportsRehabilitationIcon =
+      "assets/Mode/SportsRehabilitation_Icon.png";
+
   // 主页模式卡：压力释放模式卡片底图。
   static const String stressReliefLogo = "assets/Mode/StressRelief.png";
+
+  // 主页模式卡：压力释放图标。
+  static const String stressReliefIcon = "assets/Mode/StressRelief_Icon.png";
 
   // 主页模式卡：免疫增强模式卡片底图。
   static const String immuneBoostLogo = "assets/Mode/ImmuneBoost.png";
 
+  // 主页模式卡：免疫增强图标。
+  static const String immuneBoostIcon = "assets/Mode/ImmuneBoost_Icon.png";
+
   // 主页模式卡：抗衰老模式卡片底图。
   static const String antiAgingLogo = "assets/Mode/AntiAging.png";
+
+  // 主页模式卡：抗衰老图标。
+  static const String antiAgingIcon = "assets/Mode/AntiAging_Icon.png";
 
   // 主页模式卡：全面养护模式卡片底图。
   static const String fullCareLogo = "assets/Mode/FullCare.png";
 
+  // 主页模式卡：全面养护图标。
+  static const String fullCareIcon = "assets/Mode/FullCare_Icon.png";
+
   // 主页模式卡：情绪疗愈模式卡片底图。
   static const String mentalHealingLogo = "assets/Mode/EmotonnalHealing.png";
+
+  // 主页模式卡：情绪疗愈图标。
+  static const String emotionalHealingIcon =
+      "assets/Mode/EmotionalHealing_Icon.png";
 
   // 选择用户 / 自定义方案列表：搜索框背景。
   static const String choseUserSearchBg = "assets/Choseusers/searchBox.png";
@@ -115,6 +151,9 @@ class Assets {
   static const String choseUserAddBg =
       "assets/Choseusers/adduserBackground.png";
 
+  // 选择用户：底部添加用户按钮图标。
+  static const String choseUserAddIcon = "assets/Choseusers/adduserIcon.png";
+
   // 启动治疗页：人体主视觉图片。
   static const String startBodyLogo = "assets/Start/startBody.png";
   /////////////////////////////////////功能框背景/////////////////////////////////////
@@ -128,9 +167,10 @@ class Assets {
   // 启动治疗页：VAT 功能参数面板背景。
   static const String startVatPanel = "assets/Start/Function/VATpage.png";
 
-  // 启动治疗页：分子氢功能参数面板背景。
-  static const String startHydrogenPanel =
-      "assets/Start/Function/hydrogenpage.png";
+  // 启动治疗页：分子氢功能参数面板背景，英国版使用专用图片。
+  static String get startHydrogenPanel => AppBrand.current.flavor == 'britain'
+      ? "assets/Start/Function/hydrogenpage1.png"
+      : "assets/Start/Function/hydrogenpage.png";
 
   // 启动治疗页：拓展功能参数面板背景。
   static const String startExpandPanel = "assets/Start/Function/expandpage.png";
@@ -813,4 +853,8 @@ class Assets {
   static const String relaxicon = "assets/History/relaxicon.png";
   //免疫提升icon
   static const String immuneicon = "assets/History/immuneicon.png";
+
+  ///加水gif
+
+  static const String water = "assets/Mainimages/water.gif";
 }

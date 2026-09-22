@@ -4,8 +4,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:infibo_app/components/designCanvas/design.dart';
 import 'package:infibo_app/components/logic.dart';
 import 'package:infibo_app/components/logout_menu.dart';
+import 'package:infibo_app/config/app_brand.dart';
 import 'package:infibo_app/constants/assets.dart';
 import 'package:infibo_app/constants/color.dart';
 import 'package:infibo_app/stores/app_header_clock_store.dart';
@@ -17,7 +19,7 @@ class AppSettingHeaderPage extends StatelessWidget {
     super.key,
     this.children = const [],
     this.onUserTap, //用户区域
-    this.enableLogoBack = true,
+    this.enableLogoBack = false,
     this.resizeToAvoidBottomInset = true,
   });
 
@@ -35,28 +37,34 @@ class AppSettingHeaderPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double pageTopOffset = AppLayoutScope.of(context).pageTopOffset;
+
     return Scaffold(
       resizeToAvoidBottomInset: resizeToAvoidBottomInset,
       backgroundColor: AppTheme.primaryColor,
       body: SafeArea(
+        maintainBottomViewPadding: true,
         child: SizedBox(
           width: double.infinity,
           height: double.infinity,
-          child: Stack(
-            children: [
-              ...children,
-              Positioned(
-                left: 48,
-                top: 25,
-                right: 44,
-                child: AppTopHeader(
-                  onLogoTap: enableLogoBack
-                      ? AppComponentLogic.backToMainPage
-                      : null,
-                  onUserTap: onUserTap,
+          child: Transform.translate(
+            offset: Offset(0, pageTopOffset),
+            child: Stack(
+              children: [
+                ...children,
+                Positioned(
+                  left: 48,
+                  top: 25,
+                  right: AppBrand.current.headerLayout.settingPageRightInset,
+                  child: AppTopHeader(
+                    onLogoTap: enableLogoBack
+                        ? AppComponentLogic.backToMainPage
+                        : null,
+                    onUserTap: onUserTap,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -78,13 +86,31 @@ class AppTopHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final AppHeaderClockController clock = AppHeaderClockController.instance
       ..startClock();
+    final HeaderLayoutConfig layout = AppBrand.current.headerLayout;
+    final Widget userButton = _buildUserButton();
+    final Widget clockBlock = Obx(
+      () => _buildTimeBlock(clock.timeText, clock.dateText),
+    );
+
+    if (layout.logoPosition == HeaderLogoPosition.trailing) {
+      return Row(
+        children: [
+          userButton,
+          SizedBox(width: layout.settingClockGap),
+          clockBlock,
+          const Spacer(),
+          _buildLogo(layout),
+        ],
+      );
+    }
+
     return Row(
       children: [
-        _buildLogo(),
-        const SizedBox(width: 80),
-        Obx(() => _buildTimeBlock(clock.timeText, clock.dateText)),
+        _buildLogo(layout),
+        SizedBox(width: layout.settingClockGap),
+        clockBlock,
         const Spacer(),
-        _buildUserButton(),
+        userButton,
         const SizedBox(width: 12),
       ],
     );
@@ -97,6 +123,7 @@ class AppTopHeader extends StatelessWidget {
 
       return LogoutMenu(
         onLogout: AppComponentLogic.logout,
+        enabled: false,
         child: _buildImageButton(
           asset: Assets.adminMainLogo,
           width: 108,
@@ -152,11 +179,11 @@ class AppTopHeader extends StatelessWidget {
   }
 
   // 构建品牌logo
-  Widget _buildLogo() {
+  Widget _buildLogo(HeaderLayoutConfig layout) {
     final Widget logo = Image.asset(
       Assets.mainLogo,
-      width: 242,
-      height: 44,
+      width: layout.logoSize.width,
+      height: layout.logoSize.height,
       fit: BoxFit.contain,
     );
 
