@@ -12,12 +12,16 @@ import 'package:get/get.dart';
 import 'package:infibo_app/components/logic.dart';
 
 class SummaryLogic {
-  // 页面无操作 1 分钟后，走和点击确认一样的返回逻辑。
+  // 页面无操作 2 秒后，走和点击确认一样的返回逻辑。
   static const Duration _idleDuration = Duration(milliseconds: 2000);
 
   final TextEditingController feelingController = TextEditingController();
 
   Timer? _idleTimer;
+
+  // 键盘（输入法）是否正在显示。打字期间暂停自动返回计时，
+  // 避免用户输入中途停顿超过 2 秒时总结页被销毁。
+  bool _keyboardVisible = false;
   String userName = 'no_user_selected'.tr;
   Map<String, int> moduleSeconds = <String, int>{};
 
@@ -58,13 +62,29 @@ class SummaryLogic {
         moduleSeconds.values.fold<int>(0, (sum, seconds) => sum + seconds);
   }
 
-  // 点击、拖动、滚动、输入都算一次用户操作，会重新开始 2 分钟计时。
+  // 点击、拖动、滚动、输入都算一次用户操作，会重新开始空闲计时。
   void recordUserAction() {
     startIdleTimer();
   }
 
+  // 键盘弹出（正在打字）时暂停自动返回计时，键盘收起后再重新计时。
+  // 这样用户在感受留言里输入时，无论写多久、停顿多久，页面都不会被自动关闭。
+  void setKeyboardVisible(bool visible) {
+    if (_keyboardVisible == visible) return;
+    _keyboardVisible = visible;
+    if (visible) {
+      _idleTimer?.cancel();
+      _idleTimer = null;
+    } else {
+      startIdleTimer();
+    }
+  }
+
   void startIdleTimer() {
     _idleTimer?.cancel();
+    _idleTimer = null;
+    // 打字期间不启动自动返回计时，等键盘收起后由 setKeyboardVisible 重新计时。
+    if (_keyboardVisible) return;
     _idleTimer = Timer(_idleDuration, confirmBackToMain);
   }
 

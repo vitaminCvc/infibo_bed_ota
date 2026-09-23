@@ -41,6 +41,9 @@ class _MainPageState extends State<MainPage> with RouteAware {
   Timer? _waterLevelTimer; //水位状态轮询定时器
   bool _isDeviceStatusPolling = false;
   bool _isHomeDeviceStateReading = false;
+  // 设备状态轮询（0x0012 → 0x0006）一轮结束的信号量。
+  // 水位读取（0x01E5）会先等它完成，从而保证串口发送时序恒为 0x0012 → 0x0006 → 0x01E5。
+  Completer<void>? _homeDeviceStateCycleCompleter;
   bool _isWaterLevelPolling = false;
   bool _isWaterLevelReading = false;
   bool _isWaterLevelDialogVisible = false;
@@ -154,15 +157,32 @@ class _MainPageState extends State<MainPage> with RouteAware {
   }
 
   // 首页显示期间同时同步设备故障状态和氛围灯真实状态。
+  // 发送时序固定为 0x0012 → 0x0006：两条都读完后才释放信号量，允许水位 0x01E5 读取。
   Future<void> _readHomeDeviceState() async {
     if (!_isDeviceStatusPolling || _isHomeDeviceStateReading) return;
     _isHomeDeviceStateReading = true;
+    _homeDeviceStateCycleCompleter = Completer<void>();
     try {
-      await _syncAmbientLightStateFromDevice();
+      await _syncAmbientLightStateFromDevice(); // 第 1 帧：0x0012 氛围灯开关状态
       if (!mounted || !_isDeviceStatusPolling) return;
-      await _readDeviceStatus0006();
+      await _readDeviceStatus0006(); // 第 2 帧：0x0006 系统运行状态
     } finally {
       _isHomeDeviceStateReading = false;
+      // 本轮 0x0012 / 0x0006 已发送完毕，唤醒正在等待的水位读取（0x01E5）。
+      _homeDeviceStateCycleCompleter?.complete();
+      _homeDeviceStateCycleCompleter = null;
+    }
+  }
+
+  /// 等待当前一轮 0x0012 / 0x0006 读取完成。
+  ///
+  /// 水位读取在发送 0x01E5 前调用本方法，确保 0x01E5 永远排在 0x0006 之后，
+  /// 维持 0x0012 → 0x0006 → 0x01E5 的发送时序（旧版本 6月30日/7月9日 即为此顺序）。
+  Future<void> _waitForHomeDeviceStateCycle() async {
+    while (_isHomeDeviceStateReading) {
+      final Completer<void>? completer = _homeDeviceStateCycleCompleter;
+      if (completer == null) return;
+      await completer.future;
     }
   }
 
@@ -170,6 +190,8 @@ class _MainPageState extends State<MainPage> with RouteAware {
     if (_isWaterLevelPolling) return;
     _isWaterLevelPolling = true;
     // 注释掉分子氢读取水位状态
+    // 注意：这里不再直接抢发 0x01E5，首帧会等 0x0012 / 0x0006 读完后才发出，
+    // 保证进入首页的发送时序为 0x0012 → 0x0006 → 0x01E5（3s 轮询周期保持不变）。
     _readWaterLevelStatus01E5();
     _waterLevelTimer = Timer.periodic(
       const Duration(seconds: 3),
@@ -222,6 +244,9 @@ class _MainPageState extends State<MainPage> with RouteAware {
     if (_isWaterLevelReading) return;
     _isWaterLevelReading = true;
     try {
+      // 先等 0x0012 / 0x0006 本轮读取完成，确保 0x01E5 排在 0x0006 之后发送。
+      await _waitForHomeDeviceStateCycle();
+      if (!mounted || !_isWaterLevelPolling) return;
       final int state = await widget.modbusService.readHoldingRegister(
         HydrogenModbus.waterLevelReadAddress,
       );
