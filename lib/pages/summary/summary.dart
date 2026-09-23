@@ -44,6 +44,8 @@ class _SummaryPageState extends State<SummaryPage> {
     final bool is16x9 = AppLayoutScope.of(context).is16x9;
     // 获取键盘高度
     final double keyboardHeight = MediaQuery.viewInsetsOf(context).bottom;
+    // 键盘显示（正在打字）时暂停空闲自动返回，键盘收起后再重新计时。
+    _logic.setKeyboardVisible(keyboardHeight > 0);
     final double keyboardShift = keyboardHeight > 0
         ? math.max(
             0,

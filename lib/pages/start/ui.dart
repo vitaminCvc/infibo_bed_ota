@@ -1215,8 +1215,13 @@ class _StartPageState extends State<StartPage>
         setState(() => _isWaitingLiftBottom = false);
       }
 
-      _waitingLiftBreathController.stop();
-      _waitingLiftBreathController.reset();
+      // 等待升降杆到位的异步过程中页面可能已被销毁，
+      // 此时 _waitingLiftBreathController 已 dispose，再调用 stop/reset 会触发
+      // 'AnimationController.stop() called after AnimationController.dispose()' 断言。
+      if (mounted) {
+        _waitingLiftBreathController.stop();
+        _waitingLiftBreathController.reset();
+      }
 
       // 英国版在下降前已关灯；其他版本保留到位后关灯的流程。
       if (!_isBritainVersion) await _turnoffAmbientLight();
@@ -1284,8 +1289,12 @@ class _StartPageState extends State<StartPage>
       if (!mounted) return;
       _showError('${'error_send_params_failed'.tr}$e');
     } finally {
-      _waitingLiftBreathController.stop();
-      _waitingLiftBreathController.reset();
+      // try 里的任何 return / 异常都会走到这里；页面若已销毁，控制器也已 dispose，
+      // 必须先判断 mounted，避免对已销毁的 AnimationController 调用 stop/reset。
+      if (mounted) {
+        _waitingLiftBreathController.stop();
+        _waitingLiftBreathController.reset();
+      }
 
       if (mounted) {
         setState(() {
