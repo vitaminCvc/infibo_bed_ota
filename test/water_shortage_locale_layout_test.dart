@@ -19,7 +19,14 @@ void main() {
         GetMaterialApp(
           translations: AppTranslations(),
           locale: Locale(parts[0], parts[1]),
-          home: const Scaffold(body: Center(child: WaterShortageDialog())),
+          home: Scaffold(
+            body: Center(
+              child: WaterShortageDialog(
+                readyToFill: false,
+                onButtonTap: () {},
+              ),
+            ),
+          ),
         ),
       );
       expect(
@@ -39,6 +46,22 @@ void main() {
       expect(
         tester.getBottomLeft(find.byType(Image)).dy,
         lessThan(tester.getTopLeft(lower).dy),
+      );
+      // 按钮位于文案下方，且默认展示 “Ready?” 文案。
+      expect(
+        find.text(entry.value['water_level_ready_button']!),
+        findsOneWidget,
+      );
+      final Finder button = find.byKey(
+        const ValueKey<String>('water_level_filling_button'),
+      );
+      expect(button, findsOneWidget);
+      final Size buttonSize = tester.getSize(button);
+      expect(buttonSize.width, lessThanOrEqualTo(192));
+      expect(buttonSize.height, lessThanOrEqualTo(56));
+      expect(
+        tester.getTopLeft(button).dy,
+        greaterThan(tester.getBottomLeft(lower).dy),
       );
       await tester.pumpWidget(const SizedBox.shrink());
     });

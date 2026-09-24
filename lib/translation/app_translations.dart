@@ -130,6 +130,8 @@ class AppTranslations extends Translations {
       'water_level_filling_message': '正在注水，请稍候...',
       'water_level_complete_title': '注水完成',
       'water_level_complete_message': '注水已完成，可以继续使用设备',
+      'water_level_ready_button': '已备好水源？',
+      'water_level_start_filling_button': '开始加水',
 
       // 登录页面
       'login_email_hint': '输入邮箱',
@@ -421,6 +423,8 @@ class AppTranslations extends Translations {
       'water_level_complete_title': 'Filling Complete',
       'water_level_complete_message':
           'Water filling complete. You may continue using the device.',
+      'water_level_ready_button': 'Ready?',
+      'water_level_start_filling_button': 'Start Filling',
       // 登录页面
       'login_email_hint': 'Enter email address', // 输入邮箱
       'login_password_hint': 'Enter password', // 输入密码
@@ -715,6 +719,8 @@ class AppTranslations extends Translations {
       'water_level_complete_title': 'Llenado completo',
       'water_level_complete_message':
           'Llenado de agua completo. Puede continuar usando el dispositivo.',
+      'water_level_ready_button': '¿Listo?',
+      'water_level_start_filling_button': 'Iniciar llenado',
       // 登录页面
       'login_email_hint': 'Ingrese correo electrónico', // 输入邮箱
       'login_password_hint': 'Ingrese contraseña', // 输入密码
@@ -1013,6 +1019,8 @@ class AppTranslations extends Translations {
       'water_level_complete_title': 'Enchimento concluído',
       'water_level_complete_message':
           'Enchimento de água concluído. Pode continuar a utilizar o dispositivo.',
+      'water_level_ready_button': 'Pronto?',
+      'water_level_start_filling_button': 'Iniciar enchimento',
       // 登录页面
       'login_email_hint': 'Introduza o e-mail', // 输入邮箱
       'login_password_hint': 'Introduza a palavra-passe', // 输入密码
@@ -1309,6 +1317,8 @@ class AppTranslations extends Translations {
       'water_level_complete_title': 'Наполнение завершено',
       'water_level_complete_message':
           'Наполнение водой завершено. Можно продолжать использование устройства.',
+      'water_level_ready_button': 'Готовы?',
+      'water_level_start_filling_button': 'Начать заполнение',
       // 登录页面
       'login_email_hint': 'Введите адрес электронной почты', // 输入邮箱
       'login_password_hint': 'Введите пароль', // 输入密码
@@ -1601,6 +1611,8 @@ class AppTranslations extends Translations {
       'water_level_complete_title': 'Remplissage terminé',
       'water_level_complete_message':
           'Remplissage d’eau terminé. Vous pouvez continuer à utiliser l’appareil.',
+      'water_level_ready_button': 'Prêt ?',
+      'water_level_start_filling_button': 'Démarrer le remplissage',
       // 登录页面
       'login_email_hint': 'Saisir l’adresse e-mail', // 输入邮箱
       'login_password_hint': 'Saisir le mot de passe', // 输入密码
@@ -1897,6 +1909,8 @@ class AppTranslations extends Translations {
       'water_level_filling_message': '물을 보충하고 있습니다. 잠시만 기다려 주세요...',
       'water_level_complete_title': '물 보충 완료',
       'water_level_complete_message': '물 보충이 완료되었습니다. 장치를 계속 사용할 수 있습니다.',
+      'water_level_ready_button': '준비되셨나요?',
+      'water_level_start_filling_button': '물 채우기 시작',
       // 登录页面
       'login_email_hint': '이메일을 입력하세요', // 输入邮箱
       'login_password_hint': '비밀번호를 입력하세요', // 输入密码
@@ -2178,6 +2192,8 @@ class AppTranslations extends Translations {
       'water_level_complete_title': 'اكتملت تعبئة الماء',
       'water_level_complete_message':
           'اكتملت تعبئة الماء، ويمكنك متابعة استخدام الجهاز.',
+      'water_level_ready_button': 'هل أنت مستعد؟',
+      'water_level_start_filling_button': 'بدء التعبئة',
       // 登录页面
       'login_email_hint': 'أدخل البريد الإلكتروني', // 输入邮箱
       'login_password_hint': 'أدخل كلمة المرور', // 输入密码
@@ -2470,6 +2486,8 @@ class AppTranslations extends Translations {
       'water_level_complete_title': 'Wasserfüllung abgeschlossen',
       'water_level_complete_message':
           'Das Wasser wurde vollständig eingefüllt. Sie können das Gerät weiter verwenden.',
+      'water_level_ready_button': 'Bereit?',
+      'water_level_start_filling_button': 'Füllen starten',
       // 登录页面
       'login_email_hint': 'E-Mail-Adresse eingeben', // 输入邮箱
       'login_password_hint': 'Passwort eingeben', // 输入密码
@@ -2770,6 +2788,8 @@ class AppTranslations extends Translations {
       'water_level_complete_title': 'Su Dolumu Tamamlandı',
       'water_level_complete_message':
           'Su dolumu tamamlandı. Cihazı kullanmaya devam edebilirsiniz.',
+      'water_level_ready_button': 'Hazır mısınız?',
+      'water_level_start_filling_button': 'Doldurmayı Başlat',
       // 登录页面
       'login_email_hint': 'E-posta adresini girin', // 输入邮箱
       'login_password_hint': 'Şifreyi girin', // 输入密码

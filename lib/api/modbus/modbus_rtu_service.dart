@@ -1076,6 +1076,17 @@ class ModbusRtuService {
     }
   }
 
+  /// 开始自动加水：写 0x01EB=1，是否加满仍由 0x01E5 水位轮询确认。
+  Future<void> startWaterFilling() async {
+    await sendCommandQueue([
+      ModbusWriteCommand(
+        address: HydrogenModbus.waterFillingSwitchAddress,
+        value: 1,
+      ),
+    ]);
+    debugPrint('Water filling start TX address=0x01EB value=1');
+  }
+
   Future<int> readHoldingRegister(int address) async {
     final Uint8List frame = _buildReadHoldingRegistersFrame(
       slaveId: slaveId,

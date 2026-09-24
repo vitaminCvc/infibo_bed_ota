@@ -133,6 +133,8 @@ void main() {
       'water_level_filling_message',
       'water_level_complete_title',
       'water_level_complete_message',
+      'water_level_ready_button',
+      'water_level_start_filling_button',
     };
     final Map<String, Map<String, String>> translations =
         AppTranslations().keys;
@@ -161,11 +163,17 @@ void main() {
     Get.updateLocale(const Locale('zh', 'CN'));
 
     final ValueNotifier<int> notifier = ValueNotifier<int>(1);
+    int startFillingCalls = 0;
 
     await tester.pumpWidget(
       GetMaterialApp(
         home: Scaffold(
-          body: Center(child: WaterLevelStateDialog(notifier: notifier)),
+          body: Center(
+            child: WaterLevelStateDialog(
+              notifier: notifier,
+              onStartFilling: () => startFillingCalls++,
+            ),
+          ),
         ),
       ),
     );
@@ -173,6 +181,18 @@ void main() {
     expect(find.text('设备缺水提醒'), findsOneWidget);
     expect(find.text('水量不足，请连接水源自动加水'), findsOneWidget);
     expect(find.text('分子氢功能暂不可用'), findsOneWidget);
+
+    // 第一次点击只确认水源：按钮文案切到 Start Filling，不触发加水。
+    expect(find.text('已备好水源？'), findsOneWidget);
+    await tester.tap(find.text('已备好水源？'));
+    await tester.pump();
+    expect(find.text('开始加水'), findsOneWidget);
+    expect(startFillingCalls, 0);
+
+    // 第二次点击才开始自动加水。
+    await tester.tap(find.text('开始加水'));
+    await tester.pump();
+    expect(startFillingCalls, 1);
   });
 
   testWidgets('water level state dialog transitions to filling state (2)', (
@@ -186,7 +206,12 @@ void main() {
     await tester.pumpWidget(
       GetMaterialApp(
         home: Scaffold(
-          body: Center(child: WaterLevelStateDialog(notifier: notifier)),
+          body: Center(
+            child: WaterLevelStateDialog(
+              notifier: notifier,
+              onStartFilling: () {},
+            ),
+          ),
         ),
       ),
     );
@@ -203,42 +228,74 @@ void main() {
     expect(find.text('设备缺水提醒'), findsNothing);
   });
 
-  testWidgets(
-    'shortage dialog stays visible and allows dismissal after four seconds',
-    (WidgetTester tester) async {
-      Get.addTranslations(AppTranslations().keys);
-      Get.updateLocale(const Locale('zh', 'CN'));
+  testWidgets('shortage dialog cannot be dismissed manually', (
+    WidgetTester tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(1024, 1366));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
 
-      final ValueNotifier<int> notifier = ValueNotifier<int>(1);
-      bool animationCompleted = false;
+    Get.testMode = true;
+    Get.addTranslations(AppTranslations().keys);
+    Get.updateLocale(const Locale('zh', 'CN'));
+    Get.put(UserStore());
+    addTearDown(() {
+      if (Get.isRegistered<AppHeaderClockController>()) {
+        Get.delete<AppHeaderClockController>(force: true);
+      }
+      Get.reset();
+    });
 
-      await tester.pumpWidget(
-        GetMaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: WaterLevelStateDialog(
-                notifier: notifier,
-                onShortageAnimationCompleted: () => animationCompleted = true,
-              ),
-            ),
-          ),
+    final _FakeWaterLevelModbusService modbusService =
+        _FakeWaterLevelModbusService(waterLevelStates: const <int>[1]);
+
+    await tester.pumpWidget(
+      GetMaterialApp(
+        navigatorObservers: [appRouteObserver],
+        home: MainPage(modbusService: modbusService),
+      ),
+    );
+    await tester.pump(const Duration(milliseconds: 250));
+    expect(find.text('设备缺水提醒'), findsOneWidget);
+
+    // 缺水弹窗不能手动关闭：遮罩没有关闭手势，点击外部也不生效。
+    final Finder barrier = find.byKey(
+      const ValueKey<String>('water_level_dialog_barrier'),
+    );
+    expect(tester.widget<GestureDetector>(barrier).onTap, isNull);
+    await tester.tapAt(const Offset(50, 1000));
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 4));
+    expect(find.text('设备缺水提醒'), findsOneWidget);
+    expect(find.text('已备好水源？'), findsOneWidget);
+
+    // 离开首页再回来依然保持提醒（弹窗从未被关闭）。
+    final BuildContext mainContext = tester.element(find.byType(MainPage));
+    Navigator.of(mainContext).push<void>(
+      MaterialPageRoute<void>(
+        builder: (_) => const Scaffold(
+          key: ValueKey<String>('water_level_reentry_test_page'),
         ),
-      );
+      ),
+    );
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 250));
 
-      await tester.pump(const Duration(seconds: 2));
-      expect(animationCompleted, isFalse);
+    final Finder reentryPage = find.byKey(
+      const ValueKey<String>('water_level_reentry_test_page'),
+    );
+    expect(reentryPage, findsOneWidget);
+    Navigator.of(tester.element(reentryPage)).pop();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 250));
+    expect(find.text('设备缺水提醒'), findsOneWidget);
 
-      await tester.pump(const Duration(seconds: 2));
-      expect(animationCompleted, isTrue);
-
-      final Finder fadeFinder = find.descendant(
-        of: find.byType(WaterLevelStateDialog),
-        matching: find.byType(FadeTransition),
-      );
-      expect(fadeFinder, findsNothing);
-      expect(find.text('设备缺水提醒'), findsOneWidget);
-    },
-  );
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
+    if (Get.isRegistered<AppHeaderClockController>()) {
+      Get.find<AppHeaderClockController>().onClose();
+      Get.delete<AppHeaderClockController>(force: true);
+    }
+  });
 
   testWidgets('mode card header places icon and translated title in one row', (
     WidgetTester tester,
@@ -455,7 +512,7 @@ void main() {
   });
 
   testWidgets(
-    'shortage dialog stays closed for current visit and returns on re-entry',
+    'water recovery keeps the shortage dialog open until completion',
     (WidgetTester tester) async {
       await tester.binding.setSurfaceSize(const Size(1024, 1366));
       addTearDown(() => tester.binding.setSurfaceSize(null));
@@ -490,19 +547,13 @@ void main() {
       await tester.pump(const Duration(milliseconds: 250));
       expect(find.text('设备缺水提醒'), findsOneWidget);
 
-      await tester.pump(const Duration(seconds: 4));
-      final GestureTapCallback? dismissShortage = tester
-          .widget<GestureDetector>(barrier)
-          .onTap;
-      expect(dismissShortage, isNotNull);
-      dismissShortage!();
-      await tester.pump();
+      // 水位回到正常(2)：按需求弹窗保持打开，等待用户继续加水流程。
+      modbusService.waterLevelOverride = 2;
+      await tester.pump(const Duration(seconds: 3));
       await tester.pump(const Duration(milliseconds: 250));
-      expect(find.text('设备缺水提醒'), findsNothing);
+      expect(find.text('设备缺水提醒'), findsOneWidget);
 
-      await tester.pump(const Duration(seconds: 6));
-      expect(find.text('设备缺水提醒'), findsNothing);
-
+      // 离开首页再回来依然保持提醒（弹窗从未被关闭）。
       final BuildContext mainContext = tester.element(find.byType(MainPage));
       Navigator.of(mainContext).push<void>(
         MaterialPageRoute<void>(
@@ -523,6 +574,22 @@ void main() {
       await tester.pump(const Duration(milliseconds: 250));
       expect(find.text('设备缺水提醒'), findsOneWidget);
 
+      // 高水位(3) → 注水完成；点击屏幕任意位置关闭后，再次缺水可重新弹出。
+      modbusService.waterLevelOverride = 3;
+      await tester.pump(const Duration(seconds: 3));
+      await tester.pump(const Duration(milliseconds: 250));
+      expect(find.text('注水完成'), findsOneWidget);
+
+      await tester.tapAt(const Offset(50, 1000));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 250));
+      expect(find.text('注水完成'), findsNothing);
+
+      modbusService.waterLevelOverride = 1;
+      await tester.pump(const Duration(seconds: 3));
+      await tester.pump(const Duration(milliseconds: 250));
+      expect(find.text('设备缺水提醒'), findsOneWidget);
+
       await tester.pumpWidget(const SizedBox.shrink());
       await tester.pump();
       if (Get.isRegistered<AppHeaderClockController>()) {
@@ -533,7 +600,7 @@ void main() {
   );
 
   testWidgets(
-    'a new shortage after recovery is shown again in the same visit',
+    'Ready? only switches the label and Start Filling writes 0x01EB=1',
     (WidgetTester tester) async {
       await tester.binding.setSurfaceSize(const Size(1024, 1366));
       addTearDown(() => tester.binding.setSurfaceSize(null));
@@ -550,9 +617,7 @@ void main() {
       });
 
       final _FakeWaterLevelModbusService modbusService =
-          _FakeWaterLevelModbusService(
-            waterLevelStates: const <int>[1, 1, 0, 1],
-          );
+          _FakeWaterLevelModbusService(waterLevelStates: const <int>[1]);
 
       await tester.pumpWidget(
         GetMaterialApp(
@@ -561,23 +626,48 @@ void main() {
         ),
       );
       await tester.pump(const Duration(milliseconds: 250));
-      expect(find.text('设备缺水提醒'), findsOneWidget);
+      expect(find.text('已备好水源？'), findsOneWidget);
 
-      await tester.pump(const Duration(seconds: 4));
+      // 第一次点击只切换按钮文案，不发送串口指令。
+      await tester.tap(find.text('已备好水源？'));
+      await tester.pump();
+      expect(find.text('开始加水'), findsOneWidget);
+      expect(modbusService.waterFillingCommands, isEmpty);
+
+      // 第二次点击写 0x01EB=1 并切到注水中。
+      await tester.tap(find.text('开始加水'));
+      await tester.pump();
+      expect(find.text('注水中'), findsOneWidget);
+      expect(modbusService.waterFillingCommands, hasLength(1));
+      expect(modbusService.waterFillingCommands.single.address, 0x01EB);
+      expect(modbusService.waterFillingCommands.single.value, 1);
+
+      // 注水中不能手动关闭。
       final Finder barrier = find.byKey(
         const ValueKey<String>('water_level_dialog_barrier'),
       );
-      final GestureTapCallback? dismissShortage = tester
-          .widget<GestureDetector>(barrier)
-          .onTap;
-      expect(dismissShortage, isNotNull);
-      dismissShortage!();
+      expect(tester.widget<GestureDetector>(barrier).onTap, isNull);
+      await tester.tapAt(const Offset(50, 1000));
+      await tester.pump();
+      expect(find.text('注水中'), findsOneWidget);
+
+      // 2=正常水位只是加水中的中间值，不能提前提示完成。
+      modbusService.waterLevelOverride = 2;
+      await tester.pump(const Duration(seconds: 3));
+      await tester.pump(const Duration(milliseconds: 250));
+      expect(find.text('注水中'), findsOneWidget);
+
+      // 高水位(3) → 注水完成，点击屏幕任意位置关闭。
+      modbusService.waterLevelOverride = 3;
+      await tester.pump(const Duration(seconds: 3));
+      await tester.pump(const Duration(milliseconds: 250));
+      expect(find.text('注水完成'), findsOneWidget);
+      expect(tester.widget<GestureDetector>(barrier).onTap, isNotNull);
+
+      await tester.tap(find.text('注水完成'));
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 250));
-      expect(find.text('设备缺水提醒'), findsNothing);
-
-      await tester.pump(const Duration(seconds: 5));
-      expect(find.text('设备缺水提醒'), findsOneWidget);
+      expect(find.text('注水完成'), findsNothing);
 
       await tester.pumpWidget(const SizedBox.shrink());
       await tester.pump();
@@ -588,58 +678,7 @@ void main() {
     },
   );
 
-  testWidgets('filling dialog dismisses immediately on barrier tap', (
-    WidgetTester tester,
-  ) async {
-    await tester.binding.setSurfaceSize(const Size(1024, 1366));
-    addTearDown(() => tester.binding.setSurfaceSize(null));
-
-    Get.testMode = true;
-    Get.addTranslations(AppTranslations().keys);
-    Get.updateLocale(const Locale('zh', 'CN'));
-    Get.put(UserStore());
-    addTearDown(() {
-      if (Get.isRegistered<AppHeaderClockController>()) {
-        Get.delete<AppHeaderClockController>(force: true);
-      }
-      Get.reset();
-    });
-
-    final _FakeWaterLevelModbusService modbusService =
-        _FakeWaterLevelModbusService(waterLevelStates: const <int>[1, 2]);
-
-    await tester.pumpWidget(
-      GetMaterialApp(
-        navigatorObservers: [appRouteObserver],
-        home: MainPage(modbusService: modbusService),
-      ),
-    );
-    await tester.pump(const Duration(milliseconds: 250));
-    await tester.pump(const Duration(seconds: 3));
-    await tester.pump(const Duration(milliseconds: 250));
-    expect(find.text('注水中'), findsOneWidget);
-
-    final Finder barrier = find.byKey(
-      const ValueKey<String>('water_level_dialog_barrier'),
-    );
-    final GestureTapCallback? dismissFilling = tester
-        .widget<GestureDetector>(barrier)
-        .onTap;
-    expect(dismissFilling, isNotNull);
-    dismissFilling!();
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 250));
-    expect(find.text('注水中'), findsNothing);
-
-    await tester.pumpWidget(const SizedBox.shrink());
-    await tester.pump();
-    if (Get.isRegistered<AppHeaderClockController>()) {
-      Get.find<AppHeaderClockController>().onClose();
-      Get.delete<AppHeaderClockController>(force: true);
-    }
-  });
-
-  testWidgets('water level complete dialog auto dismisses after five minutes', (
+  testWidgets('water level complete dialog auto dismisses after five seconds', (
     WidgetTester tester,
   ) async {
     await tester.binding.setSurfaceSize(const Size(1024, 1366));
@@ -673,10 +712,11 @@ void main() {
     await tester.pump(const Duration(milliseconds: 250));
     expect(find.text('注水完成'), findsOneWidget);
 
-    await tester.pump(const Duration(minutes: 4, seconds: 59));
+    await tester.pump(const Duration(seconds: 4));
     expect(find.text('注水完成'), findsOneWidget);
 
     await tester.pump(const Duration(seconds: 1));
+    await tester.pump();
     await tester.pump(const Duration(milliseconds: 250));
     expect(find.text('注水完成'), findsNothing);
 
@@ -976,10 +1016,18 @@ class _FakeWaterLevelModbusService extends ModbusRtuService {
   int ambientLightState;
   final List<int> _waterLevelStates;
 
+  /// 设置后 0x01E5 恒定返回该值，便于测试中途切换水位。
+  int? waterLevelOverride;
+
+  /// 记录写 0x01EB（自动加水）的指令。
+  final List<ModbusWriteCommand> waterFillingCommands = <ModbusWriteCommand>[];
+
   @override
   Future<int> readHoldingRegister(int address) async {
     if (address == 0x01E5) {
       waterLevelReads++;
+      final int? override = waterLevelOverride;
+      if (override != null) return override;
       final int index = waterLevelReads - 1;
       if (index < _waterLevelStates.length) {
         return _waterLevelStates[index];
@@ -995,7 +1043,11 @@ class _FakeWaterLevelModbusService extends ModbusRtuService {
   }
 
   @override
-  Future<void> sendCommandQueue(List<ModbusWriteCommand> commands) async {}
+  Future<void> sendCommandQueue(List<ModbusWriteCommand> commands) async {
+    waterFillingCommands.addAll(
+      commands.where((ModbusWriteCommand command) => command.address == 0x01EB),
+    );
+  }
 }
 
 Finder _findAssetImage(String assetName) {
