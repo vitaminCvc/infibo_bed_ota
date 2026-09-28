@@ -305,6 +305,59 @@ class ModbusRtuService {
     );
   }
 
+  /// 结束疗程时最多发送三轮。完整清零成功后，后续轮次只重发模块和系统停止命令。
+  /// 若完整轮失败，下一轮仍发送完整命令，避免清零步骤被跳过。
+  Future<void> stopTherapyThreeRounds({
+    bool stopRed = false,
+    bool stopVat = false,
+    bool stopPemf = false,
+    bool stopHydrogen = false,
+    bool stopChakra = false,
+    bool stopTerahertz = false,
+    bool stopHifem = false,
+    bool stopFragrance = false,
+  }) async {
+    bool fullRoundSucceeded = false;
+    Object? lastError;
+    for (int round = 0; round < 3; round++) {
+      try {
+        if (fullRoundSucceeded) {
+          await sendCommandQueue(
+            buildStopTherapyCompactCommands(
+              stopRed: stopRed,
+              stopVat: stopVat,
+              stopPemf: stopPemf,
+              stopHydrogen: stopHydrogen,
+              stopChakra: stopChakra,
+              stopTerahertz: stopTerahertz,
+              stopHifem: stopHifem,
+              stopFragrance: stopFragrance,
+            ),
+          );
+        } else {
+          await stopTherapy(
+            stopRed: stopRed,
+            stopVat: stopVat,
+            stopPemf: stopPemf,
+            stopHydrogen: stopHydrogen,
+            stopChakra: stopChakra,
+            stopTerahertz: stopTerahertz,
+            stopHifem: stopHifem,
+            stopFragrance: stopFragrance,
+          );
+          fullRoundSucceeded = true;
+        }
+        debugPrint('停止指令第 ${round + 1} 轮完成');
+      } catch (error) {
+        lastError = error;
+        debugPrint('停止指令第 ${round + 1} 轮失败: $error');
+      }
+    }
+    if (!fullRoundSucceeded) {
+      throw StateError('停止指令全部发送失败，错误信息：$lastError');
+    }
+  }
+
   /// 按自定义方案的当前 5 分钟节点配置红光模块。
   ///
   /// mode: 0=连续，1=脉冲；strength660/strength850 均为 0-100%。
@@ -644,6 +697,41 @@ class ModbusRtuService {
       ],
       if (includeSystemStop)
         const ModbusWriteCommand(address: systemCommandAddress, value: 2),
+    ];
+  }
+
+  /// 精简停止轮只写正在运行模块的停止寄存器；系统停止必须最后发送。
+  List<ModbusWriteCommand> buildStopTherapyCompactCommands({
+    bool stopRed = false,
+    bool stopVat = false,
+    bool stopPemf = false,
+    bool stopHydrogen = false,
+    bool stopChakra = false,
+    bool stopTerahertz = false,
+    bool stopHifem = false,
+    bool stopFragrance = false,
+  }) {
+    return [
+      if (stopRed)
+        const ModbusWriteCommand(
+          address: redLightTotalCommandAddress,
+          value: 2,
+        ),
+      if (stopPemf)
+        const ModbusWriteCommand(address: pemfTotalCommandAddress, value: 2),
+      if (stopHydrogen)
+        const ModbusWriteCommand(address: hydrogenCommandAddress, value: 2),
+      if (stopVat)
+        const ModbusWriteCommand(address: vatCommandAddress, value: 2),
+      if (stopChakra)
+        const ModbusWriteCommand(address: chakraCommandAddress, value: 2),
+      if (stopTerahertz)
+        const ModbusWriteCommand(address: terahertzCommandAddress, value: 2),
+      if (stopHifem)
+        const ModbusWriteCommand(address: hifemCommandAddress, value: 2),
+      if (stopFragrance)
+        const ModbusWriteCommand(address: fragranceCommandAddress, value: 2),
+      const ModbusWriteCommand(address: systemCommandAddress, value: 2),
     ];
   }
 
@@ -1074,6 +1162,17 @@ class ModbusRtuService {
       debugPrint('Hydrogen modbus failed: $error');
       rethrow;
     }
+  }
+
+  /// 开始自动加水：写 0x01EB=1，是否加满仍由 0x01E5 水位轮询确认。
+  Future<void> startWaterFilling() async {
+    await sendCommandQueue([
+      ModbusWriteCommand(
+        address: HydrogenModbus.waterFillingSwitchAddress,
+        value: 1,
+      ),
+    ]);
+    debugPrint('Water filling start TX address=0x01EB value=1');
   }
 
   Future<int> readHoldingRegister(int address) async {

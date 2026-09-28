@@ -37,6 +37,15 @@ class _StartPageState extends State<StartPage>
   bool _isSyncingVatMusic = false;
   // 这里使用 AndroidSerialPortService，默认路径为 /dev/ttyS0
   final ModbusRtuService modbusService = const ModbusRtuService();
+  // 仅结束疗程的停止流程使用 20ms 间隔，其他设备命令继续使用默认间隔。
+  late final ModbusRtuService _stopModbusService = ModbusRtuService(
+    portName: modbusService.portName,
+    baudRate: modbusService.baudRate,
+    slaveId: modbusService.slaveId,
+    timeout: modbusService.timeout,
+    commandDelay: const Duration(milliseconds: 20),
+    maxRetries: modbusService.maxRetries,
+  );
   bool get _isBritainVersion => AppBrand.current.flavor == 'britain';
   bool _britainFinishPending = false;
   StartLiftSequence get _liftSequence => StartLiftSequence(
@@ -1512,13 +1521,18 @@ class _StartPageState extends State<StartPage>
     }
   }
 
+  // 模式结束后，点击停止按钮，停止治疗并进入总结页
   Future<void> _handleStopPressed() async {
     if (_isCommanding || (!_logic.canStop && !_britainFinishPending)) return;
 
     final _StartArguments args = _StartArguments.from(Get.arguments);
+    // 自动结束和手动停止都从此处冻结倒计时，避免发送指令期间继续计时。
+    _timer?.cancel();
+    _timer = null;
     setState(() => _isCommanding = true);
     try {
-      await modbusService.stopTherapy(
+      // 完整清零成功后，余下轮次仅重复模块停止和系统停止。
+      await _stopModbusService.stopTherapyThreeRounds(
         stopRed: _runningModules.contains('red'),
         stopVat: _runningModules.contains('vat'),
         stopPemf: _runningModules.contains('pemf'),
@@ -1532,7 +1546,7 @@ class _StartPageState extends State<StartPage>
       if (_isBritainVersion) {
         if (!mounted) return;
         // 英国版先停止计时、阶段切换和音乐；上升确认后立即进入总结页。
-        // 到位状态与开灯由不依赖页面生命周期的后台任务继续处理。
+        // 到位状态由不依赖页面生命周期的后台任务继续处理。
         setState(() {
           _britainFinishPending = true;
           _logic.stop();
@@ -1561,7 +1575,7 @@ class _StartPageState extends State<StartPage>
     }
   }
 
-  Future<bool> _runStopButtonDeviceActions() => _liftSequence.riseAndLight();
+  Future<bool> _runStopButtonDeviceActions() => _liftSequence.riseAfterStop();
 
   /// 构建当前阶段的所有模块参数命令列表，包含红光/PEMF/HYDROGEN/VAT。
   List<ModbusWriteCommand> _buildPhaseCommands({
@@ -2694,7 +2708,7 @@ class _ExpandStatusItem {
   final String iconOff;
 }
 
-/// 启动页的升降与灯光顺序，放在原文件中供页面和协议顺序测试共用。
+/// 启动页的升降顺序，放在原文件中供页面和协议顺序测试共用。
 class StartLiftSequence {
   StartLiftSequence({
     required this.service,
@@ -2729,40 +2743,33 @@ class StartLiftSequence {
     return true;
   }
 
-  Future<bool> riseAndLight() async {
+  Future<bool> riseAfterStop() async {
     if (isBritain) {
       if (!isActive()) return false;
       await _write(0x0010, 3);
       JoystickCommandBus.instance.lockLeftTop();
       // 写入上升命令成功后立即允许跳转总结页。后续轮询不依赖启动页生命周期。
-      unawaited(_waitForLiftReachTopAndTurnOnLight());
+      unawaited(_waitForLiftReachTop());
       return true;
     }
 
-    // 其他版本保留原来的等待 2 秒及异常处理行为。
+    // 其他版本保留上升失败时的异常处理，结束疗程不再等待开灯。
     try {
       await _write(0x0010, 3);
       JoystickCommandBus.instance.lockLeftTop();
     } catch (e) {
       debugPrint('stop button one-key-up failed: $e');
     }
-    try {
-      await delay(const Duration(seconds: 2));
-      await _write(0x0012, 1);
-      debugPrint('stop button auto-on ambient light TX 0x0012=1');
-    } catch (e) {
-      debugPrint('stop button auto-on ambient light failed: $e');
-    }
     return true;
   }
 
-  Future<void> _waitForLiftReachTopAndTurnOnLight() async {
+  Future<void> _waitForLiftReachTop() async {
     while (true) {
       final int status;
       try {
         status = await service.readHoldingRegister(0x0011);
       } catch (error) {
-        // 总结页已打开，后台读取失败只记录并继续轮询，避免一次超时永久不开灯。
+        // 总结页已打开，后台读取失败只记录并继续轮询，确保到位后重置摇杆。
         debugPrint('stop button background lift status read failed: $error');
         await delay(const Duration(milliseconds: 500));
         continue;
@@ -2771,12 +2778,6 @@ class StartLiftSequence {
       debugPrint('stop button background lift status RX 0x0011=$status');
       if (status == 0) {
         JoystickCommandBus.instance.reset();
-        try {
-          await _write(0x0012, 1);
-          debugPrint('stop button background ambient light TX 0x0012=1');
-        } catch (error) {
-          debugPrint('stop button background ambient light failed: $error');
-        }
         return;
       }
       await delay(const Duration(milliseconds: 500));

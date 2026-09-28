@@ -50,8 +50,9 @@ class _MainPageState extends State<MainPage> with RouteAware {
   bool _isWaterLevelDialogDismissedForVisit = false;
   Timer? _waterLevelCompleteAutoDismissTimer;
   final ValueNotifier<int> _waterLevelStateNotifier = ValueNotifier<int>(1);
-  final ValueNotifier<bool> _waterLevelShortageCanDismissNotifier =
-      ValueNotifier<bool>(false);
+
+  /// 最近一次 0x01E5 读数：1=缺水, 2=正常, 3=高水位；关闭弹窗时用于判断是否仍在缺水。
+  int? _lastWaterLevelRegisterState;
   bool _isRouteSubscribed = false;
   // final ValueNotifier<String> _liftCurrentText = ValueNotifier<String>('--');
   // 主页面逻辑控制器
@@ -84,7 +85,6 @@ class _MainPageState extends State<MainPage> with RouteAware {
     _stopWaterLevelPolling();
     _cancelWaterLevelCompleteAutoDismissTimer();
     _waterLevelStateNotifier.dispose();
-    _waterLevelShortageCanDismissNotifier.dispose();
     // _liftCurrentText.dispose();
     super.dispose();
   }
@@ -239,7 +239,7 @@ class _MainPageState extends State<MainPage> with RouteAware {
     }
   }
 
-  //注释掉分子氢读取水位状态
+  // 0x01E5 水位：1=缺水，2=水位正常，3=高水位（注水完成），其余值忽略。
   Future<void> _readWaterLevelStatus01E5() async {
     if (_isWaterLevelReading) return;
     _isWaterLevelReading = true;
@@ -251,35 +251,58 @@ class _MainPageState extends State<MainPage> with RouteAware {
         HydrogenModbus.waterLevelReadAddress,
       );
       if (!mounted) return;
+      _lastWaterLevelRegisterState = state;
 
-      if (state == 0) {
-        // 0 表示本轮缺水已恢复，允许后续新的缺水事件再次提醒。
+      if (state == 1) {
+        if (!_isWaterLevelDialogVisible &&
+            !_isWaterLevelDialogDismissedForVisit) {
+          // 只要检测到缺水就弹出提醒，进入"缺水"状态。
+          _waterLevelStateNotifier.value = 1;
+          _cancelWaterLevelCompleteAutoDismissTimer();
+          _showWaterLevelStateDialog();
+        } else if (_isWaterLevelDialogVisible &&
+            _waterLevelStateNotifier.value == 3) {
+          // 完成提示还没关闭就再次缺水：回到缺水提醒，重新从 Ready? 开始。
+          _cancelWaterLevelCompleteAutoDismissTimer();
+          _waterLevelStateNotifier.value = 1;
+        }
+      } else if (state == 3) {
+        // 高水位=注水完成：弹窗已打开时切到完成提示，等待点击关闭。
+        _isWaterLevelDialogDismissedForVisit = false;
+        if (_isWaterLevelDialogVisible && _waterLevelStateNotifier.value != 3) {
+          _waterLevelStateNotifier.value = 3;
+          _startWaterLevelCompleteAutoDismissTimer();
+        }
+      } else if (state == 2) {
+        // 2=水位正常：缺水弹窗保持打开等用户继续操作；
+        // 注水中继续等 3，不提前提示完成。
         _isWaterLevelDialogDismissedForVisit = false;
       }
-      if (state == 1 &&
-          !_isWaterLevelDialogVisible &&
-          !_isWaterLevelDialogDismissedForVisit) {
-        // 只有首次收到 0x01E5=1 时才弹出弹窗，进入"缺水"状态。
-        _waterLevelStateNotifier.value = 1;
-        _cancelWaterLevelCompleteAutoDismissTimer();
-        _showWaterLevelStateDialog();
-      } else if (_isWaterLevelDialogVisible && (state == 2 || state == 3)) {
-        // 弹窗已打开，收到 2/3 只切状态，不重新弹出、不关闭重开。
-        final int previousState = _waterLevelStateNotifier.value;
-        _waterLevelStateNotifier.value = state;
-        if (state == 3 && previousState != 3) {
-          _startWaterLevelCompleteAutoDismissTimer();
-        } else if (state != 3) {
-          _cancelWaterLevelCompleteAutoDismissTimer();
-        }
-      }
-      // state==2 或 3 但弹窗未打开：直接忽略，不触发弹窗。
+      // 其余值（如 0）忽略，不改变弹窗状态。
 
       debugPrint('Water level sync RX 0x01E5=$state');
     } catch (e) {
       debugPrint('Water level sync failed: $e');
     } finally {
       _isWaterLevelReading = false;
+    }
+  }
+
+  /// 点击 “Start Filling”：先切到注水中，再向下位机写入 0x01EB=1。
+  Future<void> _startWaterFilling() async {
+    if (!mounted || !_isWaterLevelDialogVisible) return;
+    if (_waterLevelStateNotifier.value != 1) return;
+    _waterLevelStateNotifier.value = 2;
+    try {
+      await widget.modbusService.startWaterFilling();
+    } catch (e) {
+      debugPrint('Start water filling failed: $e');
+      if (mounted &&
+          _isWaterLevelDialogVisible &&
+          _waterLevelStateNotifier.value == 2) {
+        // 写入失败时退回缺水状态，允许重新点击按钮重试。
+        _waterLevelStateNotifier.value = 1;
+      }
     }
   }
 
@@ -305,13 +328,14 @@ class _MainPageState extends State<MainPage> with RouteAware {
 
   void _dismissWaterLevelStateDialog() {
     if (!_isWaterLevelDialogVisible || !mounted) return;
+    // 缺水和注水中的弹窗不能手动关闭，只有完成状态允许点击关闭。
+    if (_waterLevelStateNotifier.value != 3) return;
     Navigator.of(context, rootNavigator: true).pop();
   }
 
   void _showWaterLevelStateDialog() {
     if (_isWaterLevelDialogVisible || !mounted) return;
     _isWaterLevelDialogVisible = true;
-    _waterLevelShortageCanDismissNotifier.value = false;
     unawaited(AudioPromptPlayer.instance.playWaterSafely());
     unawaited(
       showGeneralDialog<void>(
@@ -324,46 +348,46 @@ class _MainPageState extends State<MainPage> with RouteAware {
           return ValueListenableBuilder<int>(
             valueListenable: _waterLevelStateNotifier,
             builder: (context, state, _) {
-              return ValueListenableBuilder<bool>(
-                valueListenable: _waterLevelShortageCanDismissNotifier,
-                builder: (context, shortageCanDismiss, _) {
-                  final bool canDismiss = state != 1 || shortageCanDismiss;
-                  return PopScope(
-                    canPop: canDismiss,
-                    child: Stack(
-                      children: [
-                        Positioned.fill(
-                          child: GestureDetector(
-                            key: const ValueKey<String>(
-                              'water_level_dialog_barrier',
-                            ),
-                            behavior: HitTestBehavior.opaque,
-                            onTap: canDismiss
-                                ? _dismissWaterLevelStateDialog
-                                : null,
-                            child: Container(
-                              color: Colors.black.withValues(alpha: 0.6),
-                            ),
-                          ),
+              // 只有完成状态允许关闭；缺水（含 Ready?/Start Filling）和注水中均不可手动关闭。
+              final bool canDismiss = state == 3;
+              return PopScope(
+                canPop: canDismiss,
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: GestureDetector(
+                        key: const ValueKey<String>(
+                          'water_level_dialog_barrier',
                         ),
-                        Center(
-                          child: Material(
-                            color: Colors.transparent,
-                            child: WaterLevelStateDialog(
-                              notifier: _waterLevelStateNotifier,
-                              onShortageAnimationCompleted: () {
-                                if (mounted && _isWaterLevelDialogVisible) {
-                                  _waterLevelShortageCanDismissNotifier.value =
-                                      true;
-                                }
-                              },
-                            ),
-                          ),
+                        behavior: HitTestBehavior.opaque,
+                        onTap: canDismiss
+                            ? _dismissWaterLevelStateDialog
+                            : null,
+                        child: Container(
+                          color: Colors.black.withValues(alpha: 0.6),
                         ),
-                      ],
+                      ),
                     ),
-                  );
-                },
+                    Center(
+                      child: Material(
+                        color: Colors.transparent,
+                        child: GestureDetector(
+                          // 完成后点击弹窗内部任意位置也能关闭。
+                          behavior: HitTestBehavior.opaque,
+                          onTap: canDismiss
+                              ? _dismissWaterLevelStateDialog
+                              : null,
+                          child: WaterLevelStateDialog(
+                            notifier: _waterLevelStateNotifier,
+                            onStartFilling: () {
+                              unawaited(_startWaterFilling());
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               );
             },
           );
@@ -371,7 +395,10 @@ class _MainPageState extends State<MainPage> with RouteAware {
       ).whenComplete(() {
         _cancelWaterLevelCompleteAutoDismissTimer();
         _isWaterLevelDialogVisible = false;
-        _isWaterLevelDialogDismissedForVisit = true;
+        // 关闭时若最近读数仍是缺水（竞态），本次停留不再重复弹出；
+        // 水位回到正常/高水位后会重新允许提醒。
+        _isWaterLevelDialogDismissedForVisit =
+            _lastWaterLevelRegisterState == 1;
       }),
     );
   }

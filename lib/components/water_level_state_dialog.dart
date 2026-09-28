@@ -1,14 +1,13 @@
 // 水位状态机弹窗。
 //
 // 一个弹窗承载 3 个状态，由外部 ValueNotifier<int> 驱动：
-//   1 = 独立缺水提醒界面（GIF 动画）
-//   2 = 注水中（静态）
+//   1 = 缺水提醒界面（GIF 动画 + Ready?/Start Filling 按钮）
+//   2 = 注水中（点击 Start Filling 后进入，静态）
 //   3 = 注水完成（静态）
 //
 // 弹窗打开后，状态变化只切文案，不重新弹出、不关闭重开，避免闪动。
+// 缺水和注水中由调用方禁止手动关闭；完成状态由调用方允许点击屏幕任意位置关闭。
 // 状态 2/3 的图标位预留给后续添加图片；当前版本只展示文字。
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:infibo_app/components/glass_card.dart';
@@ -19,69 +18,65 @@ class WaterLevelStateDialog extends StatefulWidget {
   const WaterLevelStateDialog({
     super.key,
     required this.notifier,
-    this.onShortageAnimationCompleted,
+    required this.onStartFilling,
   });
 
   /// 水位状态：1=缺水, 2=注水中, 3=注水完成。
   final ValueNotifier<int> notifier;
-  final VoidCallback? onShortageAnimationCompleted;
+
+  /// 点击 “Start Filling” 时触发，由调用方向下位机发送自动加水指令。
+  final VoidCallback onStartFilling;
 
   @override
   State<WaterLevelStateDialog> createState() => _WaterLevelStateDialogState();
 }
 
 class _WaterLevelStateDialogState extends State<WaterLevelStateDialog> {
-  static const Duration _shortageAnimationDuration = Duration(seconds: 4);
-
-  Timer? _shortageAnimationTimer;
+  late int _previousState;
+  bool _readyToFill = false;
 
   @override
   void initState() {
     super.initState();
+    _previousState = widget.notifier.value;
     widget.notifier.addListener(_onStateChanged);
-    if (widget.notifier.value == 1) {
-      _startShortageAnimation();
-    }
   }
 
   @override
   void dispose() {
     widget.notifier.removeListener(_onStateChanged);
-    _shortageAnimationTimer?.cancel();
     super.dispose();
-  }
-
-  void _startShortageAnimation() {
-    _shortageAnimationTimer?.cancel();
-    _shortageAnimationTimer = Timer(
-      _shortageAnimationDuration,
-      _finishShortageAnimation,
-    );
-  }
-
-  void _finishShortageAnimation() {
-    if (!mounted || widget.notifier.value != 1) return;
-    widget.onShortageAnimationCompleted?.call();
   }
 
   void _onStateChanged() {
     final int state = widget.notifier.value;
-    if (state == 1) {
-      if (_shortageAnimationTimer?.isActive != true) {
-        _startShortageAnimation();
-      }
-    } else {
-      _shortageAnimationTimer?.cancel();
-      _shortageAnimationTimer = null;
+    if (state == 1 && _previousState == 3) {
+      // 完成后再次缺水：重新从 “Ready?” 开始确认水源。
+      _readyToFill = false;
     }
+    _previousState = state;
     if (mounted) setState(() {});
+  }
+
+  /// 缺水按钮：第一次点击只确认水源，第二次点击才触发自动加水。
+  void _handleShortageButtonTap() {
+    if (!_readyToFill) {
+      setState(() => _readyToFill = true);
+      return;
+    }
+    widget.onStartFilling();
   }
 
   @override
   Widget build(BuildContext context) {
     final int state = widget.notifier.value;
 
-    if (state == 1) return const WaterShortageDialog();
+    if (state == 1) {
+      return WaterShortageDialog(
+        readyToFill: _readyToFill,
+        onButtonTap: _handleShortageButtonTap,
+      );
+    }
 
     return buildGlassCard(
       width: 362,

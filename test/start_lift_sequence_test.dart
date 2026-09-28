@@ -91,21 +91,24 @@ void main() {
     expect(service.events, ['write:18:0', 'write:16:4']);
   });
 
-  test('light on failure does not block Britain summary navigation', () async {
-    final service = RecordingLiftService()..failWrite = 0x0012;
-    expect(await sequence(service, true).riseAndLight(), isTrue);
-    await Future<void>.delayed(Duration.zero);
-    expect(service.events.last, 'write:18:1');
-  });
+  test(
+    'Britain reaches summary without sending an ambient light command',
+    () async {
+      final service = RecordingLiftService()..failWrite = 0x0012;
+      expect(await sequence(service, true).riseAfterStop(), isTrue);
+      await Future<void>.delayed(Duration.zero);
+      expect(service.events, isNot(contains('write:18:1')));
+    },
+  );
 
   test(
-    'Britain returns after rise acknowledgement and opens light later',
+    'Britain returns after rise acknowledgement and resets joystick later',
     () async {
       final status = Completer<int>();
       final service = RecordingLiftService()..pendingStatus = status;
       bool returned = false;
 
-      final completion = sequence(service, true).riseAndLight().then((value) {
+      final completion = sequence(service, true).riseAfterStop().then((value) {
         returned = value;
       });
       await Future<void>.delayed(Duration.zero);
@@ -117,7 +120,7 @@ void main() {
       await completion;
       await Future<void>.delayed(Duration.zero);
 
-      expect(service.events.last, 'write:18:1');
+      expect(service.events, ['write:16:3', 'read:17']);
     },
   );
 
@@ -129,29 +132,23 @@ void main() {
       service,
       true,
       isActive: () => active,
-    ).riseAndLight();
+    ).riseAfterStop();
 
     expect(await completion, isTrue);
     active = false;
     status.complete(0);
     await Future<void>.delayed(Duration.zero);
 
-    expect(service.events.last, 'write:18:1');
+    expect(service.events, ['write:16:3', 'read:17']);
   });
 
   test(
-    'Britain polls nonzero status until zero before opening light',
+    'Britain polls nonzero status until zero without turning on light',
     () async {
       final service = RecordingLiftService();
-      expect(await sequence(service, true).riseAndLight(), isTrue);
+      expect(await sequence(service, true).riseAfterStop(), isTrue);
       await Future<void>.delayed(Duration.zero);
-      expect(service.events, [
-        'write:16:3',
-        'read:17',
-        'delay:500',
-        'read:17',
-        'write:18:1',
-      ]);
+      expect(service.events, ['write:16:3', 'read:17', 'delay:500', 'read:17']);
     },
   );
 
@@ -161,21 +158,18 @@ void main() {
       ..clear()
       ..add(0);
 
-    expect(await sequence(service, true).riseAndLight(), isTrue);
+    expect(await sequence(service, true).riseAfterStop(), isTrue);
     await Future<void>.delayed(Duration.zero);
 
-    expect(service.events, [
-      'write:16:3',
-      'read:17',
-      'delay:500',
-      'read:17',
-      'write:18:1',
-    ]);
+    expect(service.events, ['write:16:3', 'read:17', 'delay:500', 'read:17']);
   });
 
   test('failed rise prevents Britain summary navigation and light', () async {
     final service = RecordingLiftService()..failWrite = 0x0010;
-    await expectLater(sequence(service, true).riseAndLight(), throwsStateError);
+    await expectLater(
+      sequence(service, true).riseAfterStop(),
+      throwsStateError,
+    );
     expect(service.events, isNot(contains('write:18:1')));
   });
 
@@ -185,15 +179,18 @@ void main() {
     expect(service.events, ['write:16:4']);
   });
 
-  test('other versions retain two second delay with no status read', () async {
-    final service = RecordingLiftService();
-    await sequence(service, false).riseAndLight();
-    expect(service.events, ['write:16:3', 'delay:2000', 'write:18:1']);
-  });
+  test(
+    'other versions rise without a two second delay or light command',
+    () async {
+      final service = RecordingLiftService();
+      await sequence(service, false).riseAfterStop();
+      expect(service.events, ['write:16:3']);
+    },
+  );
 
-  test('other versions retain light attempt after rise failure', () async {
+  test('other versions do not turn on light after rise failure', () async {
     final service = RecordingLiftService()..failWrite = 0x0010;
-    await sequence(service, false).riseAndLight();
-    expect(service.events, ['write:16:3', 'delay:2000', 'write:18:1']);
+    await sequence(service, false).riseAfterStop();
+    expect(service.events, ['write:16:3']);
   });
 }

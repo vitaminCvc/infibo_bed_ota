@@ -34,6 +34,9 @@ class HydrogenModbus {
   static const int flowReadAddress = 0x01E4;
   static const int waterLevelReadAddress = 0x01E5;
 
+  /// 自动加水开关：写入 1 开始自动加水，水位仍由 0x01E5 轮询确认。
+  static const int waterFillingSwitchAddress = 0x01EB;
+
   static HydrogenBatchPayload buildPayload({required int concentration}) {
     final int safeConcentration = clampPercentage(concentration);
     final int enable = safeConcentration > 0 ? 1 : 0;
