@@ -18,23 +18,33 @@ class SummaryPage extends StatefulWidget {
   State<SummaryPage> createState() => _SummaryPageState();
 }
 
-class _SummaryPageState extends State<SummaryPage> {
+class _SummaryPageState extends State<SummaryPage> with WidgetsBindingObserver {
   static const double _designWidth = 800;
   static const double _summaryBottomMargin = 80;
   static const double _keyboardButtonGap = 24;
 
   final SummaryLogic _logic = SummaryLogic();
 
+  bool get _isKeyboardVisible => View.of(context).viewInsets.bottom > 0;
+
   @override
   void initState() {
     super.initState();
-    // 页面打开时读取启动页传来的用户和模块运行数据，并开启 2 分钟无操作计时。
+    WidgetsBinding.instance.addObserver(this);
+    // 页面打开时读取启动页传来的用户和模块运行数据，并开启 2 秒无操作计时。
     _logic.configure(Get.arguments);
     _logic.startIdleTimer();
   }
 
   @override
+  void didChangeMetrics() {
+    if (!mounted) return;
+    _logic.setKeyboardVisible(_isKeyboardVisible);
+  }
+
+  @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _logic.dispose();
     super.dispose();
   }
@@ -43,9 +53,12 @@ class _SummaryPageState extends State<SummaryPage> {
   Widget build(BuildContext context) {
     final bool is16x9 = AppLayoutScope.of(context).is16x9;
     // 获取键盘高度
-    final double keyboardHeight = MediaQuery.viewInsetsOf(context).bottom;
+    final bool keyboardVisible = _isKeyboardVisible;
+    final double keyboardHeight = keyboardVisible
+        ? MediaQuery.viewInsetsOf(context).bottom
+        : 0;
     // 键盘显示（正在打字）时暂停空闲自动返回，键盘收起后再重新计时。
-    _logic.setKeyboardVisible(keyboardHeight > 0);
+    _logic.setKeyboardVisible(keyboardVisible);
     final double keyboardShift = keyboardHeight > 0
         ? math.max(
             0,
@@ -53,7 +66,7 @@ class _SummaryPageState extends State<SummaryPage> {
           )
         : 0;
 
-    // 监听页面上的点击、滑动和滚动；只要用户有操作，就重新计算 2 分钟。
+    // 监听页面上的点击、滑动和滚动；只要用户有操作，就重新计算 2 秒。
     return Listener(
       behavior: HitTestBehavior.translucent,
       onPointerDown: (_) => _logic.recordUserAction(),

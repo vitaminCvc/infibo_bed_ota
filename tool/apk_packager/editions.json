@@ -1,0 +1,10 @@
+[
+  { "id": "official", "label": "官方版（正式服务器）", "flavor": "global", "target": "lib/main_global.dart", "apiBaseUrl": "http://192.241.254.196" },
+  { "id": "china_test", "label": "国内环境测试版", "flavor": "global", "target": "lib/main_global.dart", "apiBaseUrl": "http://8.138.247.157" },
+  { "id": "india", "label": "印度版", "flavor": "india", "target": "lib/main_india.dart", "apiBaseUrl": "http://192.241.254.196" },
+  { "id": "spain", "label": "西班牙版", "flavor": "spain", "target": "lib/main_spain.dart", "apiBaseUrl": "http://192.241.254.196" },
+  { "id": "turkey", "label": "土耳其版", "flavor": "turkey", "target": "lib/main_turkey.dart", "apiBaseUrl": "http://192.241.254.196" },
+  { "id": "america", "label": "美国版", "flavor": "america", "target": "lib/main_america.dart", "apiBaseUrl": "http://192.241.254.196" },
+  { "id": "britain", "label": "英国版", "flavor": "britain", "target": "lib/main_britain.dart", "apiBaseUrl": "http://192.241.254.196" },
+  { "id": "australia", "label": "澳大利亚版", "flavor": "australia", "target": "lib/main_australia.dart", "apiBaseUrl": "http://192.241.254.196" }
+]
