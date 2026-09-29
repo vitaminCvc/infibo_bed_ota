@@ -115,7 +115,14 @@ class ConnectionPromptHostState extends State<ConnectionPromptHost>
 
     if (route != null) {
       _backGuardRoute = null;
-      navigator.removeRoute(route);
+      if (route.isCurrent) {
+        // 正常弹出才能触发下层页面的 RouteAware.didPopNext，恢复首页轮询。
+        // PopScope 阻止用户返回；这里由连接状态或“跳过”主动关闭。
+        navigator.pop<void>();
+      } else {
+        // 保护路由上方还有其他页面时，只移除保护路由，不能误关当前页面。
+        navigator.removeRoute(route);
+      }
     }
   }
 
