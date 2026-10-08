@@ -56,9 +56,18 @@ void main() {
         const ValueKey<String>('water_level_filling_button'),
       );
       expect(button, findsOneWidget);
-      final Size buttonSize = tester.getSize(button);
-      expect(buttonSize.width, lessThanOrEqualTo(192));
-      expect(buttonSize.height, lessThanOrEqualTo(56));
+      // 自适应按钮可随译文增宽，但不能超出卡片边界。
+      final Rect cardBounds = tester.getRect(find.byType(ClipRRect).first);
+      final Rect buttonBounds = tester.getRect(button);
+      expect(buttonBounds.left, greaterThanOrEqualTo(cardBounds.left));
+      expect(buttonBounds.right, lessThanOrEqualTo(cardBounds.right));
+      expect(buttonBounds.top, greaterThanOrEqualTo(cardBounds.top));
+      expect(buttonBounds.bottom, lessThanOrEqualTo(cardBounds.bottom));
+      final Rect labelBounds = tester.getRect(
+        find.text(entry.value['water_level_ready_button']!),
+      );
+      expect(labelBounds.center.dx, closeTo(buttonBounds.center.dx, 0.01));
+      expect(labelBounds.center.dy, closeTo(buttonBounds.center.dy, 0.01));
       expect(
         tester.getTopLeft(button).dy,
         greaterThan(tester.getBottomLeft(lower).dy),

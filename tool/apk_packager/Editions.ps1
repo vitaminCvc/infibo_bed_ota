@@ -1,4 +1,4 @@
-function Get-InfiboEditions {
+﻿function Get-InfiboEditions {
     param([Parameter(Mandatory = $true)][string]$Path)
 
     if (-not (Test-Path -LiteralPath $Path -PathType Leaf)) {
@@ -22,6 +22,14 @@ function Get-InfiboEditions {
         }
         if ($seen.ContainsKey($id)) { throw "Duplicate edition id: $id" }
         $seen[$id] = $true
+        # 未指定时支持自动加水；旧印度硬件通过配置明确关闭，避免影响已有版本。
+        $filling = $item.PSObject.Properties['indiaAutoWaterFilling']
+        if ($filling -and $filling.Value -isnot [bool]) {
+            throw "indiaAutoWaterFilling must be a boolean: $id"
+        }
+        if (-not $filling) {
+            $item | Add-Member -NotePropertyName indiaAutoWaterFilling -NotePropertyValue $true
+        }
     }
     return $items
 }

@@ -21,6 +21,9 @@ import 'package:infibo_app/pages/settingpage/ui.dart';
 import 'package:infibo_app/pages/start/ui.dart';
 import 'package:infibo_app/pages/WifiBluetooth/connection_prompt_controller.dart';
 import 'package:infibo_app/pages/WifiBluetooth/connection_prompt_host.dart';
+import 'package:infibo_app/api/modbus/modbus_rtu_service.dart';
+import 'package:infibo_app/components/water_quality/water_quality_controller.dart';
+import 'package:infibo_app/components/water_quality/water_quality_host.dart';
 
 const String _initialRoute = String.fromEnvironment(
   'INFIBO_INITIAL_ROUTE',
@@ -34,16 +37,26 @@ Widget getRootWidget({
   String? initialRoute,
   required Locale locale,
   ConnectionPromptGateway? connectionPromptGateway,
+  WaterQualityController? waterQualityController,
 }) {
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  final quality =
+      waterQualityController ??
+      WaterQualityController(
+        readRegister: const ModbusRtuService().readHoldingRegister,
+      );
   return GetMaterialApp(
     navigatorKey: navigatorKey,
     builder: (BuildContext context, Widget? child) {
       return DesignCanvas(
-        child: ConnectionPromptHost(
-          navigatorKey: navigatorKey,
-          gateway: connectionPromptGateway,
-          child: child ?? const SizedBox.shrink(),
+        child: WaterQualityHost(
+          controller: quality,
+          disposeController: waterQualityController == null,
+          child: ConnectionPromptHost(
+            navigatorKey: navigatorKey,
+            gateway: connectionPromptGateway,
+            child: child ?? const SizedBox.shrink(),
+          ),
         ),
       );
     },
@@ -63,7 +76,11 @@ Widget getRootWidget({
     defaultTransition: Transition.noTransition,
     transitionDuration: Duration.zero,
     getPages: getRoutes(),
-    navigatorObservers: [GetObserver(), appRouteObserver],
+    navigatorObservers: [
+      GetObserver(),
+      appRouteObserver,
+      WaterQualityRouteObserver(quality),
+    ],
   );
 }
 

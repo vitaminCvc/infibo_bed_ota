@@ -1,4 +1,4 @@
-$ErrorActionPreference = 'Stop'
+﻿$ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
 
 $worker = Join-Path $PSScriptRoot 'Build-InfiboApks.ps1'
@@ -22,7 +22,8 @@ try {
 $flavor = $args[[array]::IndexOf($args, '--flavor') + 1]
 $target = $args[[array]::IndexOf($args, '--target') + 1]
 $server = @($args | Where-Object { $_ -like '--dart-define=API_BASE_URL=*' })[0]
-Add-Content -LiteralPath $env:INFIBO_TEST_CALLS -Value "$flavor|$target|$server"
+$filling = @($args | Where-Object { $_ -like '--dart-define=INDIA_AUTO_WATER_FILLING=*' }) -join ''
+Add-Content -LiteralPath $env:INFIBO_TEST_CALLS -Value ("$flavor|$target|$server" + $(if ($filling) { "|$filling" }))
 if ($flavor -eq $env:INFIBO_TEST_FAIL) { exit 7 }
 $output = Join-Path (Get-Location).Path 'build/app/outputs/flutter-apk'
 New-Item -ItemType Directory -Path $output -Force | Out-Null
@@ -45,10 +46,13 @@ exit 0
     & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $worker -All -Destination $destination -ProjectRoot $project -FlutterExecutable $mockFlutter | Out-Null
     Assert-That ($LASTEXITCODE -eq 0) 'Build all should succeed.'
     $allCalls = @(Get-Content -LiteralPath $calls)
-    Assert-That ($allCalls.Count -eq 8) 'Build all should invoke Flutter eight times.'
+    Assert-That ($allCalls.Count -eq 9) 'Build all should invoke Flutter nine times.'
     Assert-That (@($allCalls | Where-Object { $_ -eq 'global|lib/main_global.dart|--dart-define=API_BASE_URL=http://8.138.247.157' }).Count -eq 1) 'Domestic test should use the China test server.'
-    Assert-That ((Get-ChildItem -LiteralPath $destination -Filter '*.apk').Count -eq 9) 'Each edition should create its own APK without overwriting prior builds.'
+    Assert-That ((Get-ChildItem -LiteralPath $destination -Filter '*.apk').Count -eq 10) 'Each edition should create its own APK without overwriting prior builds.'
 
+    Assert-That (@($allCalls | Where-Object { $_ -like 'india|*|--dart-define=INDIA_AUTO_WATER_FILLING=true' }).Count -eq 1) 'India must enable automatic filling.'
+    Assert-That (@($allCalls | Where-Object { $_ -like 'india|*|--dart-define=INDIA_AUTO_WATER_FILLING=false' }).Count -eq 1) 'Legacy India must disable automatic filling.'
+    Assert-That (@(Get-ChildItem -LiteralPath $destination -Filter 'Infibo_india_legacy_*.apk').Count -eq 1) 'Legacy APK must have a distinct edition filename.'
     $officialFolder = Join-Path $testRoot 'Official APKs'
     $chinaFolder = Join-Path $testRoot 'China test APKs'
     $routeConfigPath = Join-Path $testRoot 'routes.json'
@@ -89,7 +93,7 @@ exit 0
     Assert-That (Test-Path -LiteralPath $stale) 'Failed build must not move a stale APK.'
     $gui = Join-Path $PSScriptRoot 'Apk-Packager-Gui.ps1'
     $guiSmoke = & powershell.exe -STA -NoProfile -ExecutionPolicy Bypass -File $gui -SmokeTest
-    Assert-That ($LASTEXITCODE -eq 0 -and $guiSmoke -eq 'GUI smoke passed: 8 editions') 'GUI should load all eight editions.'
+    Assert-That ($LASTEXITCODE -eq 0 -and $guiSmoke -eq 'GUI smoke passed: 9 editions') 'GUI should load all nine editions.'
     $customDefinitions = Join-Path $testRoot 'new editions.json'
     $parsedEditions = Get-Content -LiteralPath (Join-Path $PSScriptRoot 'editions.json') -Raw -Encoding utf8 | ConvertFrom-Json
     $newEditions = @($parsedEditions)
@@ -99,7 +103,7 @@ exit 0
     & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $worker -DefinitionsPath $customDefinitions -Edition japan -Destination $destination -ProjectRoot $project -FlutterExecutable $mockFlutter | Out-Null
     Assert-That ($LASTEXITCODE -eq 0) 'A newly configured edition should build without changing the worker.'
     $newGuiSmoke = & powershell.exe -STA -NoProfile -ExecutionPolicy Bypass -File $gui -SmokeTest -TestDefinitionsPath $customDefinitions
-    Assert-That ($LASTEXITCODE -eq 0 -and $newGuiSmoke -eq 'GUI smoke passed: 9 editions') 'A newly configured edition should appear in the GUI.'
+    Assert-That ($LASTEXITCODE -eq 0 -and $newGuiSmoke -eq 'GUI smoke passed: 10 editions') 'A newly configured edition should appear in the GUI.'
     $env:INFIBO_TEST_FAIL = ''
     $settingsPath = Join-Path $testRoot 'saved-destinations.json'
     $guiBuild = & powershell.exe -STA -NoProfile -ExecutionPolicy Bypass -File $gui -SmokeBuild -TestProjectRoot $project -TestFlutterExecutable $mockFlutter -TestDestination $destination -TestSettingsPath $settingsPath
@@ -107,11 +111,11 @@ exit 0
     $savedPaths = Get-Content -LiteralPath $settingsPath -Raw -Encoding utf8 | ConvertFrom-Json
     Assert-That ($savedPaths.official -eq $destination) 'The GUI should remember the official edition destination.'
     $savedGuiSmoke = & powershell.exe -STA -NoProfile -ExecutionPolicy Bypass -File $gui -SmokeTest -TestDestination $destination -TestSettingsPath $settingsPath
-    Assert-That ($LASTEXITCODE -eq 0 -and $savedGuiSmoke -eq 'GUI smoke passed: 8 editions') 'The GUI should reload saved destinations.'
+    Assert-That ($LASTEXITCODE -eq 0 -and $savedGuiSmoke -eq 'GUI smoke passed: 9 editions') 'The GUI should reload saved destinations.'
     $guiAllRoot = Join-Path $testRoot 'GUI all destinations'
     $guiAll = & powershell.exe -STA -NoProfile -ExecutionPolicy Bypass -File $gui -SmokeBuild -TestBuildAll -TestProjectRoot $project -TestFlutterExecutable $mockFlutter -TestDestination $guiAllRoot
     Assert-That ($LASTEXITCODE -eq 0 -and $guiAll -eq 'GUI build passed') 'GUI build all should finish.'
-    foreach ($id in @('official', 'china_test', 'india', 'spain', 'turkey', 'america', 'britain', 'australia')) {
+    foreach ($id in @('official', 'china_test', 'india', 'india_legacy', 'spain', 'turkey', 'america', 'britain', 'australia')) {
         Assert-That (@(Get-ChildItem -LiteralPath (Join-Path $guiAllRoot $id) -Filter '*.apk').Count -eq 1) "GUI build all should route $id to its own directory."
     }
     Write-Output 'Packager tests passed.'

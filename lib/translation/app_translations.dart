@@ -3,10 +3,15 @@
 // 所有页面展示文案按语言代码集中维护在这里。
 import 'package:get/get.dart';
 import 'package:infibo_app/config/app_brand.dart';
+import 'water_quality_translations.dart';
+import 'status_detection_translations.dart';
 
 class AppTranslations extends Translations {
   @override
-  Map<String, Map<String, String>> get keys => {
+  Map<String, Map<String, String>> get keys =>
+      withStatusDetectionTranslations(_baseKeys);
+
+  Map<String, Map<String, String>> get _baseKeys => withWaterQualityTranslations({
     ///////////////////////////////////////////////////////////中文语言////////////////////////////////////////////////
     'zh_CN': {
       'prompt_volume': '提示音音量',
@@ -2953,5 +2958,5 @@ class AppTranslations extends Translations {
       'root_chakra': 'Kök Çakra', // 海底轮
       'root_sub': '(gonadlar)', // 生殖腺
     },
-  };
+  });
 }

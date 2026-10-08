@@ -13,15 +13,21 @@ import 'package:infibo_app/pages/settingpage/DeviceInfo.dart';
 import 'package:infibo_app/pages/settingpage/logic.dart';
 import 'package:infibo_app/pages/settingpage/prompt_volume_settings_panel.dart';
 import 'package:infibo_app/pages/settingpage/wifi_ble_settings_panel.dart';
+import 'package:infibo_app/pages/settingpage/status_detection_panel.dart';
 import 'package:infibo_app/stores/app_header_clock_store.dart';
 import 'package:infibo_app/utils/date_time_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingWidget extends StatefulWidget {
-  const SettingWidget({super.key, this.connectionGateway});
+  const SettingWidget({
+    super.key,
+    this.connectionGateway,
+    this.statusReadRegister,
+  });
 
   /// 测试可注入连接网关；正式页面留空即可读取系统真实连接信息。
   final ConnectionDetailsGateway? connectionGateway;
+  final Future<int> Function(int address)? statusReadRegister;
 
   @override
   State<SettingWidget> createState() => _SettingWidgetState();
@@ -133,6 +139,10 @@ class _SettingWidgetState extends State<SettingWidget> {
     _SettingMenuItemData(
       titleKey: 'prompt_volume',
       icon: Icons.volume_up_outlined,
+    ),
+    _SettingMenuItemData(
+      titleKey: 'status_detection',
+      icon: Icons.monitor_heart_outlined,
     ),
   ];
 
@@ -442,6 +452,9 @@ class _SettingWidgetState extends State<SettingWidget> {
     }
     if (_selectedMenuIndex == 5) {
       return const PromptVolumeSettingsPanel();
+    }
+    if (_selectedMenuIndex == 6) {
+      return StatusDetectionPanel(readRegister: widget.statusReadRegister);
     }
     return Align(
       alignment: Alignment.topLeft,

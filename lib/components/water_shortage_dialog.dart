@@ -12,6 +12,7 @@ class WaterShortageDialog extends StatelessWidget {
     super.key,
     required this.readyToFill,
     required this.onButtonTap,
+    this.supportsAutoWaterFilling = true,
   });
 
   /// false：按钮显示 “Ready?”，仅确认水源已准备；
@@ -20,6 +21,9 @@ class WaterShortageDialog extends StatelessWidget {
 
   /// 按钮点击回调；切换文案或开始加水由调用方根据 [readyToFill] 决定。
   final VoidCallback onButtonTap;
+
+  /// 旧硬件只显示人工加水提醒，隐藏自动加水入口及其占用的间距。
+  final bool supportsAutoWaterFilling;
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +62,10 @@ class WaterShortageDialog extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Text(
-                'water_level_shortage_message'.tr,
+                (supportsAutoWaterFilling
+                        ? 'water_level_shortage_message'
+                        : 'water_level_warning_message')
+                    .tr,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   color: Color(0xFFD3D3D3),
@@ -89,8 +96,10 @@ class WaterShortageDialog extends StatelessWidget {
                   fontWeight: FontWeight.w400,
                 ),
               ),
-              const SizedBox(height: 24),
-              _buildActionButton(),
+              if (supportsAutoWaterFilling) ...[
+                const SizedBox(height: 24),
+                _buildActionButton(),
+              ],
             ],
           ),
         ),
@@ -98,44 +107,32 @@ class WaterShortageDialog extends StatelessWidget {
     );
   }
 
-  /// 尺寸和配色参考首页“自定义方案”按钮：Ready? → Start Filling。
+  /// Ready? → Start Filling：尺寸随文字和内边距自适应。
   Widget _buildActionButton() {
-    return SizedBox(
-      width: 192,
-      height: 56,
-      child: Material(
-        color: Colors.transparent,
-        child: Ink(
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(28)),
-            color: Color(0xFF1876F2),
-          ),
-          child: InkWell(
-            key: const ValueKey<String>('water_level_filling_button'),
-            onTap: onButtonTap,
-            borderRadius: BorderRadius.circular(28),
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 14),
-                child: FittedBox(
-                  // 多语言长文案（如法语）自动缩放，避免溢出按钮。
-                  fit: BoxFit.scaleDown,
-                  child: Text(
-                    readyToFill
-                        ? 'water_level_start_filling_button'.tr
-                        : 'water_level_ready_button'.tr,
-                    maxLines: 1,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 19,
-                      height: 1.5,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
+    return FilledButton(
+      key: const ValueKey<String>('water_level_filling_button'),
+      onPressed: onButtonTap,
+      style: FilledButton.styleFrom(
+        backgroundColor: const Color(0xFF1876F2),
+        foregroundColor: Colors.white,
+        minimumSize: Size.zero,
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        visualDensity: VisualDensity.standard,
+        alignment: Alignment.center,
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+        shape: const StadiumBorder(),
+      ),
+      child: Text(
+        readyToFill
+            ? 'water_level_start_filling_button'.tr
+            : 'water_level_ready_button'.tr,
+        textAlign: TextAlign.center,
+        style: const TextStyle(
+          fontSize: 19,
+          height: 1.5,
+          leadingDistribution: TextLeadingDistribution.even,
+          letterSpacing: 0,
+          fontWeight: FontWeight.w600,
         ),
       ),
     );
