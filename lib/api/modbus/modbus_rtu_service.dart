@@ -19,6 +19,7 @@ import 'package:infibo_app/api/modbus/terahertz_modbus.dart';
 import 'package:infibo_app/api/modbus/vat_modbus.dart';
 import 'package:infibo_app/services/android_serial_port_service.dart';
 import 'package:infibo_app/utils/byte_utils.dart';
+import 'package:infibo_app/config/app_brand.dart';
 
 class ModbusRtuService {
   static const Duration modbusCommandInterval = Duration(milliseconds: 40);
@@ -1166,6 +1167,8 @@ class ModbusRtuService {
 
   /// 开始自动加水：写 0x01EB=1，是否加满仍由 0x01E5 水位轮询确认。
   Future<void> startWaterFilling() async {
+    // 除隐藏按钮外，在指令入口再次保护旧硬件，防止其他调用误发 0x01EB。
+    if (!AppBrand.current.supportsAutoWaterFilling) return;
     await sendCommandQueue([
       ModbusWriteCommand(
         address: HydrogenModbus.waterFillingSwitchAddress,

@@ -72,12 +72,13 @@ $checkColumn.Width = 55
 [void]$grid.Columns.Add($checkColumn)
 $nameColumn = New-Object System.Windows.Forms.DataGridViewTextBoxColumn
 $nameColumn.HeaderText = '版本'
-$nameColumn.Width = 180
+# 为“印度老版（无自动加水）”预留完整显示空间。
+$nameColumn.Width = 230
 $nameColumn.ReadOnly = $true
 [void]$grid.Columns.Add($nameColumn)
 $pathColumn = New-Object System.Windows.Forms.DataGridViewTextBoxColumn
 $pathColumn.HeaderText = 'APK 保存目录（可直接输入）'
-$pathColumn.Width = 580
+$pathColumn.Width = 530
 [void]$grid.Columns.Add($pathColumn)
 $browseColumn = New-Object System.Windows.Forms.DataGridViewButtonColumn
 $browseColumn.HeaderText = '选目录'

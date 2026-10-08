@@ -37,6 +37,12 @@ class HydrogenModbus {
   /// 自动加水开关：写入 1 开始自动加水，水位仍由 0x01E5 轮询确认。
   static const int waterFillingSwitchAddress = 0x01EB;
 
+  /// TDS 水质检测：>=10 为异常，<10 为正常。
+  static const int waterQualityTestingAddress = 0x01EC;
+
+  /// 水质异常处理状态：0=成功/正常，1=处理中，2=失败。
+  static const int waterQualityTreatmentAddress = 0x01ED;
+
   static HydrogenBatchPayload buildPayload({required int concentration}) {
     final int safeConcentration = clampPercentage(concentration);
     final int enable = safeConcentration > 0 ? 1 : 0;

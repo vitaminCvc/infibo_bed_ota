@@ -6,7 +6,8 @@
 //   3 = 注水完成（静态）
 //
 // 弹窗打开后，状态变化只切文案，不重新弹出、不关闭重开，避免闪动。
-// 缺水和注水中由调用方禁止手动关闭；完成状态由调用方允许点击屏幕任意位置关闭。
+// 新硬件缺水和注水中禁止手动关闭；旧硬件缺水提醒展示 4 秒后由调用方允许关闭。
+// 完成状态由调用方允许点击屏幕任意位置关闭。
 // 状态 2/3 的图标位预留给后续添加图片；当前版本只展示文字。
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -19,6 +20,7 @@ class WaterLevelStateDialog extends StatefulWidget {
     super.key,
     required this.notifier,
     required this.onStartFilling,
+    this.supportsAutoWaterFilling = true,
   });
 
   /// 水位状态：1=缺水, 2=注水中, 3=注水完成。
@@ -26,6 +28,9 @@ class WaterLevelStateDialog extends StatefulWidget {
 
   /// 点击 “Start Filling” 时触发，由调用方向下位机发送自动加水指令。
   final VoidCallback onStartFilling;
+
+  /// 由当前版本的硬件配置决定是否展示自动加水按钮。
+  final bool supportsAutoWaterFilling;
 
   @override
   State<WaterLevelStateDialog> createState() => _WaterLevelStateDialogState();
@@ -73,6 +78,7 @@ class _WaterLevelStateDialogState extends State<WaterLevelStateDialog> {
 
     if (state == 1) {
       return WaterShortageDialog(
+        supportsAutoWaterFilling: widget.supportsAutoWaterFilling,
         readyToFill: _readyToFill,
         onButtonTap: _handleShortageButtonTap,
       );

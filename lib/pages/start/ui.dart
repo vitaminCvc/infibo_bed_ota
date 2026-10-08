@@ -17,6 +17,9 @@ import 'package:infibo_app/pages/music/player.dart';
 import 'package:infibo_app/pages/start/audio_prompt_player.dart';
 import 'package:infibo_app/pages/start/logic.dart';
 import 'package:lottie/lottie.dart';
+import 'package:infibo_app/components/water_quality/water_quality_controller.dart';
+import 'package:infibo_app/components/water_quality/water_quality_host.dart';
+import 'package:infibo_app/components/water_quality/water_quality_command_guard.dart';
 
 // 启动理疗页面
 class StartPage extends StatefulWidget {
@@ -89,6 +92,26 @@ class _StartPageState extends State<StartPage>
   bool _hasStartBeenPressed = false;
   int _lastPhaseIndex = 0;
   final Set<String> _runningModules = <String>{};
+  bool _hydrogenNeedsReplay = false;
+  WaterQualityController? get _waterQuality =>
+      WaterQualityScope.maybeOf(context);
+  bool get _canUseHydrogen => _waterQuality?.canUseHydrogen ?? true;
+
+  Future<void> _checkWaterBeforeHydrogen() async {
+    if (_modulesForPhase().contains('hydrogen')) {
+      await _waterQuality?.checkHydrogenBeforeCommand();
+    }
+  }
+
+  List<ModbusWriteCommand> _guardHydrogen(List<ModbusWriteCommand> commands) {
+    final guarded = WaterQualityCommandGuard.filter(
+      commands,
+      canUseHydrogen: _canUseHydrogen,
+    );
+    if (guarded.length != commands.length) _hydrogenNeedsReplay = true;
+    return guarded;
+  }
+
   // 记录每个模块在上一个已下发节点的“参数签名”，用于快速判断是否有参数变化。
   final Map<String, String> _runningModuleSignatures = <String, String>{};
   // 记录每个模块在上一个已下发节点的“寄存器地址 -> 值”，用于做按地址的增量下发。
@@ -1237,7 +1260,11 @@ class _StartPageState extends State<StartPage>
 
       // 4. 构建当前 5 分钟节点的模块命令
       await _waitForPreloadBeforeStart();
-      final List<ModbusWriteCommand> commands = _buildPhaseCommands();
+      await _checkWaterBeforeHydrogen();
+      if (!mounted) return;
+      final List<ModbusWriteCommand> commands = _guardHydrogen(
+        _buildPhaseCommands(),
+      );
       await _prepareVatMusicPlayback();
 
       // 预设模式不使用预加载。
@@ -1266,7 +1293,13 @@ class _StartPageState extends State<StartPage>
           ),
         ];
 
-        await modbusService.sendCommandQueue(startCommands);
+        final guardedStart = _guardHydrogen(startCommands);
+        await modbusService.sendCommandQueue(guardedStart);
+        if (guardedStart.any(
+          (command) => command.address == 0x01D1 && command.value == 1,
+        )) {
+          _hydrogenNeedsReplay = false;
+        }
       } else {
         // 预设模式走这里：完整下发参数 + APPLY + COMMAND + 0x0004
         throw StateError('Phase parameter preload is not complete.');
@@ -1408,7 +1441,7 @@ class _StartPageState extends State<StartPage>
     List<ModbusWriteCommand> commands,
   ) async {
     final List<_PreloadCommandBatch> batches = _buildPreloadCommandBatches(
-      commands,
+      _guardHydrogen(commands),
     );
     for (final _PreloadCommandBatch batch in batches) {
       await modbusService.writeMultipleRegisters(
@@ -1495,11 +1528,28 @@ class _StartPageState extends State<StartPage>
 
     setState(() => _isCommanding = true);
     try {
+      await _checkWaterBeforeHydrogen();
+      if (!mounted) return;
+      // 初次因水质未写入参数时，用户主动继续且复测正常才补齐当前阶段参数。
+      if (_hydrogenNeedsReplay &&
+          _canUseHydrogen &&
+          _modulesForPhase().contains('hydrogen')) {
+        final replay = _guardHydrogen(
+          _buildPhaseCommands(moduleFilter: {'hydrogen'}),
+        );
+        await modbusService.sendCommandQueue(replay);
+        if (replay.any(
+          (command) => command.address == 0x01D1 && command.value == 1,
+        )) {
+          _hydrogenNeedsReplay = false;
+        }
+      }
+      if (!mounted) return;
       await modbusService.resumeTherapy(
         resumeRed: _runningModules.contains('red'),
         resumeVat: _runningModules.contains('vat'),
         resumePemf: _runningModules.contains('pemf'),
-        resumeHydrogen: _runningModules.contains('hydrogen'),
+        resumeHydrogen: _runningModules.contains('hydrogen') && _canUseHydrogen,
         resumeChakra: _runningModules.contains('chakra'),
         resumeTerahertz: _runningModules.contains('terahertz'),
         resumeHifem: _runningModules.contains('hifem'),
@@ -2248,7 +2298,7 @@ class _StartPageState extends State<StartPage>
   }
 
   /// 检测阶段切换，并下发新阶段参数。
-  void _trySwitchPhase() {
+  Future<void> _trySwitchPhase() async {
     if (_isSwitchingPhase || _isCompletingSession) return;
 
     final int currentIndex = _logic.activePhaseIndex;
@@ -2277,6 +2327,22 @@ class _StartPageState extends State<StartPage>
       _isSwitchingPhase = true;
     }
     _stopHydrogenFlowPolling(clearValue: false);
+    await _checkWaterBeforeHydrogen();
+    if (!mounted) return;
+    if (!_logic.isRunning || _isCompletingSession) {
+      _isSwitchingPhase = false;
+      return;
+    }
+    if (_logic.elapsedSeconds >= _logic.totalSeconds) {
+      _isSwitchingPhase = false;
+      unawaited(_trySwitchPhase());
+      return;
+    }
+    if (_logic.activePhaseIndex != currentIndex) {
+      _isSwitchingPhase = false;
+      unawaited(_trySwitchPhase());
+      return;
+    }
 
     final List<ModbusWriteCommand> commands = <ModbusWriteCommand>[];
     // 三类模块集合：
@@ -2477,6 +2543,12 @@ class _StartPageState extends State<StartPage>
         currentParamValues: currentParamValues,
       ),
     );
+    if (_hydrogenNeedsReplay &&
+        _canUseHydrogen &&
+        currSet.contains('hydrogen') &&
+        !modulesToStart.contains('hydrogen')) {
+      commands.addAll(_buildPhaseCommands(moduleFilter: {'hydrogen'}));
+    }
 
     debugPrint('skip system restart because already running');
 
@@ -2497,9 +2569,16 @@ class _StartPageState extends State<StartPage>
     if (commands.isNotEmpty) {
       final Stopwatch phaseSwitchStopwatch = Stopwatch()..start();
       debugPrint('phase switch TX command count: ${commands.length}');
+      final guardedCommands = _guardHydrogen(commands);
       _phaseSwitchModbusService
-          .sendCommandQueue(commands)
+          .sendCommandQueue(guardedCommands)
           .then((_) {
+            if (!mounted) return;
+            if (guardedCommands.any(
+              (command) => command.address == 0x01D1 && command.value == 1,
+            )) {
+              _hydrogenNeedsReplay = false;
+            }
             phaseSwitchStopwatch.stop();
             debugPrint(
               'phase switch TX complete: ${commands.length} commands, '

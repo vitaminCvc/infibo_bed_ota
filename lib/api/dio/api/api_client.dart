@@ -12,9 +12,9 @@ class ApiClient {
       baseUrl: const String.fromEnvironment(
         'API_BASE_URL',
         // 正式环境
-        defaultValue: 'http://192.241.254.196',
+        // defaultValue: 'http://192.241.254.196',
         // 国内测试环境
-        // defaultValue: 'http://8.138.247.157',
+        defaultValue: 'http://8.138.247.157',
       ),
       connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(seconds: 10),

@@ -11,6 +11,7 @@ import 'package:infibo_app/components/designCanvas/design.dart';
 import 'package:infibo_app/components/index.dart';
 import 'package:infibo_app/components/water_level_state_dialog.dart';
 import 'package:infibo_app/constants/assets.dart';
+import 'package:infibo_app/config/app_brand.dart';
 import 'package:infibo_app/constants/color.dart';
 import 'package:infibo_app/constants/layout.dart';
 import 'package:infibo_app/pages/joystick/ui.dart';
@@ -18,6 +19,7 @@ import 'package:infibo_app/pages/main/logic.dart';
 import 'package:infibo_app/pages/start/audio_prompt_player.dart';
 import 'package:infibo_app/pages/WifiBluetooth/connection_prompt_host.dart';
 import 'package:infibo_app/routes/route_observer.dart';
+import 'package:infibo_app/components/water_quality/water_quality_host.dart';
 
 // 主页面UI
 class MainPage extends StatefulWidget {
@@ -50,6 +52,17 @@ class _MainPageState extends State<MainPage> with RouteAware {
   bool _isWaterLevelDialogDismissedForVisit = false;
   Timer? _waterLevelCompleteAutoDismissTimer;
   final ValueNotifier<int> _waterLevelStateNotifier = ValueNotifier<int>(1);
+
+  // 旧硬件沿用原版 4 秒提醒展示时间，之后可手动关闭，不等待自动注水完成。
+  final ValueNotifier<bool> _legacyWaterReminderCanDismiss = ValueNotifier(
+    false,
+  );
+  Timer? _legacyWaterReminderTimer;
+  bool get _supportsAutoWaterFilling =>
+      AppBrand.current.supportsAutoWaterFilling;
+  bool get _canDismissWaterDialog =>
+      _waterLevelStateNotifier.value == 3 ||
+      (!_supportsAutoWaterFilling && _legacyWaterReminderCanDismiss.value);
 
   /// 最近一次 0x01E5 读数：1=缺水, 2=正常, 3=高水位；关闭弹窗时用于判断是否仍在缺水。
   int? _lastWaterLevelRegisterState;
@@ -85,6 +98,8 @@ class _MainPageState extends State<MainPage> with RouteAware {
     _stopWaterLevelPolling();
     _cancelWaterLevelCompleteAutoDismissTimer();
     _waterLevelStateNotifier.dispose();
+    _legacyWaterReminderTimer?.cancel();
+    _legacyWaterReminderCanDismiss.dispose();
     // _liftCurrentText.dispose();
     super.dispose();
   }
@@ -274,8 +289,8 @@ class _MainPageState extends State<MainPage> with RouteAware {
           _startWaterLevelCompleteAutoDismissTimer();
         }
       } else if (state == 2) {
-        // 2=水位正常：缺水弹窗保持打开等用户继续操作；
-        // 注水中继续等 3，不提前提示完成。
+        // 2=水位正常：新硬件继续等待加水操作/高水位 3，不提前提示完成。
+        // 旧硬件仍显示提醒，但展示满 4 秒即可手动关闭，不要求进入自动注水流程。
         _isWaterLevelDialogDismissedForVisit = false;
       }
       // 其余值（如 0）忽略，不改变弹窗状态。
@@ -285,11 +300,17 @@ class _MainPageState extends State<MainPage> with RouteAware {
       debugPrint('Water level sync failed: $e');
     } finally {
       _isWaterLevelReading = false;
+      // 原有水位读取完成后再检测 TDS，保留 0012 → 0006 → 01E5 顺序。
+      if (mounted && _isWaterLevelPolling) {
+        unawaited(WaterQualityScope.maybeOf(context)?.onHomeWaterPollComplete());
+      }
     }
   }
 
   /// 点击 “Start Filling”：先切到注水中，再向下位机写入 0x01EB=1。
   Future<void> _startWaterFilling() async {
+    // 旧硬件即使被意外调用，也不切换到“注水中”，不发送自动加水命令。
+    if (!_supportsAutoWaterFilling) return;
     if (!mounted || !_isWaterLevelDialogVisible) return;
     if (_waterLevelStateNotifier.value != 1) return;
     _waterLevelStateNotifier.value = 2;
@@ -328,14 +349,23 @@ class _MainPageState extends State<MainPage> with RouteAware {
 
   void _dismissWaterLevelStateDialog() {
     if (!_isWaterLevelDialogVisible || !mounted) return;
-    // 缺水和注水中的弹窗不能手动关闭，只有完成状态允许点击关闭。
-    if (_waterLevelStateNotifier.value != 3) return;
+    // 新硬件等待完成；旧硬件展示满 4 秒后允许关闭提醒。
+    if (!_canDismissWaterDialog) return;
     Navigator.of(context, rootNavigator: true).pop();
   }
 
   void _showWaterLevelStateDialog() {
     if (_isWaterLevelDialogVisible || !mounted) return;
     _isWaterLevelDialogVisible = true;
+    _legacyWaterReminderCanDismiss.value = false;
+    if (!_supportsAutoWaterFilling) {
+      _legacyWaterReminderTimer?.cancel();
+      _legacyWaterReminderTimer = Timer(const Duration(seconds: 4), () {
+        if (mounted && _isWaterLevelDialogVisible) {
+          _legacyWaterReminderCanDismiss.value = true;
+        }
+      });
+    }
     unawaited(AudioPromptPlayer.instance.playWaterSafely());
     unawaited(
       showGeneralDialog<void>(
@@ -345,11 +375,14 @@ class _MainPageState extends State<MainPage> with RouteAware {
         barrierColor: Colors.transparent,
         transitionDuration: const Duration(milliseconds: 180),
         pageBuilder: (context, animation, secondaryAnimation) {
-          return ValueListenableBuilder<int>(
-            valueListenable: _waterLevelStateNotifier,
-            builder: (context, state, _) {
-              // 只有完成状态允许关闭；缺水（含 Ready?/Start Filling）和注水中均不可手动关闭。
-              final bool canDismiss = state == 3;
+          return ListenableBuilder(
+            listenable: Listenable.merge([
+              _waterLevelStateNotifier,
+              _legacyWaterReminderCanDismiss,
+            ]),
+            builder: (context, _) {
+              // 关闭权限与硬件能力一起判断，避免隐藏按钮后旧设备无法退出。
+              final bool canDismiss = _canDismissWaterDialog;
               return PopScope(
                 canPop: canDismiss,
                 child: Stack(
@@ -378,6 +411,7 @@ class _MainPageState extends State<MainPage> with RouteAware {
                               ? _dismissWaterLevelStateDialog
                               : null,
                           child: WaterLevelStateDialog(
+                            supportsAutoWaterFilling: _supportsAutoWaterFilling,
                             notifier: _waterLevelStateNotifier,
                             onStartFilling: () {
                               unawaited(_startWaterFilling());
@@ -393,6 +427,8 @@ class _MainPageState extends State<MainPage> with RouteAware {
           );
         },
       ).whenComplete(() {
+        _legacyWaterReminderTimer?.cancel();
+        _legacyWaterReminderTimer = null;
         _cancelWaterLevelCompleteAutoDismissTimer();
         _isWaterLevelDialogVisible = false;
         // 关闭时若最近读数仍是缺水（竞态），本次停留不再重复弹出；

@@ -43,6 +43,16 @@ class AppBrandConfig {
   });
 
   final String flavor;
+
+  /// 自动加水开关仅对印度版生效，避免改变其他国家已交付版本的行为。
+  /// 印度默认支持自动加水；仅“印度老版（无自动加水）”打包时传入
+  /// --dart-define=INDIA_AUTO_WATER_FILLING=false，适配旧硬件。
+  bool get supportsAutoWaterFilling =>
+      flavor != 'india' ||
+      const bool.fromEnvironment(
+        'INDIA_AUTO_WATER_FILLING',
+        defaultValue: true,
+      );
   final Locale defaultLocale;
   final String loginLogoAsset;
   final Size loginLogoSize;

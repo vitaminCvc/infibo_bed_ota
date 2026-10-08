@@ -1,4 +1,4 @@
-[CmdletBinding()]
+﻿[CmdletBinding()]
 param(
     [string[]]$Edition,
     [switch]$All,
@@ -66,7 +66,7 @@ $selected = if ($buildAll) {
         $match[0]
     }
 }
-$selected = @($selected | Select-Object -Unique -Property Id, Label, Flavor, Target, ApiBaseUrl)
+$selected = @($selected | Select-Object -Unique -Property Id, Label, Flavor, Target, ApiBaseUrl, IndiaAutoWaterFilling)
 
 foreach ($item in $selected) {
     if (-not (Test-Path -LiteralPath (Join-Path $ProjectRoot $item.Target) -PathType Leaf)) {
@@ -113,6 +113,12 @@ try {
             '--target', $item.Target,
             "--dart-define=API_BASE_URL=$($item.ApiBaseUrl)"
         )
+        # 新旧印度版本共用入口和包名，仅通过编译开关区分硬件能力。
+        # APK 文件名及保存目录仍按独立的版本 Id 区分，防止新旧安装包混淆。
+        if ($item.Flavor -eq 'india') {
+            $fillingValue = ([bool]$item.IndiaAutoWaterFilling).ToString().ToLowerInvariant()
+            $arguments += "--dart-define=INDIA_AUTO_WATER_FILLING=$fillingValue"
+        }
         & $FlutterExecutable @arguments
         if ($LASTEXITCODE -ne 0) {
             throw "Flutter build failed for $($item.Label) (exit code $LASTEXITCODE)."

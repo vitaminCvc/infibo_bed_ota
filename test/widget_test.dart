@@ -6,6 +6,7 @@ import 'package:infibo_app/api/dio/login/login_models.dart';
 import 'package:infibo_app/api/modbus/modbus_rtu_service.dart';
 import 'package:infibo_app/components/water_level_state_dialog.dart';
 import 'package:infibo_app/constants/assets.dart';
+import 'package:infibo_app/config/app_brand.dart';
 import 'package:infibo_app/pages/customized/logic.dart';
 import 'package:infibo_app/pages/music/logic.dart';
 import 'package:infibo_app/pages/main/ui.dart';
@@ -21,6 +22,47 @@ import 'package:infibo_app/utils/gender_utils.dart';
 import 'package:infibo_app/utils/localized_api_message.dart';
 
 void main() {
+  testWidgets('India legacy shortage closes after four seconds without filling', (tester) async {
+    AppBrand.configure(AppBrands.india);
+    addTearDown(() => AppBrand.configure(AppBrands.global));
+    await tester.binding.setSurfaceSize(const Size(1024, 1366));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    Get.testMode = true;
+    Get.addTranslations(AppTranslations().keys);
+    Get.updateLocale(const Locale('zh', 'CN'));
+    Get.put(UserStore());
+    addTearDown(() => Get.reset());
+    final service = _FakeWaterLevelModbusService(waterLevelStates: [1]);
+    await tester.pumpWidget(GetMaterialApp(
+      navigatorObservers: [appRouteObserver],
+      home: MainPage(modbusService: service),
+    ));
+    await tester.pump(const Duration(milliseconds: 250));
+    final barrier = find.byKey(const ValueKey<String>('water_level_dialog_barrier'));
+    expect(find.byKey(const ValueKey<String>('water_level_filling_button')), findsNothing);
+    expect(tester.widget<GestureDetector>(barrier).onTap, isNull);
+    await tester.pump(const Duration(seconds: 4));
+    expect(tester.widget<GestureDetector>(barrier).onTap, isNotNull);
+    await tester.tapAt(const Offset(5, 5));
+    await tester.pump(const Duration(milliseconds: 250));
+    await tester.pump(const Duration(seconds: 3));
+    expect(find.byType(WaterLevelStateDialog), findsNothing);
+    expect(service.waterFillingCommands, isEmpty);
+    // 水位恢复后再次缺水，必须能重新提醒，不能永久屏蔽报警。
+    service.waterLevelOverride = 2;
+    await tester.pump(const Duration(seconds: 3));
+    service.waterLevelOverride = 1;
+    await tester.pump(const Duration(seconds: 3));
+    await tester.pump(const Duration(milliseconds: 250));
+    expect(find.byType(WaterLevelStateDialog), findsOneWidget);
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
+    if (Get.isRegistered<AppHeaderClockController>()) {
+      Get.find<AppHeaderClockController>().onClose();
+      Get.delete<AppHeaderClockController>(force: true);
+    }
+  }, skip: const bool.fromEnvironment('INDIA_AUTO_WATER_FILLING', defaultValue: true));
+
   test('logout labels stay compact in constrained menu', () {
     const Map<String, String> compactLabels = <String, String>{
       'pt_PT': 'Sair',
@@ -602,6 +644,11 @@ void main() {
   testWidgets(
     'Ready? only switches the label and Start Filling writes 0x01EB=1',
     (WidgetTester tester) async {
+      // 开启编译开关时用印度配置验证完整的新硬件加水流程。
+      if (const bool.fromEnvironment('INDIA_AUTO_WATER_FILLING', defaultValue: true)) {
+        AppBrand.configure(AppBrands.india);
+        addTearDown(() => AppBrand.configure(AppBrands.global));
+      }
       await tester.binding.setSurfaceSize(const Size(1024, 1366));
       addTearDown(() => tester.binding.setSurfaceSize(null));
 

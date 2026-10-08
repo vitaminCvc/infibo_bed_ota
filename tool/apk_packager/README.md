@@ -11,6 +11,7 @@
 | 官方版 | global | `lib/main_global.dart` | `http://192.241.254.196` |
 | 国内环境测试版 | global | `lib/main_global.dart` | `http://8.138.247.157` |
 | 印度版 | india | `lib/main_india.dart` | `http://192.241.254.196` |
+| 印度老版（无自动加水） | india | `lib/main_india.dart` | `http://192.241.254.196` |
 | 西班牙版 | spain | `lib/main_spain.dart` | `http://192.241.254.196` |
 | 土耳其版 | turkey | `lib/main_turkey.dart` | `http://192.241.254.196` |
 | 美国版 | america | `lib/main_america.dart` | `http://192.241.254.196` |
@@ -18,6 +19,30 @@
 | 澳大利亚版 | australia | `lib/main_australia.dart` | `http://192.241.254.196` |
 
 ## 以后增加版本
+
+### 印度版新旧硬件打包开关
+
+印度版默认支持自动加水。打包工具新增“印度老版（无自动加水）”，适用于老客户：保留缺水检测和提示音，隐藏加水按钮，
+提醒展示 4 秒后可点击关闭，不发送 `0x01EB=1`。首页检测恢复、疗程结束三轮停止指令、
+总结页等后续修复仍然保留。其他国家版本不受这个开关影响。
+图形打包工具选择“印度版”生成支持自动加水的版本；选择“印度老版（无自动加水）”生成旧硬件版本。
+两个版本独立记忆保存目录，文件名分别以 `Infibo_india_` 和 `Infibo_india_legacy_` 开头。
+两者共用应用包名，安装时互相覆盖更新，不会同时安装两个应用。重新打开打包工具即可看到新增选项。
+
+在项目根目录执行以下命令，可明确选择印度硬件版本：
+
+```powershell
+# 老客户：人工加水，缺水提醒展示 4 秒后允许关闭。
+flutter build apk --release --flavor india --target lib/main_india.dart --dart-define=INDIA_AUTO_WATER_FILLING=false
+
+# 新硬件：显示 Ready? / Start Filling，并启用自动加水指令。
+flutter build apk --release --flavor india --target lib/main_india.dart --dart-define=INDIA_AUTO_WATER_FILLING=true
+```
+
+两条命令均输出到 `build/app/outputs/flutter-apk/app-india-release.apk`，
+请在下一次构建前保存并标明硬件版本，避免混发。此开关在编译时确定，不能在运行时切换。
+
+### 新增地区或服务器环境
 
 只需在 [editions.json](editions.json) 里加一项。保存后重新打开打包工具，新版本就会出现在列表里。例如，要增加一个使用现有 `global` 包配置、但连接另一台测试服务器的版本，可以照着国内测试版复制一行：
 
