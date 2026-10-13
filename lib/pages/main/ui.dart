@@ -302,7 +302,9 @@ class _MainPageState extends State<MainPage> with RouteAware {
       _isWaterLevelReading = false;
       // 原有水位读取完成后再检测 TDS，保留 0012 → 0006 → 01E5 顺序。
       if (mounted && _isWaterLevelPolling) {
-        unawaited(WaterQualityScope.maybeOf(context)?.onHomeWaterPollComplete());
+        unawaited(
+          WaterQualityScope.maybeOf(context)?.onHomeWaterPollComplete(),
+        );
       }
     }
   }

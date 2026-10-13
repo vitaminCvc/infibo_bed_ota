@@ -165,7 +165,7 @@ void main() {
           body: Align(
             alignment: Alignment.topLeft,
             child: SizedBox(
-              width: 429,
+              width: 411,
               height: 900,
               child: WifiBleSettingsPanel(
                 gateway: FakePanelGateway(
@@ -189,9 +189,9 @@ void main() {
 
     expect(titleText.style?.color, Colors.white);
     expect(titleText.style?.fontSize, 24);
-    expect(titleText.style?.fontWeight, isNull);
+    expect(titleText.style?.fontWeight, FontWeight.w400);
     expect(tester.getTopLeft(title), Offset.zero);
-    expect(tester.getTopLeft(wifiRow), const Offset(6, 78));
+    expect(tester.getTopLeft(wifiRow), const Offset(0, 78));
     expect(tester.getSize(wifiRow).width, 411);
   });
 
@@ -206,7 +206,7 @@ void main() {
           body: Align(
             alignment: Alignment.topLeft,
             child: SizedBox(
-              width: 429,
+              width: 411,
               height: 900,
               child: WifiBleSettingsPanel(
                 gateway: FakePanelGateway(
@@ -290,7 +290,7 @@ void main() {
           body: Align(
             alignment: Alignment.topLeft,
             child: SizedBox(
-              width: 429,
+              width: 411,
               height: 900,
               child: WifiBleSettingsPanel(
                 gateway: FakePanelGateway(
@@ -310,7 +310,7 @@ void main() {
     final Finder divider = find.byType(Divider);
     final Finder bleTitle = find.text('BLE');
 
-    expect(tester.getTopLeft(divider).dx, 6);
+    expect(tester.getTopLeft(divider).dx, 0);
     expect(tester.getSize(divider), const Size(411, 1));
     expect(
       tester.getTopLeft(divider).dy - tester.getBottomLeft(wifiDetail).dy,

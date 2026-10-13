@@ -14,6 +14,7 @@ import 'package:infibo_app/pages/settingpage/logic.dart';
 import 'package:infibo_app/pages/settingpage/prompt_volume_settings_panel.dart';
 import 'package:infibo_app/pages/settingpage/wifi_ble_settings_panel.dart';
 import 'package:infibo_app/pages/settingpage/status_detection_panel.dart';
+import 'package:infibo_app/pages/settingpage/settings_panel_style.dart';
 import 'package:infibo_app/stores/app_header_clock_store.dart';
 import 'package:infibo_app/utils/date_time_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -34,12 +35,6 @@ class SettingWidget extends StatefulWidget {
 }
 
 class _SettingWidgetState extends State<SettingWidget> {
-  static const TextStyle _rightPanelTitleStyle = TextStyle(
-    color: Colors.white,
-    fontSize: 24,
-    fontWeight: FontWeight.w500,
-  );
-
   ////////////////////////////// 日期时间选择器布局参数 //////////////////////////////
 
   // 日期时间滚轮整体左边距，数值越小越靠左
@@ -306,7 +301,9 @@ class _SettingWidgetState extends State<SettingWidget> {
           children: [
             Container(
               height: 80,
-              padding: const EdgeInsets.symmetric(horizontal: 24),
+              padding: const EdgeInsets.symmetric(
+                horizontal: settingsCardHorizontalPadding,
+              ),
               alignment: Alignment.centerLeft,
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
@@ -370,7 +367,9 @@ class _SettingWidgetState extends State<SettingWidget> {
                 )
               : null,
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 22),
+        padding: const EdgeInsets.symmetric(
+          horizontal: settingsCardHorizontalPadding,
+        ),
         child: Row(
           children: [
             Icon(
@@ -416,8 +415,16 @@ class _SettingWidgetState extends State<SettingWidget> {
         border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
       ),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 30, 14, 14),
-        child: _buildRightPanelContent(pageTitle),
+        padding: const EdgeInsets.fromLTRB(
+          settingsCardHorizontalPadding,
+          30,
+          settingsCardHorizontalPadding,
+          14,
+        ),
+        child: DefaultTextStyle.merge(
+          style: const TextStyle(fontFamily: settingsFontFamily),
+          child: _buildRightPanelContent(pageTitle),
+        ),
       ),
     );
   }
@@ -463,7 +470,7 @@ class _SettingWidgetState extends State<SettingWidget> {
   }
 
   Widget _buildRightPanelTitle(String title) {
-    return Text(title, style: _rightPanelTitleStyle);
+    return Text(title, style: settingsPanelTitleStyle);
   }
 
   ////////////////////////////////////////语言设置页面///////////////////////////////
@@ -539,7 +546,9 @@ class _SettingWidgetState extends State<SettingWidget> {
       child: Container(
         width: 411,
         height: 66,
-        padding: const EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.symmetric(
+          horizontal: settingsCardHorizontalPadding,
+        ),
         decoration: BoxDecoration(
           color: const Color(0xFF252935),
           borderRadius: BorderRadius.circular(10),

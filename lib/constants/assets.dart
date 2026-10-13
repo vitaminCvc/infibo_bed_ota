@@ -253,6 +253,16 @@ class Assets {
   static const String startHydrogenIconOn =
       "assets/Start/icon/hydrogenStart.png";
 
+  // 状态检测分子氢卡片：Figma 8098:7617 的原始图标、状态点和分隔线。
+  static const String statusHydrogenFigma =
+      'assets/Start/icon/statusHydrogenFigma.png';
+  static const String statusHydrogenDotFigma =
+      'assets/Start/icon/statusHydrogenDotFigma.png';
+  static const String statusHydrogenHorizontalFigma =
+      'assets/Start/icon/statusHydrogenHorizontalFigma.png';
+  static const String statusHydrogenVerticalFigma =
+      'assets/Start/icon/statusHydrogenVerticalFigma.png';
+
   // 启动治疗页：脉轮拓展未启动状态图标。
   static const String startExpandIconOff = "assets/Start/icon/Chakras.png";
 

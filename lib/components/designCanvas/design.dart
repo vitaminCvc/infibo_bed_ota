@@ -5,11 +5,7 @@ import 'package:infibo_app/constants/color.dart';
 import 'package:infibo_app/constants/layout.dart';
 
 class AppLayoutScope extends InheritedWidget {
-  const AppLayoutScope({
-    super.key,
-    required this.layout,
-    required super.child,
-  });
+  const AppLayoutScope({super.key, required this.layout, required super.child});
 
   final AppLayoutMetrics layout;
 

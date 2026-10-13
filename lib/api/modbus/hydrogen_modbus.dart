@@ -34,6 +34,9 @@ class HydrogenModbus {
   static const int flowReadAddress = 0x01E4;
   static const int waterLevelReadAddress = 0x01E5;
 
+  /// 累计运行时间（分钟）：App 读取累计值，叠加本次时长后写回新总数。
+  static const int cumulativeRuntimeAddress = 0x01E9;
+
   /// 自动加水开关：写入 1 开始自动加水，水位仍由 0x01E5 轮询确认。
   static const int waterFillingSwitchAddress = 0x01EB;
 
