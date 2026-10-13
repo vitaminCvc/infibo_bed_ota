@@ -2,6 +2,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'settings_panel_style.dart';
 import 'package:get/get.dart';
 import 'package:infibo_app/pages/start/audio_prompt_player.dart';
 
@@ -65,17 +66,13 @@ class _PromptVolumeSettingsPanelState extends State<PromptVolumeSettingsPanel> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          Text(
-            'prompt_volume'.tr,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
+          Text('prompt_volume'.tr, style: settingsPanelTitleStyle),
           const SizedBox(height: 34),
           Container(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.symmetric(
+              horizontal: settingsCardHorizontalPadding,
+              vertical: 20,
+            ),
             decoration: BoxDecoration(
               color: const Color(0xFF343844),
               borderRadius: BorderRadius.circular(14),

@@ -4,6 +4,7 @@
 import 'dart:async';
 import 'dart:math' as math;
 import 'package:infibo_app/api/modbus/modbus_rtu_service.dart';
+import 'package:infibo_app/api/modbus/hydrogen_runtime_recorder.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:infibo_app/components/designCanvas/design.dart';
@@ -40,6 +41,18 @@ class _StartPageState extends State<StartPage>
   bool _isSyncingVatMusic = false;
   // 这里使用 AndroidSerialPortService，默认路径为 /dev/ttyS0
   final ModbusRtuService modbusService = const ModbusRtuService();
+  // 累计时长通信采用短超时；底层不重试，由 recorder 对同一总数最多重试一次。
+  late final HydrogenRuntimeRecorder _hydrogenRuntimeRecorder =
+      HydrogenRuntimeRecorder(
+        service: ModbusRtuService(
+          portName: modbusService.portName,
+          baudRate: modbusService.baudRate,
+          slaveId: modbusService.slaveId,
+          timeout: const Duration(milliseconds: 500),
+          commandDelay: Duration.zero,
+          maxRetries: 0,
+        ),
+      );
   // 仅结束疗程的停止流程使用 20ms 间隔，其他设备命令继续使用默认间隔。
   late final ModbusRtuService _stopModbusService = ModbusRtuService(
     portName: modbusService.portName,
@@ -1576,6 +1589,8 @@ class _StartPageState extends State<StartPage>
     if (_isCommanding || (!_logic.canStop && !_britainFinishPending)) return;
 
     final _StartArguments args = _StartArguments.from(Get.arguments);
+    final moduleSeconds = _logic.actualWorkSecondsByDevice(args.modeTitle);
+    var runtimeWriteFailed = false;
     // 自动结束和手动停止都从此处冻结倒计时，避免发送指令期间继续计时。
     _timer?.cancel();
     _timer = null;
@@ -1593,6 +1608,13 @@ class _StartPageState extends State<StartPage>
         stopFragrance: _runningModules.contains('fragrance'),
       );
       unawaited(AudioPromptPlayer.instance.playEndSafely());
+      // 停止确认后立即提交，后续升降失败或重试不应漏记或重复累计。
+      try {
+        await _hydrogenRuntimeRecorder.recordSession(moduleSeconds);
+      } catch (error) {
+        runtimeWriteFailed = true;
+        debugPrint('hydrogen cumulative runtime update failed: $error');
+      }
       if (_isBritainVersion) {
         if (!mounted) return;
         // 英国版先停止计时、阶段切换和音乐；上升确认后立即进入总结页。
@@ -1615,7 +1637,11 @@ class _StartPageState extends State<StartPage>
         _stopHydrogenFlowPolling(clearValue: true);
       });
       unawaited(VatMusicPlayer.instance.stop());
-      _openSummaryPage(args);
+      _openSummaryPage(
+        args,
+        moduleSeconds,
+        runtimeWriteFailed: runtimeWriteFailed,
+      );
     } catch (e) {
       debugPrint('stop command failed: $e');
       if (!mounted) return;
@@ -2266,11 +2292,11 @@ class _StartPageState extends State<StartPage>
     ).showSnackBar(SnackBar(content: Text(message)));
   }
 
-  void _openSummaryPage(_StartArguments args) {
-    final Map<String, int> moduleSeconds = _logic.actualWorkSecondsByDevice(
-      args.modeTitle,
-    );
-
+  void _openSummaryPage(
+    _StartArguments args,
+    Map<String, int> moduleSeconds, {
+    required bool runtimeWriteFailed,
+  }) {
     // 停止按钮或理疗自动结束后，不再弹总结框，直接进入总结页面。
     Get.offNamed(
       '/summary',
@@ -2284,6 +2310,9 @@ class _StartPageState extends State<StartPage>
         'isOfflineMode': args.isOfflineMode,
       },
     );
+    if (runtimeWriteFailed) {
+      Get.rawSnackbar(message: 'status_hydrogen_runtime_write_failed'.tr);
+    }
   }
 
   void _startTimer() {

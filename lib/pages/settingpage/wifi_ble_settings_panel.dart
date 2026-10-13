@@ -6,6 +6,7 @@ import 'package:infibo_app/pages/WifiBluetooth/connection_prompt_controller.dart
 import 'package:infibo_app/pages/WifiBluetooth/system_gateway.dart';
 
 import 'wifi_ble_settings_controller.dart';
+import 'settings_panel_style.dart';
 
 /// 设置页中的 WIFI & BLE 连接详情面板。
 ///
@@ -80,16 +81,12 @@ class _WifiBleSettingsPanelState extends State<WifiBleSettingsPanel>
               height: 78,
               child: Align(
                 alignment: AlignmentDirectional.topStart,
-                child: Text(
-                  'wifi_ble'.tr,
-                  style: const TextStyle(color: Colors.white, fontSize: 24),
-                ),
+                child: Text('wifi_ble'.tr, style: settingsPanelTitleStyle),
               ),
             ),
             Padding(
-              // 卡片公共内边距为左 20px、右 14px；再补起始 6px、末尾
-              // 12px 后，连接行距离卡片左右均为 26px，实际宽度为 411px。
-              padding: const EdgeInsetsDirectional.only(start: 6, end: 12),
+              // 公共卡片已经提供左右 26px 内边距，无需额外叠加。
+              padding: EdgeInsets.zero,
               child: _ConnectionDetailRow(
                 key: const ValueKey<String>('settings_wifi_row'),
                 iconAsset: 'assets/WifiBLE/wifi.png',
@@ -101,12 +98,12 @@ class _WifiBleSettingsPanelState extends State<WifiBleSettingsPanel>
             ),
             const SizedBox(height: 32),
             const Padding(
-              padding: EdgeInsetsDirectional.only(start: 6, end: 12),
+              padding: EdgeInsets.zero,
               child: Divider(height: 1, thickness: 1, color: Color(0x12FFFFFF)),
             ),
             const SizedBox(height: 32),
             Padding(
-              padding: const EdgeInsetsDirectional.only(start: 6, end: 12),
+              padding: EdgeInsets.zero,
               child: _ConnectionDetailRow(
                 key: const ValueKey<String>('settings_ble_row'),
                 iconAsset: 'assets/WifiBLE/ble.png',

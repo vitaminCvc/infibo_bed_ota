@@ -340,7 +340,7 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
       width: 711,
       constraints: const BoxConstraints(minHeight: 317),
       // EdgeInsets.fromLTRB(左边距, 上边距, 右边距, 下边距)
-      padding: const EdgeInsets.fromLTRB(44, 28, 44, 25),
+      padding: const EdgeInsets.fromLTRB(26, 28, 26, 25),
       decoration: const BoxDecoration(
         image: DecorationImage(
           image: AssetImage(Assets.historyCard),
@@ -530,7 +530,7 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
     // 四个小功能卡片
     return Container(
       height: 136,
-      padding: const EdgeInsets.fromLTRB(18, 22, 22, 12),
+      padding: const EdgeInsets.fromLTRB(26, 22, 26, 12),
       decoration: const BoxDecoration(
         image: DecorationImage(
           image: AssetImage(Assets.fuctionCard),

@@ -393,10 +393,7 @@ class _DeviceDetailsPanel extends StatelessWidget {
         const Positioned(
           left: 26,
           top: 449,
-          child: _VersionInfoCell(
-            label: 'Android App Version',
-            value: 'V1.05',
-          ),
+          child: _VersionInfoCell(label: 'Android App Version', value: 'V1.09'),
         ),
         const Positioned(
           left: 242,
