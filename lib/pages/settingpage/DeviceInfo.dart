@@ -1,13 +1,21 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:infibo_app/api/modbus/modbus_rtu_service.dart';
 import 'package:infibo_app/constants/assets.dart';
 
 const double _deviceDetailsHeight = 1355;
 const double _deviceInfoPanelScrollHeight = 1261;
 
 class DeviceInfoPanel extends StatelessWidget {
-  const DeviceInfoPanel({super.key, this.showDeviceStatusHeading = true});
+  const DeviceInfoPanel({
+    super.key,
+    this.showDeviceStatusHeading = true,
+    this.readRegister,
+  });
 
   final bool showDeviceStatusHeading;
+  final Future<int> Function(int address)? readRegister;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +36,10 @@ class DeviceInfoPanel extends StatelessWidget {
             maxHeight: _deviceDetailsHeight,
             child: Transform.translate(
               offset: Offset(-26, verticalOffset),
-              child: const _DeviceDetailsPanel(decorated: false),
+              child: _DeviceDetailsPanel(
+                decorated: false,
+                readRegister: readRegister,
+              ),
             ),
           ),
         ),
@@ -333,10 +344,42 @@ class _SettingsMenuItem extends StatelessWidget {
   }
 }
 
-class _DeviceDetailsPanel extends StatelessWidget {
-  const _DeviceDetailsPanel({this.decorated = true});
+class _DeviceDetailsPanel extends StatefulWidget {
+  const _DeviceDetailsPanel({this.decorated = true, this.readRegister});
 
   final bool decorated;
+  final Future<int> Function(int address)? readRegister;
+
+  @override
+  State<_DeviceDetailsPanel> createState() => _DeviceDetailsPanelState();
+}
+
+class _DeviceDetailsPanelState extends State<_DeviceDetailsPanel> {
+  String _firmwareVersion = '---';
+
+  @override
+  void initState() {
+    super.initState();
+    unawaited(_readFirmwareVersion());
+  }
+
+  Future<void> _readFirmwareVersion() async {
+    final read =
+        widget.readRegister ?? const ModbusRtuService().readHoldingRegister;
+    try {
+      final value = await read(0x0002);
+      if (!mounted || value < 0 || value > 0xFFFF) {
+        return;
+      }
+      // Protocol example: 0x0125 represents V1.2.5.
+      final major = (value >> 8) & 0x0F;
+      final minor = (value >> 4) & 0x0F;
+      final patch = value & 0x0F;
+      setState(() => _firmwareVersion = 'V$major.$minor.$patch');
+    } catch (_) {
+      // Keep the unavailable placeholder when the board does not respond.
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -395,12 +438,12 @@ class _DeviceDetailsPanel extends StatelessWidget {
           top: 449,
           child: _VersionInfoCell(label: 'Android App Version', value: 'V1.09'),
         ),
-        const Positioned(
+        Positioned(
           left: 242,
           top: 449,
           child: _VersionInfoCell(
             label: 'Main Controller Firmware',
-            value: 'V2.1.0',
+            value: _firmwareVersion,
           ),
         ),
         const Positioned(
@@ -470,7 +513,7 @@ class _DeviceDetailsPanel extends StatelessWidget {
         // ),
       ],
     );
-    if (!decorated) {
+    if (!widget.decorated) {
       return content;
     }
     return DecoratedBox(
