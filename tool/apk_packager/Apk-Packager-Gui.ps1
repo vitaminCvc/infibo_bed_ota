@@ -24,7 +24,7 @@ if ($TestProjectRoot) { $projectRoot = $TestProjectRoot }
 $worker = Join-Path $PSScriptRoot 'Build-InfiboApks.ps1'
 $definitionsPath = if ($TestDefinitionsPath) { $TestDefinitionsPath } else { Join-Path $PSScriptRoot 'editions.json' }
 $editions = @(Get-InfiboEditions -Path $definitionsPath)
-$settingsPath = Join-Path ([Environment]::GetFolderPath('LocalApplicationData')) 'InfiboApkPackager\destinations.json'
+$settingsPath = Join-Path ([Environment]::GetFolderPath('LocalApplicationData')) 'InfiboOtaApkPackager\destinations.json'
 if ($TestSettingsPath) { $settingsPath = $TestSettingsPath }
 $savedDestinations = @{}
 if (Test-Path -LiteralPath $settingsPath -PathType Leaf) {
@@ -40,7 +40,7 @@ if (Test-Path -LiteralPath $settingsPath -PathType Leaf) {
 }
 
 $form = New-Object System.Windows.Forms.Form
-$form.Text = 'Infibo APK 打包工具'
+$form.Text = 'Infibo OTA APK 打包工具'
 $form.ClientSize = [System.Drawing.Size]::new(960, 690)
 $form.StartPosition = 'CenterScreen'
 $form.FormBorderStyle = 'FixedDialog'
@@ -86,7 +86,7 @@ $browseColumn.Width = 80
 $browseColumn.ReadOnly = $true
 [void]$grid.Columns.Add($browseColumn)
 
-$defaultRoot = Join-Path ([Environment]::GetFolderPath('UserProfile')) 'Downloads\Infibo_APK'
+$defaultRoot = Join-Path ([Environment]::GetFolderPath('UserProfile')) 'Downloads\Infibo_OTA_APK'
 foreach ($item in $editions) {
     $path = if ($savedDestinations.ContainsKey($item.Id) -and $savedDestinations[$item.Id]) {
         $savedDestinations[$item.Id]

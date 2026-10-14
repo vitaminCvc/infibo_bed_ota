@@ -19,6 +19,7 @@ import 'package:infibo_app/pages/main/logic.dart';
 import 'package:infibo_app/pages/start/audio_prompt_player.dart';
 import 'package:infibo_app/pages/WifiBluetooth/connection_prompt_host.dart';
 import 'package:infibo_app/routes/route_observer.dart';
+import 'package:infibo_app/ota/ota_controller.dart';
 import 'package:infibo_app/components/water_quality/water_quality_host.dart';
 
 // 主页面UI
@@ -39,6 +40,7 @@ class _MainPageState extends State<MainPage> with RouteAware {
   bool _pendingLightState = false;
   bool _hasPendingLight = false;
   bool _deviceFault = false; //true:设备故障(红色),false:设备正常(绿色)
+  Timer? _otaCheckTimer;
   Timer? _deviceStatusTimer; //设备状态轮询定时器
   Timer? _waterLevelTimer; //水位状态轮询定时器
   bool _isDeviceStatusPolling = false;
@@ -90,6 +92,7 @@ class _MainPageState extends State<MainPage> with RouteAware {
   //加dispose释放定时器
   @override
   void dispose() {
+    _otaCheckTimer?.cancel();
     if (_isRouteSubscribed) {
       appRouteObserver.unsubscribe(this);
       _isRouteSubscribed = false;
@@ -107,6 +110,7 @@ class _MainPageState extends State<MainPage> with RouteAware {
   @override
   void didPush() {
     _isWaterLevelDialogDismissedForVisit = false;
+    _scheduleOtaCheck();
     _startDeviceStatusPolling();
     _startWaterLevelPolling();
   }
@@ -117,6 +121,7 @@ class _MainPageState extends State<MainPage> with RouteAware {
     if (!_isWaterLevelDialogVisible) {
       _isWaterLevelDialogDismissedForVisit = false;
     }
+    _scheduleOtaCheck();
     _startDeviceStatusPolling();
     _startWaterLevelPolling();
   }
@@ -153,6 +158,68 @@ class _MainPageState extends State<MainPage> with RouteAware {
     _stopDeviceStatusPolling();
     _stopWaterLevelPolling();
     unawaited(_stopLiftOnLeave());
+  }
+
+  void _scheduleOtaCheck() {
+    _otaCheckTimer?.cancel();
+    if (!OtaController.instance.service.config.configured ||
+        AppBrand.current.flavor != 'global')
+      return;
+    _otaCheckTimer = Timer(
+      const Duration(seconds: 10),
+      () => unawaited(_checkOtaUpdate()),
+    );
+  }
+
+  Future<void> _checkOtaUpdate() async {
+    final controller = OtaController.instance;
+    if (!mounted ||
+        ModalRoute.of(context)?.isCurrent != true ||
+        controller.busy)
+      return;
+    if (controller.checkedAt == null ||
+        DateTime.now().difference(controller.checkedAt!) >
+            const Duration(minutes: 5)) {
+      await controller.refresh();
+    }
+    if (!mounted ||
+        ModalRoute.of(context)?.isCurrent != true ||
+        _isWaterLevelDialogVisible ||
+        Get.isDialogOpen == true)
+      return;
+    try {
+      if (await widget.modbusService.readHoldingRegister(0x0006) != 0) return;
+    } catch (_) {
+      return;
+    }
+    if (!mounted ||
+        ModalRoute.of(context)?.isCurrent != true ||
+        !controller.takePrompt())
+      return;
+    final view = await Get.dialog<bool>(
+      AlertDialog(
+        title: Text('ota_prompt'.tr),
+        content: Text(
+          [
+            if (controller.appAvailable)
+              '${'ota_app'.tr}: ${controller.manifest!.app!.version}',
+            if (controller.firmwareAvailable)
+              '${'ota_board'.tr}: ${controller.manifest!.firmware!.version}',
+          ].join('\n'),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(result: false),
+            child: Text('ota_later'.tr),
+          ),
+          FilledButton(
+            onPressed: () => Get.back(result: true),
+            child: Text('ota_view'.tr),
+          ),
+        ],
+      ),
+    );
+    if (view == true && mounted) Get.toNamed('/setting/update');
   }
 
   void _startDeviceStatusPolling() {

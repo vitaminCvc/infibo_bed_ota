@@ -5,11 +5,12 @@ import 'package:get/get.dart';
 import 'package:infibo_app/config/app_brand.dart';
 import 'water_quality_translations.dart';
 import 'status_detection_translations.dart';
+import 'ota_translations.dart';
 
 class AppTranslations extends Translations {
   @override
   Map<String, Map<String, String>> get keys =>
-      withStatusDetectionTranslations(_baseKeys);
+      withOtaTranslations(withStatusDetectionTranslations(_baseKeys));
 
   Map<String, Map<String, String>> get _baseKeys => withWaterQualityTranslations({
     ///////////////////////////////////////////////////////////中文语言////////////////////////////////////////////////

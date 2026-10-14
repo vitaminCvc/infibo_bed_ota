@@ -18,17 +18,24 @@ import 'package:infibo_app/pages/settingpage/settings_panel_style.dart';
 import 'package:infibo_app/stores/app_header_clock_store.dart';
 import 'package:infibo_app/utils/date_time_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:infibo_app/config/app_brand.dart';
+import 'package:infibo_app/ota/ota_controller.dart';
+import 'system_update_panel.dart';
 
 class SettingWidget extends StatefulWidget {
   const SettingWidget({
     super.key,
     this.connectionGateway,
     this.statusReadRegister,
+    this.updateController,
+    this.openUpdates = false,
   });
 
   /// 测试可注入连接网关；正式页面留空即可读取系统真实连接信息。
   final ConnectionDetailsGateway? connectionGateway;
   final Future<int> Function(int address)? statusReadRegister;
+  final OtaController? updateController;
+  final bool openUpdates;
 
   @override
   State<SettingWidget> createState() => _SettingWidgetState();
@@ -120,7 +127,7 @@ class _SettingWidgetState extends State<SettingWidget> {
   late final FixedExtentScrollController _minuteController;
 
   // 左侧菜单数据源：统一在这里维护标题和图标，避免在 UI 里写死重复内容。
-  static const List<_SettingMenuItemData> _menuItems = [
+  static const List<_SettingMenuItemData> _baseMenuItems = [
     _SettingMenuItemData(titleKey: 'language_setting', icon: Icons.public),
     _SettingMenuItemData(titleKey: 'date_time', icon: Icons.schedule),
     _SettingMenuItemData(titleKey: 'device_info', icon: Icons.layers_outlined),
@@ -139,6 +146,15 @@ class _SettingWidgetState extends State<SettingWidget> {
       titleKey: 'status_detection',
       icon: Icons.monitor_heart_outlined,
     ),
+  ];
+
+  List<_SettingMenuItemData> get _menuItems => [
+    ..._baseMenuItems,
+    if (AppBrand.current.flavor == 'global')
+      const _SettingMenuItemData(
+        titleKey: 'system_update',
+        icon: Icons.system_update,
+      ),
   ];
 
   static const List<_LanguageOptionData> _languageOptions = [
@@ -199,6 +215,8 @@ class _SettingWidgetState extends State<SettingWidget> {
   @override
   void initState() {
     super.initState();
+    if (widget.openUpdates && AppBrand.current.flavor == 'global')
+      _selectedMenuIndex = 7;
 
     //历史记录列表滚动监听事件
     _historyListController.addListener(_handleHistoryScroll);
@@ -328,6 +346,9 @@ class _SettingWidgetState extends State<SettingWidget> {
                     item: item,
                     selected: selected,
                     onTap: () {
+                      if ((widget.updateController ?? OtaController.instance)
+                          .busy)
+                        return;
                       setState(() {
                         _selectedMenuIndex = index;
                       });
@@ -462,6 +483,9 @@ class _SettingWidgetState extends State<SettingWidget> {
     }
     if (_selectedMenuIndex == 6) {
       return StatusDetectionPanel(readRegister: widget.statusReadRegister);
+    }
+    if (_selectedMenuIndex == 7) {
+      return SystemUpdatePanel(controller: widget.updateController);
     }
     return Align(
       alignment: Alignment.topLeft,

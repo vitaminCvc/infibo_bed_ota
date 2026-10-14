@@ -34,3 +34,10 @@ android/.kotlin/
 
 # Flutter / Android sensitive configs
 android/gradle.properties
+
+# Backup of copied worktrees; not an active checkout
+.copy-backup/
+
+# Local OTA deployment configuration and generated releases
+ota_release_config.json
+release/

@@ -24,6 +24,7 @@ import 'package:infibo_app/pages/WifiBluetooth/connection_prompt_host.dart';
 import 'package:infibo_app/api/modbus/modbus_rtu_service.dart';
 import 'package:infibo_app/components/water_quality/water_quality_controller.dart';
 import 'package:infibo_app/components/water_quality/water_quality_host.dart';
+import 'package:infibo_app/ota/ota_busy_overlay.dart';
 
 const String _initialRoute = String.fromEnvironment(
   'INFIBO_INITIAL_ROUTE',
@@ -49,13 +50,15 @@ Widget getRootWidget({
     navigatorKey: navigatorKey,
     builder: (BuildContext context, Widget? child) {
       return DesignCanvas(
-        child: WaterQualityHost(
-          controller: quality,
-          disposeController: waterQualityController == null,
-          child: ConnectionPromptHost(
-            navigatorKey: navigatorKey,
-            gateway: connectionPromptGateway,
-            child: child ?? const SizedBox.shrink(),
+        child: OtaBusyOverlay(
+          child: WaterQualityHost(
+            controller: quality,
+            disposeController: waterQualityController == null,
+            child: ConnectionPromptHost(
+              navigatorKey: navigatorKey,
+              gateway: connectionPromptGateway,
+              child: child ?? const SizedBox.shrink(),
+            ),
           ),
         ),
       );
@@ -111,6 +114,10 @@ List<GetPage> getRoutes() {
     GetPage(name: "/music", page: () => const MusicSelectPage()),
     // 设置页
     GetPage(name: "/setting", page: () => const SettingWidget()),
+    GetPage(
+      name: "/setting/update",
+      page: () => const SettingWidget(openUpdates: true),
+    ),
     GetPage(
       name: "/setting/history-detail",
       page: () => const HistoryDetailPage(),

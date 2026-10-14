@@ -1,0 +1,4 @@
+{
+  "official": { "manifest_url": "", "allow_http": false },
+  "china_test": { "manifest_url": "", "allow_http": false }
+}

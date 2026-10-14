@@ -5,6 +5,7 @@
 // 发送字节、关闭串口，并通过事件流接收下位机返回的数据。
 // 正式业务和串口测试页都应从这里拿默认串口参数，避免不同地方写死不同节点。
 import 'dart:async';
+import 'serial_session_gate.dart';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -13,6 +14,35 @@ import 'package:infibo_app/utils/byte_utils.dart';
 class AndroidSerialPortService {
   AndroidSerialPortService._() {
     _channel.setMethodCallHandler(_handleNativeCall);
+  }
+
+  final SerialSessionGate _gate = SerialSessionGate();
+  Future<T?> _invoke<T>(String method, [Object? arguments]) =>
+      _gate.run<T?>(null, () => _channel.invokeMethod<T>(method, arguments));
+  Future<SerialLease> beginExclusiveSession() {
+    _ensureAndroid();
+    return _gate.acquire();
+  }
+
+  Future<Uint8List> transceiveExclusive({
+    required SerialLease lease,
+    required Uint8List bytes,
+    required Duration timeout,
+    String path = defaultPath,
+    int baudRate = defaultBaudRate,
+  }) async {
+    _ensureAndroid();
+    final response = await _gate.run<Object?>(
+      lease,
+      () => _channel.invokeMethod<Object>('transceiveBytes', {
+        'path': path,
+        'baudRate': baudRate,
+        'timeoutMs': timeout.inMilliseconds,
+        'bytes': bytes,
+      }),
+    );
+    if (response is Uint8List) return response;
+    return Uint8List.fromList(List<int>.from(response as List? ?? []));
   }
 
   static final AndroidSerialPortService instance = AndroidSerialPortService._();
@@ -38,17 +68,12 @@ class AndroidSerialPortService {
     int baudRate = defaultBaudRate,
   }) async {
     _ensureAndroid();
-    await _channel.invokeMethod<bool>('openSerialPort', {
-      'path': path,
-      'baudRate': baudRate,
-    });
+    await _invoke<bool>('openSerialPort', {'path': path, 'baudRate': baudRate});
   }
 
   Future<int> sendBytes(Uint8List bytes) async {
     _ensureAndroid();
-    final int? count = await _channel.invokeMethod<int>('sendBytes', {
-      'bytes': bytes,
-    });
+    final int? count = await _invoke<int>('sendBytes', {'bytes': bytes});
     return count ?? 0;
   }
 
@@ -59,13 +84,12 @@ class AndroidSerialPortService {
     required Duration timeout,
   }) async {
     _ensureAndroid();
-    final Object? response = await _channel
-        .invokeMethod<Object>('transceiveBytes', {
-          'path': path,
-          'baudRate': baudRate,
-          'timeoutMs': timeout.inMilliseconds,
-          'bytes': bytes,
-        });
+    final Object? response = await _invoke<Object>('transceiveBytes', {
+      'path': path,
+      'baudRate': baudRate,
+      'timeoutMs': timeout.inMilliseconds,
+      'bytes': bytes,
+    });
 
     if (response is Uint8List) return response;
     return Uint8List.fromList(List<int>.from(response as List? ?? []));
@@ -77,7 +101,7 @@ class AndroidSerialPortService {
     int baudRate = defaultBaudRate,
   }) async {
     _ensureAndroid();
-    final int? count = await _channel.invokeMethod<int>('writeBytesOnce', {
+    final int? count = await _invoke<int>('writeBytesOnce', {
       'path': path,
       'baudRate': baudRate,
       'bytes': bytes,
@@ -94,15 +118,14 @@ class AndroidSerialPortService {
     required int maxRetries,
   }) async {
     _ensureAndroid();
-    final Object? response = await _channel
-        .invokeMethod<Object>('writeModbusQueue', {
-          'path': path,
-          'baudRate': baudRate,
-          'timeoutMs': timeout.inMilliseconds,
-          'delayMs': commandDelay.inMilliseconds,
-          'maxRetries': maxRetries,
-          'frames': frames,
-        });
+    final Object? response = await _invoke<Object>('writeModbusQueue', {
+      'path': path,
+      'baudRate': baudRate,
+      'timeoutMs': timeout.inMilliseconds,
+      'delayMs': commandDelay.inMilliseconds,
+      'maxRetries': maxRetries,
+      'frames': frames,
+    });
 
     final List<dynamic> items = response is List ? response : const [];
     return [
@@ -120,19 +143,18 @@ class AndroidSerialPortService {
     required Duration commandDelay,
   }) async {
     _ensureAndroid();
-    final int? count = await _channel
-        .invokeMethod<int>('writeModbusQueueNoResponse', {
-          'path': path,
-          'baudRate': baudRate,
-          'delayMs': commandDelay.inMilliseconds,
-          'frames': frames,
-        });
+    final int? count = await _invoke<int>('writeModbusQueueNoResponse', {
+      'path': path,
+      'baudRate': baudRate,
+      'delayMs': commandDelay.inMilliseconds,
+      'frames': frames,
+    });
     return count ?? 0;
   }
 
   Future<void> closeSerialPort() async {
     _ensureAndroid();
-    await _channel.invokeMethod<bool>('closeSerialPort');
+    await _invoke<bool>('closeSerialPort');
   }
 
   Future<void> _handleNativeCall(MethodCall call) async {
