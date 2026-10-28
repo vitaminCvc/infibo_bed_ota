@@ -17,14 +17,19 @@ enum InstallAction { requested, needsPermission }
 
 abstract interface class UpdateGateway {
   Future<InstalledApp> installedApp();
+  Future<bool> canInstallPackages();
   Future<String> cacheDirectory();
   Future<InstallAction> install(File file, AppRelease release);
   Future<void> openInstallPermission();
   Future<void> keepAwake(bool enabled);
 }
 
+// 安卓的更新网关
 class AndroidUpdateGateway implements UpdateGateway {
   static const channel = MethodChannel('infibo_app/ota');
+  @override
+  Future<bool> canInstallPackages() async =>
+      await channel.invokeMethod<bool>('canInstallPackages') == true;
   @override
   Future<InstalledApp> installedApp() async {
     final value = await channel.invokeMapMethod<String, dynamic>(

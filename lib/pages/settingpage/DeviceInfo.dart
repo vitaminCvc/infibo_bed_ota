@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'package:infibo_app/components/brand_logo.dart';
 
 import 'package:flutter/material.dart';
 import 'package:infibo_app/api/modbus/modbus_rtu_service.dart';
 import 'package:infibo_app/constants/assets.dart';
+import 'package:infibo_app/config/app_brand.dart';
+import 'package:infibo_app/services/installed_app_version.dart';
 
 const double _deviceDetailsHeight = 1355;
 const double _deviceInfoPanelScrollHeight = 1261;
@@ -102,15 +105,18 @@ class DeviceInfoPage extends StatelessWidget {
   }
 
   Widget _buildHeader() {
+    final logoSize = AppBrand.current.flavor == 'uaeBiohackn'
+        ? AppBrand.current.headerLayout.logoSize
+        : const Size(242, 44);
     return Stack(
       children: <Widget>[
         Positioned(
           left: 48,
           top: 38,
-          child: Image.asset(
+          child: BrandLogo(
             Assets.mainLogo,
-            width: 242,
-            height: 44,
+            width: logoSize.width,
+            height: logoSize.height,
             fit: BoxFit.contain,
           ),
         ),
@@ -356,11 +362,25 @@ class _DeviceDetailsPanel extends StatefulWidget {
 
 class _DeviceDetailsPanelState extends State<_DeviceDetailsPanel> {
   String _firmwareVersion = '---';
+  String _appVersion = 'Reading version…';
 
   @override
   void initState() {
     super.initState();
     unawaited(_readFirmwareVersion());
+    unawaited(_readAppVersion());
+  }
+
+  // 读取已安装 APK 的版本，用户界面只显示版本名称。
+  // 页面离开后原生结果仍可能返回，因此更新界面前必须判断 mounted。
+  Future<void> _readAppVersion() async {
+    try {
+      final version = await InstalledAppVersion.read();
+      if (mounted) setState(() => _appVersion = version.displayText);
+    } catch (_) {
+      // Windows 预览、旧原生包或读取异常时显示占位，不能冒充真实版本。
+      if (mounted) setState(() => _appVersion = 'Version unavailable');
+    }
   }
 
   Future<void> _readFirmwareVersion() async {
@@ -433,10 +453,16 @@ class _DeviceDetailsPanelState extends State<_DeviceDetailsPanel> {
           top: 391,
           child: _SectionHeading('Version Information'),
         ),
-        const Positioned(
+        Positioned(
           left: 26,
           top: 449,
-          child: _VersionInfoCell(label: 'Android App Version', value: 'V1.09'),
+          child: Tooltip(
+            message: _appVersion,
+            child: _VersionInfoCell(
+              label: 'Android App Version',
+              value: _appVersion,
+            ),
+          ),
         ),
         Positioned(
           left: 242,
@@ -839,6 +865,8 @@ class _VersionInfoCell extends StatelessWidget {
           const SizedBox(height: 14),
           Text(
             value,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
             style: const TextStyle(
               color: Color(0xFFF4F4F6),
               fontSize: 17,

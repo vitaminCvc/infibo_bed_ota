@@ -3,6 +3,7 @@
 // 用户在这里选择注册角色，输入邮箱、验证码、密码并勾选协议。
 
 import 'dart:async';
+import 'package:infibo_app/components/brand_logo.dart';
 import 'dart:ui';
 
 import 'package:flutter/services.dart';
@@ -112,7 +113,9 @@ class _RegisterPageState extends State<RegisterPage> {
     if (_didPrecache) return;
     _didPrecache = true;
 
-    precacheImage(AssetImage(Assets.logo), context);
+    if (!Assets.logo.toLowerCase().endsWith('.svg')) {
+      precacheImage(AssetImage(Assets.logo), context);
+    }
     precacheImage(const AssetImage(Assets.glassLogo), context);
     precacheImage(const AssetImage(Assets.passwordLogo), context);
     precacheImage(const AssetImage(Assets.adminLogo), context);
@@ -240,7 +243,7 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget _buildBrandHeader({Key? key}) {
     final Size logoSize = AppBrand.current.loginLogoSize;
 
-    return Image.asset(
+    return BrandLogo(
       Assets.logo,
       key: key,
       width: logoSize.width,

@@ -2,14 +2,15 @@
 //
 // 提供常规页面使用的顶部 Header 和基础页面容器；共享时钟状态由 stores 统一维护。
 import 'package:flutter/material.dart';
+import 'package:infibo_app/components/brand_logo.dart';
 import 'package:get/get.dart';
 import 'package:infibo_app/components/designCanvas/design.dart';
 import 'package:infibo_app/components/logic.dart';
-import 'package:infibo_app/components/logout_menu.dart';
+import 'package:infibo_app/components/header_controls.dart';
 import 'package:infibo_app/config/app_brand.dart';
 import 'package:infibo_app/constants/assets.dart';
 import 'package:infibo_app/constants/color.dart';
-import 'package:infibo_app/stores/index.dart';
+import 'package:infibo_app/stores/app_header_clock_store.dart';
 
 class AppHeaderPage extends StatelessWidget {
   const AppHeaderPage({
@@ -51,6 +52,10 @@ class AppHeaderPage extends StatelessWidget {
                   top: 25,
                   right: AppBrand.current.headerLayout.indexPageRightInset,
                   child: AppTopHeader(
+                    clockCenterOffset:
+                        (AppBrand.current.headerLayout.indexPageRightInset -
+                            48) /
+                        2,
                     onLogoTap: enableLogoBack
                         ? AppComponentLogic.backToMainPage
                         : null,
@@ -75,12 +80,15 @@ class AppTopHeader extends StatelessWidget {
     this.onSettingTap,
     this.onUserTap,
     this.enableLogout = false,
+    this.clockCenterOffset = 0,
   });
 
   final VoidCallback? onLogoTap;
   final VoidCallback? onSettingTap;
   final VoidCallback? onUserTap;
   final bool enableLogout;
+
+  final double clockCenterOffset;
 
   @override
   Widget build(BuildContext context) {
@@ -90,146 +98,42 @@ class AppTopHeader extends StatelessWidget {
     final Widget clockBlock = Obx(
       () => _buildTimeBlock(clock.timeText, clock.dateText),
     );
-    final Widget userButton = _buildUserButton();
-    final Widget settingButton = _buildSettingButton();
+    final Widget userButton = HeaderUserButton(enableLogout: enableLogout);
+    final Widget settingButton = HeaderSettingsButton(onTap: onSettingTap);
 
-    if (layout.logoPosition == HeaderLogoPosition.trailing) {
-      return Row(
-        children: [
-          userButton,
-          const SizedBox(width: 8),
-          settingButton,
-          SizedBox(width: layout.indexClockGap),
-          clockBlock,
-          const Spacer(),
-          _buildLogo(layout),
-        ],
-      );
-    }
-
-    return Row(
-      children: [
-        _buildLogo(layout),
-        SizedBox(width: layout.indexClockGap),
-        clockBlock,
-        const Spacer(),
-        //创建用户信息按钮
-        userButton,
-        const SizedBox(width: 8),
-        settingButton,
-      ],
-    );
-  }
-
-  Widget _buildSettingButton() {
-    return _buildImageButton(
-      asset: Assets.settingLogo,
-      width: 100,
-      height: 48,
-      onTap: AppComponentLogic.openSettingPage,
-      child: Positioned(
-        left: 18,
-        top: 10,
-        child: SizedBox(
-          height: 28,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.settings_outlined, color: Colors.white, size: 18),
-              const SizedBox(width: 4),
-              Text(
-                'settings'.tr,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
+    final bool logoTrailing =
+        layout.logoPosition == HeaderLogoPosition.trailing;
+    return LayoutBuilder(
+      builder: (context, constraints) => AnchoredHeaderLayout(
+        height: _logoSlotHeight(layout),
+        logo: _buildLogo(layout),
+        clock: clockBlock,
+        clockLeft: constraints.maxWidth / 2 - 38 + clockCenterOffset,
+        logoTrailing: logoTrailing,
+        actions: Row(
+          mainAxisSize: MainAxisSize.min,
+          textDirection: TextDirection.ltr,
+          children: [userButton, const SizedBox(width: 8), settingButton],
         ),
       ),
     );
   }
 
-  Widget _buildUserButton() {
-    return Obx(() {
-      final UserStore userStore = UserStore.instance;
+  double _logoSlotHeight(HeaderLayoutConfig layout) =>
+      layout.logoSize.height > 48 ? layout.logoSize.height : 48;
 
-      return LogoutMenu(
-        onLogout: AppComponentLogic.logout,
-        enabled: enableLogout,
-        child: _buildImageButton(
-          asset: Assets.adminMainLogo,
-          width: 108,
-          height: 48,
-          child: SizedBox(
-            width: 108,
-            height: 48,
-            child: Stack(
-              children: [
-                Positioned(
-                  left: 8,
-                  top: 6,
-                  child: _buildRoleAvatar(userStore.avatarText),
-                ),
-                Positioned(
-                  left: 50,
-                  top: 13,
-                  right: 8,
-                  child: Text(
-                    userStore.roleText,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-    });
-  }
-
-  //创建角色头像组件
-  Widget _buildRoleAvatar(String text) {
-    return Container(
-      width: 35,
-      height: 35,
-      alignment: Alignment.center,
-      decoration: const BoxDecoration(
-        shape: BoxShape.circle,
-        color: Color.fromARGB(255, 41, 41, 41),
-      ),
-      child: Text(
-        text,
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 12,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
-    );
-  }
-
-  //创建用户信息按钮
   Widget _buildLogo(HeaderLayoutConfig layout) {
-    final Widget logo = Image.asset(
+    final Widget logo = BrandLogo(
       Assets.mainLogo,
       width: layout.logoSize.width,
       height: layout.logoSize.height,
       fit: BoxFit.contain,
     );
 
-    // 固定 Header 中 Logo 占用的高度，避免是否可点击导致上下位置变化
+    // Keep the same header height as settings for aligned clocks.
     final Widget logoBox = SizedBox(
       width: layout.indexLogoSlotWidth,
-      height: 48,
+      height: _logoSlotHeight(layout),
       child: Align(alignment: Alignment.centerLeft, child: logo),
     );
 
@@ -248,10 +152,14 @@ class AppTopHeader extends StatelessWidget {
     return SizedBox(
       width: 76,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
             timeText,
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            softWrap: false,
             style: const TextStyle(
               color: Colors.white,
               fontSize: 22,
@@ -262,6 +170,9 @@ class AppTopHeader extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             dateText,
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            softWrap: false,
             style: const TextStyle(
               color: Color(0xFF90939D),
               fontSize: 13,
@@ -270,39 +181,6 @@ class AppTopHeader extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildImageButton({
-    required String asset,
-    required double width,
-    required double height,
-    VoidCallback? onTap,
-    Widget? child,
-  }) {
-    final button = SizedBox(
-      width: width,
-      height: height,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Image.asset(asset, width: width, height: height, fit: BoxFit.contain),
-          ?child,
-        ],
-      ),
-    );
-    if (onTap == null) return button;
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: onTap,
-      child: _withMinTapTarget(button),
-    );
-  }
-
-  Widget _withMinTapTarget(Widget child) {
-    return ConstrainedBox(
-      constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
-      child: Center(child: child),
     );
   }
 }

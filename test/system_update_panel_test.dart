@@ -36,9 +36,13 @@ void main() {
       expect(find.text('主板固件'), findsOneWidget);
       expect(find.textContaining('1.0.0'), findsOneWidget);
       expect(find.textContaining('1.2.4'), findsOneWidget);
+      expect(find.text('1.1.0'), findsOneWidget);
+      expect(find.textContaining('Build'), findsNothing);
       await tester.tap(find.byKey(const ValueKey('ota-app-update')));
       await tester.pumpAndSettle();
       expect(find.text('确认更新软件？'), findsOneWidget);
+      expect(find.text('1.1.0'), findsNWidgets(2));
+      expect(find.textContaining('Build'), findsNothing);
       await tester.tap(find.text('稍后'));
       await tester.pumpAndSettle();
       expect(service.downloads, 0);

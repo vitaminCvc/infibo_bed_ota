@@ -41,6 +41,8 @@ class AndroidUpdateBridge(private val activity: Activity, messenger: BinaryMesse
                 mapOf("packageName" to activity.packageName, "version" to (info.versionName ?: ""), "versionCode" to versionCode(info))
             }
             "cacheDirectory" -> background(result) { cacheDirectory().canonicalPath }
+            // 先询问系统的真实状态，不把授权状态缓存在 Dart，也不自行修改系统权限。
+            "canInstallPackages" -> result.success(canInstall())
             "keepAwake" -> {
                 if (call.argument<Boolean>("enabled") == true || initiallyAwake) activity.window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
                 else activity.window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -95,7 +97,8 @@ class AndroidUpdateBridge(private val activity: Activity, messenger: BinaryMesse
         val flags = if (Build.VERSION.SDK_INT >= 28) PackageManager.GET_SIGNING_CERTIFICATES else PackageManager.GET_SIGNATURES
         val archive = activity.packageManager.getPackageArchiveInfo(file.path, flags) ?: error("Invalid APK archive")
         val current = activity.packageManager.getPackageInfo(activity.packageName, flags)
-        require(archive.packageName == activity.packageName && versionCode(archive) == expectedCode && expectedCode > versionCode(current)) { "APK package or version mismatch" }
+        // 上位机只允许更高编号覆盖安装，文件内容、包名、实际编号和签名照常校验。
+        require(expectedCode in 1..Int.MAX_VALUE.toLong() && archive.packageName == activity.packageName && versionCode(archive) == expectedCode && expectedCode > versionCode(current)) { "APK package or version mismatch" }
         val compatible = if (Build.VERSION.SDK_INT >= 28) {
             val old = current.signingInfo?.apkContentsSigners?.toSet().orEmpty()
             val newInfo = archive.signingInfo

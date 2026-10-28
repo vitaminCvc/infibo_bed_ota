@@ -150,7 +150,7 @@ class _SettingWidgetState extends State<SettingWidget> {
 
   List<_SettingMenuItemData> get _menuItems => [
     ..._baseMenuItems,
-    if (AppBrand.current.flavor == 'global')
+    if (AppBrand.current.supportsOtaUpdates)
       const _SettingMenuItemData(
         titleKey: 'system_update',
         icon: Icons.system_update,
@@ -159,64 +159,36 @@ class _SettingWidgetState extends State<SettingWidget> {
 
   static const List<_LanguageOptionData> _languageOptions = [
     ///////////////////////////////////////////////////////////英文语言////////////////////////////////////////////////
-    _LanguageOptionData(
-      flag: '🇺🇸',
-      name: 'English',
-      locale: Locale('en', 'US'),
-    ),
+    _LanguageOptionData(name: 'English', locale: Locale('en', 'US')),
     ///////////////////////////////////////////////////////////西班牙语语言////////////////////////////////////////////////
-    _LanguageOptionData(
-      flag: '🇪🇸',
-      name: 'Español',
-      locale: Locale('es', 'ES'),
-    ),
+    _LanguageOptionData(name: 'Español', locale: Locale('es', 'ES')),
     ///////////////////////////////////////////////////////////葡萄牙语语言////////////////////////////////////////////////
-    _LanguageOptionData(
-      flag: '🇵🇱',
-      name: 'Português',
-      locale: Locale('pt', 'PT'),
-    ),
+    _LanguageOptionData(name: 'Português', locale: Locale('pt', 'PT')),
     ///////////////////////////////////////////////////////////俄语语言////////////////////////////////////////////////
-    _LanguageOptionData(
-      flag: '🇷🇺',
-      name: 'Русский',
-      locale: Locale('ru', 'RU'),
-    ),
+    _LanguageOptionData(name: 'Русский', locale: Locale('ru', 'RU')),
+    ///////////////////////////////////////////////////////////波兰语语言////////////////////////////////////////////////
+    // 波兰语
+    _LanguageOptionData(name: 'Polski', locale: Locale('pl', 'PL')),
     ///////////////////////////////////////////////////////////法语语言////////////////////////////////////////////////
-    _LanguageOptionData(
-      flag: '🇫🇷',
-      name: 'Français',
-      locale: Locale('fr', 'FR'),
-    ),
+    _LanguageOptionData(name: 'Français', locale: Locale('fr', 'FR')),
     ///////////////////////////////////////////////////////////韩语语言////////////////////////////////////////////////
-    _LanguageOptionData(flag: '🇰🇷', name: '한국어', locale: Locale('ko', 'KR')),
+    _LanguageOptionData(name: '한국어', locale: Locale('ko', 'KR')),
     ///////////////////////////////////////////////////////////阿拉伯语言////////////////////////////////////////////////
-    _LanguageOptionData(
-      flag: '🇦🇪',
-      name: 'العربية',
-      locale: Locale('ar', 'SA'),
-    ),
+    _LanguageOptionData(name: 'العربية', locale: Locale('ar', 'SA')),
     //////////////////////////////////////////////////////////德语语言///////////////////////////////////////////////////
-    _LanguageOptionData(
-      flag: '🇩🇪',
-      name: 'Deutsch',
-      locale: Locale('de', 'DE'),
-    ),
+    _LanguageOptionData(name: 'Deutsch', locale: Locale('de', 'DE')),
     ///////////////////////////////////////////////////////////土耳其语言////////////////////////////////////////////////
-    _LanguageOptionData(
-      flag: '🇹🇷',
-      name: 'Türkçe',
-      locale: Locale('tr', 'TR'),
-    ),
+    _LanguageOptionData(name: 'Türkçe', locale: Locale('tr', 'TR')),
     ///////////////////////////////////////////////////////////中文语言////////////////////////////////////////////////
-    _LanguageOptionData(flag: '🇨🇳', name: '中文', locale: Locale('zh', 'CN')),
+    _LanguageOptionData(name: '中文', locale: Locale('zh', 'CN')),
   ];
 
   @override
   void initState() {
     super.initState();
-    if (widget.openUpdates && AppBrand.current.flavor == 'global')
+    if (widget.openUpdates && AppBrand.current.supportsOtaUpdates) {
       _selectedMenuIndex = 7;
+    }
 
     //历史记录列表滚动监听事件
     _historyListController.addListener(_handleHistoryScroll);
@@ -331,7 +303,7 @@ class _SettingWidgetState extends State<SettingWidget> {
                 ),
               ),
               child: Text(
-                'setting_menu'.tr,
+                'settings_menu_title'.tr,
                 style: const TextStyle(color: Colors.white, fontSize: 24),
               ),
             ),
@@ -347,8 +319,9 @@ class _SettingWidgetState extends State<SettingWidget> {
                     selected: selected,
                     onTap: () {
                       if ((widget.updateController ?? OtaController.instance)
-                          .busy)
+                          .busy) {
                         return;
+                      }
                       setState(() {
                         _selectedMenuIndex = index;
                       });
@@ -404,7 +377,7 @@ class _SettingWidgetState extends State<SettingWidget> {
                 fit: BoxFit.scaleDown,
                 alignment: AlignmentDirectional.centerStart,
                 child: Text(
-                  item.titleKey.tr,
+                  'settings_menu_${item.titleKey}'.tr,
                   maxLines: 1,
                   style: const TextStyle(
                     color: Colors.white,
@@ -580,8 +553,6 @@ class _SettingWidgetState extends State<SettingWidget> {
         ),
         child: Row(
           children: [
-            Text(option.flag, style: const TextStyle(fontSize: 26)),
-            const SizedBox(width: 8),
             Expanded(
               child: Text(
                 option.name,
@@ -1316,13 +1287,8 @@ class _SettingMenuItemData {
 }
 
 class _LanguageOptionData {
-  const _LanguageOptionData({
-    required this.flag,
-    required this.name,
-    this.locale,
-  });
+  const _LanguageOptionData({required this.name, this.locale});
 
-  final String flag;
   final String name;
   final Locale? locale;
 }

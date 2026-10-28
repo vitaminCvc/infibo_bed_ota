@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -56,6 +57,8 @@ class OtaController extends ChangeNotifier {
   CancelToken? _cancelToken;
   bool _disposed = false;
   bool _refreshing = false;
+  bool _resuming = false;
+  static const _permissionRequestKey = 'ota_permission_app_request';
   bool get checking => _refreshing || phase == OtaPhase.checking;
   String? _promptedRelease;
   DateTime? checkedAt;
@@ -79,9 +82,7 @@ class OtaController extends ChangeNotifier {
       installed != null &&
       manifest?.app?.isNewerThan(installed!.versionCode) == true;
   bool get firmwareAvailable =>
-      boardVersion != null &&
-      manifest?.firmware != null &&
-      manifest!.firmware!.versionRegister > boardVersion!;
+      boardVersion != null && manifest?.firmware != null;
   String get phaseKey => switch (phase) {
     OtaPhase.transferring => 'ota_board_transferring',
     OtaPhase.boardVerifying => 'ota_board_verifying',
@@ -122,7 +123,7 @@ class OtaController extends ChangeNotifier {
       final preferences = await SharedPreferences.getInstance();
       final expected = preferences.getInt('ota_pending_app_code');
       if (expected != null && (!busy || confirmInstall)) {
-        if (installed!.versionCode >= expected) {
+        if (installed!.versionCode == expected) {
           phase = OtaPhase.success;
           noticeKey = 'ota_success';
         } else {
@@ -135,6 +136,11 @@ class OtaController extends ChangeNotifier {
       errorKey = _error(error);
       _notify();
     }
+  }
+
+  Future<void> restore() async {
+    await metadata();
+    if (!_disposed) await resume();
   }
 
   Future<void> refresh() async {
@@ -169,10 +175,14 @@ class OtaController extends ChangeNotifier {
   }
 
   bool takePrompt() {
+    // 相同版本仍可手动重装，但不在每次启动时提醒重装当前版本。
+    final promptFirmware =
+        firmwareAvailable &&
+        manifest!.firmware!.versionRegister != boardVersion;
     final signature =
-        '${appAvailable ? manifest!.app!.versionCode : 0}:${firmwareAvailable ? manifest!.firmware!.versionRegister : 0}';
+        '${appAvailable ? manifest!.app!.versionCode : 0}:${promptFirmware ? manifest!.firmware!.versionRegister : 0}:$boardVersion';
     if (busy ||
-        (!appAvailable && !firmwareAvailable) ||
+        (!appAvailable && !promptFirmware) ||
         _promptedRelease == signature) {
       return false;
     }
@@ -185,6 +195,33 @@ class OtaController extends ChangeNotifier {
     if (busy || checking || !appAvailable || release == null || _disposed) {
       return;
     }
+    await _updateApp(release);
+  }
+
+  // 权限设置可能重建 Activity，所以只保存用户已确认的版本资料，不保存任意文件路径。
+  Future<void> _requestInstallPermission(AppRelease release) async {
+    final preferences = await SharedPreferences.getInstance();
+    await preferences.setString(
+      _permissionRequestKey,
+      jsonEncode({
+        'channel': service.config.channel,
+        'version': release.version,
+        'version_code': release.versionCode,
+        'package_name': release.packageName,
+        'url': release.url.toString(),
+        'size': release.size,
+        'sha256': release.sha256,
+      }),
+    );
+    phase = OtaPhase.needsPermission;
+    _notify();
+    await service.gateway.openInstallPermission();
+  }
+
+  Future<void> _updateApp(
+    AppRelease release, {
+    bool resumingPermission = false,
+  }) async {
     phase = OtaPhase.checkingDevice;
     errorKey = null;
     noticeKey = null;
@@ -199,8 +236,14 @@ class OtaController extends ChangeNotifier {
         throw const OtaFailure('ota_device_unavailable');
       }
       if (state != 0) throw const OtaFailure('ota_device_busy');
+      // 没授权时先去设置，不再下载数百 MB 后才发现无法安装。
+      if (!await service.gateway.canInstallPackages()) {
+        await _requestInstallPermission(release);
+        return;
+      }
       await service.gateway.keepAwake(true);
-      phase = OtaPhase.downloading;
+      // download 会先校验缓存；只有真的请求网络时才显示下载 0%。
+      phase = OtaPhase.verifying;
       _notify();
       final file = await service.download(
         release,
@@ -223,14 +266,24 @@ class OtaController extends ChangeNotifier {
       final action = await service.install(file, release);
       if (action == InstallAction.needsPermission) {
         await preferences.remove('ota_pending_app_code');
-        phase = OtaPhase.needsPermission;
+        await _requestInstallPermission(release);
       } else {
+        await preferences.remove(_permissionRequestKey);
         phase = OtaPhase.installRequested;
       }
     } catch (error) {
       await (await SharedPreferences.getInstance()).remove(
         'ota_pending_app_code',
       );
+      // 冷启动串口尚未就绪、或主板仍忙时保留授权后续任务；不绕过空闲检查。
+      final waitingForBoard =
+          error is OtaFailure &&
+          {'ota_device_busy', 'ota_device_unavailable'}.contains(error.key);
+      if (!resumingPermission || !waitingForBoard) {
+        await (await SharedPreferences.getInstance()).remove(
+          _permissionRequestKey,
+        );
+      }
       errorKey = _error(error);
       phase = OtaPhase.error;
     } finally {
@@ -244,7 +297,11 @@ class OtaController extends ChangeNotifier {
 
   Future<void> updateFirmware() async {
     final release = manifest?.firmware;
-    if (busy || checking || !firmwareAvailable || release == null || _disposed) {
+    if (busy ||
+        checking ||
+        !firmwareAvailable ||
+        release == null ||
+        _disposed) {
       return;
     }
     phase = OtaPhase.checkingDevice;
@@ -270,6 +327,7 @@ class OtaController extends ChangeNotifier {
           _notify();
         },
       );
+      var completionNotice = 'ota_board_success';
       await firmwareService.upgrade(
         file,
         release,
@@ -279,6 +337,9 @@ class OtaController extends ChangeNotifier {
           _notify();
         },
         onPhase: (value) {
+          if (value == 'ota_board_reinstall_unverified') {
+            completionNotice = value;
+          }
           phase = switch (value) {
             'ota_board_transferring' => OtaPhase.transferring,
             'ota_board_verifying' => OtaPhase.boardVerifying,
@@ -292,7 +353,7 @@ class OtaController extends ChangeNotifier {
         },
       );
       boardVersion = release.versionRegister;
-      noticeKey = 'ota_board_success';
+      noticeKey = completionNotice;
       phase = OtaPhase.success;
     } catch (error) {
       if (error is FirmwareOtaFailure) boardErrorCode = error.errorCode;
@@ -312,15 +373,64 @@ class OtaController extends ChangeNotifier {
   }
 
   Future<void> resume() async {
-    if (phase != OtaPhase.installRequested) return;
-    await metadata(confirmInstall: true);
-    if (phase == OtaPhase.installRequested) phase = OtaPhase.idle;
-    _notify();
+    if (_disposed ||
+        _resuming ||
+        checking ||
+        (busy && phase != OtaPhase.installRequested)) {
+      return;
+    }
+    _resuming = true;
+    try {
+      if (phase == OtaPhase.installRequested) {
+        await metadata(confirmInstall: true);
+        if (phase == OtaPhase.installRequested) phase = OtaPhase.idle;
+        return;
+      }
+      final preferences = await SharedPreferences.getInstance();
+      final saved = preferences.getString(_permissionRequestKey);
+      if (saved == null) return;
+      try {
+        if (saved.length > 16 * 1024) throw const FormatException();
+        final value = jsonDecode(saved);
+        if (value is! Map || value['channel'] != service.config.channel) {
+          throw const FormatException();
+        }
+        installed = await service.gateway.installedApp();
+        final release = AppRelease.parse(
+          value,
+          packageName: installed!.packageName,
+          allowHttp: service.config.allowHttp,
+        );
+        if (!release.isNewerThan(installed!.versionCode)) {
+          await preferences.remove(_permissionRequestKey);
+          phase = OtaPhase.idle;
+          return;
+        }
+        phase = OtaPhase.needsPermission;
+        // 用户未打开开关时只显示提示，不反复把人送回系统设置。
+        if (!await service.gateway.canInstallPackages()) return;
+        // 重新确认主板空闲、文件 SHA256、包名和签名；缓存正确时无网络下载。
+        await _updateApp(release, resumingPermission: true);
+      } on FormatException {
+        await preferences.remove(_permissionRequestKey);
+        throw const OtaFailure('ota_invalid_manifest');
+      }
+    } catch (error) {
+      errorKey = _error(error);
+      phase = OtaPhase.error;
+    } finally {
+      _resuming = false;
+      _notify();
+    }
   }
 
   Future<void> openInstallPermission() async {
     try {
-      await service.gateway.openInstallPermission();
+      if (await service.gateway.canInstallPackages()) {
+        await resume();
+      } else {
+        await service.gateway.openInstallPermission();
+      }
     } catch (error) {
       errorKey = _error(error);
       phase = OtaPhase.error;

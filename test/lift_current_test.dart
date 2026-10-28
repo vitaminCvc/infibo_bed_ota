@@ -174,25 +174,28 @@ class StatusOnlyService extends ModbusRtuService {
 void main() {
   setUp(() => JoystickCommandBus.instance.reset());
 
-  testWidgets('automatic lift only polls status and stops when idle', (
-    tester,
-  ) async {
-    final service = StatusOnlyService();
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(body: JoystickControl(modbusService: service)),
-      ),
-    );
-    JoystickCommandBus.instance.lockLeftBottom();
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 500));
-    expect(service.reads, [0x0011]);
-    service.status = 0;
-    await tester.pump(const Duration(milliseconds: 500));
-    await tester.pump(const Duration(seconds: 2));
-    expect(service.reads, [0x0011, 0x0011]);
-    await tester.pumpWidget(const SizedBox());
-  });
+  testWidgets(
+    'automatic lift keeps polling status and control without reading current',
+    (tester) async {
+      final service = StatusOnlyService();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(body: JoystickControl(modbusService: service)),
+        ),
+      );
+      JoystickCommandBus.instance.lockLeftBottom();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 500));
+      expect(service.reads, [0x0011, 0x0010]);
+      service.status = 0;
+      await tester.pump(const Duration(milliseconds: 500));
+      final idleReads = service.reads.length;
+      await tester.pump(const Duration(seconds: 2));
+      expect(service.reads.length, greaterThan(idleReads));
+      expect(service.reads, everyElement(isIn([0x0011, 0x0010])));
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
 
   testWidgets('manual lift sends move and stop without polling current', (
     tester,
@@ -208,7 +211,8 @@ void main() {
     await tester.pump(const Duration(seconds: 1));
     await tester.pump(const Duration(seconds: 2));
     expect(service.writes, [1]);
-    expect(service.reads, isEmpty);
+    expect(service.reads, isNotEmpty);
+    expect(service.reads, everyElement(0x0011));
     await gesture.up();
     await tester.pump();
     expect(service.writes, [1, 0]);

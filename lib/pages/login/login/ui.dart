@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:infibo_app/api/dio/api/api_response.dart';
 import 'package:infibo_app/api/dio/login/login_api.dart';
 import 'package:infibo_app/api/dio/login/login_models.dart';
+import 'package:infibo_app/components/brand_logo.dart';
 import 'package:infibo_app/components/designCanvas/design.dart';
 import 'package:infibo_app/config/app_brand.dart';
 import 'package:infibo_app/constants/assets.dart';
@@ -70,7 +71,9 @@ class _LoginPageState extends State<LoginPage> {
     if (_didPrecache) return;
     _didPrecache = true;
 
-    precacheImage(AssetImage(Assets.logo), context);
+    if (!Assets.logo.toLowerCase().endsWith('.svg')) {
+      precacheImage(AssetImage(Assets.logo), context);
+    }
     precacheImage(const AssetImage(Assets.glassLogo), context);
     precacheImage(const AssetImage(Assets.passwordLogo), context);
   }
@@ -185,7 +188,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildBrandHeader({Key? key}) {
     final Size logoSize = AppBrand.current.loginLogoSize;
 
-    return Image.asset(
+    return BrandLogo(
       Assets.logo,
       key: key,
       width: logoSize.width,

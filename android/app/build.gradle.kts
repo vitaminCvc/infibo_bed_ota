@@ -67,7 +67,12 @@ android {
             applicationId = "com.infibo.app.australia"
             resValue("string", "app_name", "Infibo Australia")
         }
-    }
+        create("uaeBiohackn") {
+            dimension = "market"
+            applicationId = "com.infibo.app.uae.biohackn"
+            resValue("string", "app_name", "Biohackn")
+        }
+    }   
 
     buildTypes {
         release {

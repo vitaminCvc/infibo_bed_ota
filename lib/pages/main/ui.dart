@@ -17,14 +17,21 @@ import 'package:infibo_app/constants/layout.dart';
 import 'package:infibo_app/pages/joystick/ui.dart';
 import 'package:infibo_app/pages/main/logic.dart';
 import 'package:infibo_app/pages/start/audio_prompt_player.dart';
-import 'package:infibo_app/pages/WifiBluetooth/connection_prompt_host.dart';
 import 'package:infibo_app/routes/route_observer.dart';
 import 'package:infibo_app/ota/ota_controller.dart';
+import 'package:infibo_app/pages/settingpage/system_update_panel.dart'
+    show UpdateConfirmationDialog;
 import 'package:infibo_app/components/water_quality/water_quality_host.dart';
 
 // 主页面UI
 class MainPage extends StatefulWidget {
-  const MainPage({super.key, this.modbusService = const ModbusRtuService()});
+  const MainPage({
+    super.key,
+    this.modbusService = const ModbusRtuService(),
+    this.otaController,
+  });
+
+  final OtaController? otaController;
 
   final ModbusRtuService modbusService;
 
@@ -41,6 +48,10 @@ class _MainPageState extends State<MainPage> with RouteAware {
   bool _hasPendingLight = false;
   bool _deviceFault = false; //true:设备故障(红色),false:设备正常(绿色)
   Timer? _otaCheckTimer;
+  int _otaVisit = 0;
+  bool _otaCheckPending = false;
+  OtaController get _otaController =>
+      widget.otaController ?? OtaController.instance;
   Timer? _deviceStatusTimer; //设备状态轮询定时器
   Timer? _waterLevelTimer; //水位状态轮询定时器
   bool _isDeviceStatusPolling = false;
@@ -110,7 +121,7 @@ class _MainPageState extends State<MainPage> with RouteAware {
   @override
   void didPush() {
     _isWaterLevelDialogDismissedForVisit = false;
-    _scheduleOtaCheck();
+    _beginOtaVisit();
     _startDeviceStatusPolling();
     _startWaterLevelPolling();
   }
@@ -121,7 +132,11 @@ class _MainPageState extends State<MainPage> with RouteAware {
     if (!_isWaterLevelDialogVisible) {
       _isWaterLevelDialogDismissedForVisit = false;
     }
-    _scheduleOtaCheck();
+    if (appRouteObserver.isPageTransition) {
+      _beginOtaVisit();
+    } else if (_otaCheckPending) {
+      _scheduleOtaCheck();
+    }
     _startDeviceStatusPolling();
     _startWaterLevelPolling();
   }
@@ -130,9 +145,11 @@ class _MainPageState extends State<MainPage> with RouteAware {
   ///
   Future<void> _stopLiftOnLeave() async {
     try {
-      await widget.modbusService.sendCommandQueue([
+      final bus = JoystickCommandBus.instance;
+      bus.noteLocalCommand(0);
+      await bus.runLiftWrite(() => widget.modbusService.sendCommandQueue([
         const ModbusWriteCommand(address: 0x0010, value: 0),
-      ]);
+      ]));
 
       ///发送失败
     } catch (e) {
@@ -143,6 +160,11 @@ class _MainPageState extends State<MainPage> with RouteAware {
   @override
   ///离开首页
   void didPushNext() {
+    if (appRouteObserver.isPageTransition) {
+      _otaVisit++;
+      _otaCheckPending = false;
+      _otaCheckTimer?.cancel();
+    }
     _stopDeviceStatusPolling();
     // Keep polling while the blocking water warning dialog is on top.
     if (!_isWaterLevelDialogVisible) {
@@ -160,66 +182,75 @@ class _MainPageState extends State<MainPage> with RouteAware {
     unawaited(_stopLiftOnLeave());
   }
 
+  void _beginOtaVisit() {
+    _otaVisit++;
+    _otaCheckPending = true;
+    _scheduleOtaCheck();
+  }
+
   void _scheduleOtaCheck() {
     _otaCheckTimer?.cancel();
-    if (!OtaController.instance.service.config.configured ||
-        AppBrand.current.flavor != 'global')
+    if (!_otaController.service.config.configured ||
+        !AppBrand.current.supportsOtaUpdates) {
       return;
+    }
+    final visit = _otaVisit;
+    // One delayed check per visit lets startup connection/water dialogs settle.
     _otaCheckTimer = Timer(
       const Duration(seconds: 10),
-      () => unawaited(_checkOtaUpdate()),
+      () => unawaited(_checkOtaUpdate(visit)),
     );
   }
 
-  Future<void> _checkOtaUpdate() async {
-    final controller = OtaController.instance;
-    if (!mounted ||
-        ModalRoute.of(context)?.isCurrent != true ||
-        controller.busy)
-      return;
-    if (controller.checkedAt == null ||
-        DateTime.now().difference(controller.checkedAt!) >
-            const Duration(minutes: 5)) {
-      await controller.refresh();
-    }
-    if (!mounted ||
-        ModalRoute.of(context)?.isCurrent != true ||
+  Future<void> _checkOtaUpdate(int visit) async {
+    bool currentVisit() =>
+        mounted &&
+        visit == _otaVisit &&
+        ModalRoute.of(context)?.isCurrent == true;
+    if (!currentVisit()) return;
+    _otaCheckPending = false;
+    final controller = _otaController;
+    if (controller.busy || controller.checking) return;
+    await controller.refresh();
+    if (!currentVisit() ||
+        !controller.appAvailable ||
         _isWaterLevelDialogVisible ||
-        Get.isDialogOpen == true)
+        Get.isDialogOpen == true) {
       return;
+    }
     try {
-      if (await widget.modbusService.readHoldingRegister(0x0006) != 0) return;
+      // Read live mainboard state; cached UI status is not an idle guarantee.
+      await _homeDeviceStateCycleCompleter?.future;
+      if (!currentVisit() ||
+          await widget.modbusService.readHoldingRegister(0x0006) != 0) {
+        return;
+      }
     } catch (_) {
       return;
     }
-    if (!mounted ||
-        ModalRoute.of(context)?.isCurrent != true ||
-        !controller.takePrompt())
+    if (!currentVisit() ||
+        controller.busy ||
+        controller.checking ||
+        !controller.appAvailable) {
       return;
-    final view = await Get.dialog<bool>(
-      AlertDialog(
-        title: Text('ota_prompt'.tr),
-        content: Text(
-          [
-            if (controller.appAvailable)
-              '${'ota_app'.tr}: ${controller.manifest!.app!.version}',
-            if (controller.firmwareAvailable)
-              '${'ota_board'.tr}: ${controller.manifest!.firmware!.version}',
-          ].join('\n'),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Get.back(result: false),
-            child: Text('ota_later'.tr),
-          ),
-          FilledButton(
-            onPressed: () => Get.back(result: true),
-            child: Text('ota_view'.tr),
-          ),
-        ],
+    }
+    if (!mounted) return;
+    final release = controller.manifest!.app!;
+    final accepted = await showDialog<bool>(
+      context: context,
+      barrierColor: const Color(0x99000000),
+      builder: (_) => UpdateConfirmationDialog(
+        release: release,
+        firmware: false,
+        currentBoardVersion: controller.boardVersion,
       ),
     );
-    if (view == true && mounted) Get.toNamed('/setting/update');
+    if (accepted == true &&
+        currentVisit() &&
+        identical(controller.manifest?.app, release)) {
+      // updateApp checks mainboard idle again before download and installation.
+      await controller.updateApp();
+    }
   }
 
   void _startDeviceStatusPolling() {
@@ -693,6 +724,7 @@ class _MainPageState extends State<MainPage> with RouteAware {
           top: layout.mainContentY(1010),
           child: JoystickControl(
             modbusService: widget.modbusService,
+            beforeStatusRead: _waitForHomeDeviceStateCycle,
             /* 电流检测暂时停用。
             onLiftCurrentChanged: (value) {
               if (!mounted) return;
@@ -1015,6 +1047,8 @@ class _ModeCardState extends State<_ModeCard> {
                           padding: EdgeInsets.only(bottom: titleBottomPadding),
                           child: Text(
                             item.titleKey.tr,
+                            maxLines: 1,
+                            softWrap: false,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               color: item.color,

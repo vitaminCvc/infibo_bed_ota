@@ -1,4 +1,14 @@
 {
-  "official": { "manifest_url": "", "allow_http": false },
-  "china_test": { "manifest_url": "", "allow_http": false }
+  "official": {
+    "manifest_url": "",
+    "allow_http": false
+  },
+  "china_test": {
+    "manifest_url": "",
+    "allow_http": false
+  },
+  "uae_biohackn": {
+    "manifest_url": "https://ota.infibo.net/ota/uae-biohackn.json",
+    "allow_http": false
+  }
 }

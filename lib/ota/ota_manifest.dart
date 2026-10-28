@@ -66,10 +66,38 @@ String _version(Map<String, dynamic> value) {
 
 String _notes(Map<String, dynamic> value) {
   final notes = value['notes'] ?? '';
-  if (notes is! String || notes.length > 4096) {
+  if (notes is! String || notes.length > 10000) {
     throw const FormatException('Invalid release notes');
   }
   return notes;
+}
+
+const _notesLocales = {
+  'zh_CN',
+  'en_US',
+  'es_ES',
+  'pt_PT',
+  'ru_RU',
+  'pl_PL',
+  'fr_FR',
+  'ko_KR',
+  'ar_SA',
+  'de_DE',
+  'tr_TR',
+};
+
+Map<String, String> _localizedNotes(Map<String, dynamic> value) {
+  final raw = value['notes_i18n'];
+  if (raw is! Map) return const {};
+  // Optional explanatory text must never prevent an otherwise valid update.
+  return Map.unmodifiable({
+    for (final entry in raw.entries)
+      if (_notesLocales.contains(entry.key) &&
+          entry.value is String &&
+          (entry.value as String).trim().isNotEmpty &&
+          (entry.value as String).length <= 10000)
+        entry.key as String: entry.value as String,
+  });
 }
 
 class OtaFile {
@@ -79,14 +107,36 @@ class OtaFile {
     required this.size,
     required this.sha256,
     this.notes = '',
+    this.notesI18n = const {},
   });
   final String version;
   final Uri url;
   final int size;
   final String sha256;
   final String notes;
+  final Map<String, String> notesI18n;
+
+  String notesFor(String? locale) {
+    final normalized = locale?.replaceAll('-', '_').toLowerCase();
+    String? languageMatch;
+    for (final entry in notesI18n.entries) {
+      final key = entry.key.toLowerCase();
+      if (normalized == key && entry.value.trim().isNotEmpty) {
+        return entry.value;
+      }
+      if (normalized != null &&
+          key.split('_').first == normalized.split('_').first &&
+          entry.value.trim().isNotEmpty) {
+        languageMatch = entry.value;
+      }
+    }
+    if (languageMatch != null) return languageMatch;
+    final english = notesI18n['en_US'];
+    return english != null && english.trim().isNotEmpty ? english : notes;
+  }
 }
 
+// 应用的更新发布信息
 class AppRelease extends OtaFile {
   const AppRelease({
     required super.version,
@@ -94,6 +144,7 @@ class AppRelease extends OtaFile {
     required super.size,
     required super.sha256,
     super.notes,
+    super.notesI18n,
     required this.versionCode,
     required this.packageName,
   });
@@ -117,6 +168,7 @@ class AppRelease extends OtaFile {
       size: _integer(value, 'size', maxOtaFileSize),
       sha256: _hash(value),
       notes: _notes(value),
+      notesI18n: _localizedNotes(value),
       versionCode: _integer(value, 'version_code', 0x7fffffff),
       packageName: targetPackage,
     );
@@ -130,9 +182,12 @@ class FirmwareRelease extends OtaFile {
     required super.size,
     required super.sha256,
     super.notes,
+
+    super.notesI18n,
     required this.versionRegister,
     required this.crc32,
   });
+
   final int versionRegister;
   final int crc32;
   factory FirmwareRelease.parse(Object? json, {bool allowHttp = false}) {
@@ -160,6 +215,7 @@ class FirmwareRelease extends OtaFile {
       size: _integer(value, 'size', 2 * 1024 * 1024),
       sha256: _hash(value),
       notes: _notes(value),
+      notesI18n: _localizedNotes(value),
       versionRegister: register,
       crc32: _hex(value['crc32'], 0xffffffff),
     );
@@ -179,7 +235,7 @@ class OtaManifest {
     final value = _object(json);
     if (value['schema'] != 1 ||
         value['channel'] != channel ||
-        !{'official', 'china_test'}.contains(channel)) {
+        !{'official', 'china_test', 'uae_biohackn'}.contains(channel)) {
       throw const FormatException('Update schema or channel mismatch');
     }
     return OtaManifest(

@@ -3042,11 +3042,7 @@ class _PemfWavePopupState extends State<_PemfWavePopup> {
   static const double _listTop = 67;
   static const double _rowHeight = 44;
   static const double _rowGap = 8;
-  static const double _cancelLeft = 64;
-  static const double _confirmLeft = 144;
   static const double _buttonTop = 601;
-  static const double _buttonWidth = 72;
-  static const double _buttonHeight = 32;
 
   late _PemfWave? _selected;
 
@@ -3060,71 +3056,90 @@ class _PemfWavePopupState extends State<_PemfWavePopup> {
   Widget build(BuildContext context) {
     return SizedBox(
       width: _width,
-      height: _height,
-      child: Stack(
-        children: [
-          Positioned.fill(
-            child: Image.asset(widget.dialogAsset, fit: BoxFit.fill),
-          ),
-          Positioned(
-            top: 18,
-            left: 0,
-            right: 0,
-            //顶部标题
-            child: Center(
-              child: Text(
-                'select_waveform'.tr,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: _height),
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: Image.asset(
+                widget.dialogAsset,
+                fit: BoxFit.fill,
+                // Only stretch the empty strip below the waveform list when
+                // translated actions need another row.
+                centerSlice: const Rect.fromLTWH(20, 590, 239, 1),
+              ),
+            ),
+            Positioned(
+              top: 18,
+              left: 0,
+              right: 0,
+              //顶部标题
+              child: Center(
+                child: Text(
+                  'select_waveform'.tr,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
             ),
-          ),
-          if (_selected != null)
+            if (_selected != null)
+              Positioned(
+                left: 20,
+                right: 20,
+                top: _selectedRowTop(_selected!),
+                child: Image.asset(
+                  _selected!.selectedAsset,
+                  height: _rowHeight,
+                  fit: BoxFit.fill,
+                ),
+              ),
             Positioned(
-              left: 20,
-              right: 20,
-              top: _selectedRowTop(_selected!),
-              child: Image.asset(
-                _selected!.selectedAsset,
-                height: _rowHeight,
-                fit: BoxFit.fill,
+              left: 0,
+              right: 0,
+              top: 0,
+              height: _buttonTop,
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTapUp: (details) => _handleTap(details.localPosition),
+                child: const SizedBox.expand(),
               ),
             ),
-          //底部确认与取消按钮
-          Positioned(
-            left: _cancelLeft,
-            top: _buttonTop,
-            child: _buildWaveActionButton(
-              text: 'cancel'.tr,
-              active: false,
-              onTap: widget.onCancel,
+            // Actual button bounds also handle taps; no fixed hit rectangles.
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(height: _buttonTop),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(12, 0, 12, 25),
+                  child: Wrap(
+                    alignment: WrapAlignment.center,
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      _buildWaveActionButton(
+                        text: 'cancel'.tr,
+                        active: false,
+                        onTap: widget.onCancel,
+                      ),
+                      _buildWaveActionButton(
+                        text: 'confirm'.tr,
+                        active: true,
+                        onTap: () {
+                          final selected = _selected;
+                          if (selected != null) widget.onConfirm(selected);
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ),
-          Positioned(
-            left: _confirmLeft,
-            top: _buttonTop,
-            child: _buildWaveActionButton(
-              text: 'confirm'.tr,
-              active: true,
-              onTap: () {
-                final selected = _selected;
-                if (selected != null) {
-                  widget.onConfirm(selected);
-                }
-              },
-            ),
-          ),
-          Positioned.fill(
-            child: GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTapUp: (details) => _handleTap(details.localPosition),
-              child: const SizedBox.expand(),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -3176,15 +3191,14 @@ class _PemfWavePopupState extends State<_PemfWavePopup> {
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
       child: Container(
-        width: 72,
-        height: 32,
-        alignment: Alignment.center,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
           color: active ? const Color(0xFF1F74E8) : const Color(0xFF5E6570),
           borderRadius: BorderRadius.circular(18),
         ),
         child: Text(
           text,
+          textAlign: TextAlign.center,
           style: const TextStyle(
             color: Colors.white,
             fontSize: 14,
@@ -3196,17 +3210,6 @@ class _PemfWavePopupState extends State<_PemfWavePopup> {
   }
 
   void _handleTap(Offset position) {
-    if (_isInsideButton(position, _cancelLeft)) {
-      widget.onCancel();
-      return;
-    }
-
-    if (_isInsideButton(position, _confirmLeft)) {
-      final _PemfWave? selected = _selected;
-      if (selected != null) widget.onConfirm(selected);
-      return;
-    }
-
     final int rowIndex = ((position.dy - _listTop) / (_rowHeight + _rowGap))
         .floor();
     final double rowTop = _listTop + rowIndex * (_rowHeight + _rowGap);
@@ -3220,13 +3223,6 @@ class _PemfWavePopupState extends State<_PemfWavePopup> {
 
     final _PemfWave tappedWave = _pemfWaves[rowIndex];
     setState(() => _selected = tappedWave);
-  }
-
-  bool _isInsideButton(Offset position, double left) {
-    return position.dx >= left &&
-        position.dx <= left + _buttonWidth &&
-        position.dy >= _buttonTop &&
-        position.dy <= _buttonTop + _buttonHeight;
   }
 }
 
@@ -3653,25 +3649,28 @@ class _PlanNameDialogState extends State<_PlanNameDialog> {
                     child: Center(child: _buildStatus()),
                   ),
                   Positioned(
-                    left: 182,
-                    top: 168,
-                    child: _PlanNameDialogButton(
-                      text: 'cancel'.tr,
-                      width: 88,
-                      backgroundColor: const Color(0xFF6C737D),
-                      onTap: canSubmit
-                          ? () => Navigator.of(context).pop()
-                          : null,
-                    ),
-                  ),
-                  Positioned(
-                    left: 282,
-                    top: 168,
-                    child: _PlanNameDialogButton(
-                      text: 'confirm'.tr,
-                      width: 88,
-                      backgroundColor: const Color(0xFF1F74E8),
-                      onTap: canSubmit ? _submit : null,
+                    left: 25,
+                    right: 20,
+                    bottom: 14,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        _PlanNameDialogButton(
+                          text: 'cancel'.tr,
+
+                          backgroundColor: const Color(0xFF6C737D),
+                          onTap: canSubmit
+                              ? () => Navigator.of(context).pop()
+                              : null,
+                        ),
+                        const SizedBox(width: 12),
+                        _PlanNameDialogButton(
+                          text: 'confirm'.tr,
+
+                          backgroundColor: const Color(0xFF1F74E8),
+                          onTap: canSubmit ? _submit : null,
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -3688,13 +3687,11 @@ class _PlanNameDialogState extends State<_PlanNameDialog> {
 class _PlanNameDialogButton extends StatelessWidget {
   const _PlanNameDialogButton({
     required this.text,
-    required this.width,
     required this.backgroundColor,
     required this.onTap,
   });
 
   final String text;
-  final double width;
   final Color backgroundColor;
   final VoidCallback? onTap;
 
@@ -3704,15 +3701,15 @@ class _PlanNameDialogButton extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
       child: Container(
-        width: width,
-        height: 40,
-        alignment: Alignment.center,
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         decoration: BoxDecoration(
           color: backgroundColor,
           borderRadius: BorderRadius.circular(22),
         ),
         child: Text(
           text,
+          textAlign: TextAlign.center,
+          softWrap: false,
           style: const TextStyle(
             color: Colors.white,
             fontSize: 16,

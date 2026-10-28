@@ -22,6 +22,59 @@ OtaManifest parse(Map<String, Object?> value) => OtaManifest.parse(
 
 void main() {
   test(
+    'UAE channel accepts its own package and rejects other packages/channels',
+    () {
+      Map<String, Object?> uae() {
+        final value = release()..['channel'] = 'uae_biohackn';
+        (value['app'] as Map)['package_name'] = 'com.infibo.app.uae.biohackn';
+        return value;
+      }
+
+      OtaManifest parseUae(Map<String, Object?> value) => OtaManifest.parse(
+        value,
+        channel: 'uae_biohackn',
+        packageName: 'com.infibo.app.uae.biohackn',
+      );
+      expect(parseUae(uae()).app!.packageName, 'com.infibo.app.uae.biohackn');
+      expect(() => parseUae(release()), throwsFormatException);
+      final wrong = uae();
+      (wrong['app'] as Map)['package_name'] = 'com.infibo.app.global';
+      expect(() => parseUae(wrong), throwsFormatException);
+      expect(
+        parseUae({
+          'schema': 1,
+          'channel': 'uae_biohackn',
+          'app': null,
+          'firmware': null,
+        }).app,
+        isNull,
+      );
+    },
+  );
+
+  test('rejects non application OTA firmware names including Bootloader', () {
+    for (final filename in [
+      'board.bin',
+      '厂家固件.BIN',
+      'Immortal-Main-Bootloader-OTA-v1.3.1.bin',
+    ]) {
+      expect(
+        () => FirmwareRelease.parse({
+          'product': 'Immortal-Main-Board',
+          'version': '1.3.1',
+          'firmware_register': '0x0131',
+          'file': filename,
+          'url': 'https://updates.example/file.bin',
+          'size': 32,
+          'sha256': 'b' * 64,
+          'crc32': '0x2F599FDA',
+        }),
+        throwsFormatException,
+      );
+    }
+  });
+
+  test(
     'software update compares numeric build code rather than display version',
     () {
       expect(parse(release()).app!.isNewerThan(1), isTrue);

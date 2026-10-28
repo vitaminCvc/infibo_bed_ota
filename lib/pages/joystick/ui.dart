@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:infibo_app/api/modbus/modbus_rtu_service.dart';
 import 'package:infibo_app/constants/assets.dart';
+import 'package:infibo_app/routes/route_observer.dart';
 
 enum JoystickAction {
   idle,
@@ -14,7 +15,27 @@ enum JoystickAction {
   holdingRightBottom,
 }
 
-enum JoystickExternalCommand { lockLeftTop, lockLeftBottom, reset }
+enum JoystickExternalCommand {
+  lockLeftTop(JoystickAction.lockedLeftTop),
+  lockLeftBottom(JoystickAction.lockedLeftBottom),
+  reset(JoystickAction.idle),
+  holdRightTop(JoystickAction.holdingRightTop),
+  holdRightBottom(JoystickAction.holdingRightBottom);
+
+  const JoystickExternalCommand(this.action);
+
+  final JoystickAction action;
+
+  // 0x0011 状态值与 0x0010 控制值一致；未知值不能当作停止。
+  static JoystickExternalCommand? fromStatus(int status) => switch (status) {
+    0 => reset,
+    1 => holdRightTop,
+    2 => holdRightBottom,
+    3 => lockLeftTop,
+    4 => lockLeftBottom,
+    _ => null,
+  };
+}
 
 class JoystickCommandBus {
   JoystickCommandBus._();
@@ -23,23 +44,63 @@ class JoystickCommandBus {
   final StreamController<JoystickExternalCommand> _controller =
       StreamController<JoystickExternalCommand>.broadcast();
   JoystickExternalCommand _lastLiftCommand = JoystickExternalCommand.reset;
+  int _commandRevision = 0;
+  int _pendingDeviceWrites = 0;
+  bool _waitingForStopFeedback = false;
+  Future<void>? _deviceWriteTail;
 
   Stream<JoystickExternalCommand> get stream => _controller.stream;
   JoystickExternalCommand get lastLiftCommand => _lastLiftCommand;
+  int get commandRevision => _commandRevision;
+  bool get hasPendingDeviceWrite => _pendingDeviceWrites > 0;
+  bool get waitingForStopFeedback => _waitingForStopFeedback;
+
+  void noteLocalCommand(int value) {
+    _commandRevision++;
+    _waitingForStopFeedback = value == 0;
+  }
+
+  Future<void> runLiftWrite(Future<void> Function() write) async {
+    final previous = _deviceWriteTail;
+    final completion = Completer<void>();
+    _deviceWriteTail = completion.future;
+    _pendingDeviceWrites++;
+    try {
+      if (previous != null) await previous;
+      await write();
+    } finally {
+      _pendingDeviceWrites--;
+      if (identical(_deviceWriteTail, completion.future)) {
+        _deviceWriteTail = null;
+      }
+      completion.complete();
+    }
+  }
 
   void lockLeftBottom() {
-    _lastLiftCommand = JoystickExternalCommand.lockLeftBottom;
-    _controller.add(JoystickExternalCommand.lockLeftBottom);
+    _publish(JoystickExternalCommand.lockLeftBottom);
   }
 
   void lockLeftTop() {
-    _lastLiftCommand = JoystickExternalCommand.lockLeftTop;
-    _controller.add(JoystickExternalCommand.lockLeftTop);
+    _publish(JoystickExternalCommand.lockLeftTop);
   }
 
   void reset() {
-    _lastLiftCommand = JoystickExternalCommand.reset;
-    _controller.add(JoystickExternalCommand.reset);
+    _waitingForStopFeedback = false;
+    _publish(JoystickExternalCommand.reset);
+  }
+
+  void syncStatus(int status) {
+    if (status == 0) _waitingForStopFeedback = false;
+    final command = JoystickExternalCommand.fromStatus(status);
+    if (command != null && command != _lastLiftCommand) {
+      _publish(command);
+    }
+  }
+
+  void _publish(JoystickExternalCommand command) {
+    _lastLiftCommand = command;
+    _controller.add(command);
   }
 }
 
@@ -47,11 +108,15 @@ class JoystickControl extends StatefulWidget {
   const JoystickControl({
     super.key,
     this.modbusService,
+    this.beforeStatusRead,
     /*电流相关寄存器地址 */
     // this.onLiftCurrentChanged,
   });
 
   final ModbusRtuService? modbusService;
+
+  /// 首页先完成氛围灯和系统状态读取，避免升降轮询抢占既有顺序。
+  final Future<void> Function()? beforeStatusRead;
   /*电流相关寄存器地址 */
   /// 仅订阅时读取电流；null 表示本次读取失败。
   // final ValueChanged<int?>? onLiftCurrentChanged;
@@ -60,7 +125,7 @@ class JoystickControl extends StatefulWidget {
   State<JoystickControl> createState() => _JoystickControlState();
 }
 
-class _JoystickControlState extends State<JoystickControl> {
+class _JoystickControlState extends State<JoystickControl> with RouteAware {
   static const double _joystickImageWidth = 187;
   static const double _joystickImageHeight = 187;
   static const double _leftTopOffsetX = 0;
@@ -78,11 +143,8 @@ class _JoystickControlState extends State<JoystickControl> {
 
   JoystickAction get _action => _actionNotifier.value;
 
-  bool _isCommanding = false;
-  bool _pendingStop = false;
   static const Duration _holdDebounceDuration = Duration(seconds: 1);
   static const int _liftStatusAddress = 0x0011;
-  static const int _liftIdleStatusValue = 0;
   static const Duration _liftStatusPollInterval = Duration(milliseconds: 500);
   Timer? _rightTopDebounceTimer;
   Timer? _rightBottomDebounceTimer;
@@ -90,8 +152,12 @@ class _JoystickControlState extends State<JoystickControl> {
   StreamSubscription<JoystickExternalCommand>? _externalCommandSubscription;
   bool _rightTopCommandSent = false;
   bool _rightBottomCommandSent = false;
+  bool _rightTopPressed = false;
+  bool _rightBottomPressed = false;
+  bool get _hasLocalPress => _rightTopPressed || _rightBottomPressed;
   bool _isReadingLiftStatus = false;
   int _liftPollGeneration = 0;
+  ModalRoute<dynamic>? _route;
 
   ModbusRtuService get _service =>
       widget.modbusService ?? const ModbusRtuService();
@@ -102,21 +168,21 @@ class _JoystickControlState extends State<JoystickControl> {
     _externalCommandSubscription = JoystickCommandBus.instance.stream.listen((
       JoystickExternalCommand command,
     ) {
-      switch (command) {
-        case JoystickExternalCommand.lockLeftTop:
-          _syncLeftTopFromExternal();
-        case JoystickExternalCommand.lockLeftBottom:
-          _syncLeftBottomFromExternal();
-        case JoystickExternalCommand.reset:
-          _syncIdleFromExternal();
-      }
+      _syncActionFromExternal(command);
     });
     _syncFromCurrentGlobalLiftState();
+    _startLiftStatusPolling();
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    final route = ModalRoute.of(context);
+    if (route != _route) {
+      appRouteObserver.unsubscribe(this);
+      _route = route;
+      if (route != null) appRouteObserver.subscribe(this, route);
+    }
     precacheImage(const AssetImage(Assets.joystickDefault), context);
     precacheImage(const AssetImage(Assets.joystickLeftTop), context);
     precacheImage(const AssetImage(Assets.joystickLeftBottom), context);
@@ -130,9 +196,22 @@ class _JoystickControlState extends State<JoystickControl> {
     _rightBottomDebounceTimer?.cancel();
     _liftStatusPollTimer?.cancel();
     _externalCommandSubscription?.cancel();
+    appRouteObserver.unsubscribe(this);
     _actionNotifier.dispose();
     super.dispose();
   }
+
+  @override
+  void didPush() => _startLiftStatusPolling();
+
+  @override
+  void didPopNext() => _startLiftStatusPolling();
+
+  @override
+  void didPushNext() => _stopLiftStatusPolling();
+
+  @override
+  void didPop() => _stopLiftStatusPolling();
 
   @override
   Widget build(BuildContext context) {
@@ -272,11 +351,12 @@ class _JoystickControlState extends State<JoystickControl> {
     JoystickAction action,
     int commandValue,
   ) async {
-    if (_action != JoystickAction.idle) return;
+    if (_action != JoystickAction.idle || _hasLocalPress) return;
+    final generation = ++_liftPollGeneration;
     _actionNotifier.value = action;
     debugPrint('Joystick lift trigger TX 0x0010=$commandValue');
     final bool sent = await _sendCommand(0x0010, commandValue);
-    if (!mounted) return;
+    if (!mounted || generation != _liftPollGeneration) return;
     if (!sent) {
       _actionNotifier.value = JoystickAction.idle;
       return;
@@ -286,7 +366,6 @@ class _JoystickControlState extends State<JoystickControl> {
     } else if (action == JoystickAction.lockedLeftBottom) {
       JoystickCommandBus.instance.lockLeftBottom();
     }
-    _startLiftStatusPolling();
   }
 
   void _startLiftStatusPolling() {
@@ -297,43 +376,22 @@ class _JoystickControlState extends State<JoystickControl> {
     });
   }
 
-  void _syncLeftBottomFromExternal() {
+  void _syncActionFromExternal(JoystickExternalCommand command) {
     if (!mounted) return;
-    _actionNotifier.value = JoystickAction.lockedLeftBottom;
-    _startLiftStatusPolling();
-  }
-
-  void _syncLeftTopFromExternal() {
-    if (!mounted) return;
-    _actionNotifier.value = JoystickAction.lockedLeftTop;
-    _startLiftStatusPolling();
+    _liftPollGeneration++;
+    _actionNotifier.value = command.action;
   }
 
   void _manualStopLiftAction() {
-    _stopLiftStatusPolling();
+    _liftPollGeneration++;
     _actionNotifier.value = JoystickAction.idle;
     JoystickCommandBus.instance.reset();
     debugPrint('Joystick manual stop TX 0x0010=0');
     unawaited(_sendCommand(0x0010, 0));
   }
 
-  void _syncIdleFromExternal() {
-    if (!mounted) return;
-    _actionNotifier.value = JoystickAction.idle;
-    _stopLiftStatusPolling();
-  }
-
   void _syncFromCurrentGlobalLiftState() {
-    final JoystickExternalCommand current =
-        JoystickCommandBus.instance.lastLiftCommand;
-    switch (current) {
-      case JoystickExternalCommand.lockLeftTop:
-        _syncLeftTopFromExternal();
-      case JoystickExternalCommand.lockLeftBottom:
-        _syncLeftBottomFromExternal();
-      case JoystickExternalCommand.reset:
-        _syncIdleFromExternal();
-    }
+    _syncActionFromExternal(JoystickCommandBus.instance.lastLiftCommand);
   }
 
   void _stopLiftStatusPolling() {
@@ -343,34 +401,50 @@ class _JoystickControlState extends State<JoystickControl> {
   }
 
   Future<void> _readLiftStatusOnce() async {
-    if (_isReadingLiftStatus) return;
-    final bool automatic =
-        _action == JoystickAction.lockedLeftTop ||
-        _action == JoystickAction.lockedLeftBottom;
-    final bool holding =
-        (_action == JoystickAction.holdingRightTop && _rightTopCommandSent) ||
-        (_action == JoystickAction.holdingRightBottom &&
-            _rightBottomCommandSent);
-    if (!automatic && !holding) {
-      _stopLiftStatusPolling();
+    final bus = JoystickCommandBus.instance;
+    // 空闲时也要读取，才能发现由下位机或其他页面触发的动作。
+    // 防抖期间先保留按压反馈，写命令时不使用之前的状态覆盖新操作。
+    if (_isReadingLiftStatus ||
+        bus.hasPendingDeviceWrite ||
+        ModalRoute.of(context)?.isCurrent == false ||
+        (_rightTopPressed && !_rightTopCommandSent) ||
+        (_rightBottomPressed && !_rightBottomCommandSent)) {
       return;
     }
 
     _isReadingLiftStatus = true;
     final int generation = _liftPollGeneration;
+    final int revision = bus.commandRevision;
+    bool isCurrentRead() =>
+        mounted &&
+        generation == _liftPollGeneration &&
+        revision == bus.commandRevision &&
+        ModalRoute.of(context)?.isCurrent != false;
+    int? confirmedStatus;
     try {
-      if (automatic) {
-        final int status = await _service.readHoldingRegister(
-          _liftStatusAddress,
-        );
-        if (!mounted || generation != _liftPollGeneration) return;
-        debugPrint('Joystick lift status RX 0x0011=$status');
-        if (status == _liftIdleStatusValue && mounted) {
-          _actionNotifier.value = JoystickAction.idle;
-          _stopLiftStatusPolling();
-          JoystickCommandBus.instance.reset();
-          return;
-        }
+      await widget.beforeStatusRead?.call();
+      if (!isCurrentRead()) return;
+      final int status = await _service.readHoldingRegister(_liftStatusAddress);
+      if (!isCurrentRead()) return;
+      debugPrint('Joystick lift status RX 0x0011=$status');
+      final command = JoystickExternalCommand.fromStatus(status);
+      if (command == null) return;
+      confirmedStatus = status;
+      _actionNotifier.value = command.action;
+
+      // 本地按压中的控制交给手势处理。停止命令发出后，旧的运动反馈
+      // 不得重新写回运动指令；等收到停止状态后再恢复自动校正。
+      if (_hasLocalPress || (bus.waitingForStopFeedback && status != 0)) return;
+      final control = await _service.readHoldingRegister(0x0010);
+      if (!isCurrentRead()) return;
+      if (control != status) {
+        debugPrint('Joystick reconcile TX 0x0010=$status (was $control)');
+        await bus.runLiftWrite(() async {
+          if (!isCurrentRead()) return;
+          await _service.sendCommandQueue([
+            ModbusWriteCommand(address: 0x0010, value: status),
+          ]);
+        });
       }
 
       /* 电流检测暂时停用。
@@ -394,6 +468,9 @@ class _JoystickControlState extends State<JoystickControl> {
     } catch (e) {
       debugPrint('Joystick lift status read failed: $e');
     } finally {
+      if (confirmedStatus != null && isCurrentRead()) {
+        bus.syncStatus(confirmedStatus);
+      }
       _isReadingLiftStatus = false;
     }
   }
@@ -401,14 +478,16 @@ class _JoystickControlState extends State<JoystickControl> {
   // ── 右上（按住类型）──────────────────────────────────────────
 
   void _onRightTopDown() {
-    if (_action != JoystickAction.idle) return;
+    if (_action != JoystickAction.idle || _hasLocalPress) return;
+    _liftPollGeneration++;
+    _rightTopPressed = true;
     debugPrint('Joystick rightTop down, wait 1s debounce');
     _actionNotifier.value = JoystickAction.holdingRightTop;
     _rightTopCommandSent = false;
     _rightTopDebounceTimer?.cancel();
     _rightTopDebounceTimer = Timer(_holdDebounceDuration, () {
       if (!mounted) return;
-      if (_action != JoystickAction.holdingRightTop) return;
+      if (!_rightTopPressed) return;
       _rightTopCommandSent = true;
       debugPrint('Joystick rightTop debounce passed TX 0x0010=1');
       // unawaited(_sendHoldCommand(1, JoystickAction.holdingRightTop));
@@ -417,11 +496,13 @@ class _JoystickControlState extends State<JoystickControl> {
   }
 
   void _onRightTopUp() {
-    if (_action != JoystickAction.holdingRightTop) return;
+    // 状态反馈可能已改变图片，但只要本地发过移动命令，松手仍须停止。
+    if (!_rightTopPressed) return;
+    _rightTopPressed = false;
+    _liftPollGeneration++;
     _rightTopDebounceTimer?.cancel();
     final bool sent = _rightTopCommandSent;
     _rightTopCommandSent = false;
-    _stopLiftStatusPolling();
     _actionNotifier.value = JoystickAction.idle;
     if (sent) {
       debugPrint('Joystick rightTop up/cancel TX 0x0010=0');
@@ -434,14 +515,16 @@ class _JoystickControlState extends State<JoystickControl> {
   // ── 右下（按住类型）──────────────────────────────────────────
 
   void _onRightBottomDown() {
-    if (_action != JoystickAction.idle) return;
+    if (_action != JoystickAction.idle || _hasLocalPress) return;
+    _liftPollGeneration++;
+    _rightBottomPressed = true;
     debugPrint('Joystick rightBottom down, wait 1s debounce');
     _actionNotifier.value = JoystickAction.holdingRightBottom;
     _rightBottomCommandSent = false;
     _rightBottomDebounceTimer?.cancel();
     _rightBottomDebounceTimer = Timer(_holdDebounceDuration, () {
       if (!mounted) return;
-      if (_action != JoystickAction.holdingRightBottom) return;
+      if (!_rightBottomPressed) return;
       _rightBottomCommandSent = true;
       debugPrint('Joystick rightBottom debounce passed TX 0x0010=2');
       // unawaited(_sendHoldCommand(2, JoystickAction.holdingRightBottom));
@@ -450,11 +533,12 @@ class _JoystickControlState extends State<JoystickControl> {
   }
 
   void _onRightBottomUp() {
-    if (_action != JoystickAction.holdingRightBottom) return;
+    if (!_rightBottomPressed) return;
+    _rightBottomPressed = false;
+    _liftPollGeneration++;
     _rightBottomDebounceTimer?.cancel();
     final bool sent = _rightBottomCommandSent;
     _rightBottomCommandSent = false;
-    _stopLiftStatusPolling();
     _actionNotifier.value = JoystickAction.idle;
     if (sent) {
       debugPrint('Joystick rightBottom up/cancel TX 0x0010=0');
@@ -480,47 +564,24 @@ class _JoystickControlState extends State<JoystickControl> {
   */
 
   Future<bool> _sendCommand(int address, int value) async {
-    if (_isCommanding) {
-      if (value == 0) {
-        _pendingStop = true;
-      }
-      return false;
-    }
-    _isCommanding = true;
+    final bus = JoystickCommandBus.instance;
+    bus.noteLocalCommand(value);
+    final revision = bus.commandRevision;
+    var sent = false;
     try {
-      await _service.sendCommandQueue([
-        ModbusWriteCommand(address: address, value: value),
-      ]);
-      debugPrint('Joystick command success');
-      return true;
+      await bus.runLiftWrite(() async {
+        // 校正写完成前可能已经松手；取消排队中的旧移动，停止仍必须发送。
+        if (value != 0 && revision != bus.commandRevision) return;
+        await _service.sendCommandQueue([
+          ModbusWriteCommand(address: address, value: value),
+        ]);
+        sent = true;
+      });
+      if (sent) debugPrint('Joystick command success');
+      return sent;
     } catch (e) {
       debugPrint('Joystick command failed: $e');
       return false;
-    } finally {
-      if (mounted) {
-        _isCommanding = false;
-        if (_pendingStop) {
-          _pendingStop = false;
-          unawaited(_sendPendingStop());
-        }
-      }
-    }
-  }
-
-  Future<void> _sendPendingStop() async {
-    if (_isCommanding) return;
-    _isCommanding = true;
-    try {
-      await _service.sendCommandQueue([
-        const ModbusWriteCommand(address: 0x0010, value: 0),
-      ]);
-      debugPrint('Joystick pending stop success');
-    } catch (e) {
-      debugPrint('Joystick pending stop failed: $e');
-    } finally {
-      if (mounted) {
-        _isCommanding = false;
-      }
     }
   }
 }

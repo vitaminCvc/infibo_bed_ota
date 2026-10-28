@@ -1,3 +1,5 @@
+import 'package:infibo_app/config/app_brand.dart';
+
 import 'ota_manifest.dart';
 
 class OtaConfig {
@@ -6,11 +8,28 @@ class OtaConfig {
     this.manifestUrl = '',
     this.allowHttp = false,
   });
-  factory OtaConfig.environment() => const OtaConfig(
-    channel: String.fromEnvironment('OTA_CHANNEL', defaultValue: 'official'),
-    manifestUrl: String.fromEnvironment('OTA_MANIFEST_URL'),
-    allowHttp: bool.fromEnvironment('OTA_ALLOW_HTTP', defaultValue: false),
-  );
+  factory OtaConfig.environment() {
+    final uae = AppBrand.current.flavor == 'uaeBiohackn';
+    const configuredChannel = String.fromEnvironment('OTA_CHANNEL');
+    const configuredUrl = String.fromEnvironment('OTA_MANIFEST_URL');
+    final channel = configuredChannel.isNotEmpty
+        ? configuredChannel
+        : uae
+        ? 'uae_biohackn'
+        : 'official';
+    return OtaConfig(
+      channel: channel,
+      manifestUrl: configuredUrl.isNotEmpty
+          ? configuredUrl
+          : uae && channel == 'uae_biohackn'
+          ? 'https://ota.infibo.net/ota/uae-biohackn.json'
+          : '',
+      allowHttp: const bool.fromEnvironment(
+        'OTA_ALLOW_HTTP',
+        defaultValue: false,
+      ),
+    );
+  }
   final String channel;
   final String manifestUrl;
   final bool allowHttp;

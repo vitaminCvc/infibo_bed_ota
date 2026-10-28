@@ -1,4 +1,17 @@
 const statusDetectionTranslations = <String, Map<String, String>>{
+  'pl_PL': {
+    'status_detection': 'Kontrola stanu',
+    'status_tds_label': 'TDS wody',
+    'status_tds_reading': 'Odczyt jakości wody…',
+    'status_water_normal': 'Jakość wody prawidłowa',
+    'status_water_abnormal': 'Jakość wody nieprawidłowa',
+    'status_tds_unavailable':
+        'Jakość wody niedostępna. Otwórz tę stronę ponownie, aby wykonać pomiar.',
+    'status_tds_rule':
+        'TDS poniżej 10: norma. TDS równe 10 lub wyższe: nieprawidłowe.',
+    'status_detection_hint':
+        'Wynik odczytano po otwarciu strony. Po wymianie wody otwórz stronę ponownie.',
+  },
   'zh_CN': {
     'status_detection': '状态检测',
     'status_tds_label': 'TDS 水质',
@@ -123,6 +136,34 @@ const statusDetectionTranslations = <String, Map<String, String>>{
 };
 
 const statusSnapshotTranslations = <String, Map<String, String>>{
+  'pl_PL': {
+    'status_reading': 'Odczytywanie…',
+    'status_unavailable': 'Niedostępne',
+    'status_unknown': 'Nieznany (@value)',
+    'status_refresh': 'Odśwież',
+    'status_refreshing': 'Odczytywanie…',
+    'status_checked_at': 'Ostatni pomiar: @time',
+    'status_state_idle': 'Gotowość',
+    'status_state_running': 'W trakcie',
+    'status_state_paused': 'Wstrzymano',
+    'status_state_fault': 'Usterka',
+    'status_state_complete': 'Zakończono',
+    'status_state_disabled': 'Wyłączono',
+    'status_temperature_660': 'Temperatura 660 nm',
+    'status_temperature_850': 'Temperatura 850 nm',
+    'status_current': 'Zmierzony prąd',
+    'status_voltage': 'Zmierzone napięcie',
+    'status_coil_temperature': 'Temperatura cewki',
+    'status_volume': 'Głośność',
+    'status_amplifier_temperature': 'Temperatura wzmacniacza',
+    'status_water_level': 'Poziom wody',
+    'status_water_temperature': 'Temperatura wody',
+    'status_level_low': 'Niski poziom',
+    'status_level_normal': 'Prawidłowy',
+    'status_level_high': 'Wysoki poziom',
+    'status_snapshot_hint':
+        'Wyniki bieżącego pomiaru. Po wymianie wody odśwież dane.',
+  },
   'zh_CN': {
     'status_reading': '读取中…',
     'status_unavailable': '暂不可用',
@@ -403,6 +444,15 @@ const statusSnapshotTranslations = <String, Map<String, String>>{
 };
 
 const statusQualityTranslations = <String, Map<String, String>>{
+  'pl_PL': {
+    'status_red_title': 'Światło czerwone',
+    'status_hydrogen_title': 'Wodór cząsteczkowy',
+    'status_hydrogen_runtime_label': 'Łączny czas pracy',
+    'status_hydrogen_runtime_write_failed':
+        'Nie udało się potwierdzić zapisu czasu pracy wodoru. Zapis tej sesji nie zostanie ponowiony później.',
+    'status_quality_abnormal': 'Nieprawidłowa',
+    'status_tds_rule_compact': 'Norma <10, nieprawidłowe ≥10',
+  },
   'zh_CN': {
     'status_red_title': '红光',
     'status_hydrogen_title': '分子氢',
@@ -495,6 +545,20 @@ const statusQualityTranslations = <String, Map<String, String>>{
 };
 
 const statusRuntimeResetTranslations = <String, Map<String, String>>{
+  'pl_PL': {
+    'status_hydrogen_reset_password': 'Hasło',
+    'status_hydrogen_reset_password_incorrect':
+        'Nieprawidłowe hasło. Spróbuj ponownie.',
+    'status_hydrogen_reset_title': 'Reset czasu pracy wodoru',
+    'status_hydrogen_reset_message':
+        'Wyzerować łączny czas pracy wodoru? Tej operacji nie można cofnąć.',
+    'status_hydrogen_reset_cancel': 'Anuluj',
+    'status_hydrogen_reset_confirm': 'Resetuj',
+    'status_hydrogen_reset_success':
+        'Łączny czas pracy wodoru został wyzerowany.',
+    'status_hydrogen_reset_failed':
+        'Nie udało się potwierdzić resetu. Sprawdź połączenie i spróbuj ponownie.',
+  },
   'zh_CN': {
     'status_hydrogen_reset_password': '密码',
     'status_hydrogen_reset_password_incorrect': '密码错误，请重新输入。',

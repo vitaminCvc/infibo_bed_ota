@@ -127,6 +127,7 @@ class AndroidSerialPortService {
       'frames': frames,
     });
 
+    ///解析响应，返回所有回复的字节数据
     final List<dynamic> items = response is List ? response : const [];
     return [
       for (final dynamic item in items)
@@ -136,6 +137,7 @@ class AndroidSerialPortService {
     ];
   }
 
+  // 不等待回复，直接返回发送的字节数
   Future<int> writeModbusQueueNoResponse({
     required List<Uint8List> frames,
     String path = defaultPath,

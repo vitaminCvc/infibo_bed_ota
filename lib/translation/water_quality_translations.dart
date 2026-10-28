@@ -1,4 +1,21 @@
 const waterQualityTranslations = <String, Map<String, String>>{
+  'pl_PL': {
+    'water_quality_title': 'Problem z jakością wody',
+    'water_quality_waiting_message':
+        'Funkcja wodoru cząsteczkowego jest wstrzymana. Oczekiwanie na automatyczne uzdatnianie wody.',
+    'water_quality_treating_message':
+        'Funkcja wodoru cząsteczkowego jest wstrzymana. Trwa uzdatnianie wody.',
+    'water_quality_success_title': 'Uzdatnianie wody zakończone',
+    'water_quality_success_message':
+        'Jakość wody wróciła do normy. Można ponownie korzystać z funkcji wodoru cząsteczkowego.',
+    'water_quality_failed_title': 'Uzdatnianie wody nie powiodło się',
+    'water_quality_failed_message': 'Zmień źródło wody i spróbuj ponownie.',
+    'water_quality_got_it': 'Rozumiem',
+    'water_quality_tds_unavailable':
+        'Informacje o jakości wody są chwilowo niedostępne. Poczekaj na kolejny pomiar.',
+    'water_quality_treatment_unavailable':
+        'Stan uzdatniania jest chwilowo niedostępny. Poczekaj na kolejny pomiar.',
+  },
   'zh_CN': {
     'water_quality_title': '水质异常',
     'water_quality_waiting_message': '分子氢功能已暂停，等待设备自动处理。',

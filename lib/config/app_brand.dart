@@ -44,6 +44,8 @@ class AppBrandConfig {
 
   final String flavor;
 
+  bool get supportsOtaUpdates => flavor == 'global' || flavor == 'uaeBiohackn';
+
   /// 自动加水开关仅对印度版生效，避免改变其他国家已交付版本的行为。
   /// 印度默认支持自动加水；仅“印度老版（无自动加水）”打包时传入
   /// --dart-define=INDIA_AUTO_WATER_FILLING=false，适配旧硬件。
@@ -200,6 +202,26 @@ abstract final class AppBrands {
       usersActionGap: 12,
     ),
   );
+  // 阿联酋Biohackn品牌
+  static const AppBrandConfig uaeBiohackn = AppBrandConfig(
+    flavor: 'uaeBiohackn',
+    defaultLocale: Locale('en', 'US'),
+    loginLogoAsset: 'assets/branding/uaeBiohackn/login_logo.svg',
+    loginLogoSize: Size(380, 123),
+    headerLogoAsset: 'assets/branding/uaeBiohackn/header_logo.svg',
+    headerLayout: HeaderLayoutConfig(
+      logoSize: Size(204, 56),
+      logoPosition: HeaderLogoPosition.leading,
+      indexLogoSlotWidth: 242,
+      indexPageRightInset: 44,
+      settingPageRightInset: 44,
+      usersPageRightInset: 44,
+      indexClockGap: 80,
+      settingClockGap: 80,
+      usersClockGap: 80,
+      usersActionGap: 12,
+    ),
+  );
 
   static AppBrandConfig fromFlavor(String flavor) => switch (flavor) {
     'global' => global,
@@ -209,6 +231,7 @@ abstract final class AppBrands {
     'america' => america,
     'britain' => britain,
     'australia' => australia,
+    'uaeBiohackn' => uaeBiohackn,
     _ => throw ArgumentError.value(flavor, 'flavor', 'Unsupported app flavor'),
   };
 }

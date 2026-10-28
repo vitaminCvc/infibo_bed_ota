@@ -465,17 +465,32 @@ class _PlanCard extends StatelessWidget {
                 ),
               ),
             ),
-          Positioned(left: 20, top: 24, child: _buildTitle()),
-          Positioned(left: 20, bottom: 18, child: _buildFeatureIcons()),
-          Positioned(
-            right: 114,
-            bottom: 20,
-            child: _RenameButton(onTap: onRename),
-          ),
-          Positioned(
+          Positioned.fill(
+            left: 20,
             right: 18,
-            bottom: 20,
-            child: _SelectButton(onTap: onSelect),
+            top: 24,
+            bottom: 18,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [_buildTitle(), _buildFeatureIcons()],
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _RenameButton(onTap: onRename),
+                    const SizedBox(width: 8),
+                    _SelectButton(onTap: onSelect),
+                  ],
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -505,14 +520,18 @@ class _PlanCard extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-          item.name,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            height: 1,
-            fontFamily: 'Microsoft YaHei',
-            fontWeight: FontWeight.w500,
+        Flexible(
+          child: Text(
+            item.name,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              height: 1,
+              fontFamily: 'Microsoft YaHei',
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
         const SizedBox(width: 8),
@@ -547,27 +566,24 @@ class _RenameButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 100,
-      height: 32,
-      child: ElevatedButton.icon(
-        onPressed: onTap,
-        icon: const Icon(Icons.drive_file_rename_outline, size: 15),
-        label: Text('rename_plan'.tr),
-        style: ElevatedButton.styleFrom(
-          padding: EdgeInsets.zero,
-          elevation: 0,
-          backgroundColor: const Color(0xFF3D3F48),
-          foregroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-            side: const BorderSide(color: Color(0xFF4A4D57)),
-          ),
-          textStyle: const TextStyle(
-            fontSize: 13,
-            fontFamily: 'Microsoft YaHei',
-            fontWeight: FontWeight.w500,
-          ),
+    return ElevatedButton.icon(
+      onPressed: onTap,
+      icon: const Icon(Icons.drive_file_rename_outline, size: 15),
+      label: Text('rename_plan'.tr, softWrap: false),
+      style: ElevatedButton.styleFrom(
+        minimumSize: Size.zero,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        elevation: 0,
+        backgroundColor: const Color(0xFF3D3F48),
+        foregroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: const BorderSide(color: Color(0xFF4A4D57)),
+        ),
+        textStyle: const TextStyle(
+          fontSize: 13,
+          fontFamily: 'Microsoft YaHei',
+          fontWeight: FontWeight.w500,
         ),
       ),
     );
@@ -582,26 +598,21 @@ class _SelectButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 88,
-      height: 32,
-      child: ElevatedButton.icon(
-        onPressed: onTap,
-        icon: const Icon(Icons.check_circle_outline, size: 17),
-        label: Text('select'.tr),
-        style: ElevatedButton.styleFrom(
-          padding: EdgeInsets.zero,
-          elevation: 0,
-          backgroundColor: const Color(0xFF1F74E8),
-          foregroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          textStyle: const TextStyle(
-            fontSize: 14,
-            fontFamily: 'Microsoft YaHei',
-            fontWeight: FontWeight.w500,
-          ),
+    return ElevatedButton.icon(
+      onPressed: onTap,
+      icon: const Icon(Icons.check_circle_outline, size: 17),
+      label: Text('select'.tr, softWrap: false),
+      style: ElevatedButton.styleFrom(
+        minimumSize: Size.zero,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        elevation: 0,
+        backgroundColor: const Color(0xFF1F74E8),
+        foregroundColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        textStyle: const TextStyle(
+          fontSize: 14,
+          fontFamily: 'Microsoft YaHei',
+          fontWeight: FontWeight.w500,
         ),
       ),
     );

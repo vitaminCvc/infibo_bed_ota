@@ -10,14 +10,19 @@ import 'package:infibo_app/ota/ota_service.dart';
 import 'package:infibo_app/ota/ota_controller.dart';
 
 class TestGateway implements UpdateGateway {
+  bool permission = true;
+  int permissionScreens = 0;
+  @override
+  Future<bool> canInstallPackages() async => permission;
   int code = 1;
+  String version = '1.0.0';
   int installs = 0;
   final awake = <bool>[];
   InstallAction action = InstallAction.requested;
   @override
   Future<InstalledApp> installedApp() async => InstalledApp(
     packageName: 'com.infibo.app.global',
-    version: '1.0.0',
+    version: version,
     versionCode: code,
   );
   @override
@@ -34,7 +39,9 @@ class TestGateway implements UpdateGateway {
   }
 
   @override
-  Future<void> openInstallPermission() async {}
+  Future<void> openInstallPermission() async {
+    permissionScreens++;
+  }
 }
 
 class TestService extends OtaService {
@@ -53,9 +60,17 @@ class TestService extends OtaService {
   );
   Completer<File>? pendingDownload;
   int downloads = 0;
+  int checks = 0;
+  OtaManifest? publishedManifest;
   @override
-  Future<UpdateCheck> check() async =>
-      UpdateCheck(await gateway.installedApp(), OtaManifest(app: release));
+  Future<UpdateCheck> check() async {
+    checks++;
+    return UpdateCheck(
+      await gateway.installedApp(),
+      publishedManifest ?? OtaManifest(app: release),
+    );
+  }
+
   @override
   Future<File> download(
     OtaFile release, {
@@ -93,6 +108,112 @@ void main() {
   });
   tearDown(() => controller.dispose());
   test(
+    'requests permission before downloading and resumes after granting it',
+    () async {
+      gateway.permission = false;
+      await controller.refresh();
+      await controller.updateApp();
+      expect(service.downloads, 0);
+      expect(gateway.installs, 0);
+      expect(gateway.permissionScreens, 1);
+      expect(controller.phase, OtaPhase.needsPermission);
+      await controller.resume();
+      expect(gateway.permissionScreens, 1);
+      expect(service.downloads, 0);
+      gateway.permission = true;
+      await controller.resume();
+      expect(service.downloads, 1);
+      expect(gateway.installs, 1);
+      expect(controller.phase, OtaPhase.installRequested);
+    },
+  );
+  test('permission continuation survives controller recreation', () async {
+    gateway.permission = false;
+    await controller.refresh();
+    await controller.updateApp();
+    controller.dispose();
+    gateway.permission = true;
+    service = TestService(gateway);
+    controller = OtaController(service: service, readRegister: (_) async => 0);
+    await controller.metadata();
+    await controller.resume();
+    expect(service.downloads, 1);
+    expect(gateway.installs, 1);
+    expect(controller.phase, OtaPhase.installRequested);
+  });
+  test(
+    'resuming after permission still checks that the board is idle',
+    () async {
+      gateway.permission = false;
+      await controller.refresh();
+      await controller.updateApp();
+      controller.dispose();
+      gateway.permission = true;
+      service = TestService(gateway);
+      controller = OtaController(
+        service: service,
+        readRegister: (_) async => 1,
+      );
+      await controller.resume();
+      expect(service.downloads, 0);
+      expect(gateway.installs, 0);
+      expect(controller.errorKey, 'ota_device_busy');
+    },
+  );
+  test('duplicate resume events start only one continuation', () async {
+    gateway.permission = false;
+    await controller.refresh();
+    await controller.updateApp();
+    gateway.permission = true;
+    service.pendingDownload = Completer<File>();
+    final first = controller.resume();
+    await Future<void>.delayed(Duration.zero);
+    await controller.resume();
+    expect(service.downloads, 1);
+    service.pendingDownload!.complete(File('verified-test.apk'));
+    await first;
+    expect(gateway.installs, 1);
+  });
+  test(
+    'corrupted saved permission request never installs or downloads',
+    () async {
+      final preferences = await SharedPreferences.getInstance();
+      await preferences.setString('ota_permission_app_request', '{invalid');
+      await controller.resume();
+      expect(service.downloads, 0);
+      expect(gateway.installs, 0);
+      expect(controller.errorKey, 'ota_invalid_manifest');
+      expect(preferences.getString('ota_permission_app_request'), isNull);
+    },
+  );
+  test(
+    'permission continuation survives board startup and resumes when idle',
+    () async {
+      gateway.permission = false;
+      await controller.refresh();
+      await controller.updateApp();
+      controller.dispose();
+      gateway.permission = true;
+      var ready = false;
+      service = TestService(gateway);
+      controller = OtaController(
+        service: service,
+        readRegister: (_) async {
+          if (!ready) throw const OtaFailure('ota_device_unavailable');
+          return 0;
+        },
+      );
+      await controller.resume();
+      expect(controller.errorKey, 'ota_device_unavailable');
+      expect(gateway.installs, 0);
+      ready = true;
+      await controller.resume();
+      expect(service.downloads, 1);
+      expect(gateway.installs, 1);
+      expect(controller.phase, OtaPhase.installRequested);
+    },
+  );
+  test(
     'metadata cannot consume install confirmation while install is in flight',
     () async {
       final preferences = await SharedPreferences.getInstance();
@@ -112,24 +233,33 @@ void main() {
       expect(gateway.installs, 0);
     },
   );
-  test('board manifest enables only a genuinely newer board release', () async {
-    await controller.refresh();
-    controller.manifest = OtaManifest(
-      firmware: FirmwareRelease(
-        version: '1.2.5',
-        url: Uri.parse('https://example.test/main_APP_OTA.bin'),
-        size: 10,
-        sha256: 'a' * 64,
-        versionRegister: 0x0125,
-        crc32: 0,
-      ),
-    );
-    expect(controller.firmwareAvailable, isTrue);
-    expect(controller.takePrompt(), isTrue);
-    expect(controller.takePrompt(), isFalse);
-    controller.boardVersion = 0x0125;
-    expect(controller.firmwareAvailable, isFalse);
-  });
+  test(
+    'published board target permits newer, equal and lower versions without equal-version prompts',
+    () async {
+      await controller.refresh();
+      controller.manifest = OtaManifest(
+        firmware: FirmwareRelease(
+          version: '1.2.5',
+          url: Uri.parse('https://example.test/main_APP_OTA.bin'),
+          size: 10,
+          sha256: 'a' * 64,
+          versionRegister: 0x0125,
+          crc32: 0,
+        ),
+      );
+      expect(controller.firmwareAvailable, isTrue);
+      expect(controller.takePrompt(), isTrue);
+      expect(controller.takePrompt(), isFalse);
+      controller.boardVersion = 0x0125;
+      expect(controller.firmwareAvailable, isTrue);
+      expect(controller.takePrompt(), isFalse);
+      controller.boardVersion = 0x0130;
+      expect(controller.firmwareAvailable, isTrue);
+      expect(controller.takePrompt(), isTrue);
+      controller.boardVersion = null;
+      expect(controller.firmwareAvailable, isFalse);
+    },
+  );
   test('checks versions and prompts once per release in a session', () async {
     await controller.refresh();
     expect(controller.appAvailable, isTrue);

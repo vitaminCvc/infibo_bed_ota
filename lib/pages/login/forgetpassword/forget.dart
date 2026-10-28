@@ -3,6 +3,7 @@
 // 用户在这里输入邮箱、验证码、新密码和确认新密码，用于重置登录密码。
 
 import 'dart:async';
+import 'package:infibo_app/components/brand_logo.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -92,7 +93,9 @@ class _ForgetPageState extends State<ForgetPage> {
     if (_didPrecache) return;
     _didPrecache = true;
 
-    precacheImage(AssetImage(Assets.logo), context);
+    if (!Assets.logo.toLowerCase().endsWith('.svg')) {
+      precacheImage(AssetImage(Assets.logo), context);
+    }
     precacheImage(const AssetImage(Assets.glassLogo), context);
     precacheImage(const AssetImage(Assets.passwordLogo), context);
   }
@@ -230,7 +233,7 @@ class _ForgetPageState extends State<ForgetPage> {
   Widget _buildBrandHeader({Key? key}) {
     final Size logoSize = AppBrand.current.loginLogoSize;
 
-    return Image.asset(
+    return BrandLogo(
       Assets.logo,
       key: key,
       width: logoSize.width,

@@ -1,3 +1,4 @@
+import 'package:infibo_app/config/app_brand.dart';
 import 'package:flutter/foundation.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -5,9 +6,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AudioPromptAssets {
   const AudioPromptAssets._();
 
-  static const String welcome = 'assets/AudioPrompt/welcome.mp3';
-  static const String start = 'assets/AudioPrompt/start.mp3';
-  static const String end = 'assets/AudioPrompt/end.mp3';
+  static String get welcome => AppBrand.current.flavor == 'uaeBiohackn'
+      ? 'assets/branding/uaeBiohackn/audio/welcome.mp3'
+      : 'assets/AudioPrompt/welcome.mp3';
+  static String get start => AppBrand.current.flavor == 'uaeBiohackn'
+      ? 'assets/branding/uaeBiohackn/audio/start.mp3'
+      : 'assets/AudioPrompt/start.mp3';
+  static String get end => AppBrand.current.flavor == 'uaeBiohackn'
+      ? 'assets/branding/uaeBiohackn/audio/end.mp3'
+      : 'assets/AudioPrompt/end.mp3';
+  static String? get startup => AppBrand.current.flavor == 'uaeBiohackn'
+      ? 'assets/branding/uaeBiohackn/audio/startup.mp3'
+      : null;
+
   static const String water = 'assets/AudioPrompt/water.mp3';
 }
 
@@ -65,6 +76,7 @@ class AudioPromptPlayer {
   final Set<String> _loadedAssetPaths = <String>{};
 
   int _volume = defaultVolume;
+  bool _startupPromptStarted = false;
 
   /// 提示音音量百分比（0～100），独立于音乐播放器。
   int get volume => _volume;
@@ -100,6 +112,15 @@ class AudioPromptPlayer {
         (player) => player.setVolume(normalizedVolume),
       ),
     );
+  }
+
+  /// Called once after the first app frame, never on page entry or resume.
+  Future<void> playStartupOnceSafely() async {
+    final String? asset = AudioPromptAssets.startup;
+    if (_startupPromptStarted || asset == null) return;
+    // Set before awaiting so concurrent calls cannot start duplicate playback.
+    _startupPromptStarted = true;
+    await playAssetSafely(asset);
   }
 
   Future<void> playWelcome() =>

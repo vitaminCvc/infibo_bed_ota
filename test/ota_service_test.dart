@@ -6,23 +6,31 @@ import 'package:infibo_app/ota/android_update_gateway.dart';
 import 'package:infibo_app/ota/ota_config.dart';
 import 'package:infibo_app/ota/ota_manifest.dart';
 import 'package:infibo_app/ota/ota_service.dart';
+import 'package:infibo_app/ota/ota_controller.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FakeUpdateGateway implements UpdateGateway {
   FakeUpdateGateway(this.directory);
   final Directory directory;
   int installations = 0;
+  bool permission = true;
+  int code = 1;
+  InstallAction action = InstallAction.requested;
   @override
-  Future<InstalledApp> installedApp() async => const InstalledApp(
+  Future<bool> canInstallPackages() async => permission;
+  @override
+  Future<InstalledApp> installedApp() async => InstalledApp(
     packageName: 'com.infibo.app.global',
     version: '1.0.0',
-    versionCode: 1,
+    versionCode: code,
   );
   @override
   Future<String> cacheDirectory() async => directory.path;
   @override
   Future<InstallAction> install(File file, AppRelease release) async {
     installations++;
-    return InstallAction.requested;
+    if (action == InstallAction.needsPermission) permission = false;
+    return action;
   }
 
   @override
@@ -32,16 +40,23 @@ class FakeUpdateGateway implements UpdateGateway {
 }
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  // 此处是实际回环 HTTP 联测，不使用 widget test 的 HTTP 400 替身。
+  HttpOverrides.global = null;
   late HttpServer server;
   late Directory directory;
   late FakeUpdateGateway gateway;
   late OtaService service;
+  int requests = 0;
   final data = List<int>.generate(300, (i) => i & 0xff);
   setUp(() async {
+    SharedPreferences.setMockInitialValues({});
+    requests = 0;
     directory = await Directory.systemTemp.createTemp('infibo-ota-test-');
     gateway = FakeUpdateGateway(directory);
     server = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
     server.listen((request) async {
+      requests++;
       if (request.uri.path == '/redirect') {
         request.response.statusCode = 302;
         request.response.headers.set('Location', '/file');
@@ -70,6 +85,53 @@ void main() {
         sha256: hash ?? sha256.convert(data).toString(),
       );
   test(
+    'returning from permission installs verified cache without another HTTP request',
+    () async {
+      final controller = OtaController(
+        service: service,
+        readRegister: (_) async => 0,
+      );
+      try {
+        controller.installed = await gateway.installedApp();
+        controller.manifest = OtaManifest(app: release());
+        // 模拟下载完成到安装之间权限失效，覆盖首次预检查无法消除的竞态。
+        gateway.action = InstallAction.needsPermission;
+        await controller.updateApp();
+        expect(requests, 1);
+        expect(controller.phase, OtaPhase.needsPermission);
+        gateway.permission = true;
+        gateway.action = InstallAction.requested;
+        final phases = <OtaPhase>[];
+        controller.addListener(() => phases.add(controller.phase));
+        await controller.resume();
+        expect(requests, 1);
+        expect(gateway.installations, 2);
+        expect(controller.phase, OtaPhase.installRequested);
+        expect(phases, isNot(contains(OtaPhase.downloading)));
+      } finally {
+        controller.dispose();
+      }
+    },
+  );
+  test(
+    'verified cache is reusable after recreating the download service',
+    () async {
+      final cached = await service.download(release());
+      service.dispose();
+      service = OtaService(
+        config: const OtaConfig(allowHttp: true),
+        gateway: gateway,
+      );
+      final progress = <double>[];
+      expect(
+        (await service.download(release(), onProgress: progress.add)).path,
+        cached.path,
+      );
+      expect(requests, 1);
+      expect(progress, [1]);
+    },
+  );
+  test(
     'downloads and verifies complete bytes without installing automatically',
     () async {
       final file = await service.download(release());
@@ -83,6 +145,16 @@ void main() {
       expect(gateway.installations, 1);
     },
   );
+  test('older APK is rejected even if its bytes are verified', () async {
+    gateway.code = 5;
+    final file = await service.download(release());
+    await expectLater(
+      service.install(file, release()),
+      throwsA(isA<OtaFailure>()),
+    );
+    expect(gateway.installations, 0);
+  });
+
   test(
     'wrong hash and wrong length remove partial files and never install',
     () async {

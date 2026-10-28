@@ -59,6 +59,14 @@ class Assets {
   // 公共页头：设置按钮图片。
   static const String settingLogo = "assets/Mainimages/setting.png";
 
+  // 公共页头：自适应用户按钮背景、设置按钮背景和图标。
+  static const String headerUserBackground =
+      "assets/Mainimages/header_user.svg";
+  static const String headerSettingsBackground =
+      "assets/Mainimages/header_settings_bg.svg";
+  static const String headerSettingsIcon =
+      "assets/Mainimages/header_settings_icon.svg";
+
   // 公共页头:退出登录背景图片
   static const String logoOutBackg = "assets/Mainimages/logooutbackground.png";
 

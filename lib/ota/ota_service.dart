@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:crypto/crypto.dart';
+import 'ota_file_verifier.dart';
 import 'package:dio/dio.dart';
 import 'android_update_gateway.dart';
 import 'ota_config.dart';
@@ -29,11 +29,13 @@ class OtaService {
               receiveTimeout: const Duration(seconds: 30),
             ),
           );
+  // 初始化时检查配置是否已配置，未配置则抛出异常
   final OtaConfig config;
   final UpdateGateway gateway;
   final Dio _dio;
   bool _downloading = false;
   Future<UpdateCheck> check() async {
+    // 检查配置是否已配置，未配置则抛出异常
     if (!config.configured) throw const OtaFailure('ota_not_configured');
     final installed = await gateway.installedApp();
     try {
@@ -46,6 +48,8 @@ class OtaService {
         ),
       );
       final text = response.data;
+      // 检查响应是否为空或者大小是否超过256kb
+      // 超过256kb则抛出异常
       if (text == null || utf8.encode(text).length > 256 * 1024) {
         throw const FormatException('Manifest too large');
       }
@@ -65,14 +69,14 @@ class OtaService {
     }
   }
 
-  Future<bool> verified(File file, OtaFile release) async {
-    if (!await file.exists() || await file.length() != release.size) {
-      return false;
-    }
-    return (await sha256.bind(file.openRead()).first).toString() ==
-        release.sha256.toLowerCase();
-  }
+  //  验证文件是否已下载完成，大小和 sha256 校验是否通过
+  Future<bool> verified(File file, OtaFile release) => verifyOtaFile(
+    path: file.path,
+    size: release.size,
+    expectedSha256: release.sha256,
+  );
 
+  // 下载文件，返回下载完成后的文件路径
   Future<File> download(
     OtaFile release, {
     CancelToken? cancelToken,
@@ -107,6 +111,10 @@ class OtaService {
         }
         return target;
       }
+      onProgress?.call(0);
+      if (cancelToken?.isCancelled == true) {
+        throw const OtaFailure('ota_cancelled');
+      }
       final response = await _dio.get<ResponseBody>(
         release.url.toString(),
         cancelToken: cancelToken,
@@ -138,6 +146,9 @@ class OtaService {
       if (!await verified(partial, release)) {
         throw const OtaFailure('ota_file_invalid');
       }
+      if (cancelToken?.isCancelled == true) {
+        throw const OtaFailure('ota_cancelled');
+      }
       if (await target.exists()) await target.delete();
       await partial.rename(target.path);
       return target;
@@ -164,6 +175,7 @@ class OtaService {
       throw const OtaFailure('ota_file_invalid');
     }
     final installed = await gateway.installedApp();
+    // 上位机只安装更高内部编号；主板固件沿用独立的目标版本规则。
     if (installed.packageName != release.packageName ||
         !release.isNewerThan(installed.versionCode)) {
       throw const OtaFailure('ota_invalid_manifest');

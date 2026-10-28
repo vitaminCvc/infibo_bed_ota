@@ -1,0 +1,14 @@
+{
+  "official_ota": {
+    "name": "1.0.0",
+    "number": 0
+  },
+  "china_test_ota": {
+    "name": "1.0.0",
+    "number": 0
+  },
+  "uae_biohackn_ota": {
+    "name": "1.0.0",
+    "number": 0
+  }
+}

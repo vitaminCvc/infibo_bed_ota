@@ -1,4 +1,7 @@
 import 'dart:async';
+import 'dart:io';
+
+import 'package:infibo_app/config/app_brand.dart';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:infibo_app/pages/start/audio_prompt_player.dart';
@@ -10,6 +13,109 @@ void main() {
   setUp(() {
     SharedPreferences.setMockInitialValues(<String, Object>{});
   });
+
+  test(
+    'each brand plays its own three prompts and keeps the shared water prompt',
+    () async {
+      final original = AppBrand.current;
+      addTearDown(() => AppBrand.configure(original));
+      for (final brand in [
+        AppBrands.global,
+        AppBrands.india,
+        AppBrands.spain,
+        AppBrands.turkey,
+        AppBrands.america,
+        AppBrands.britain,
+        AppBrands.australia,
+        AppBrands.uaeBiohackn,
+      ]) {
+        AppBrand.configure(brand);
+        final backends = <FakeAudioPromptBackend>[];
+        final player = AudioPromptPlayer(
+          audioPlayerFactory: () {
+            final backend = FakeAudioPromptBackend();
+            backends.add(backend);
+            return backend;
+          },
+        );
+        await player.preloadWelcomeSafely();
+        await player.playWelcomeSafely();
+        await player.playStartSafely();
+        await player.playEndSafely();
+        await player.playWaterSafely();
+        final folder = brand.flavor == 'uaeBiohackn'
+            ? 'assets/branding/uaeBiohackn/audio'
+            : 'assets/AudioPrompt';
+        expect(backends.expand((b) => b.playedAssets).toList(), [
+          '$folder/welcome.mp3',
+          '$folder/start.mp3',
+          '$folder/end.mp3',
+          'assets/AudioPrompt/water.mp3',
+        ], reason: brand.flavor);
+        for (final backend in backends) {
+          expect(File(backend.currentAsset!).existsSync(), isTrue);
+        }
+      }
+    },
+  );
+
+  test('UAE cold-start prompt plays once with saved prompt volume', () async {
+    final original = AppBrand.current;
+    addTearDown(() => AppBrand.configure(original));
+    AppBrand.configure(AppBrands.uaeBiohackn);
+    SharedPreferences.setMockInitialValues({'audio_prompt_volume': 35});
+    final backend = FakeAudioPromptBackend();
+    final player = AudioPromptPlayer(audioPlayer: backend);
+    await player.loadVolume();
+    await Future.wait([
+      player.playStartupOnceSafely(),
+      player.playStartupOnceSafely(),
+    ]);
+    await player.playStartupOnceSafely();
+    expect(backend.playedAssets, [
+      'assets/branding/uaeBiohackn/audio/startup.mp3',
+    ]);
+    expect(backend.volumes.last, 0.35);
+    expect(File(backend.currentAsset!).existsSync(), isTrue);
+    final nextProcess = FakeAudioPromptBackend();
+    await AudioPromptPlayer(audioPlayer: nextProcess).playStartupOnceSafely();
+    expect(nextProcess.playCount, 1);
+  });
+
+  test('other brands do not load or play the UAE startup prompt', () async {
+    final original = AppBrand.current;
+    addTearDown(() => AppBrand.configure(original));
+    for (final brand in [
+      AppBrands.global,
+      AppBrands.india,
+      AppBrands.spain,
+      AppBrands.turkey,
+      AppBrands.america,
+      AppBrands.britain,
+      AppBrands.australia,
+    ]) {
+      AppBrand.configure(brand);
+      final backend = FakeAudioPromptBackend();
+      await AudioPromptPlayer(audioPlayer: backend).playStartupOnceSafely();
+      expect(backend.loadedAssets, isEmpty, reason: brand.flavor);
+      expect(backend.playCount, 0);
+    }
+  });
+
+  test(
+    'startup audio failure is contained and not retried during the session',
+    () async {
+      final original = AppBrand.current;
+      addTearDown(() => AppBrand.configure(original));
+      AppBrand.configure(AppBrands.uaeBiohackn);
+      final backend = FakeAudioPromptBackend()..throwOnLoad = true;
+      final player = AudioPromptPlayer(audioPlayer: backend);
+      await player.playStartupOnceSafely();
+      await player.playStartupOnceSafely();
+      expect(backend.loadedAssets.length, 1);
+      expect(backend.playCount, 0);
+    },
+  );
 
   test('missing saved volume keeps the 20 percent default', () async {
     final AudioPromptPlayer player = AudioPromptPlayer();

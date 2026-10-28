@@ -17,6 +17,8 @@ import 'package:infibo_app/pages/music/logic.dart';
 import 'package:infibo_app/pages/music/player.dart';
 import 'package:infibo_app/pages/start/audio_prompt_player.dart';
 import 'package:infibo_app/pages/start/logic.dart';
+import 'package:infibo_app/pages/start/runtime_parameter_pair.dart';
+import 'package:infibo_app/pages/start/runtime_waveform_row.dart';
 import 'package:lottie/lottie.dart';
 import 'package:infibo_app/components/water_quality/water_quality_controller.dart';
 import 'package:infibo_app/components/water_quality/water_quality_host.dart';
@@ -24,7 +26,12 @@ import 'package:infibo_app/components/water_quality/water_quality_command_guard.
 
 // 启动理疗页面
 class StartPage extends StatefulWidget {
-  const StartPage({super.key});
+  const StartPage({
+    super.key,
+    this.modbusService = const ModbusRtuService(),
+  });
+
+  final ModbusRtuService modbusService;
 
   @override
   State<StartPage> createState() => _StartPageState();
@@ -40,7 +47,7 @@ class _StartPageState extends State<StartPage>
   bool? _lastVatMusicSingleLoop;
   bool _isSyncingVatMusic = false;
   // 这里使用 AndroidSerialPortService，默认路径为 /dev/ttyS0
-  final ModbusRtuService modbusService = const ModbusRtuService();
+  ModbusRtuService get modbusService => widget.modbusService;
   // 累计时长通信采用短超时；底层不重试，由 recorder 对同一总数最多重试一次。
   late final HydrogenRuntimeRecorder _hydrogenRuntimeRecorder =
       HydrogenRuntimeRecorder(
@@ -485,229 +492,111 @@ class _StartPageState extends State<StartPage>
     return Image.asset(asset, fit: fit);
   }
 
-  Widget _buildRedLightPanelInfo(bool isActive) {
-    final RedLightPhaseSetting? setting = _logic.activeRedLightSetting;
-
-    final String strength660Text = setting == null
-        ? ''
-        : setting.strength660.toString();
-    final String strength850Text = setting == null
-        ? ''
-        : setting.strength850.toString();
-
-    final String modeText = setting?.mode == RedLightWorkMode.pulse
-        ? 'pulse'.tr
-        : 'continuous'.tr;
-
-    final String modeAsset = setting?.mode == RedLightWorkMode.pulse
-        ? Assets.maichong
-        : Assets.startExpandContinuous;
-    //背景板文字位置
-    return Positioned(
-      //调节红光功能框内文字整体位置
-      left: 18,
-      top: 22,
-      child: IgnorePointer(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'red_light'.tr,
-              style: TextStyle(color: Colors.white, fontSize: 20),
-            ),
-
-            const SizedBox(height: 24),
-
-            Row(
-              children: [
-                SizedBox(
-                  width: 100,
-                  child: Text(
-                    'wavelength'.tr,
-                    style: TextStyle(color: Color(0xffb9bcc6), fontSize: 17),
-                  ),
-                ),
-                SizedBox(width: 20),
-                SizedBox(
-                  width: 100,
-                  child: Text(
-                    'intensity'.tr,
-                    style: TextStyle(color: Color(0xffb9bcc6), fontSize: 17),
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 10),
-
-            _buildRedLightInfoRow('660', strength660Text),
-
-            const SizedBox(height: 10),
-
-            Row(
-              children: [
-                SizedBox(
-                  width: 100,
-                  child: Text(
-                    'wavelength'.tr,
-                    style: TextStyle(color: Color(0xffb9bcc6), fontSize: 17),
-                  ),
-                ),
-                SizedBox(width: 20),
-                SizedBox(
-                  width: 100,
-                  child: Text(
-                    'intensity'.tr,
-                    style: TextStyle(color: Color(0xffb9bcc6), fontSize: 17),
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 6),
-
-            _buildRedLightInfoRow('850', strength850Text),
-
-            const SizedBox(height: 22),
-
-            if (setting != null)
-              Row(
-                children: [
-                  Text(
-                    modeText,
-                    style: const TextStyle(
-                      color: Color(0xFFE4E7EE),
-                      fontSize: 13,
-                    ),
-                  ),
-                  const SizedBox(width: 5),
-                  Image.asset(
-                    modeAsset,
-                    width: 170,
-                    height: 24,
-                    fit: BoxFit.contain,
-                  ),
-                ],
-              ),
-          ],
-        ),
+  Widget _buildRuntimePanelTitle(String title) {
+    return SizedBox(
+      width: 160,
+      child: Text(
+        title,
+        maxLines: 1,
+        softWrap: false,
+        overflow: TextOverflow.ellipsis,
+        style: const TextStyle(color: Colors.white, fontSize: 20, height: 1.2),
       ),
     );
   }
 
-  Widget _buildRedLightInfoRow(String wavelength, String strengthText) {
-    return SizedBox(
-      width: 215,
-      child: Row(
-        children: [
-          SizedBox(
-            width: 105,
-            child: Text(
-              wavelength,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 21,
-                height: 1,
+  Widget _buildRedLightPanelInfo(bool isActive) {
+    final RedLightPhaseSetting? setting = _logic.activeRedLightSetting;
+    final String modeKey = setting?.mode == RedLightWorkMode.pulse
+        ? 'pulse'
+        : 'continuous';
+    final String modeAsset = setting?.mode == RedLightWorkMode.pulse
+        ? Assets.maichong
+        : Assets.startExpandContinuous;
+    return Positioned(
+      left: 18,
+      top: 22,
+      child: IgnorePointer(
+        child: SizedBox(
+          width: 220,
+          height: 208,
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              _buildRuntimePanelTitle('red_light'.tr),
+              Positioned(
+                top: 48,
+                child: RuntimeParameterPair(
+                  leftLabelKey: 'wavelength',
+                  rightLabelKey: 'intensity',
+                  leftValue: '660',
+                  rightValue: setting?.strength660.toString() ?? '',
+                  valueTop: 37,
+                  leftValueFontSize: 21,
+                ),
               ),
-            ),
+              Positioned(
+                top: 110,
+                child: RuntimeParameterPair(
+                  leftLabelKey: 'wavelength',
+                  rightLabelKey: 'intensity',
+                  leftValue: '850',
+                  rightValue: setting?.strength850.toString() ?? '',
+                  valueTop: 37,
+                  leftValueFontSize: 21,
+                ),
+              ),
+              if (setting != null)
+                Positioned(
+                  top: 184,
+                  child: RuntimeWaveformRow(
+                    labelKey: modeKey,
+                    asset: modeAsset,
+                    waveformWidth: 170,
+                    waveformHeight: 24,
+                  ),
+                ),
+            ],
           ),
-          SizedBox(width: 17), // 波长和强度之间的间距(调节长度值)
-          Text(
-            strengthText,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-              height: 1,
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
 
   Widget _buildPemfPanelInfo(bool isActive) {
     final PemfPhaseSetting? setting = _logic.activePemfSetting;
-
-    final String frequencyText = setting?.frequency.toString() ?? '';
-    final String intensityText = setting?.intensity.toString() ?? '';
     final String waveformAsset = _getWaveformAsset(setting?.waveform ?? '');
-
     return Positioned(
-      //调节 PEMF 功能框内文字整体位置
       left: 18,
       top: 22,
       child: IgnorePointer(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'PEMF',
-              style: TextStyle(color: Colors.white, fontSize: 20),
-            ),
-            const SizedBox(height: 22),
-            Row(
-              children: [
-                SizedBox(
-                  width: 100,
-                  child: Text(
-                    'frequency'.tr,
-                    style: TextStyle(color: Color(0xffb9bcc6), fontSize: 17),
-                  ),
+        child: SizedBox(
+          width: 220,
+          height: 138,
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              _buildRuntimePanelTitle('PEMF'),
+              Positioned(
+                top: 46,
+                child: RuntimeParameterPair(
+                  leftLabelKey: 'frequency',
+                  rightLabelKey: 'intensity',
+                  leftValue: setting?.frequency.toString() ?? '',
+                  rightValue: setting?.intensity.toString() ?? '',
                 ),
-                SizedBox(width: 20),
-                SizedBox(
-                  width: 100,
-                  child: Text(
-                    'intensity'.tr,
-                    style: TextStyle(color: Color(0xffb9bcc6), fontSize: 17),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 6),
-            Row(
-              children: [
-                SizedBox(
-                  width: 100,
-                  child: Text(
-                    frequencyText,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      height: 1,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 17),
-                Text(
-                  intensityText,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    height: 1,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            if (waveformAsset.isNotEmpty)
-              Row(
-                children: [
-                  Text(
-                    'waveform'.tr,
-                    style: const TextStyle(
-                      color: Color(0xFFE4E7EE),
-                      fontSize: 13,
-                    ),
-                  ),
-                  const SizedBox(width: 20),
-                  SizedBox(
-                    width: 168,
-                    child: Image.asset(waveformAsset, fit: BoxFit.contain),
-                  ),
-                ],
               ),
-          ],
+              if (waveformAsset.isNotEmpty)
+                Positioned(
+                  top: 114,
+                  child: RuntimeWaveformRow(
+                    labelKey: 'waveform',
+                    asset: waveformAsset,
+                    waveformWidth: 168,
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );
@@ -715,68 +604,29 @@ class _StartPageState extends State<StartPage>
 
   Widget _buildVatPanelInfo(bool isActive) {
     final VatPhaseSetting? setting = _logic.activeVatSetting;
-
-    final String frequencyText = setting?.frequency.toString() ?? '';
-    final String intensityText = _currentVatIntensity(setting).toString();
-
     return Positioned(
-      //调节 VAT 功能框内文字整体位置
       left: 40,
       top: 22,
       child: IgnorePointer(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'VAT',
-              style: TextStyle(color: Colors.white, fontSize: 20),
-            ),
-            const SizedBox(height: 15),
-            Row(
-              children: [
-                SizedBox(
-                  width: 100,
-                  child: Text(
-                    'frequency'.tr,
-                    style: TextStyle(color: Color(0xffb9bcc6), fontSize: 17),
-                  ),
+        child: SizedBox(
+          width: 220,
+          height: 105,
+          child: Stack(
+            children: [
+              _buildRuntimePanelTitle('VAT'),
+              Positioned(
+                top: 40,
+                child: RuntimeParameterPair(
+                  leftLabelKey: 'frequency',
+                  rightLabelKey: 'intensity',
+                  leftValue: setting?.frequency.toString() ?? '',
+                  rightValue: _currentVatIntensity(setting).toString(),
+                  valueTop: 41,
+                  leftValueFontSize: 21,
                 ),
-                SizedBox(width: 18),
-                SizedBox(
-                  width: 100,
-                  child: Text(
-                    'intensity'.tr,
-                    style: TextStyle(color: Color(0xffb9bcc6), fontSize: 17),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                SizedBox(
-                  width: 100,
-                  child: Text(
-                    frequencyText,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 21,
-                      height: 1,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 17),
-                Text(
-                  intensityText,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    height: 1,
-                  ),
-                ),
-              ],
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -1395,7 +1245,9 @@ class _StartPageState extends State<StartPage>
   }
 
   Future<void> _runStartButtonDeviceActions() async {
-    await _liftSequence.descend();
+    if (!await _liftSequence.descend()) {
+      throw StateError('Lift descent superseded by a newer command');
+    }
   }
 
   // 预加载参数
@@ -2830,13 +2682,28 @@ class StartLiftSequence {
   final bool Function() isActive;
   final Future<void> Function(Duration) delay;
 
-  Future<void> _write(int address, int value) async {
-    await service.sendCommandQueue([
+  Future<int> _write(int address, int value) async {
+    final bus = JoystickCommandBus.instance;
+    var revision = bus.commandRevision;
+    Future<void> write() => service.sendCommandQueue([
       ModbusWriteCommand(address: address, value: value),
     ]);
-    debugPrint(
-      'Start lift write confirmed: 0x${address.toRadixString(16)}=$value',
-    );
+    if (address == 0x0010) {
+      bus.noteLocalCommand(value);
+      revision = bus.commandRevision;
+      await bus.runLiftWrite(() async {
+        if (revision != bus.commandRevision) return;
+        await write();
+      });
+    } else {
+      await write();
+    }
+    if (address != 0x0010 || revision == bus.commandRevision) {
+      debugPrint(
+        'Start lift write confirmed: 0x${address.toRadixString(16)}=$value',
+      );
+    }
+    return revision;
   }
 
   Future<bool> descend() async {
@@ -2846,7 +2713,8 @@ class StartLiftSequence {
       await _write(0x0012, 0);
       if (!isActive()) return false;
     }
-    await _write(0x0010, 4);
+    final revision = await _write(0x0010, 4);
+    if (revision != JoystickCommandBus.instance.commandRevision) return false;
     JoystickCommandBus.instance.lockLeftBottom();
     return true;
   }
@@ -2854,16 +2722,18 @@ class StartLiftSequence {
   Future<bool> riseAfterStop() async {
     if (isBritain) {
       if (!isActive()) return false;
-      await _write(0x0010, 3);
+      final revision = await _write(0x0010, 3);
+      if (revision != JoystickCommandBus.instance.commandRevision) return false;
       JoystickCommandBus.instance.lockLeftTop();
       // 写入上升命令成功后立即允许跳转总结页。后续轮询不依赖启动页生命周期。
-      unawaited(_waitForLiftReachTop());
+      unawaited(_waitForLiftReachTop(revision));
       return true;
     }
 
     // 其他版本保留上升失败时的异常处理，结束疗程不再等待开灯。
     try {
-      await _write(0x0010, 3);
+      final revision = await _write(0x0010, 3);
+      if (revision != JoystickCommandBus.instance.commandRevision) return false;
       JoystickCommandBus.instance.lockLeftTop();
     } catch (e) {
       debugPrint('stop button one-key-up failed: $e');
@@ -2871,18 +2741,21 @@ class StartLiftSequence {
     return true;
   }
 
-  Future<void> _waitForLiftReachTop() async {
-    while (true) {
+  Future<void> _waitForLiftReachTop(int revision) async {
+    final bus = JoystickCommandBus.instance;
+    while (revision == bus.commandRevision) {
       final int status;
       try {
         status = await service.readHoldingRegister(0x0011);
       } catch (error) {
+        if (revision != bus.commandRevision) return;
         // 总结页已打开，后台读取失败只记录并继续轮询，确保到位后重置摇杆。
         debugPrint('stop button background lift status read failed: $error');
         await delay(const Duration(milliseconds: 500));
         continue;
       }
 
+      if (revision != bus.commandRevision) return;
       debugPrint('stop button background lift status RX 0x0011=$status');
       if (status == 0) {
         JoystickCommandBus.instance.reset();

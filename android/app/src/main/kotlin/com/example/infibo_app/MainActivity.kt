@@ -4,6 +4,7 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.android.FlutterActivity
 
 class MainActivity : FlutterActivity() {
+    private var appInfoBridge: AndroidAppInfoBridge? = null
     private var updateBridge: AndroidUpdateBridge? = null
     private var serialPortBridge: AndroidSerialPortBridge? = null
     private var bluetoothProfileBridge: AndroidBluetoothProfileBridge? = null
@@ -11,6 +12,7 @@ class MainActivity : FlutterActivity() {
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+        appInfoBridge = AndroidAppInfoBridge(this, flutterEngine.dartExecutor.binaryMessenger)
         updateBridge = AndroidUpdateBridge(this, flutterEngine.dartExecutor.binaryMessenger)
         serialPortBridge = AndroidSerialPortBridge(flutterEngine.dartExecutor.binaryMessenger)
         bluetoothProfileBridge = AndroidBluetoothProfileBridge(
@@ -33,6 +35,8 @@ class MainActivity : FlutterActivity() {
     }
 
     override fun onDestroy() {
+        appInfoBridge?.dispose()
+        appInfoBridge = null
         updateBridge?.dispose()
         updateBridge = null
         wifiInfoBridge?.dispose()

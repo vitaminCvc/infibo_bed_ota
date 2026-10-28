@@ -49,4 +49,7 @@ Future<void> bootstrapApp(AppBrandConfig brand) async {
       locale: initialLocale,
     ),
   );
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    unawaited(AudioPromptPlayer.instance.playStartupOnceSafely());
+  });
 }
