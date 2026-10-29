@@ -13,17 +13,22 @@ void main() {
   late GlobalKey<NavigatorState> navigator;
   late int tds;
   late int status;
+  late bool failRead;
   Completer<int>? pendingTreatment;
   setUp(() {
     Get.testMode = true;
     tds = 10;
     status = 1;
+    failRead = false;
     pendingTreatment = null;
     navigator = GlobalKey<NavigatorState>();
     controller = WaterQualityController(
-      readRegister: (address) async => address == 0x01EC
-          ? tds
-          : await (pendingTreatment?.future ?? Future.value(status)),
+      readRegister: (address) async {
+        if (failRead) throw StateError('device still starting');
+        return address == 0x01EC
+            ? tds
+            : await (pendingTreatment?.future ?? Future.value(status));
+      },
     );
   });
   tearDown(() {
@@ -59,6 +64,25 @@ void main() {
     await tester.pump(const Duration(milliseconds: 700));
     await tester.pump();
   }
+
+  testWidgets('startup failure leaves page usable until real anomaly arrives', (
+    tester,
+  ) async {
+    failRead = true;
+    await tester.pumpWidget(app(locale: const Locale('zh', 'CN')));
+    await pumpUi(tester);
+    expect(find.byType(WaterQualityDialog), findsNothing);
+    expect(find.text('/start').hitTestable(), findsOneWidget);
+    await tester.pump(const Duration(seconds: 3));
+    await pumpUi(tester);
+    expect(find.byType(WaterQualityDialog), findsNothing);
+    failRead = false;
+    await tester.pump(const Duration(seconds: 3));
+    await pumpUi(tester);
+    expect(find.byType(WaterQualityDialog), findsOneWidget);
+    expect(controller.phase, WaterQualityPhase.treating);
+    await unmount(tester);
+  });
 
   testWidgets('processing animates only after ED one and stops on result', (
     tester,

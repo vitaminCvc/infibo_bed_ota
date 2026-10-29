@@ -136,8 +136,11 @@ class WaterQualityController extends ChangeNotifier {
       if (_disposed || visit != _visit) return;
       _tdsValid = false;
       readError = WaterQualityReadError.tds;
-      if (!episodeActive) phase = WaterQualityPhase.unavailable;
-      if (_eligible && _dismissedVisit != _visit) visible = true;
+      if (!episodeActive) {
+        phase = WaterQualityPhase.unavailable;
+        // 下位机可能尚未启动：读取失败静默重试，仅真实异常主动弹窗。
+        visible = false;
+      }
       notifyListeners();
     }
   }

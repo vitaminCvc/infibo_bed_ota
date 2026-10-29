@@ -29,6 +29,74 @@ void main() {
   });
   tearDown(() => controller.dispose());
 
+  for (final page in ['/main', '/start']) {
+    Future<void> retry() => page == '/main'
+        ? controller.onHomeWaterPollComplete()
+        : controller.poll();
+
+    test(
+      '$page startup read failures stay silent and recover normally',
+      () async {
+        device.fail = true;
+        await controller.enterPage(page);
+        expect(controller.visible, isFalse);
+        expect(controller.canUseHydrogen, isFalse);
+        expect(controller.readError, WaterQualityReadError.tds);
+        await retry();
+        expect(controller.visible, isFalse);
+        device.fail = false;
+        await retry();
+        expect(device.reads, [0x01EC, 0x01EC, 0x01EC]);
+        expect(controller.visible, isFalse);
+        expect(controller.phase, WaterQualityPhase.normal);
+        expect(controller.canUseHydrogen, isTrue);
+      },
+    );
+
+    test(
+      '$page genuine anomaly opens after a silent startup failure',
+      () async {
+        device.fail = true;
+        await controller.enterPage(page);
+        expect(controller.visible, isFalse);
+        device.fail = false;
+        device.tds = 10;
+        await retry();
+        expect(controller.visible, isTrue);
+        expect(controller.phase, WaterQualityPhase.treating);
+        expect(controller.canUseHydrogen, isFalse);
+      },
+    );
+  }
+
+  test('failed command check does not reopen a dismissed anomaly', () async {
+    device.tds = 10;
+    await controller.enterPage('/start');
+    controller.dismiss();
+    device.fail = true;
+    expect(await controller.checkHydrogenBeforeCommand(), isFalse);
+    expect(controller.visible, isFalse);
+    expect(controller.episodeActive, isTrue);
+    expect(controller.phase, WaterQualityPhase.treating);
+  });
+
+  test(
+    'read failure does not replace a success dialog with unavailable',
+    () async {
+      device.tds = 10;
+      await controller.enterPage('/start');
+      device.status = 0;
+      device.tds = 8;
+      await controller.poll();
+      expect(controller.phase, WaterQualityPhase.success);
+      expect(controller.visible, isTrue);
+      device.fail = true;
+      await controller.poll();
+      expect(controller.visible, isFalse);
+      expect(controller.canUseHydrogen, isFalse);
+    },
+  );
+
   test('normal entry reads EC only and does not announce success', () async {
     await controller.enterPage('/start');
     expect(device.reads, [0x01EC]);
