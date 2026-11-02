@@ -113,6 +113,30 @@ try {
             '--target', $item.Target,
             "--dart-define=API_BASE_URL=$($item.ApiBaseUrl)"
         )
+        if ($item.Id -eq 'india') {
+            $arguments += '--dart-define=OTA_CHANNEL=india_alteon'
+            $arguments += '--dart-define=OTA_MANIFEST_URL=https://ota.infibo.net/ota/india-alteon.json'
+        }
+        if ($item.Id -eq 'spain') {
+            $arguments += '--dart-define=OTA_CHANNEL=spain_qvita'
+            $arguments += '--dart-define=OTA_MANIFEST_URL=https://ota.infibo.net/ota/spain-qvita.json'
+        }
+        if ($item.Id -eq 'australia') {
+            $arguments += '--dart-define=OTA_CHANNEL=australia_halsa'
+            $arguments += '--dart-define=OTA_MANIFEST_URL=https://ota.infibo.net/ota/australia-halsa.json'
+        }
+        if ($item.Id -eq 'america') {
+            $arguments += '--dart-define=OTA_CHANNEL=america_lngvty'
+            $arguments += '--dart-define=OTA_MANIFEST_URL=https://ota.infibo.net/ota/america-lngvty.json'
+        }
+        if ($item.Id -eq 'britain') {
+            $arguments += '--dart-define=OTA_CHANNEL=britain_omnia'
+            $arguments += '--dart-define=OTA_MANIFEST_URL=https://ota.infibo.net/ota/britain-omnia.json'
+        }
+        if ($item.Id -eq 'turkey') {
+            $arguments += '--dart-define=OTA_CHANNEL=turkey_omnia'
+            $arguments += '--dart-define=OTA_MANIFEST_URL=https://ota.infibo.net/ota/turkey-omnia.json'
+        }
         # 新旧印度版本共用入口和包名，仅通过编译开关区分硬件能力。
         # APK 文件名及保存目录仍按独立的版本 Id 区分，防止新旧安装包混淆。
         if ($item.Flavor -eq 'india') {
@@ -133,7 +157,8 @@ try {
         }
 
         $stamp = Get-Date -Format 'yyyyMMdd_HHmmss'
-        $baseName = "Infibo_$($item.Id)_v${version}_$stamp"
+        $namePrefix = if ($item.Id -eq 'india') { 'Alteon' } elseif ($item.Id -eq 'india_alteon_ota') { 'Alteon_OTA' } elseif ($item.Id -eq 'spain') { 'Qvita' } elseif ($item.Id -eq 'spain_qvita_ota') { 'Qvita_OTA' } elseif ($item.Id -eq 'australia') { 'Halsa' } elseif ($item.Id -eq 'australia_halsa_ota') { 'Halsa_OTA' } elseif ($item.Id -eq 'america') { 'Lngvty' } elseif ($item.Id -eq 'america_lngvty_ota') { 'Lngvty_OTA' } elseif ($item.Id -eq 'britain') { 'Omnia' } elseif ($item.Id -eq 'britain_omnia_ota') { 'Omnia_OTA' } elseif ($item.Id -eq 'turkey') { 'Omnia' } elseif ($item.Id -eq 'turkey_omnia_ota') { 'Omnia_OTA' } else { "Infibo_$($item.Id)" }
+        $baseName = "${namePrefix}_v${version}_$stamp"
         $targetDirectory = $resolvedDestinations[$item.Id]
         $target = Join-Path $targetDirectory "$baseName.apk"
         $suffix = 2

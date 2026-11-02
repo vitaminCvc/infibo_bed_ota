@@ -44,7 +44,15 @@ class AppBrandConfig {
 
   final String flavor;
 
-  bool get supportsOtaUpdates => flavor == 'global' || flavor == 'uaeBiohackn';
+  bool get supportsOtaUpdates =>
+      flavor == 'global' ||
+      flavor == 'uaeBiohackn' ||
+      flavor == 'india' ||
+      flavor == 'spain' ||
+      flavor == 'australia' ||
+      flavor == 'america' ||
+      flavor == 'britain' ||
+      flavor == 'turkey';
 
   /// 自动加水开关仅对印度版生效，避免改变其他国家已交付版本的行为。
   /// 印度默认支持自动加水；仅“印度老版（无自动加水）”打包时传入

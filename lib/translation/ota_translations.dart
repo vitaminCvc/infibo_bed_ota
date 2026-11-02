@@ -1,3 +1,6 @@
+import 'ota_translations_western.dart';
+import 'ota_translations_eastern.dart';
+
 const _en = <String, String>{
   'ota_check_intro': 'Check published software and firmware for this device.',
   'ota_last_checked': 'Last checked · @time',
@@ -351,5 +354,7 @@ Map<String, Map<String, String>> withOtaTranslations(
       ..._en,
       if (entry.key == 'zh_CN') ..._zh,
       if (entry.key == 'pl_PL') ..._pl,
+      ...?otaWesternTranslations[entry.key],
+      ...?otaEasternTranslations[entry.key],
     },
 };

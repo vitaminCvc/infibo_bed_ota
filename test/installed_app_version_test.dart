@@ -23,6 +23,7 @@ void main() {
   testWidgets('settings shows version name without the internal build number', (
     tester,
   ) async {
+    addTearDown(() => tester.pumpWidget(const SizedBox.shrink()));
     messenger.setMockMethodCallHandler(channel, (call) async {
       expect(call.method, 'getVersion');
       return {'versionName': '1.1.1', 'versionCode': 3};
@@ -37,6 +38,7 @@ void main() {
   });
 
   testWidgets('native failure uses an honest placeholder', (tester) async {
+    addTearDown(() => tester.pumpWidget(const SizedBox.shrink()));
     messenger.setMockMethodCallHandler(
       channel,
       (_) async => throw PlatformException(code: 'unavailable'),
@@ -48,6 +50,7 @@ void main() {
   });
 
   testWidgets('late native response after leaving is safe', (tester) async {
+    addTearDown(() => tester.pumpWidget(const SizedBox.shrink()));
     final pending = Completer<Map<String, Object>>();
     messenger.setMockMethodCallHandler(channel, (_) => pending.future);
     await tester.pumpWidget(panel());
@@ -60,6 +63,7 @@ void main() {
   testWidgets('long version and maximum build fit the settings cell', (
     tester,
   ) async {
+    addTearDown(() => tester.pumpWidget(const SizedBox.shrink()));
     messenger.setMockMethodCallHandler(
       channel,
       (_) async => {

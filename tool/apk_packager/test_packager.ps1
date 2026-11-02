@@ -1,4 +1,4 @@
-﻿$ErrorActionPreference = 'Stop'
+$ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
 
 $worker = Join-Path $PSScriptRoot 'Build-InfiboApks.ps1'
@@ -48,7 +48,7 @@ exit 0
     $allCalls = @(Get-Content -LiteralPath $calls)
     Assert-That ($allCalls.Count -eq 9) 'Build all should invoke Flutter nine times.'
     Assert-That (@($allCalls | Where-Object { $_ -eq 'global|lib/main_global.dart|--dart-define=API_BASE_URL=http://8.138.247.157' }).Count -eq 1) 'Domestic test should use the China test server.'
-    Assert-That ((Get-ChildItem -LiteralPath $destination -Filter '*.apk').Count -eq 10) 'Each edition should create its own APK without overwriting prior builds.'
+    Assert-That (@(Get-ChildItem -LiteralPath $destination -Filter '*.apk').Count -eq 10) 'Each edition should create its own APK without overwriting prior builds.'
 
     Assert-That (@($allCalls | Where-Object { $_ -like 'india|*|--dart-define=INDIA_AUTO_WATER_FILLING=true' }).Count -eq 1) 'India must enable automatic filling.'
     Assert-That (@($allCalls | Where-Object { $_ -like 'india|*|--dart-define=INDIA_AUTO_WATER_FILLING=false' }).Count -eq 1) 'Legacy India must disable automatic filling.'
@@ -76,7 +76,7 @@ exit 0
     } | ConvertTo-Json | Set-Content -LiteralPath $configPath -Encoding utf8
     & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $worker -ConfigPath $configPath -FlutterExecutable $mockFlutter | Out-Null
     Assert-That ($LASTEXITCODE -eq 0) 'GUI configuration should be accepted by the worker.'
-    Assert-That ((Get-ChildItem -LiteralPath $destination -Filter 'Infibo_britain_*.apk').Count -eq 2) 'Repeated builds must keep both APKs.'
+    Assert-That (@(Get-ChildItem -LiteralPath $destination -Filter 'Omnia*.apk').Count -eq 3) 'Repeated Britain builds must keep all Omnia APKs.'
 
     $env:INFIBO_TEST_FAIL = 'spain'
     $stale = Join-Path $project 'build/app/outputs/flutter-apk/app-spain-release.apk'

@@ -86,7 +86,7 @@ class _SystemUpdatePanelState extends State<SystemUpdatePanel> {
                 ),
               )
             : const Icon(Icons.refresh, size: 18),
-        label: Text('ota_check'.tr),
+        label: Text('ota_check'.tr, textAlign: TextAlign.center),
       );
       final heading = Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,7 +99,10 @@ class _SystemUpdatePanelState extends State<SystemUpdatePanel> {
                 : controller.checkedAt == null
                 ? 'ota_check_intro'.tr
                 : 'ota_last_checked'.trParams({
-                    'time': _checkedTime(controller.checkedAt!),
+                    // 防止 RTL 文案把日期及时间各段重新排列。
+                    'time': Directionality.of(context) == TextDirection.rtl
+                        ? '\u2066${_checkedTime(controller.checkedAt!)}\u2069'
+                        : _checkedTime(controller.checkedAt!),
                   }),
             style: const TextStyle(
               color: Color(0xffb7b7bd),
@@ -271,6 +274,7 @@ class _SystemUpdatePanelState extends State<SystemUpdatePanel> {
             style: const TextStyle(
               fontFamily: settingsFontFamily,
               color: OtaUpdateStyle.foreground,
+              fontFamilyFallback: OtaUpdateStyle.fontFallback,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -305,6 +309,7 @@ class _SystemUpdatePanelState extends State<SystemUpdatePanel> {
                                     ? 'ota_update'
                                     : 'ota_up_to_date_button')
                                 .tr,
+                            textAlign: TextAlign.center,
                           ),
                         )
                       : null,
@@ -334,7 +339,10 @@ class _SystemUpdatePanelState extends State<SystemUpdatePanel> {
                               ? () => _confirm(firmware, firmware: true)
                               : null,
                           icon: const Icon(Icons.download_rounded, size: 20),
-                          label: Text(boardAction.tr),
+                          label: Text(
+                            boardAction.tr,
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                 ),
                 const SizedBox(height: 20),
@@ -392,6 +400,7 @@ class _ReleaseCard extends StatelessWidget {
       const SizedBox(height: 6),
       Text(
         value,
+        textDirection: TextDirection.ltr,
         style: TextStyle(
           fontSize: 24,
           height: 1.3,
@@ -411,51 +420,69 @@ class _ReleaseCard extends StatelessWidget {
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Wrap(
-          spacing: 12,
-          runSpacing: 12,
-          crossAxisAlignment: WrapCrossAlignment.center,
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             ExcludeSemantics(
               child: Container(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   color: OtaUpdateStyle.inset,
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(icon, size: 24, color: OtaUpdateStyle.foreground),
+                child: Icon(icon, size: 20, color: OtaUpdateStyle.foreground),
               ),
             ),
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 20,
-                height: 1.5,
-                fontWeight: FontWeight.w600,
-                color: OtaUpdateStyle.foreground,
-              ),
-            ),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ExcludeSemantics(
-                  child: Container(
-                    width: 6,
-                    height: 6,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: statusColor,
+            const SizedBox(width: 12),
+            Expanded(
+              child: LayoutBuilder(
+                builder: (context, constraints) => Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        title,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          height: 1.5,
+                          fontWeight: FontWeight.w600,
+                          color: OtaUpdateStyle.foreground,
+                        ),
+                      ),
                     ),
-                  ),
+                    const SizedBox(width: 10),
+                    ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxWidth: constraints.maxWidth * 0.45,
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          ExcludeSemantics(
+                            child: Container(
+                              width: 6,
+                              height: 6,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: statusColor,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 6),
+                          Flexible(
+                            child: Text(
+                              status,
+                              style: OtaUpdateStyle.caption.copyWith(
+                                color: statusColor,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 6),
-                Flexible(
-                  child: Text(
-                    status,
-                    style: OtaUpdateStyle.caption.copyWith(color: statusColor),
-                  ),
-                ),
-              ],
+              ),
             ),
           ],
         ),
@@ -497,10 +524,12 @@ class _ReleaseCard extends StatelessWidget {
                         const SizedBox(width: 16),
                         Expanded(
                           child: Container(
-                            padding: const EdgeInsets.only(left: 24),
+                            padding: const EdgeInsetsDirectional.only(
+                              start: 24,
+                            ),
                             decoration: const BoxDecoration(
-                              border: Border(
-                                left: BorderSide(color: OtaUpdateStyle.border),
+                              border: BorderDirectional(
+                                start: BorderSide(color: OtaUpdateStyle.border),
                               ),
                             ),
                             child: publishedView,
@@ -584,6 +613,7 @@ class UpdateConfirmationDialog extends StatelessWidget {
                         firmware
                             ? '${boardVersionText(currentBoardVersion)} → ${release.version}'
                             : release.version,
+                        textDirection: TextDirection.ltr,
                         textAlign: TextAlign.center,
                         style: OtaUpdateStyle.body.copyWith(fontSize: 18),
                       ),
@@ -637,11 +667,11 @@ class UpdateConfirmationDialog extends StatelessWidget {
                       foregroundColor: OtaUpdateStyle.secondary,
                     ),
                     onPressed: () => Navigator.pop(context, false),
-                    child: Text('ota_later'.tr),
+                    child: Text('ota_later'.tr, textAlign: TextAlign.center),
                   );
                   final confirm = FilledButton(
                     onPressed: () => Navigator.pop(context, true),
-                    child: Text('ota_confirm'.tr),
+                    child: Text('ota_confirm'.tr, textAlign: TextAlign.center),
                   );
                   final stacked =
                       constraints.maxWidth < 300 ||

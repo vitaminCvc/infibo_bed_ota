@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:infibo_app/api/modbus/hydrogen_modbus.dart';
 import 'package:infibo_app/api/modbus/modbus_rtu_service.dart';
+import 'package:infibo_app/api/modbus/device_status.dart';
 import 'package:infibo_app/components/designCanvas/design.dart';
 import 'package:infibo_app/components/index.dart';
 import 'package:infibo_app/components/water_level_state_dialog.dart';
@@ -46,7 +47,7 @@ class _MainPageState extends State<MainPage> with RouteAware {
   bool _isLightCommanding = false;
   bool _pendingLightState = false;
   bool _hasPendingLight = false;
-  bool _deviceFault = false; //true:设备故障(红色),false:设备正常(绿色)
+  DeviceStatus _deviceStatus = DeviceStatus.offline;
   Timer? _otaCheckTimer;
   int _otaVisit = 0;
   bool _otaCheckPending = false;
@@ -147,9 +148,11 @@ class _MainPageState extends State<MainPage> with RouteAware {
     try {
       final bus = JoystickCommandBus.instance;
       bus.noteLocalCommand(0);
-      await bus.runLiftWrite(() => widget.modbusService.sendCommandQueue([
-        const ModbusWriteCommand(address: 0x0010, value: 0),
-      ]));
+      await bus.runLiftWrite(
+        () => widget.modbusService.sendCommandQueue([
+          const ModbusWriteCommand(address: 0x0010, value: 0),
+        ]),
+      );
 
       ///发送失败
     } catch (e) {
@@ -336,18 +339,15 @@ class _MainPageState extends State<MainPage> with RouteAware {
       final int state = await widget.modbusService.readHoldingRegister(
         0x0006,
       ); //读取0x0006寄存器状态，判断设备是否故障
-      final bool fault = state == 3 || state == 5; //判断是否为设备故障状态
-      // 0x0006寄存器状态为0时，设备正常(绿色)
-      // 0x0006寄存器状态为1时，设备正常(绿色)
-      // 0x0006寄存器状态为2时，设备正常(绿色)
-      // 0x0006寄存器状态为3时，设备故障(红色)
-
+      final status = DeviceStatus.fromRegister(state);
       if (!mounted) return;
-      //读取到设备故障状态后，如果新状态和旧状态不一样，就更新界面；如果读取失败，就打印错误日志。
-      if (_deviceFault != fault) {
-        setState(() => _deviceFault = fault);
+      if (_deviceStatus != status) {
+        setState(() => _deviceStatus = status);
       }
     } catch (e) {
+      if (mounted && _deviceStatus != DeviceStatus.offline) {
+        setState(() => _deviceStatus = DeviceStatus.offline);
+      }
       debugPrint('Device status sync failed: $e');
     }
   }
@@ -805,12 +805,12 @@ class _MainPageState extends State<MainPage> with RouteAware {
 
   /// 构建设备状态标签(改为动态颜色+文案)
   Widget _buildDeviceStatus() {
-    final Color statusColor = _deviceFault
-        ? Colors.red
-        : Colors.green; //根据状态判断颜色
-    final String statusText = _deviceFault
-        ? 'device_fault'.tr
-        : 'device_ready'.tr; //根据状态判断文案
+    final Color statusColor = switch (_deviceStatus) {
+      DeviceStatus.offline => const Color(0xFF999999),
+      DeviceStatus.fault => Colors.red,
+      DeviceStatus.ready => Colors.green,
+    };
+    final String statusText = _deviceStatus.translationKey.tr;
     //构建设备状态标签底部框
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),

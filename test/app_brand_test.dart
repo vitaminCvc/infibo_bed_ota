@@ -65,7 +65,7 @@ void main() {
               flavor: 'america',
               locale: const Locale('en', 'US'),
               loginLogoAsset: 'assets/branding/america/login_logo.jpg',
-              loginLogoSize: const Size(145, 145),
+              loginLogoSize: const Size(423, 159),
               headerLogoAsset: 'assets/branding/america/header_logo.jpg',
             ),
           ];

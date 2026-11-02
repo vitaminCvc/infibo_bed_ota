@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:infibo_app/components/brand_logo.dart';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:infibo_app/api/modbus/device_status.dart';
 import 'package:infibo_app/api/modbus/modbus_rtu_service.dart';
 import 'package:infibo_app/constants/assets.dart';
 import 'package:infibo_app/config/app_brand.dart';
@@ -361,6 +363,9 @@ class _DeviceDetailsPanel extends StatefulWidget {
 }
 
 class _DeviceDetailsPanelState extends State<_DeviceDetailsPanel> {
+  DeviceStatus _deviceStatus = DeviceStatus.offline;
+  Timer? _deviceStatusTimer;
+  bool _readingDeviceStatus = false;
   String _firmwareVersion = '---';
   String _appVersion = 'Reading version…';
 
@@ -369,6 +374,11 @@ class _DeviceDetailsPanelState extends State<_DeviceDetailsPanel> {
     super.initState();
     unawaited(_readFirmwareVersion());
     unawaited(_readAppVersion());
+    unawaited(_readDeviceStatus());
+    _deviceStatusTimer = Timer.periodic(
+      const Duration(seconds: 5),
+      (_) => unawaited(_readDeviceStatus()),
+    );
   }
 
   // 读取已安装 APK 的版本，用户界面只显示版本名称。
@@ -380,6 +390,30 @@ class _DeviceDetailsPanelState extends State<_DeviceDetailsPanel> {
     } catch (_) {
       // Windows 预览、旧原生包或读取异常时显示占位，不能冒充真实版本。
       if (mounted) setState(() => _appVersion = 'Version unavailable');
+    }
+  }
+
+  @override
+  void dispose() {
+    _deviceStatusTimer?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _readDeviceStatus() async {
+    if (_readingDeviceStatus) return;
+    _readingDeviceStatus = true;
+    var status = DeviceStatus.offline;
+    try {
+      final read =
+          widget.readRegister ?? const ModbusRtuService().readHoldingRegister;
+      status = DeviceStatus.fromRegister(await read(0x0006));
+    } catch (_) {
+      // 下位机未连接、超时或无效响应都显示离线，后续周期继续重试。
+    } finally {
+      _readingDeviceStatus = false;
+    }
+    if (mounted && _deviceStatus != status) {
+      setState(() => _deviceStatus = status);
     }
   }
 
@@ -410,7 +444,11 @@ class _DeviceDetailsPanelState extends State<_DeviceDetailsPanel> {
           top: 38,
           child: _SectionHeading('Device Status'),
         ),
-        Positioned(left: 26, top: 90, child: secondRow()),
+        Positioned(
+          left: 26,
+          top: 90,
+          child: secondRow(deviceStatus: _deviceStatus),
+        ),
 
         const Positioned(
           left: 26,
@@ -573,7 +611,7 @@ class _ModuleStatusTable extends StatelessWidget {
 
 // 多功能理疗仓 正常运行
 
-Widget secondRow() {
+Widget secondRow({DeviceStatus deviceStatus = DeviceStatus.offline}) {
   return Row(
     children: [
       const Text(
@@ -581,7 +619,7 @@ Widget secondRow() {
         style: TextStyle(color: Colors.white, fontSize: 20, height: 1),
       ),
       SizedBox(width: 24),
-      _RunningBadge(),
+      _RunningBadge(status: deviceStatus),
     ],
   );
 }
@@ -758,35 +796,43 @@ class _SectionHeading extends StatelessWidget {
 }
 
 class _RunningBadge extends StatelessWidget {
-  const _RunningBadge();
+  const _RunningBadge({required this.status});
+  final DeviceStatus status;
 
   @override
   Widget build(BuildContext context) {
+    final color = switch (status) {
+      DeviceStatus.offline => const Color(0xFF999999),
+      DeviceStatus.fault => Colors.red,
+      DeviceStatus.ready => const Color(0xFF32DA82),
+    };
+    final background = switch (status) {
+      DeviceStatus.offline => const Color(0xFF37383C),
+      DeviceStatus.fault => const Color(0xFF4A2525),
+      DeviceStatus.ready => const Color(0xFF244735),
+    };
     return Container(
       height: 28,
       padding: const EdgeInsets.symmetric(horizontal: 13),
       decoration: BoxDecoration(
-        color: const Color(0xFF244735),
+        color: background,
         borderRadius: BorderRadius.circular(14),
       ),
-      child: const Row(
+      child: Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           SizedBox(
             width: 6,
             height: 6,
             child: DecoratedBox(
-              decoration: BoxDecoration(
-                color: Color(0xFF32DA82),
-                shape: BoxShape.circle,
-              ),
+              decoration: BoxDecoration(color: color, shape: BoxShape.circle),
             ),
           ),
-          SizedBox(width: 7),
+          const SizedBox(width: 7),
           Text(
-            'Normal Operation',
+            status.translationKey.tr,
             style: TextStyle(
-              color: Color(0xFF32DA82),
+              color: color,
               fontSize: 13,
               height: 1,
               fontWeight: FontWeight.w500,

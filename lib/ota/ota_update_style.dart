@@ -3,6 +3,7 @@ import '../pages/settingpage/settings_panel_style.dart';
 
 /// Shared by update cards, confirmations and progress dialogs.
 abstract final class OtaUpdateStyle {
+  static const fontFallback = ['InfiboOtaArabic', 'InfiboOtaKorean'];
   static const surface = Color(0xff2c2e34);
   static const inset = Color(0xff34363d);
   static const border = Color(0xff45474f);
@@ -17,6 +18,7 @@ abstract final class OtaUpdateStyle {
   static const success = Color(0xff61d79c);
   static const notesTitle = TextStyle(
     fontFamily: settingsFontFamily,
+    fontFamilyFallback: fontFallback,
     color: foreground,
     fontSize: 16,
     fontWeight: FontWeight.w500,
@@ -49,12 +51,14 @@ abstract final class OtaUpdateStyle {
   );
   static const body = TextStyle(
     fontFamily: settingsFontFamily,
+    fontFamilyFallback: fontFallback,
     color: secondary,
     fontSize: 16,
     height: 1.5,
   );
   static const caption = TextStyle(
     fontFamily: settingsFontFamily,
+    fontFamilyFallback: fontFallback,
     color: secondary,
     fontSize: 14,
     height: 1.5,
@@ -63,6 +67,7 @@ abstract final class OtaUpdateStyle {
   static ThemeData theme(BuildContext context) => Theme.of(context).copyWith(
     textTheme: Theme.of(context).textTheme.apply(
       fontFamily: settingsFontFamily,
+      fontFamilyFallback: fontFallback,
       bodyColor: foreground,
       displayColor: foreground,
     ),
@@ -84,6 +89,7 @@ abstract final class OtaUpdateStyle {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
         textStyle: const TextStyle(
           fontFamily: settingsFontFamily,
+          fontFamilyFallback: fontFallback,
           fontSize: 16,
           fontWeight: FontWeight.w500,
         ),
@@ -99,6 +105,7 @@ abstract final class OtaUpdateStyle {
         side: const BorderSide(color: controlBorder),
         textStyle: const TextStyle(
           fontFamily: settingsFontFamily,
+          fontFamilyFallback: fontFallback,
           fontSize: 16,
         ),
         shape: const StadiumBorder(),
@@ -110,6 +117,7 @@ abstract final class OtaUpdateStyle {
         minimumSize: const Size(48, 48),
         textStyle: const TextStyle(
           fontFamily: settingsFontFamily,
+          fontFamilyFallback: fontFallback,
           fontSize: 16,
         ),
       ),
@@ -130,6 +138,7 @@ abstract final class OtaUpdateStyle {
       ),
       titleTextStyle: TextStyle(
         fontFamily: settingsFontFamily,
+        fontFamilyFallback: fontFallback,
         color: foreground,
         fontSize: 22,
         height: 1.4,

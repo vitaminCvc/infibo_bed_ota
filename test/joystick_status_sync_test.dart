@@ -12,10 +12,8 @@ class LiftStatusService extends ModbusRtuService {
   int status = 0;
   int? control;
   bool failRead = false;
-  bool failControlRead = false;
   bool failWrite = false;
   Completer<int>? pendingRead;
-  Completer<int>? pendingControlRead;
   Completer<void>? pendingWrite;
   final reads = <int>[];
   final writes = <(int, int)>[];
@@ -24,8 +22,7 @@ class LiftStatusService extends ModbusRtuService {
   Future<int> readHoldingRegister(int address) async {
     reads.add(address);
     if (address == 0x0010) {
-      if (failControlRead) throw StateError('control unavailable');
-      return pendingControlRead?.future ?? control ?? status;
+      return control ?? status;
     }
     if (failRead) throw StateError('status unavailable');
     return pendingRead?.future ?? status;
@@ -97,136 +94,174 @@ void main() {
     },
   );
 
-  for (final (status, initialControl) in [
-    (3, 4),
-    (4, 3),
-    (0, 4),
-    (1, 2),
-    (2, 1),
-  ]) {
-    testWidgets('status $status corrects control $initialControl once', (
-      tester,
-    ) async {
-      final service = LiftStatusService()
-        ..status = status
-        ..control = initialControl;
-      await mountLift(tester, service);
-      await poll(tester);
-      expect(service.control, status);
-      expect(service.writes, [(0x0010, status)]);
-      await poll(tester);
-      await poll(tester);
-      expect(service.writes, [(0x0010, status)]);
-      await tester.pumpWidget(const SizedBox());
-    });
+  for (final (status, initialControl) in [(3, 4), (4, 3), (0, 4)]) {
+    testWidgets(
+      'status $status updates display without rewriting control $initialControl',
+      (tester) async {
+        final service = LiftStatusService()
+          ..status = status
+          ..control = initialControl;
+        await mountLift(tester, service);
+        await poll(tester);
+        await poll(tester);
+        expect(service.control, initialControl);
+        expect(service.writes, isEmpty);
+        expect(service.reads, [0x0011, 0x0011]);
+        if (status == 0) {
+          expect(find.byType(Image), findsOneWidget);
+        } else {
+          expect(
+            liftImage(
+              status == 3 ? Assets.joystickLeftTop : Assets.joystickLeftBottom,
+            ),
+            findsOneWidget,
+          );
+        }
+        await tester.pumpWidget(const SizedBox());
+      },
+    );
   }
 
   testWidgets(
-    'failed control read still updates UI and retries reconciliation',
+    'legacy manual status cannot replace an automatic light or latch a manual light',
     (tester) async {
-      final service = LiftStatusService()
-        ..status = 3
-        ..control = 4
-        ..failControlRead = true;
+      final service = LiftStatusService()..status = 3;
       await mountLift(tester, service);
       await poll(tester);
-      expect(liftImage(Assets.joystickLeftTop), findsOneWidget);
+      for (final status in [1, 2]) {
+        service.status = status;
+        await poll(tester);
+        expect(liftImage(Assets.joystickLeftTop), findsOneWidget);
+        expect(liftImage(Assets.joystickRightTop), findsNothing);
+        expect(liftImage(Assets.joystickRightBottom), findsNothing);
+      }
+      service.status = 0;
+      await poll(tester);
+      for (final status in [1, 2]) {
+        service.status = status;
+        await poll(tester);
+        expect(find.byType(Image), findsOneWidget);
+      }
       expect(service.writes, isEmpty);
-      service.failControlRead = false;
-      await poll(tester);
-      expect(service.control, 3);
-      await tester.pumpWidget(const SizedBox());
-    },
-  );
-
-  testWidgets('failed correction is retried and stops writing after success', (
-    tester,
-  ) async {
-    final service = LiftStatusService()
-      ..status = 3
-      ..control = 4
-      ..failWrite = true;
-    await mountLift(tester, service);
-    await poll(tester);
-    expect(service.control, 4);
-    expect(liftImage(Assets.joystickLeftTop), findsOneWidget);
-    service.failWrite = false;
-    await poll(tester);
-    await poll(tester);
-    expect(service.control, 3);
-    expect(service.writes, [(0x0010, 3), (0x0010, 3)]);
-    await tester.pumpWidget(const SizedBox());
-  });
-
-  testWidgets('new user command invalidates an in-flight control comparison', (
-    tester,
-  ) async {
-    final pending = Completer<int>();
-    final service = LiftStatusService()
-      ..control = 4
-      ..pendingControlRead = pending;
-    await mountLift(tester, service);
-    await poll(tester);
-    final origin = tester.getTopLeft(find.byType(JoystickControl));
-    await tester.tapAt(origin + const Offset(45, 140));
-    await tester.pump();
-    pending.complete(4);
-    await tester.pump();
-    expect(service.writes, [(0x0010, 4)]);
-    await tester.pumpWidget(const SizedBox());
-  });
-
-  testWidgets(
-    'start sequence invalidates old comparisons before write acknowledgement',
-    (tester) async {
-      final pendingControl = Completer<int>();
-      final pendingWrite = Completer<void>();
-      final service = LiftStatusService()
-        ..control = 4
-        ..pendingControlRead = pendingControl
-        ..pendingWrite = pendingWrite;
-      await mountLift(tester, service);
-      await poll(tester);
-      final readsBeforeWrite = service.reads.length;
-      final descend = StartLiftSequence(
-        service: service,
-        isBritain: false,
-        isActive: () => true,
-      ).descend();
-      pendingControl.complete(4);
-      await tester.pump();
-      await poll(tester);
-      expect(service.reads.length, readsBeforeWrite);
-      expect(service.writes, [(0x0010, 4)]);
-      pendingWrite.complete();
-      await descend;
-      await tester.pump();
-      await tester.pump();
-      expect(liftImage(Assets.joystickLeftBottom), findsOneWidget);
       await tester.pumpWidget(const SizedBox());
     },
   );
 
   testWidgets(
-    'delayed moving feedback cannot restart a released manual control',
+    'delayed idle feedback never sends stop after a new automatic rise',
     (tester) async {
       final service = LiftStatusService()..control = 0;
       await mountLift(tester, service);
       final origin = tester.getTopLeft(find.byType(JoystickControl));
-      final gesture = await tester.startGesture(origin + const Offset(140, 45));
-      await tester.pump(const Duration(seconds: 1));
-      service.status = 1;
-      await poll(tester);
-      await gesture.up();
+      await tester.tapAt(origin + const Offset(45, 45));
       await tester.pump();
       await poll(tester);
-      expect(service.writes, [(0x0010, 1), (0x0010, 0)]);
-      service.status = 0;
-      await poll(tester);
+      expect(service.writes, [(0x0010, 3)]);
+      expect(service.control, 3);
+      expect(find.byType(Image), findsOneWidget);
       service.status = 3;
       await poll(tester);
-      expect(service.control, 3);
-      expect(service.writes, [(0x0010, 1), (0x0010, 0), (0x0010, 3)]);
+      expect(liftImage(Assets.joystickLeftTop), findsOneWidget);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
+
+  for (final (y, command, asset) in [
+    (45.0, 1, Assets.joystickRightTop),
+    (140.0, 2, Assets.joystickRightBottom),
+  ]) {
+    testWidgets('manual $command owns light and pauses reads until release', (
+      tester,
+    ) async {
+      final service = LiftStatusService();
+      await mountLift(tester, service);
+      final origin = tester.getTopLeft(find.byType(JoystickControl));
+      final press = await tester.startGesture(origin + Offset(140, y));
+      await tester.pump(const Duration(milliseconds: 150));
+      await poll(tester);
+      expect(service.writes, isEmpty);
+      expect(liftImage(asset), findsOneWidget);
+      await tester.pump(const Duration(seconds: 1));
+      for (final status in [0, 1, 2, 3, 4]) {
+        service.status = status;
+        await poll(tester);
+        expect(liftImage(asset), findsOneWidget);
+      }
+      expect(service.reads, isEmpty);
+      expect(service.writes, [(0x0010, command)]);
+      await press.up();
+      await tester.pump();
+      expect(find.byType(Image), findsOneWidget);
+      expect(service.writes, [(0x0010, command), (0x0010, 0)]);
+      service.status = 0;
+      await poll(tester);
+      expect(service.reads, [0x0011]);
+      await tester.pumpWidget(const SizedBox());
+    });
+
+    for (final cancel in [false, true]) {
+      testWidgets(
+        'manual $command ${cancel ? 'cancel' : 'short release'} sends stop only after debounce',
+        (tester) async {
+          final service = LiftStatusService();
+          await mountLift(tester, service);
+          final origin = tester.getTopLeft(find.byType(JoystickControl));
+          final press = await tester.startGesture(origin + Offset(140, y));
+          await tester.pump(Duration(milliseconds: cancel ? 1200 : 150));
+          if (cancel) {
+            await press.cancel();
+          } else {
+            await press.up();
+          }
+          await tester.pump();
+          expect(
+            service.writes,
+            cancel ? [(0x0010, command), (0x0010, 0)] : isEmpty,
+          );
+          expect(find.byType(Image), findsOneWidget);
+          await tester.pumpWidget(const SizedBox());
+        },
+      );
+    }
+  }
+
+  testWidgets(
+    'external automatic broadcast cannot overwrite a locally held manual light',
+    (tester) async {
+      final service = LiftStatusService();
+      await mountLift(tester, service);
+      final origin = tester.getTopLeft(find.byType(JoystickControl));
+      final press = await tester.startGesture(origin + const Offset(140, 45));
+      await tester.pump(const Duration(seconds: 1));
+      JoystickCommandBus.instance.syncStatus(4);
+      await tester.pump();
+      await tester.pump();
+      expect(liftImage(Assets.joystickRightTop), findsOneWidget);
+      await press.up();
+      await tester.pump();
+      expect(service.writes, [(0x0010, 1), (0x0010, 0)]);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
+
+  testWidgets(
+    'a status read started before a manual hold cannot overwrite its light',
+    (tester) async {
+      final pending = Completer<int>();
+      final service = LiftStatusService()..pendingRead = pending;
+      await mountLift(tester, service);
+      await poll(tester);
+      final origin = tester.getTopLeft(find.byType(JoystickControl));
+      final press = await tester.startGesture(origin + const Offset(140, 45));
+      await tester.pump(const Duration(seconds: 1));
+      pending.complete(4);
+      service.pendingRead = null;
+      await tester.pump();
+      expect(liftImage(Assets.joystickRightTop), findsOneWidget);
+      expect(service.reads, [0x0011]);
+      await press.up();
+      await tester.pump();
+      expect(service.writes, [(0x0010, 1), (0x0010, 0)]);
       await tester.pumpWidget(const SizedBox());
     },
   );
@@ -262,61 +297,26 @@ void main() {
     await tester.pumpWidget(const SizedBox());
   });
 
-  for (final releaseBeforeCorrection in [false, true]) {
-    testWidgets(
-      'manual command during correction write is ${releaseBeforeCorrection ? 'cancelled on release' : 'preserved while held'}',
-      (tester) async {
-        final pending = Completer<void>();
-        final service = LiftStatusService()
-          ..control = 4
-          ..pendingWrite = pending;
-        await mountLift(tester, service);
+  testWidgets(
+    'device status selects automatic directions and returns to idle',
+    (tester) async {
+      final service = LiftStatusService();
+      await mountLift(tester, service);
+      for (final (status, asset) in [
+        (4, Assets.joystickLeftBottom),
+        (3, Assets.joystickLeftTop),
+      ]) {
+        service.status = status;
         await poll(tester);
-        final origin = tester.getTopLeft(find.byType(JoystickControl));
-        final gesture = await tester.startGesture(
-          origin + const Offset(140, 45),
-        );
-        await tester.pump(const Duration(seconds: 1));
-        if (releaseBeforeCorrection) await gesture.up();
-        pending.complete();
-        await tester.pump();
-        await tester.pump();
-        expect(
-          service.writes,
-          releaseBeforeCorrection
-              ? [(0x0010, 0), (0x0010, 0)]
-              : [(0x0010, 0), (0x0010, 1)],
-        );
-        if (!releaseBeforeCorrection) {
-          await gesture.up();
-          await tester.pump();
-        }
-        await tester.pumpWidget(const SizedBox());
-      },
-    );
-  }
-
-  testWidgets('device status selects all four directions and returns to idle', (
-    tester,
-  ) async {
-    final service = LiftStatusService();
-    await mountLift(tester, service);
-    for (final (status, asset) in [
-      (4, Assets.joystickLeftBottom),
-      (3, Assets.joystickLeftTop),
-      (2, Assets.joystickRightBottom),
-      (1, Assets.joystickRightTop),
-    ]) {
-      service.status = status;
+        expect(liftImage(asset), findsOneWidget, reason: '0x0011=$status');
+      }
+      service.status = 0;
       await poll(tester);
-      expect(liftImage(asset), findsOneWidget, reason: '0x0011=$status');
-    }
-    service.status = 0;
-    await poll(tester);
-    expect(find.byType(Image), findsOneWidget);
-    expect(service.writes, isEmpty);
-    await tester.pumpWidget(const SizedBox());
-  });
+      expect(find.byType(Image), findsOneWidget);
+      expect(service.writes, isEmpty);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
 
   testWidgets('idle polling discovers motion after a completed movement', (
     tester,
@@ -416,22 +416,29 @@ void main() {
   });
 
   for (final (y, command) in [(45.0, 1), (140.0, 2)]) {
-    testWidgets('manual $command still stops on release after idle feedback', (
-      tester,
-    ) async {
-      final service = LiftStatusService();
-      await mountLift(tester, service);
-      final origin = tester.getTopLeft(find.byType(JoystickControl));
-      final gesture = await tester.startGesture(origin + Offset(140, y));
-      await tester.pump(const Duration(seconds: 1));
-      await poll(tester);
-      expect(service.writes, [(0x0010, command)]);
-      expect(find.byType(Image), findsOneWidget);
-      await gesture.up();
-      await tester.pump();
-      expect(service.writes, [(0x0010, command), (0x0010, 0)]);
-      await tester.pumpWidget(const SizedBox());
-    });
+    testWidgets(
+      'manual $command keeps light until release without polling feedback',
+      (tester) async {
+        final service = LiftStatusService();
+        await mountLift(tester, service);
+        final origin = tester.getTopLeft(find.byType(JoystickControl));
+        final gesture = await tester.startGesture(origin + Offset(140, y));
+        await tester.pump(const Duration(seconds: 1));
+        await poll(tester);
+        expect(service.writes, [(0x0010, command)]);
+        expect(
+          liftImage(
+            command == 1 ? Assets.joystickRightTop : Assets.joystickRightBottom,
+          ),
+          findsOneWidget,
+        );
+        expect(service.reads, isEmpty);
+        await gesture.up();
+        await tester.pump();
+        expect(service.writes, [(0x0010, command), (0x0010, 0)]);
+        await tester.pumpWidget(const SizedBox());
+      },
+    );
   }
 
   testWidgets('old feedback cannot overwrite a newer local command', (

@@ -6,6 +6,7 @@ void main() {
   testWidgets('device information panel uses English content and scrolls', (
     WidgetTester tester,
   ) async {
+    addTearDown(() => tester.pumpWidget(const SizedBox.shrink()));
     await tester.pumpWidget(
       const MaterialApp(
         home: Scaffold(

@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [Parameter(Mandatory=$true)][ValidateSet('official','china_test')][string]$Channel,
+    [Parameter(Mandatory=$true)][ValidateSet('official','china_test','india_alteon','spain_qvita','australia_halsa','america_lngvty','britain_omnia','turkey_omnia')][string]$Channel,
     [string]$ApkPath,
     [string]$AppUrl,
     [string]$FirmwarePath,
@@ -42,7 +42,8 @@ if($ApkPath){
     $line=@($badging | Where-Object {$_ -like 'package:*'}) | Select-Object -First 1
     if($line -notmatch "^package: name='([^']+)' versionCode='(\d+)' versionName='([^']+)'"){throw 'Invalid APK metadata.'}
     $package=$Matches[1];$code=[int]$Matches[2];$version=$Matches[3]
-    if($package -ne 'com.infibo.app.global' -or $code -lt 1 -or $version -notmatch '^\d+\.\d+\.\d+$'){throw 'APK is not an official/test Infibo release.'}
+    $expectedPackage = if($Channel -eq 'india_alteon'){'com.infibo.app.india'}elseif($Channel -eq 'spain_qvita'){'com.infibo.app.spain'}elseif($Channel -eq 'australia_halsa'){'com.infibo.app.australia'}elseif($Channel -eq 'america_lngvty'){'com.infibo.app.america'}elseif($Channel -eq 'britain_omnia'){'com.infibo.app.britain'}elseif($Channel -eq 'turkey_omnia'){'com.infibo.app.turkey'}else{'com.infibo.app.global'}
+    if($package -ne $expectedPackage -or $code -lt 1 -or $version -notmatch '^\d+\.\d+\.\d+$'){throw 'APK does not match the selected channel or release version.'}
     $manifest.app=[ordered]@{package_name=$package;version=$version;version_code=$code;url=$AppUrl;size=$apk.Length;sha256=(Get-FileHash -LiteralPath $apk.FullName -Algorithm SHA256).Hash.ToLowerInvariant();notes=$Notes}
 }
 if($FirmwarePath){

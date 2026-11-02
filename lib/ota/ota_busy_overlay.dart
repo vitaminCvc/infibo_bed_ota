@@ -54,6 +54,7 @@ class _OtaBusyOverlayState extends State<OtaBusyOverlay>
                     child: DefaultTextStyle(
                       style: const TextStyle(
                         fontFamily: settingsFontFamily,
+                        fontFamilyFallback: OtaUpdateStyle.fontFallback,
                         decoration: TextDecoration.none,
                         color: OtaUpdateStyle.foreground,
                         fontSize: 16,
@@ -69,7 +70,7 @@ class _OtaBusyOverlayState extends State<OtaBusyOverlay>
                             children: [
                               const ExcludeSemantics(
                                 child: Align(
-                                  alignment: Alignment.centerLeft,
+                                  alignment: AlignmentDirectional.centerStart,
                                   child: Icon(
                                     Icons.system_update_alt_rounded,
                                     color: OtaUpdateStyle.accent,
@@ -113,6 +114,7 @@ class _OtaBusyOverlayState extends State<OtaBusyOverlay>
                                 const SizedBox(height: 12),
                                 Text(
                                   '${(controller.progress.clamp(0, 1) * 100).round()}%',
+                                  textDirection: TextDirection.ltr,
                                   style: const TextStyle(
                                     color: OtaUpdateStyle.foreground,
                                     fontSize: 24,

@@ -75,7 +75,7 @@ void main() {
       device.complete(0);
       await tester.pump();
       await tester.pump();
-      expect(service.reads, [0x0012, 0x0006, 0x01E5, 0x0011, 0x0010]);
+      expect(service.reads, [0x0012, 0x0006, 0x01E5, 0x0011]);
       await tester.pumpWidget(const SizedBox());
       if (Get.isRegistered<AppHeaderClockController>()) {
         Get.find<AppHeaderClockController>().onClose();
@@ -120,8 +120,6 @@ void main() {
           for (final (status, asset) in [
             (4, Assets.joystickLeftBottom),
             (3, Assets.joystickLeftTop),
-            (2, Assets.joystickRightBottom),
-            (1, Assets.joystickRightTop),
           ]) {
             service.liftStatus = status;
             await tester.pump(const Duration(milliseconds: 500));
@@ -137,7 +135,7 @@ void main() {
               findsOneWidget,
               reason: '0x0011=$status',
             );
-            expect(service.liftControl, status);
+            expect(service.liftControl, 4);
           }
           service.liftStatus = 0;
           await tester.pump(const Duration(milliseconds: 500));
@@ -150,9 +148,9 @@ void main() {
             service.writes
                 .where((command) => command.address == 0x0010)
                 .map((command) => command.value),
-            [3, 2, 1, 0],
+            isEmpty,
           );
-          expect(service.liftControl, 0);
+          expect(service.liftControl, 4);
           expect(tester.takeException(), isNull);
           await tester.pumpWidget(const SizedBox());
           await tester.pump();

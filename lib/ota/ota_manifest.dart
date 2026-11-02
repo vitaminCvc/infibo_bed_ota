@@ -235,7 +235,17 @@ class OtaManifest {
     final value = _object(json);
     if (value['schema'] != 1 ||
         value['channel'] != channel ||
-        !{'official', 'china_test', 'uae_biohackn'}.contains(channel)) {
+        !{
+          'official',
+          'china_test',
+          'uae_biohackn',
+          'india_alteon',
+          'spain_qvita',
+          'australia_halsa',
+          'america_lngvty',
+          'britain_omnia',
+          'turkey_omnia',
+        }.contains(channel)) {
       throw const FormatException('Update schema or channel mismatch');
     }
     return OtaManifest(

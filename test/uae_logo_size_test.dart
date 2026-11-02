@@ -31,6 +31,7 @@ void main() {
 
   for (final page in ['home', 'settings', 'device']) {
     testWidgets('UAE $page preserves full SVG dimensions', (tester) async {
+      addTearDown(() => tester.pumpWidget(const SizedBox.shrink()));
       await tester.binding.setSurfaceSize(const Size(800, 1701));
       addTearDown(() => tester.binding.setSurfaceSize(null));
       await tester.pumpWidget(

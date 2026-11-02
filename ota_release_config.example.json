@@ -10,5 +10,29 @@
   "uae_biohackn": {
     "manifest_url": "https://ota.infibo.net/ota/uae-biohackn.json",
     "allow_http": false
+  },
+  "india_alteon": {
+    "manifest_url": "https://ota.infibo.net/ota/india-alteon.json",
+    "allow_http": false
+  },
+  "spain_qvita": {
+    "manifest_url": "https://ota.infibo.net/ota/spain-qvita.json",
+    "allow_http": false
+  },
+  "australia_halsa": {
+    "manifest_url": "https://ota.infibo.net/ota/australia-halsa.json",
+    "allow_http": false
+  },
+  "america_lngvty": {
+    "manifest_url": "https://ota.infibo.net/ota/america-lngvty.json",
+    "allow_http": false
+  },
+  "britain_omnia": {
+    "manifest_url": "https://ota.infibo.net/ota/britain-omnia.json",
+    "allow_http": false
+  },
+  "turkey_omnia": {
+    "manifest_url": "https://ota.infibo.net/ota/turkey-omnia.json",
+    "allow_http": false
   }
 }

@@ -18,19 +18,15 @@ enum JoystickAction {
 enum JoystickExternalCommand {
   lockLeftTop(JoystickAction.lockedLeftTop),
   lockLeftBottom(JoystickAction.lockedLeftBottom),
-  reset(JoystickAction.idle),
-  holdRightTop(JoystickAction.holdingRightTop),
-  holdRightBottom(JoystickAction.holdingRightBottom);
+  reset(JoystickAction.idle);
 
   const JoystickExternalCommand(this.action);
 
   final JoystickAction action;
 
-  // 0x0011 状态值与 0x0010 控制值一致；未知值不能当作停止。
+  // 下位机新协议只反馈停止和一键动作；点动亮灯由本地按压控制。
   static JoystickExternalCommand? fromStatus(int status) => switch (status) {
     0 => reset,
-    1 => holdRightTop,
-    2 => holdRightBottom,
     3 => lockLeftTop,
     4 => lockLeftBottom,
     _ => null,
@@ -46,18 +42,15 @@ class JoystickCommandBus {
   JoystickExternalCommand _lastLiftCommand = JoystickExternalCommand.reset;
   int _commandRevision = 0;
   int _pendingDeviceWrites = 0;
-  bool _waitingForStopFeedback = false;
   Future<void>? _deviceWriteTail;
 
   Stream<JoystickExternalCommand> get stream => _controller.stream;
   JoystickExternalCommand get lastLiftCommand => _lastLiftCommand;
   int get commandRevision => _commandRevision;
   bool get hasPendingDeviceWrite => _pendingDeviceWrites > 0;
-  bool get waitingForStopFeedback => _waitingForStopFeedback;
 
   void noteLocalCommand(int value) {
     _commandRevision++;
-    _waitingForStopFeedback = value == 0;
   }
 
   Future<void> runLiftWrite(Future<void> Function() write) async {
@@ -86,12 +79,10 @@ class JoystickCommandBus {
   }
 
   void reset() {
-    _waitingForStopFeedback = false;
     _publish(JoystickExternalCommand.reset);
   }
 
   void syncStatus(int status) {
-    if (status == 0) _waitingForStopFeedback = false;
     final command = JoystickExternalCommand.fromStatus(status);
     if (command != null && command != _lastLiftCommand) {
       _publish(command);
@@ -377,7 +368,7 @@ class _JoystickControlState extends State<JoystickControl> with RouteAware {
   }
 
   void _syncActionFromExternal(JoystickExternalCommand command) {
-    if (!mounted) return;
+    if (!mounted || _hasLocalPress) return;
     _liftPollGeneration++;
     _actionNotifier.value = command.action;
   }
@@ -403,12 +394,11 @@ class _JoystickControlState extends State<JoystickControl> with RouteAware {
   Future<void> _readLiftStatusOnce() async {
     final bus = JoystickCommandBus.instance;
     // 空闲时也要读取，才能发现由下位机或其他页面触发的动作。
-    // 防抖期间先保留按压反馈，写命令时不使用之前的状态覆盖新操作。
+    // 点动全程由按压控制亮灯；防抖结束后也不读取或应用设备反馈。
     if (_isReadingLiftStatus ||
         bus.hasPendingDeviceWrite ||
         ModalRoute.of(context)?.isCurrent == false ||
-        (_rightTopPressed && !_rightTopCommandSent) ||
-        (_rightBottomPressed && !_rightBottomCommandSent)) {
+        _hasLocalPress) {
       return;
     }
 
@@ -432,20 +422,8 @@ class _JoystickControlState extends State<JoystickControl> with RouteAware {
       confirmedStatus = status;
       _actionNotifier.value = command.action;
 
-      // 本地按压中的控制交给手势处理。停止命令发出后，旧的运动反馈
-      // 不得重新写回运动指令；等收到停止状态后再恢复自动校正。
-      if (_hasLocalPress || (bus.waitingForStopFeedback && status != 0)) return;
-      final control = await _service.readHoldingRegister(0x0010);
-      if (!isCurrentRead()) return;
-      if (control != status) {
-        debugPrint('Joystick reconcile TX 0x0010=$status (was $control)');
-        await bus.runLiftWrite(() async {
-          if (!isCurrentRead()) return;
-          await _service.sendCommandQueue([
-            ModbusWriteCommand(address: 0x0010, value: status),
-          ]);
-        });
-      }
+      // 状态只用于显示和确认，不能变成新控制指令。
+      // 下位机更新反馈可能晚于命令确认，回写会抵消刚发送的一键动作。
 
       /* 电流检测暂时停用。
       /// 读取升降杆的电流值

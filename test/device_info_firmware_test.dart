@@ -8,6 +8,7 @@ void main() {
   testWidgets(
     'firmware starts unavailable instead of showing a fixed version',
     (WidgetTester tester) async {
+      addTearDown(() => tester.pumpWidget(const SizedBox.shrink()));
       final pending = Completer<int>();
       await tester.pumpWidget(_panel((_) => pending.future));
 
@@ -25,6 +26,7 @@ void main() {
     testWidgets('formats register ${fixture.key} as ${fixture.value}', (
       WidgetTester tester,
     ) async {
+      addTearDown(() => tester.pumpWidget(const SizedBox.shrink()));
       final addresses = <int>[];
       await tester.pumpWidget(
         _panel((address) async {
@@ -44,6 +46,7 @@ void main() {
     testWidgets('invalid register $invalid leaves firmware unavailable', (
       WidgetTester tester,
     ) async {
+      addTearDown(() => tester.pumpWidget(const SizedBox.shrink()));
       await tester.pumpWidget(_panel((_) async => invalid));
       await tester.pump();
 
@@ -55,6 +58,7 @@ void main() {
   testWidgets('read failure stays unavailable without retrying', (
     WidgetTester tester,
   ) async {
+    addTearDown(() => tester.pumpWidget(const SizedBox.shrink()));
     final addresses = <int>[];
     await tester.pumpWidget(
       _panel((address) async {
@@ -72,6 +76,7 @@ void main() {
   testWidgets('rebuilds and scrolling do not reread firmware', (
     WidgetTester tester,
   ) async {
+    addTearDown(() => tester.pumpWidget(const SizedBox.shrink()));
     final addresses = <int>[];
     Future<int> read(int address) async {
       addresses.add(address);
@@ -95,6 +100,7 @@ void main() {
   testWidgets('reopening reads again and clears the previous version', (
     WidgetTester tester,
   ) async {
+    addTearDown(() => tester.pumpWidget(const SizedBox.shrink()));
     final secondRead = Completer<int>();
     final addresses = <int>[];
     Future<int> read(int address) {
@@ -121,6 +127,7 @@ void main() {
   testWidgets('reopening after a failure can show a new version', (
     WidgetTester tester,
   ) async {
+    addTearDown(() => tester.pumpWidget(const SizedBox.shrink()));
     var reads = 0;
     Future<int> read(int _) async {
       if (++reads == 1) throw TimeoutException('No board response');
@@ -142,6 +149,7 @@ void main() {
     testWidgets('late ${fails ? 'failure' : 'success'} after leaving is safe', (
       WidgetTester tester,
     ) async {
+      addTearDown(() => tester.pumpWidget(const SizedBox.shrink()));
       final pending = Completer<int>();
       await tester.pumpWidget(_panel((_) => pending.future));
       await tester.pumpWidget(const SizedBox.shrink());
@@ -165,7 +173,8 @@ Widget _panel(Future<int> Function(int address) readRegister) {
         height: 900,
         child: DeviceInfoPanel(
           showDeviceStatusHeading: false,
-          readRegister: readRegister,
+          readRegister: (address) =>
+              address == 0x0002 ? readRegister(address) : Future<int>.value(0),
         ),
       ),
     ),

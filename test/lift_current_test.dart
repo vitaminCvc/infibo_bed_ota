@@ -157,7 +157,7 @@ import 'package:infibo_app/pages/joystick/ui.dart';
 class StatusOnlyService extends ModbusRtuService {
   final reads = <int>[];
   final writes = <int>[];
-  int status = 1;
+  int status = 4;
 
   @override
   Future<int> readHoldingRegister(int address) async {
@@ -175,7 +175,7 @@ void main() {
   setUp(() => JoystickCommandBus.instance.reset());
 
   testWidgets(
-    'automatic lift keeps polling status and control without reading current',
+    'automatic lift polls only actual status without reading current or control',
     (tester) async {
       final service = StatusOnlyService();
       await tester.pumpWidget(
@@ -186,13 +186,13 @@ void main() {
       JoystickCommandBus.instance.lockLeftBottom();
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 500));
-      expect(service.reads, [0x0011, 0x0010]);
+      expect(service.reads, [0x0011]);
       service.status = 0;
       await tester.pump(const Duration(milliseconds: 500));
       final idleReads = service.reads.length;
       await tester.pump(const Duration(seconds: 2));
       expect(service.reads.length, greaterThan(idleReads));
-      expect(service.reads, everyElement(isIn([0x0011, 0x0010])));
+      expect(service.reads, everyElement(0x0011));
       await tester.pumpWidget(const SizedBox());
     },
   );
@@ -211,8 +211,7 @@ void main() {
     await tester.pump(const Duration(seconds: 1));
     await tester.pump(const Duration(seconds: 2));
     expect(service.writes, [1]);
-    expect(service.reads, isNotEmpty);
-    expect(service.reads, everyElement(0x0011));
+    expect(service.reads, isEmpty);
     await gesture.up();
     await tester.pump();
     expect(service.writes, [1, 0]);

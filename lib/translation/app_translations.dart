@@ -118,6 +118,7 @@ class AppTranslations extends Translations {
       'preset_mode': '预设健康模式',
       'preset_mode_subtitle': '10种日常健康方案',
       'device_ready': '设备就绪',
+      'device_offline': '设备离线',
       'custom_plan': '自定义方案',
       'deep_relax': '深度放松',
       'energy_boost': '焕新充能',
@@ -407,6 +408,7 @@ class AppTranslations extends Translations {
       'preset_mode': 'Gotowe programy',
       'preset_mode_subtitle': '10 programów na co dzień',
       'device_ready': 'Urządzenie gotowe',
+      'device_offline': 'Urządzenie offline',
       'custom_plan': 'Własny plan',
       'deep_relax': 'GŁĘBOKI RELAKS',
       'energy_boost': 'NOWA ENERGIA',
@@ -696,6 +698,7 @@ class AppTranslations extends Translations {
       'preset_mode': 'Preset Wellness Modes', // 预设健康模式
       'preset_mode_subtitle': '10 daily wellness programs', // 10种日常健康方案
       'device_ready': 'Device Ready', // 设备就绪
+      'device_offline': 'Device Offline',
       'custom_plan': 'Custom Plan', // 自定义方案
       'deep_relax': 'DEEP RELAX', // 深度放松
       'energy_boost': 'RE-ENERGIZE', // 焕新充能
@@ -992,6 +995,7 @@ class AppTranslations extends Translations {
       'preset_mode': 'Modos de bienestar', // 预设健康模式
       'preset_mode_subtitle': '10 programas de bienestar', // 10种日常健康方案
       'device_ready': 'Dispositivo listo', // 设备就绪
+      'device_offline': 'Dispositivo sin conexión',
       'custom_plan': 'Plan propio', // 自定义方案
       'deep_relax': 'RELAX PROFUNDO', // 深度放松
       'energy_boost': 'RECÁRGATE', // 焕新充能
@@ -1292,6 +1296,7 @@ class AppTranslations extends Translations {
       'preset_mode': 'Modos de bem-estar', // 预设健康模式
       'preset_mode_subtitle': '10 programas de bem-estar', // 10种日常健康方案
       'device_ready': 'Dispositivo pronto', // 设备就绪
+      'device_offline': 'Dispositivo offline',
       'custom_plan': 'Plano', // 自定义方案
       'deep_relax': 'RELAX PROFUNDO', // 深度放松
       'energy_boost': 'REENERGIZAR', // 焕新充能
@@ -1590,6 +1595,7 @@ class AppTranslations extends Translations {
       'preset_mode': 'Готовые велнес-режимы', // 预设健康模式
       'preset_mode_subtitle': '10 велнес-программ', // 10种日常健康方案
       'device_ready': 'Устройство готово', // 设备就绪
+      'device_offline': 'Устройство не в сети',
       'custom_plan': 'Свой режим', // 自定义方案
       'deep_relax': 'Глубокий релакс', // 深度放松
       'energy_boost': 'ЗАРЯД ЭНЕРГИИ', // 焕新充能
@@ -1884,6 +1890,7 @@ class AppTranslations extends Translations {
       'preset_mode': 'Modes bien-être', // 预设健康模式
       'preset_mode_subtitle': '10 programmes bien-être', // 10种日常健康方案
       'device_ready': 'Appareil prêt', // 设备就绪
+      'device_offline': 'Appareil hors ligne',
       'custom_plan': 'Programme', // 自定义方案
       'deep_relax': 'DÉTENTE PROF.', // 深度放松
       'energy_boost': 'REVITALISER', // 焕新充能
@@ -2187,6 +2194,7 @@ class AppTranslations extends Translations {
       'preset_mode': '프리셋 웰니스 모드', // 预设健康模式
       'preset_mode_subtitle': '일상 웰니스 프로그램 10종', // 10种日常健康方案
       'device_ready': '장치 준비 완료', // 设备就绪
+      'device_offline': '장치 오프라인',
       'custom_plan': '맞춤 플랜', // 自定义方案
       'deep_relax': '깊은 휴식', // 深度放松
       'energy_boost': '에너지 충전', // 焕新充能
@@ -2467,6 +2475,7 @@ class AppTranslations extends Translations {
       'preset_mode': 'أوضاع العافية', // 预设健康模式
       'preset_mode_subtitle': '10 برامج عافية يومية', // 10种日常健康方案
       'device_ready': 'الجهاز جاهز', // 设备就绪
+      'device_offline': 'الجهاز غير متصل',
       'custom_plan': 'خطة مخصصة', // 自定义方案
       'deep_relax': 'استرخاء عميق', // 深度放松
       'energy_boost': 'تجدد ونشاط', // 焕新充能
@@ -2761,6 +2770,7 @@ class AppTranslations extends Translations {
       'preset_mode': 'Wellness-Modi', // 预设健康模式
       'preset_mode_subtitle': '10 Wellness-Programme', // 10种日常健康方案
       'device_ready': 'Gerät bereit', // 设备就绪
+      'device_offline': 'Gerät offline',
       'custom_plan': 'Eigener Plan', // 自定义方案
       'deep_relax': 'TIEF ENTSPANNT', // 深度放松
       'energy_boost': 'NEUE ENERGIE', // 焕新充能
@@ -3063,6 +3073,7 @@ class AppTranslations extends Translations {
       'preset_mode': 'Hazır İyi Yaşam Modları', // 预设健康模式
       'preset_mode_subtitle': '10 günlük iyi yaşam programı', // 10种日常健康方案
       'device_ready': 'Cihaz Hazır', // 设备就绪
+      'device_offline': 'Cihaz Çevrimdışı',
       'custom_plan': 'Özel Plan', // 自定义方案
       'deep_relax': 'DERİN RAHATLAMA', // 深度放松
       'energy_boost': 'YENİ ENERJİ', // 焕新充能

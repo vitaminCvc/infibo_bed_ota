@@ -40,32 +40,32 @@ android {
         create("india") {
             dimension = "market"
             applicationId = "com.infibo.app.india"
-            resValue("string", "app_name", "Infibo India")
+            resValue("string", "app_name", "Alteon")
         }
         create("spain") {
             dimension = "market"
             applicationId = "com.infibo.app.spain"
-            resValue("string", "app_name", "Infibo Spain")
+            resValue("string", "app_name", "Qvita")
         }
         create("turkey") {
             dimension = "market"
             applicationId = "com.infibo.app.turkey"
-            resValue("string", "app_name", "Infibo Turkey")
+            resValue("string", "app_name", "Omnia")
         }
         create("america") {
             dimension = "market"
             applicationId = "com.infibo.app.america"
-            resValue("string", "app_name", "Infibo America")
+            resValue("string", "app_name", "Lngvty")
         }
         create("britain") {
             dimension = "market"
             applicationId = "com.infibo.app.britain"
-            resValue("string", "app_name", "Infibo Britain")
+            resValue("string", "app_name", "Omnia")
         }
         create("australia") {
             dimension = "market"
             applicationId = "com.infibo.app.australia"
-            resValue("string", "app_name", "Infibo Australia")
+            resValue("string", "app_name", "Halsa")
         }
         create("uaeBiohackn") {
             dimension = "market"
